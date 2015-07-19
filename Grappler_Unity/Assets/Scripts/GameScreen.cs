@@ -6,6 +6,7 @@ public class GameScreen : MonoBehaviour {
 
 	[SerializeField] private tk2dCameraAnchor lowerLeftAnchor;
 	[SerializeField] private tk2dCameraAnchor upperRightAnchor;
+	[SerializeField] private float onscreenMargin = 10;
 
 	private void Awake() {
 		instance = this;
@@ -36,5 +37,65 @@ public class GameScreen : MonoBehaviour {
 		get {
 			return upperRightAnchor.transform.position.y - lowerLeftAnchor.transform.position.y;
 		}
+	}
+
+	public Vector2 lowerLeft {
+		get {
+			return origin;
+		}
+	}
+
+	public Vector2 lowerRight {
+		get {
+			return new Vector2(upperRightAnchor.transform.position.x, origin.y);
+		}
+	}
+
+	public Vector2 upperLeft {
+		get {
+			return new Vector2(origin.x, upperRightAnchor.transform.position.y);
+		}
+	}
+
+	public Vector2 upperRight {
+		get {
+			return upperRightAnchor.transform.position;
+		}
+	}
+
+	public Vector2 lowerLeftWithMargin {
+		get {
+			return new Vector2(origin.x - onscreenMargin, origin.y - onscreenMargin);
+		}
+	}
+	
+	public Vector2 lowerRightWithMargin {
+		get {
+			return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, origin.y - onscreenMargin);
+		}
+	}
+	
+	public Vector2 upperLeftWithMargin {
+		get {
+			return new Vector2(origin.x - onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);
+		}
+	}
+	
+	public Vector2 upperRightWithMargin {
+		get {
+			return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);
+		}
+	}
+
+	public bool GetIsOnscreenWithMarginX(float x) {
+		return x >= lowerLeftWithMargin.x && x <= lowerRightWithMargin.x;
+	}
+
+	public bool GetIsOnscreenWithMarginY(float y) {
+		return y >= lowerLeftWithMargin.y && y <= upperLeftWithMargin.y;
+	}
+
+	public bool GetIsOnscreenWithMargin(Vector2 point) {
+		return GetIsOnscreenWithMarginX(point.x) && GetIsOnscreenWithMarginY(point.y);
 	}
 }

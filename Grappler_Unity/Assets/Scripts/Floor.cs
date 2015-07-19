@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Floor : MonoBehaviour {
-	[SerializeField] private float screenMargin = 10;
 	[SerializeField] private float tileSize = 2;
 	[SerializeField] private Transform floorTilePrefab;
 
@@ -17,20 +16,9 @@ public class Floor : MonoBehaviour {
 		CreateFloor();
 	}
 
-	private void Update() {
-		UpdateFloor();
-	}
-
-	private float GetMinX() {
-		float originX = GameScreen.instance.origin.x;
-		float minX = originX - screenMargin;
-		return minX;
-	}
-
-	private float GetMaxX() {
-		float originX = GameScreen.instance.origin.x;
-		float maxX = originX + GameScreen.instance.width + screenMargin;
-		return maxX;
+	private void FixedUpdate() {
+		MoveOffscreenLeftTilesToEnd();
+		MoveOffscreenRightTilesToBeginning();
 	}
 
 	private void AddFloorTileToEnd(Vector2 position) {
@@ -48,30 +36,37 @@ public class Floor : MonoBehaviour {
 	}
 
 	private void CreateFloor() {
-		float nextX = GetMinX();
+		float nextX = GameScreen.instance.lowerLeftWithMargin.x;
+		float maxX = GameScreen.instance.upperRightWithMargin.x;
 
-		while (nextX < GetMaxX()) {
+		while (nextX < maxX) {
 			Vector2 position = new Vector2(nextX, 0);
 			AddFloorTileToEnd(position);
 			nextX += tileSize;
 		}
 	}
 
-	private void UpdateFloor() {
+	private void MoveOffscreenLeftTilesToEnd() {
+		float minX = GameScreen.instance.lowerLeftWithMargin.x;
+		
 		while (true) {
 			Transform floorTile = floorTiles[0];
-			if (floorTile.position.x >= GetMinX()) break;
-
+			if (floorTile.position.x >= minX) break;
+			
 			floorTiles.RemoveAt(0);
 			floorTile.Recycle();
 			Transform lastFloorTile = floorTiles[floorTiles.Count - 1];
 			Vector2 position = new Vector2(lastFloorTile.transform.position.x + tileSize, 0);
 			AddFloorTileToEnd(position);
 		}
+	}
 
+	private void MoveOffscreenRightTilesToBeginning() {
+		float maxX = GameScreen.instance.upperRightWithMargin.x;
+		
 		while (true) {
 			Transform floorTile = floorTiles[floorTiles.Count - 1];
-			if (floorTile.position.x <= GetMaxX()) break;
+			if (floorTile.position.x <= maxX) break;
 			
 			floorTiles.RemoveAt(floorTiles.Count - 1);
 			floorTile.Recycle();

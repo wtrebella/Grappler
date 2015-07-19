@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Anchorable : MonoBehaviour {
@@ -13,7 +14,7 @@ public class Anchorable : MonoBehaviour {
 	}
 
 	public Vector2 GetRandomLocalAnchorPoint() {
-		AnchorPoint anchorPoint = anchorPoints[Random.Range(0, anchorPoints.Length)];
+		AnchorPoint anchorPoint = anchorPoints[UnityEngine.Random.Range(0, anchorPoints.Length)];
 		return anchorPoint.transform.localPosition;
 	}
 }

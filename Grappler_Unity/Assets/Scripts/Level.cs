@@ -12,20 +12,54 @@ public class Level : MonoBehaviour {
 
 	private void Awake() {
 		anchorables = new List<Anchorable>();
-
-		for (int i = 0; i < 1000; i++) AddAnchorable();
+		CreateAnchorables();
 	}
 
-	private void AddAnchorable() {
-		Anchorable anchorable = Instantiate(anchorablePrefab) as Anchorable;
+	private void FixedUpdate() {
+		CreateAnchorablesIfNeeded();
+		RemoveOffscreenAnchorables();
+	}
+
+	private void CreateAnchorables() {
+		while (true) {
+			Vector3 position = GetNextAnchorablePosition();
+			if (GameScreen.instance.GetIsOnscreenWithMarginX(position.x)) CreateAnchorable(position);
+			else break;
+		}
+	}
+
+	private static int anchorableNum = 0;
+	private void CreateAnchorable(Vector3 position) {
+		Anchorable anchorable = anchorablePrefab.Spawn();
 		anchorable.transform.parent = transform;
-		int anchorableCount = anchorables.Count;
-		float rangeY = maxY - minY;
-		Vector3 position = Vector3.zero;
-		position.x = distanceBetweenAnchorablesX * anchorableCount;
-		position.y = Mathf.PerlinNoise((float)anchorableCount / 20 + 0.01f, 0) * rangeY + minY;
 		anchorable.transform.position = position;
 		anchorables.Add(anchorable);
+		anchorableNum++;
+	}
 
+	private Vector2 GetNextAnchorablePosition() {
+		float rangeY = maxY - minY;
+		float firstPerlinAmount = Mathf.PerlinNoise(0.01f, 0);
+		float perlinAmount = Mathf.Abs(Mathf.PerlinNoise((float)anchorableNum / 5 + 0.01f, 0) - firstPerlinAmount);
+		Vector2 position = Vector3.zero;
+		position.x = distanceBetweenAnchorablesX * anchorableNum;
+		position.y = perlinAmount * rangeY + minY;
+		return position;
+	}
+
+	private void CreateAnchorablesIfNeeded() {	
+		Vector2 nextAnchorablePosition = GetNextAnchorablePosition();
+		if (GameScreen.instance.GetIsOnscreenWithMarginX(nextAnchorablePosition.x)) CreateAnchorable(nextAnchorablePosition);
+	}
+
+	private void RemoveOffscreenAnchorables() {
+		float minX = GameScreen.instance.lowerLeftWithMargin.x;
+		while (true) {
+			Anchorable anchorable = anchorables[0];
+			if (anchorable.transform.position.x >= minX) break;
+			
+			anchorables.RemoveAt(0);
+			anchorable.Recycle();
+		}
 	}
 }
