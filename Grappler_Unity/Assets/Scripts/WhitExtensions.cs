@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System;
 
 public static class WhitExtensions {
+	public static Vector2 ToVector2(this Vector3 v) {
+		return new Vector2(v.x, v.y);
+	}
+
 	public static List<Transform> Copy(this List<Transform> list) {
 		List<Transform> newList = new List<Transform>();
 		for (int i = 0; i < list.Count; i++) newList.Add(list[i]);
@@ -37,7 +41,6 @@ public static class WhitExtensions {
 	public static Transform GetItemWithHighestY(this List<Transform> list) {
 		if (list.Count == 0) return null;
 		list.SortByY();
-		for (int i = 0; i < list.Count; i++) Transform t = list[i];
 		return list[list.Count - 1];
 	}
 
@@ -54,17 +57,30 @@ public static class WhitExtensions {
 		return index;
 	}
 
+	public static Transform GetItemClosestTo(this List<Transform> list, Vector2 point) {
+		float dist = Mathf.Infinity;
+		Transform closestItem = null;
+		foreach (Transform t in list) {
+			float newDist = (t.position.ToVector2() - point).sqrMagnitude;
+			if (newDist < dist) {
+				dist = newDist;
+				closestItem = t;
+			}
+		}
+		return closestItem;
+	}
+
 	public static void RemoveItemsWithXValsUnder(this List<Transform> list, float x) {
 		list.SortByX();
 		int index = list.GetIndexOfFirstItemWithXValOver(x);
-		if (index > 0) list.RemoveRange(0, index);
+		if (index >= 0) list.RemoveRange(0, index);
 		else list.Clear();
 	}
 
 	public static void RemoveItemsWithXValsOver(this List<Transform> list, float x) {
 		list.SortByX();
 		int index = list.GetIndexOfFirstItemWithXValOver(x);
-		if (index > 0) list.RemoveRange(index, list.Count - index);
+		if (index >= 0) list.RemoveRange(index, list.Count - index);
 	}
 
 	public static int GetIndexOfFirstItemWithYValOver(this List<Transform> list, float y) {
@@ -83,13 +99,13 @@ public static class WhitExtensions {
 	public static void RemoveItemsWithYValsUnder(this List<Transform> list, float y) {
 		list.SortByX();
 		int index = list.GetIndexOfFirstItemWithYValOver(y);
-		if (index > 0) list.RemoveRange(0, index);
+		if (index >= 0) list.RemoveRange(0, index);
 		else list.Clear();
 	}
 	
 	public static void RemoveItemsWithYValsOver(this List<Transform> list, float y) {
 		list.SortByX();
 		int index = list.GetIndexOfFirstItemWithYValOver(y);
-		if (index > 0) list.RemoveRange(index, list.Count - index);
+		if (index >= 0) list.RemoveRange(index, list.Count - index);
 	}
 }

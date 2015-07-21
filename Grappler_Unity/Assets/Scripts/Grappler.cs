@@ -33,7 +33,12 @@ public class Grappler : StateMachine {
 	}
 
 	private void ConnectGrapple() {
-		Anchorable anchorable = GetBestFitAnchorable();
+		// i think what i really need to do is have a multiple raycast thing, starting at 45 degrees,
+		// and if nothing is found, alternating between about 5 degrees up and down until
+		// 1. something(s) is found (if multiple, choose the furthest one
+		// 2. the angle reaches past 90 or -90 (in essence, these would be behind, which we don't want)
+
+		Anchorable anchorable = GetClosestInFrontAnchorable();
 		if (anchorable == null) return;
 
 		springJoint.connectedBody = anchorable.rigidbody2D;
@@ -62,6 +67,18 @@ public class Grappler : StateMachine {
 		anchorablesBehindPlayer.RemoveItemsWithXValsOver(transform.position.x);
 		Transform highestBehindAnchorable = anchorablesBehindPlayer.GetItemWithHighestY();
 		if (highestBehindAnchorable != null) return highestBehindAnchorable.GetComponent<Anchorable>();
+
+		return null;
+	}
+
+	private Anchorable GetClosestInFrontAnchorable() {
+		var transforms = GetAllNearbyAnchorableTransforms();
+		if (transforms.Count == 0) return null;
+
+		transforms.RemoveItemsWithXValsUnder(transform.position.x);
+
+		Transform anchorableTransform = transforms.GetItemClosestTo(transform.position);
+		if (anchorableTransform != null) return anchorableTransform.GetComponent<Anchorable>();
 
 		return null;
 	}
