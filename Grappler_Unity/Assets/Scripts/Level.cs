@@ -2,17 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(CityPointMaker))]
 public class Level : MonoBehaviour {
 	[SerializeField] private Anchorable anchorablePrefab;
-	[SerializeField] private float distanceBetweenAnchorablesX = 5;
-	[SerializeField] private float minY = 16;
-	[SerializeField] private float maxY = 83;
 
+	private CityPointMaker cityPointMaker;
 	private List<Anchorable> anchorables;
 
 	private void Awake() {
+		cityPointMaker = GetComponent<CityPointMaker>();
 		anchorables = new List<Anchorable>();
-		CreateAnchorables();
+		CreateInitialAnchorables();
 	}
 
 	private void FixedUpdate() {
@@ -20,36 +20,35 @@ public class Level : MonoBehaviour {
 		RemoveOffscreenAnchorables();
 	}
 
-	private void CreateAnchorables() {
+	private void CreateInitialAnchorables() {
 		while (true) {
-			Vector3 position = GetNextAnchorablePosition();
-			if (GameScreen.instance.GetIsOnscreenWithMarginX(position.x)) CreateAnchorable(position);
+			if (NextPointIsOnScreenWithMarginX()) CreateAnchorableAtNextPoint();
 			else break;
 		}
 	}
 
 	private static int anchorableNum = 0;
-	private void CreateAnchorable(Vector3 position) {
+	private void CreateAnchorableAtNextPoint() {
 		Anchorable anchorable = anchorablePrefab.Spawn();
 		anchorable.transform.parent = transform;
-		anchorable.transform.position = position;
+		anchorable.transform.position = GetNextAnchorablePosition();
 		anchorables.Add(anchorable);
+		anchorable.name = "Anchorable " + anchorableNum.ToString();
 		anchorableNum++;
+		cityPointMaker.HandleCurrentPointUsed();
 	}
 
 	private Vector2 GetNextAnchorablePosition() {
-		float rangeY = maxY - minY;
-		float firstPerlinAmount = Mathf.PerlinNoise(0.01f, 0);
-		float perlinAmount = Mathf.Abs(Mathf.PerlinNoise((float)anchorableNum / 5 + 0.01f, 0) - firstPerlinAmount);
-		Vector2 position = Vector3.zero;
-		position.x = distanceBetweenAnchorablesX * anchorableNum;
-		position.y = perlinAmount * rangeY + minY;
-		return position;
+		return cityPointMaker.GetCurrentPoint();
+	}
+
+	private bool NextPointIsOnScreenWithMarginX() {
+		Vector3 nextPoint = GetNextAnchorablePosition();
+		return GameScreen.instance.GetIsOnscreenWithMarginX(nextPoint.x);
 	}
 
 	private void CreateAnchorablesIfNeeded() {	
-		Vector2 nextAnchorablePosition = GetNextAnchorablePosition();
-		if (GameScreen.instance.GetIsOnscreenWithMarginX(nextAnchorablePosition.x)) CreateAnchorable(nextAnchorablePosition);
+		if (NextPointIsOnScreenWithMarginX()) CreateAnchorableAtNextPoint();
 	}
 
 	private void RemoveOffscreenAnchorables() {
