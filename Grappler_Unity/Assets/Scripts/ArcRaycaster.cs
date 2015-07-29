@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class CircleRaycaster : MonoBehaviour {
+public class ArcRaycaster : MonoBehaviour {
 	[SerializeField] private bool drawDebugRays = false;
 	[SerializeField] private LayerMask layerMask;
 	[SerializeField] private float maxDistance = 20;

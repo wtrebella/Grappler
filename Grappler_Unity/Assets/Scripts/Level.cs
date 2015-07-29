@@ -12,6 +12,9 @@ public class Level : MonoBehaviour {
 	private void Awake() {
 		cityPointMaker = GetComponent<CityPointMaker>();
 		anchorables = new List<Anchorable>();
+	}
+
+	private void Start() {
 		CreateInitialAnchorables();
 	}
 
@@ -27,14 +30,11 @@ public class Level : MonoBehaviour {
 		}
 	}
 
-	private static int anchorableNum = 0;
 	private void CreateAnchorableAtNextPoint() {
 		Anchorable anchorable = anchorablePrefab.Spawn();
 		anchorable.transform.parent = transform;
 		anchorable.transform.position = GetNextAnchorablePosition();
 		anchorables.Add(anchorable);
-		anchorable.name = "Anchorable " + anchorableNum.ToString();
-		anchorableNum++;
 		cityPointMaker.HandleCurrentPointUsed();
 	}
 
@@ -52,13 +52,29 @@ public class Level : MonoBehaviour {
 	}
 
 	private void RemoveOffscreenAnchorables() {
-		float minX = GameScreen.instance.lowerLeftWithMargin.x;
-		while (true) {
-			Anchorable anchorable = anchorables[0];
-			if (anchorable.transform.position.x >= minX) break;
-			
-			anchorables.RemoveAt(0);
-			anchorable.Recycle();
+		for (int i = 0; i < anchorables.Count; i++) {
+			Anchorable anchorable = anchorables[i];
+			if (AnchorableIsOnScreenX(anchorable)) break;			
+			if (anchorable.isConnected) continue;
+			else RecycleAnchorableAtIndex(i);
 		}
+	}
+
+	private bool AnchorableIsOnScreenX(Anchorable anchorable) {
+		float minX = GameScreen.instance.lowerLeftWithMargin.x;
+		return anchorable.transform.position.x >= minX;
+	}
+
+	private void RecycleAnchorable(Anchorable anchorable) {
+		int indexOfAnchorable = anchorables.IndexOf(anchorable);
+		RecycleAnchorableAtIndex(indexOfAnchorable);
+	}
+
+	private void RecycleAnchorableAtIndex(int index) {
+		WhitTools.Assert(index >= 0 && index < anchorables.Count, "invalid anchorable index");
+
+		Anchorable anchorable = anchorables[index];
+		anchorables.RemoveAt(index);
+		anchorable.Recycle();
 	}
 }

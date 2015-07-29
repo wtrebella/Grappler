@@ -1,25 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(SpringJoint2D))]
+[RequireComponent(typeof(AnchorableFinder))]
+[RequireComponent(typeof(GrappleConnector))]
 public class Grappler : StateMachine {
-	[SerializeField] private CircleRaycaster circleRaycaster;
-	private enum GrapplerStates {Standing, Falling, Grappling};
-	private SpringJoint2D springJoint;
+	private GrappleConnector grappleConnector;
+	private AnchorableFinder anchorableFinder;
+	private enum GrapplerStates {Falling, Grappling};
 
 	private void Awake() {
-		springJoint = GetComponent<SpringJoint2D>();
-		springJoint.enabled = false;
+		anchorableFinder = GetComponent<AnchorableFinder>();
+		grappleConnector = GetComponent<GrappleConnector>();
 		currentState = GrapplerStates.Falling;
 	}
 
 	private void Falling_UpdateState() {
-		if (GetGrappleButton()) {
-			Anchorable anchorable;
-			if (FindAnchorable(out anchorable)) ConnectGrapple(anchorable);
-		}
+		if (GetGrappleButton()) ConnectGrappleIfAnchorableAvailable();
 	}
 	
 	private void Grappling_UpdateState() {
@@ -30,25 +27,22 @@ public class Grappler : StateMachine {
 		return Input.GetKey(KeyCode.Space);
 	}
 
-	private void ReleaseGrapple() {
-		springJoint.enabled = false;
-		currentState = GrapplerStates.Falling;
+	private void ConnectGrappleIfAnchorableAvailable() {
+		Anchorable anchorable;
+		if (FindAnchorable(out anchorable)) ConnectGrapple(anchorable);
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
-		springJoint.connectedBody = anchorable.rigidbody2D;
-		springJoint.connectedAnchor = anchorable.GetRandomLocalAnchorPoint();
-		springJoint.enabled = true;
+		grappleConnector.Connect(anchorable);
 		currentState = GrapplerStates.Grappling;
 	}
 
+	private void ReleaseGrapple() {
+		grappleConnector.Release();
+		currentState = GrapplerStates.Falling;
+	}
+
 	private bool FindAnchorable(out Anchorable anchorable) {
-		Collider2D foundCollider;
-		if (circleRaycaster.FindCollider(out foundCollider)) {
-			anchorable = foundCollider.GetComponent<Anchorable>();
-			return true;
-		}
-		anchorable = null;
-		return false;
+		return anchorableFinder.FindAnchorable(out anchorable);
 	}
 }

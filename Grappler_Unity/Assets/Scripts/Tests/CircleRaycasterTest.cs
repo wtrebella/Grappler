@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CircleRaycasterTest : MonoBehaviour {
 	[SerializeField] private KeyCode key = KeyCode.T;
-	[SerializeField] private CircleRaycaster raycaster;
+	[SerializeField] private ArcRaycaster raycaster;
 
 	void Start () {
 	
