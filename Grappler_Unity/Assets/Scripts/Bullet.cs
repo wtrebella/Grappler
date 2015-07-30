@@ -1,13 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum DirectionType {Left, Right}
-
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour {
 	[SerializeField] private tk2dSprite sprite;
-	[SerializeField] private float minImpulseForceMagnitude;
-	[SerializeField] private float maxImpulseForceMagnitude;
 
 	private DirectionType currentDirectionType;
 	private Rigidbody2D rigid;
@@ -21,34 +17,20 @@ public class Bullet : MonoBehaviour {
 		CheckBounds();
 	}
 
-	public static Vector2 GetDirection(DirectionType directionType) {
-		if (directionType == DirectionType.Left) return -Vector2.right;
-		else if (directionType == DirectionType.Right) return Vector2.right;
-		Debug.LogError("invalid direction");
-		return Vector2.zero;
-	}
-
 	public static DirectionType GetRandomDirectionType() {
 		DirectionType directionType = Random.value < 0.5f ? DirectionType.Left : DirectionType.Right;
 		return directionType;
 	}
 
-	public void Shoot(DirectionType directionType) {
+	public void Shoot(DirectionType directionType, Vector2 force) {
 		currentDirectionType = directionType;
 
 		Vector2 position = GetBulletSpawnPoint(directionType);
-		Vector2 force = GetImpulseForce(directionType);
 
 		SetSpriteScale(directionType);
 		transform.position = position;
 
 		rigid.AddForce(force, ForceMode2D.Impulse);
-	}
-
-	public Vector2 GetImpulseForce(DirectionType directionType) {
-		Vector2 direction = GetDirection(directionType);
-		float magnitude = Random.Range(minImpulseForceMagnitude, maxImpulseForceMagnitude);
-		return direction * magnitude;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision) {

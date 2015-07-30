@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(SpringJoint2D))]
 [RequireComponent(typeof(LineRenderer))]
-public class SpringJointLine : MonoBehaviour {
+public class SpringJointLineRenderer : MonoBehaviour {
 	private SpringJoint2D springJoint;
 	private LineRenderer lineRenderer;
 

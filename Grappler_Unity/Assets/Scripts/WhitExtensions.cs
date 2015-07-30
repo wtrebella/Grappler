@@ -8,6 +8,10 @@ public static class WhitExtensions {
 		return new Vector2(v.x, v.y);
 	}
 
+	public static Vector3 ToVector3(this Vector2 v, float z = 0) {
+		return new Vector3(v.x, v.y, z);
+	}
+
 	public static List<Transform> Copy(this List<Transform> list) {
 		List<Transform> newList = new List<Transform>();
 		for (int i = 0; i < list.Count; i++) newList.Add(list[i]);

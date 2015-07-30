@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrappleConnector))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
 	private GrappleConnector grappleConnector;
 	private AnchorableFinder anchorableFinder;
@@ -20,14 +21,20 @@ public class Grappler : StateMachine {
 	}
 
 	private void Falling_UpdateState() {
-		if (GetGrappleButton()) ConnectGrappleIfAnchorableAvailable();
+		if (GetGrappleButton()) {
+			ConnectGrappleIfAnchorableAvailable();
+			currentState = GrapplerStates.Grappling;
+		}
 	}
 	
 	private void Grappling_UpdateState() {
-		if (!GetGrappleButton()) ReleaseGrapple();
+		if (!GetGrappleButton()) {
+			ReleaseGrapple();
+			currentState = GrapplerStates.Falling;
+		}
 	}
 
-	private void Dead_UpdateState() {
+	private void Dead_EnterState() {
 		ReleaseGrapple();
 	}
 
@@ -42,12 +49,10 @@ public class Grappler : StateMachine {
 
 	private void ConnectGrapple(Anchorable anchorable) {
 		grappleConnector.Connect(anchorable);
-		currentState = GrapplerStates.Grappling;
 	}
 
 	private void ReleaseGrapple() {
 		grappleConnector.Release();
-		currentState = GrapplerStates.Falling;
 	}
 
 	private bool FindAnchorable(out Anchorable anchorable) {
