@@ -7,12 +7,16 @@ using System.Collections.Generic;
 public class Grappler : StateMachine {
 	private GrappleConnector grappleConnector;
 	private AnchorableFinder anchorableFinder;
-	private enum GrapplerStates {Falling, Grappling};
+	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleConnector = GetComponent<GrappleConnector>();
 		currentState = GrapplerStates.Falling;
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision) {
+		currentState = GrapplerStates.Dead;
 	}
 
 	private void Falling_UpdateState() {
@@ -21,6 +25,10 @@ public class Grappler : StateMachine {
 	
 	private void Grappling_UpdateState() {
 		if (!GetGrappleButton()) ReleaseGrapple();
+	}
+
+	private void Dead_UpdateState() {
+		ReleaseGrapple();
 	}
 
 	private bool GetGrappleButton() {

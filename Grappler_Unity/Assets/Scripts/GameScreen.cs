@@ -22,69 +22,79 @@ public class GameScreen : MonoBehaviour {
 	}
 
 	public Vector2 origin {
-		get {
-			return lowerLeftAnchor.transform.position;
-		}
+		get {return lowerLeftAnchor.transform.position;}
 	}
 	
 	public float width {
-		get {
-			return upperRightAnchor.transform.position.x - lowerLeftAnchor.transform.position.x;
-		}
+		get {return upperRightAnchor.transform.position.x - lowerLeftAnchor.transform.position.x;}
 	}
 
 	public float height {
-		get {
-			return upperRightAnchor.transform.position.y - lowerLeftAnchor.transform.position.y;
-		}
+		get {return upperRightAnchor.transform.position.y - lowerLeftAnchor.transform.position.y;}
+	}
+
+	public float minX {
+		get {return origin.x;}
+	}
+
+	public float maxX {
+		get {return lowerRight.x;}
+	}
+
+	public float minY {
+		get {return lowerLeft.y;}
+	}
+
+	public float maxY {
+		get {return upperLeft.y;}
+	}
+
+	public float minMarginX {
+		get {return lowerLeftWithMargin.x;}
+	}
+	
+	public float maxMarginX {
+		get {return lowerRightWithMargin.x;}
+	}
+	
+	public float minMarginY {
+		get {return lowerLeftWithMargin.y;}
+	}
+	
+	public float maxMarginY {
+		get {return upperLeftWithMargin.y;}
 	}
 
 	public Vector2 lowerLeft {
-		get {
-			return origin;
-		}
+		get {return origin;}
 	}
 
 	public Vector2 lowerRight {
-		get {
-			return new Vector2(upperRightAnchor.transform.position.x, origin.y);
-		}
+		get {return new Vector2(upperRightAnchor.transform.position.x, origin.y);}
 	}
 
 	public Vector2 upperLeft {
-		get {
-			return new Vector2(origin.x, upperRightAnchor.transform.position.y);
-		}
+		get {return new Vector2(origin.x, upperRightAnchor.transform.position.y);}
 	}
 
 	public Vector2 upperRight {
-		get {
-			return upperRightAnchor.transform.position;
-		}
+		get {return upperRightAnchor.transform.position;}
 	}
 
 	public Vector2 lowerLeftWithMargin {
-		get {
-			return new Vector2(origin.x - onscreenMargin, origin.y - onscreenMargin);
-		}
+		get {return new Vector2(origin.x - onscreenMargin, origin.y - onscreenMargin);}
 	}
 	
 	public Vector2 lowerRightWithMargin {
-		get {
-			return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, origin.y - onscreenMargin);
-		}
+		get {return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, origin.y - onscreenMargin);}
 	}
 	
 	public Vector2 upperLeftWithMargin {
-		get {
-			return new Vector2(origin.x - onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);
-		}
+		get {return new Vector2(origin.x - onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);}
 	}
 	
 	public Vector2 upperRightWithMargin {
-		get {
-			return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);
-		}
+		get {return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);}
 	}
 
 	public bool GetIsOnscreenWithMarginX(float x) {
