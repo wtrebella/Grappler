@@ -22,7 +22,7 @@ public class Grappler : StateMachine {
 
 	private void Falling_UpdateState() {
 		if (GetGrappleButton()) {
-			ConnectGrappleIfAnchorableAvailable();
+			ConnectGrappleIfAble();
 			currentState = GrapplerStates.Grappling;
 		}
 	}
@@ -42,7 +42,7 @@ public class Grappler : StateMachine {
 		return Input.GetKey(KeyCode.Space);
 	}
 
-	private void ConnectGrappleIfAnchorableAvailable() {
+	private void ConnectGrappleIfAble() {
 		Anchorable anchorable;
 		if (FindAnchorable(out anchorable)) ConnectGrapple(anchorable);
 	}
