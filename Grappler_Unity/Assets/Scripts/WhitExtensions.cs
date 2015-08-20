@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using System;
 
 public static class WhitExtensions {
+	public static Vector2 GetConnectedAnchorInWorldPosition(this SpringJoint2D springJoint) {
+		return springJoint.connectedBody.transform.TransformPoint(springJoint.connectedAnchor);
+	}
+
+	public static Vector2 GetAnchorInWorldPosition(this SpringJoint2D springJoint) {
+		return springJoint.transform.TransformPoint(springJoint.anchor);
+	}
+
 	public static Vector2 ToVector2(this Vector3 v) {
 		return new Vector2(v.x, v.y);
 	}

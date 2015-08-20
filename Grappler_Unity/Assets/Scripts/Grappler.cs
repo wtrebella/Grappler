@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(AnchorableFinder))]
-[RequireComponent(typeof(GrappleConnector))]
+[RequireComponent(typeof(GrappleRope))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
-	private GrappleConnector grappleConnector;
+	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
 		anchorableFinder = GetComponent<AnchorableFinder>();
-		grappleConnector = GetComponent<GrappleConnector>();
+		grappleRope = GetComponent<GrappleRope>();
 		currentState = GrapplerStates.Falling;
 	}
 
@@ -22,8 +22,9 @@ public class Grappler : StateMachine {
 
 	private void Falling_UpdateState() {
 		if (GetGrappleButton()) {
-			ConnectGrappleIfAble();
-			currentState = GrapplerStates.Grappling;
+		 	if (!grappleRope.IsRetracting()) {
+				ConnectGrappleIfAble();
+			}
 		}
 	}
 	
@@ -35,7 +36,7 @@ public class Grappler : StateMachine {
 	}
 
 	private void Dead_EnterState() {
-		ReleaseGrapple();
+		if (grappleRope.IsConnected()) ReleaseGrapple();
 	}
 
 	private bool GetGrappleButton() {
@@ -48,11 +49,12 @@ public class Grappler : StateMachine {
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
-		grappleConnector.Connect(anchorable);
+		grappleRope.Connect(anchorable);
+		currentState = GrapplerStates.Grappling;
 	}
 
 	private void ReleaseGrapple() {
-		grappleConnector.Release();
+		grappleRope.Release();
 	}
 
 	private bool FindAnchorable(out Anchorable anchorable) {

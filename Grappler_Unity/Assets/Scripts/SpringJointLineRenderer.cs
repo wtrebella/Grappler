@@ -18,11 +18,8 @@ public class SpringJointLineRenderer : MonoBehaviour {
 	}
 
 	private void DrawLineBetweenAnchors() {
-		Vector3 localAnchor = springJoint.anchor;
-		Vector3 localConnectedAnchor = springJoint.connectedAnchor;
-
-		Vector3 worldAnchor = springJoint.transform.TransformPoint(localAnchor);
-		Vector3 worldConnectedAnchor = springJoint.connectedBody.transform.TransformPoint(localConnectedAnchor);
+		Vector3 worldAnchor = springJoint.GetAnchorInWorldPosition();
+		Vector3 worldConnectedAnchor = springJoint.GetConnectedAnchorInWorldPosition();
 
 		lineRenderer.SetPosition(0, worldAnchor);
 		lineRenderer.SetPosition(1, worldConnectedAnchor);
