@@ -35,7 +35,7 @@ public class GrappleRope : StateMachine {
 		WhitTools.Assert(!HasConnectedAnchorable(), "already connected to something else! release before connecting.");
 		
 		springJoint.connectedBody = anchorable.rigid;
-		springJoint.connectedAnchor = anchorable.GetRandomLocalAnchorPoint();
+		springJoint.connectedAnchor = anchorable.GetAnchorPoint();
 		springJoint.enabled = true;
 		connectedAnchorable = anchorable;
 		anchorable.HandleConnected();

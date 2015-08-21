@@ -55,9 +55,15 @@ public class Grappler : StateMachine {
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection) {
+		if (!CurrentStateIs(GrapplerStates.Falling)) return;
+
 		if (!grappleRope.IsRetracting()) {
 			float angle = WhitTools.DirectionToAngle(swipeDirection);
 			ConnectGrappleIfAble(angle);
 		}
+	}
+
+	private bool CurrentStateIs(GrapplerStates grapplerState) {
+		return (GrapplerStates)currentState == grapplerState;
 	}
 }
