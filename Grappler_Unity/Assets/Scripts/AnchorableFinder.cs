@@ -1,20 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AngleRaycaster))]
 public class AnchorableFinder : MonoBehaviour {
-	[SerializeField] private ArcRaycaster[] raycasters;
+	[SerializeField] private AngleRaycaster angleRaycaster;
 
-	public bool FindAnchorable(out Anchorable anchorable) {
+	public bool FindAnchorable(out Anchorable anchorable, float angle) {
 		Collider2D foundCollider;
 		anchorable = null;
 
-		foreach (ArcRaycaster raycaster in raycasters) {
-			if (raycaster.FindCollider(out foundCollider)) {
-				anchorable = foundCollider.GetComponent<Anchorable>();
-				break;
-			}
-		}
-		
+		if (angleRaycaster.FindCollider(out foundCollider, angle)) anchorable = foundCollider.GetComponent<Anchorable>();
+
 		return anchorable != null;
 	}
 }

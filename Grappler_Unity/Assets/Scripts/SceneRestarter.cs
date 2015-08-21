@@ -2,8 +2,11 @@
 using System.Collections;
 
 public class SceneRestarter : MonoBehaviour {
-	
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.R)) Application.LoadLevel(Application.loadedLevelName);
+	public void Restart() {
+		Application.LoadLevel(Application.loadedLevelName);
+	}
+
+	private void Update () {
+		if (Input.GetKeyDown(KeyCode.R)) Restart();
 	}
 }

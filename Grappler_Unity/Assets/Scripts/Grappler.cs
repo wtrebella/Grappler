@@ -11,6 +11,7 @@ public class Grappler : StateMachine {
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
+		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
 		currentState = GrapplerStates.Falling;
@@ -21,15 +22,11 @@ public class Grappler : StateMachine {
 	}
 
 	private void Falling_UpdateState() {
-		if (GetGrappleButton()) {
-		 	if (!grappleRope.IsRetracting()) {
-				ConnectGrappleIfAble();
-			}
-		}
+
 	}
 	
 	private void Grappling_UpdateState() {
-		if (!GetGrappleButton()) {
+		if (Input.GetMouseButtonDown(0)) {
 			ReleaseGrapple();
 			currentState = GrapplerStates.Falling;
 		}
@@ -39,13 +36,9 @@ public class Grappler : StateMachine {
 		if (grappleRope.IsConnected()) ReleaseGrapple();
 	}
 
-	private bool GetGrappleButton() {
-		return Input.GetKey(KeyCode.Space);
-	}
-
-	private void ConnectGrappleIfAble() {
+	private void ConnectGrappleIfAble(float angle) {
 		Anchorable anchorable;
-		if (FindAnchorable(out anchorable)) ConnectGrapple(anchorable);
+		if (FindAnchorable(out anchorable, angle)) ConnectGrapple(anchorable);
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
@@ -57,7 +50,14 @@ public class Grappler : StateMachine {
 		grappleRope.Release();
 	}
 
-	private bool FindAnchorable(out Anchorable anchorable) {
-		return anchorableFinder.FindAnchorable(out anchorable);
+	private bool FindAnchorable(out Anchorable anchorable, float angle) {
+		return anchorableFinder.FindAnchorable(out anchorable, angle);
+	}
+
+	private void HandleSwipe(Vector2 swipeDirection) {
+		if (!grappleRope.IsRetracting()) {
+			float angle = WhitTools.DirectionToAngle(swipeDirection);
+			ConnectGrappleIfAble(angle);
+		}
 	}
 }
