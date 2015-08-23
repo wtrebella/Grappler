@@ -29,7 +29,10 @@ public class Grappler : StateMachine {
 	}
 	
 	private void Grappling_UpdateState() {
-		if (!GetGrappleKey()) ReleaseGrapple();
+		if (!GetGrappleKey()) {
+			ReleaseGrapple();
+			currentState = GrapplerStates.Falling;
+		}
 	}
 
 	private void Dead_EnterState() {
@@ -37,12 +40,15 @@ public class Grappler : StateMachine {
 	}
 
 	private bool GetGrappleKey() {
-		return Input.GetKey(KeyCode.Space);
+		return Input.GetKey(KeyCode.Space) || WhitInput.AtLeastOneTouchDown();
 	}
 
 	private void ConnectGrappleIfAble() {
 		Anchorable anchorable;
-		if (FindAnchorable(out anchorable)) ConnectGrapple(anchorable);
+		if (FindAnchorable(out anchorable)) {
+			ConnectGrapple(anchorable);
+			currentState = GrapplerStates.Grappling;
+		}
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
@@ -52,7 +58,6 @@ public class Grappler : StateMachine {
 
 	private void ReleaseGrapple() {
 		grappleRope.Release();
-		currentState = GrapplerStates.Falling;
 	}
 
 	private bool FindAnchorable(out Anchorable anchorable) {
