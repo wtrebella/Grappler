@@ -22,9 +22,8 @@ public class AnchorableGenerator : MonoBehaviour {
 	}
 
 	private void HandleCreatedBuilding(Building building) {
-		Vector2[] cornerPoints = building.GetCornerPoints();
-		CreateAnchorableAtPoint(cornerPoints[0]);
-		CreateAnchorableAtPoint(cornerPoints[1]);
+		CreateAnchorableAtPoint(building.topLeftCorner);
+		CreateAnchorableAtPoint(building.topRightCorner);
 	}
 
 	private void CreateAnchorableAtPoint(Vector2 position) {

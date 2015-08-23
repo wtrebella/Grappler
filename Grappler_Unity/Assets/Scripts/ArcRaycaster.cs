@@ -7,19 +7,20 @@ public class ArcRaycaster : MonoBehaviour {
 	[SerializeField] private float maxDistance = 20;
 	[SerializeField] [Range(1, 10)] private float incrementAngle = 5;
 	[SerializeField] [Range(1, 10)] private float incrementDistance = 5;
+	[SerializeField] private float initialAngle = 45;
 	[SerializeField] private float upwardCheckAmount = 45;
 	[SerializeField] private float downwardCheckAmount = 135;
 
-	public bool FindCollider(out Collider2D foundCollider, float initialAngle) {
-		if (FindAnyCollider(out foundCollider, initialAngle)) return true;
+	public bool FindCollider(out Collider2D foundCollider) {
+		if (FindAnyCollider(out foundCollider)) return true;
 		else return false;
 	}
 
-	private bool FindAnyCollider(out Collider2D foundCollider, float initialAngle) {
+	private bool FindAnyCollider(out Collider2D foundCollider) {
 		float distance = maxDistance;
 		
 		while (true) {
-			if (FindColliderAtInitialAngleAndDistance(out foundCollider, initialAngle, distance)) return true;
+			if (FindColliderAtInitialAngleAndDistance(out foundCollider, distance)) return true;
 			distance -= incrementDistance;
 			if (distance < 0) {
 				foundCollider = null;
@@ -28,7 +29,7 @@ public class ArcRaycaster : MonoBehaviour {
 		}
 	}
 
-	private bool FindColliderAtInitialAngleAndDistance(out Collider2D foundCollider, float initialAngle, float minDistance) {
+	private bool FindColliderAtInitialAngleAndDistance(out Collider2D foundCollider, float minDistance) {
 		float upAngle = initialAngle;
 		float downAngle = initialAngle - incrementAngle;
 		float maxAngle = initialAngle + upwardCheckAmount;

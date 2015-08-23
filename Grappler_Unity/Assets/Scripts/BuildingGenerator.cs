@@ -14,26 +14,24 @@ public class BuildingGenerator : MonoBehaviour {
 	[SerializeField] float maxHeightDifference = 50;
 
 	private List<Building> buildings;
-	private Vector2 previousSize = Vector2.zero;
-	private float previousX = 0;
-	private int buildingCounter = 0;
 
 	private void Awake() {
 		buildings = new List<Building>();
 	}
 
 	private void Start() {
-		CreateBuildings(100);
+		CreateBuildingsIfNeeded();
 	}
 
-	private void CreateBuildings(int numBuildings) {
-		for (int i = 0; i < numBuildings; i++) CreateRandomBuilding();
+	private void Update() {
+		CreateBuildingsIfNeeded();
+		RecycleOffScreenBuildings();
 	}
 
-	private void CreateRandomBuilding() {
+	private void CreateBuilding() {
+		float x = GetNextX();
 		Vector2 size = GetNextSize();
 		Color color = GetNextColor();
-		float x = previousX + previousSize.x;
 		Vector2 position = new Vector2(x, 0);
 		
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
@@ -45,15 +43,56 @@ public class BuildingGenerator : MonoBehaviour {
 	}
 	
 	private void CreateBuilding(BuildingAttributes buildingAttributes) {
-		Building building = Instantiate(buildingPrefab);
+		Building building = buildingPrefab.Spawn();
 		building.transform.parent = transform;
 		building.SetBuildingAttributes(buildingAttributes);
-		previousX = buildingAttributes.position.x;
-		previousSize = buildingAttributes.size;
 		buildings.Add(building);
 		if (SignalCreatedBuilding != null) SignalCreatedBuilding(building);
+	}
 
-		buildingCounter++;
+	private void RecycleOffScreenBuildings() {
+		List<int> indicesOfBuildingsToRecycle = GetIndicesOfBuildingsToRecycle();
+
+		for (int i = 0; i < indicesOfBuildingsToRecycle.Count; i++) {
+			RecycleBuildingAt(indicesOfBuildingsToRecycle[i]);
+		}
+	}
+
+	private List<int> GetIndicesOfBuildingsToRecycle() {
+		List<int> indicesOfBuildingsToRecycle = new List<int>();
+		
+		for (int i = 0; i < buildings.Count; i++) {
+			Building building = buildings[i];
+			if (building.IsOffLeftOfScreen()) indicesOfBuildingsToRecycle.Add(i);
+			else break;
+		}
+
+		return indicesOfBuildingsToRecycle;
+	}
+
+	private void RecycleBuildingAt(int index) {
+		Building building = buildings[index];
+		buildings.RemoveAt(index);
+		building.Recycle();
+	}
+
+	private void CreateBuildingsIfNeeded() {
+		while (NeedToCreateBuilding()) CreateBuilding();
+	}
+
+	private bool NeedToCreateBuilding() {
+		if (BuildingsExist()) return !GetLastBuilding().IsOffRightOfScreen();
+		else return true;
+	}
+
+	private Building GetLastBuilding() {
+		WhitTools.Assert(buildings.Count > 0, "no buildings to get!");
+
+		return buildings[buildings.Count - 1];
+	}
+
+	private bool BuildingsExist() {
+		return buildings.Count > 0;
 	}
 
 	private Vector2 GetNextSize() {
@@ -63,6 +102,11 @@ public class BuildingGenerator : MonoBehaviour {
 		return new Vector2(width, height);
 	}
 
+	private float GetNextX() {
+		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x;
+		else return 0;
+	}
+
 	private float GetNextWidth() {
 		return UnityEngine.Random.Range(minWidth, maxWidth);
 	}
@@ -70,13 +114,14 @@ public class BuildingGenerator : MonoBehaviour {
 	private float GetNextHeight() {
 		float height = 0;
 
-		if (buildingCounter == 0) {
-			height = UnityEngine.Random.Range(minHeight, maxHeight);
+		if (BuildingsExist()) {
+			Building lastBuilding = GetLastBuilding();
+			float minNegativeDelta = Mathf.Max(minHeight - lastBuilding.height, -maxHeightDifference);
+			float maxPositiveDelta = Mathf.Min(maxHeight - lastBuilding.height, maxHeightDifference);
+			height = lastBuilding.height + UnityEngine.Random.Range(minNegativeDelta, maxPositiveDelta);
 		}
 		else {
-			float minNegativeDelta = Mathf.Max(minHeight - previousSize.y, -maxHeightDifference);
-			float maxPositiveDelta = Mathf.Min(maxHeight - previousSize.y, maxHeightDifference);
-			height = previousSize.y + UnityEngine.Random.Range(minNegativeDelta, maxPositiveDelta);
+			height = UnityEngine.Random.Range(minHeight, maxHeight);
 		}
 	
 		return height;
