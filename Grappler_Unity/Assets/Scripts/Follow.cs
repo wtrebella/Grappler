@@ -1,49 +1,53 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum Updatetype {
+public enum FollowUpdateType {
 	Update,
 	FixedUpdate
 }
 
-public enum FollowType {
+public enum FollowMovementType {
 	Smoothdamp,
 	Immediate
 }
 
 public class Follow : MonoBehaviour {
-	[SerializeField] Transform objectToFollow;
-	[SerializeField] Updatetype updateType;
-	[SerializeField] FollowType followType;
-
-	private float smoothDampTime = 0.15f;
+	[SerializeField] private Transform objectToFollow;
+	[SerializeField] private FollowUpdateType updateType;
+	[SerializeField] private FollowMovementType movementType;
+	[SerializeField] private float smoothDampTime = 0.13f;
+	
 	private Vector3 smoothDampVelocity;
 
 	private void Update() {
-		if (updateType == Updatetype.Update) UpdateMovement();
+		if (updateType == FollowUpdateType.Update) UpdateMovement();
 	}
 
 	private void FixedUpdate() {
-		if (updateType == Updatetype.FixedUpdate) UpdateMovement();
+		if (updateType == FollowUpdateType.FixedUpdate) UpdateMovement();
 	}
 
 	private void UpdateMovement() {
-		if (followType == FollowType.Smoothdamp) UpdateMovementSmoothDamp();
-		else if (followType == FollowType.Immediate) UpdateMovementImmediate();
+		if (movementType == FollowMovementType.Smoothdamp) UpdateMovementSmoothDamp();
+		else if (movementType == FollowMovementType.Immediate) UpdateMovementImmediate();
 	}
 
 	private void UpdateMovementSmoothDamp() {
-		Vector2 objectPosition = objectToFollow.position.ToVector2();
-		Vector3 cameraCurrentPosition = transform.position;
-		Vector3 cameraTargetPosition = objectPosition.ToVector3(cameraCurrentPosition.z);
-		Vector3 cameraSmoothedPosition = Vector3.SmoothDamp(cameraCurrentPosition, cameraTargetPosition, ref smoothDampVelocity, smoothDampTime);
-		transform.position = cameraSmoothedPosition;
+		transform.position = GetSmoothedTargetPosition();
 	}
 
 	private void UpdateMovementImmediate() {
+		transform.position = GetTargetPosition();
+	}
+
+	private Vector3 GetTargetPosition() {
 		Vector2 objectPosition = objectToFollow.position.ToVector2();
-		Vector3 cameraCurrentPosition = transform.position;
-		Vector3 cameraTargetPosition = objectPosition.ToVector3(cameraCurrentPosition.z);
-		transform.position = cameraTargetPosition;
+		Vector3 targetPosition = objectPosition.ToVector3(transform.position.z);
+		return targetPosition;
+	}
+
+	private Vector3 GetSmoothedTargetPosition() {
+		Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, GetTargetPosition(), ref smoothDampVelocity, smoothDampTime);
+		return smoothedPosition;
 	}
 }
