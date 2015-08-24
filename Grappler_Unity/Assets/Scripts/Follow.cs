@@ -13,6 +13,7 @@ public enum FollowMovementType {
 
 public class Follow : MonoBehaviour {
 	[SerializeField] private Transform objectToFollow;
+	[SerializeField] private Vector2 objectOffset;
 	[SerializeField] private FollowUpdateType updateType;
 	[SerializeField] private FollowMovementType movementType;
 	[SerializeField] private float smoothDampTime = 0.13f;
@@ -41,7 +42,7 @@ public class Follow : MonoBehaviour {
 	}
 
 	private Vector3 GetTargetPosition() {
-		Vector2 objectPosition = objectToFollow.position.ToVector2();
+		Vector2 objectPosition = objectToFollow.position.ToVector2() + objectOffset;
 		Vector3 targetPosition = objectPosition.ToVector3(transform.position.z);
 		return targetPosition;
 	}

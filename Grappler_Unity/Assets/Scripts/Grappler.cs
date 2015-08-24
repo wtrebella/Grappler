@@ -46,8 +46,10 @@ public class Grappler : StateMachine {
 	private void ConnectGrappleIfAble() {
 		Anchorable anchorable;
 		if (FindAnchorable(out anchorable)) {
-			ConnectGrapple(anchorable);
-			currentState = GrapplerStates.Grappling;
+			if (grappleRope.IsRetracted()) {
+				ConnectGrapple(anchorable);
+				currentState = GrapplerStates.Grappling;
+			}
 		}
 	}
 
