@@ -18,7 +18,7 @@ public class Score : MonoBehaviour {
 	}
 
 	private int GetScoreFromDistance(float distance) {
-		return (int)(distance / 50.0f);
+		return (int)(distance * WhitTools.UnityUnitsToGameUnits);
 	}
 
 	private void SetLabel(int score) {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 public class BuildingGenerator : MonoBehaviour {
+	public Action<Building> SignalCreatedFirstBuilding;
 	public Action<Building> SignalCreatedBuilding;
 
 	[SerializeField] Building buildingPrefab;
@@ -48,6 +49,9 @@ public class BuildingGenerator : MonoBehaviour {
 		building.SetBuildingAttributes(buildingAttributes);
 		buildings.Add(building);
 		if (SignalCreatedBuilding != null) SignalCreatedBuilding(building);
+		if (buildings.Count == 1) {
+			if (SignalCreatedFirstBuilding != null) SignalCreatedFirstBuilding(building);
+		}
 	}
 
 	private void RecycleOffScreenBuildings() {

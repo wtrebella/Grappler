@@ -6,14 +6,26 @@ using System.Collections.Generic;
 [RequireComponent(typeof(GrappleRope))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
+	[SerializeField] private BuildingGenerator buildingGenerator;
+	[SerializeField] private Vector2 startOffset = new Vector2(-40, 50);
+
 	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
+		buildingGenerator.SignalCreatedFirstBuilding += HandleCreatedFirstBuilding;
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
 		currentState = GrapplerStates.Falling;
+	}
+
+	private void HandleCreatedFirstBuilding(Building building) {
+		Rigidbody2D r = GetComponent<Rigidbody2D>();
+		Vector2 newPosition = building.topLeftCorner + startOffset;
+		r.isKinematic = true;
+		transform.position = newPosition;
+		r.isKinematic = false;
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision) {
