@@ -132,6 +132,7 @@ public class BuildingGenerator : MonoBehaviour {
 	}
 
 	private Color GetNextColor() {
-		return new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+		float val = UnityEngine.Random.value;
+		return new Color(val, val, val);
 	}
 }
