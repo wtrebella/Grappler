@@ -8,6 +8,7 @@ public class BuildingGenerator : MonoBehaviour {
 	public Action<Building> SignalCreatedBuilding;
 
 	[SerializeField] Building buildingPrefab;
+	[SerializeField] float margin = 8;
 	[SerializeField] float minWidth = 5;
 	[SerializeField] float maxWidth = 30;
 	[SerializeField] float minHeight = 50;
@@ -107,7 +108,7 @@ public class BuildingGenerator : MonoBehaviour {
 	}
 
 	private float GetNextX() {
-		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x;
+		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x + margin;
 		else return 0;
 	}
 

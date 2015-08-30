@@ -1,7 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum BuildingArtStyle {
+	Sprite,
+	Cube
+}
+
+[RequireComponent(typeof(tk2dSlicedSprite))]
 public class Building : MonoBehaviour {
+	[SerializeField] private Transform buildingCubeHolder;
+	[SerializeField] private BuildingArtStyle artStyle = BuildingArtStyle.Cube;
+
 	public Vector2 topLeftCorner {
 		get {
 			AssertAttributesHaveBeenSet();
@@ -71,19 +80,37 @@ public class Building : MonoBehaviour {
 
 	private void Awake() {
 		buildingSprite = GetComponentInChildren<tk2dSlicedSprite>();
+		if (ArtStyleIsCube()) {
+			buildingSprite.gameObject.SetActive(false);
+			buildingCubeHolder.gameObject.SetActive(true);
+		}
+		else if (ArtStyleIsSprite()) {
+			buildingSprite.gameObject.SetActive(true);
+			buildingCubeHolder.gameObject.SetActive(false);
+		}
 	}
 	
 	private void SetColor(Color color) {
-		buildingSprite.color = color;
+		if (ArtStyleIsSprite()) buildingSprite.color = color;
+		else if (ArtStyleIsCube()) buildingCubeHolder.GetComponentInChildren<MeshRenderer>().material.color = color;
 	}
 
 	private void SetSize(Vector2 size) {
 		float xInPixels = size.x * WhitTools.UnitsToPixels;
 		float yInPixels = size.y * WhitTools.UnitsToPixels;
-		buildingSprite.dimensions = new Vector2(xInPixels, yInPixels);
+		if (ArtStyleIsSprite()) buildingSprite.dimensions = new Vector2(xInPixels, yInPixels);
+		else if (ArtStyleIsCube()) buildingCubeHolder.localScale = new Vector3(size.x, size.y, size.x);
 	}
 
 	private void AssertAttributesHaveBeenSet() {
 		WhitTools.Assert(attributes != null, "no attributes set!");
+	}
+
+	private bool ArtStyleIsCube() {
+		return artStyle == BuildingArtStyle.Cube;
+	}
+
+	private bool ArtStyleIsSprite() {
+		return artStyle == BuildingArtStyle.Sprite;
 	}
 }
