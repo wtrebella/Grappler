@@ -17,8 +17,15 @@ public class Follow : MonoBehaviour {
 	[SerializeField] private FollowUpdateType updateType;
 	[SerializeField] private FollowMovementType movementType;
 	[SerializeField] private float smoothDampTime = 0.13f;
-	
+
+	private float initialDistance;
+	private Vector3 initialDirection;
 	private Vector3 smoothDampVelocity;
+
+	private void Awake() {
+		initialDistance = GetObjectToThisDistance();
+		initialDirection = GetObjectToThisDirection();
+	}
 
 	private void Update() {
 		if (updateType == FollowUpdateType.Update) UpdateMovement();
@@ -41,9 +48,18 @@ public class Follow : MonoBehaviour {
 		transform.position = GetTargetPosition();
 	}
 
+	private float GetObjectToThisDistance() {
+		return (transform.position - objectToFollow.position).magnitude;
+	}
+
+	private Vector3 GetObjectToThisDirection() {
+		return (transform.position - objectToFollow.position).normalized;
+	}
+
 	private Vector3 GetTargetPosition() {
-		Vector2 objectPosition = objectToFollow.position.ToVector2() + objectOffset;
-		Vector3 targetPosition = objectPosition.ToVector3(transform.position.z);
+		Vector3 objectPosition = objectToFollow.position;
+		Vector3 offsetObjectPosition = new Vector3(objectPosition.x + objectOffset.x, objectPosition.y + objectOffset.y, objectPosition.z);
+		Vector3 targetPosition = offsetObjectPosition + initialDirection * initialDistance;
 		return targetPosition;
 	}
 
