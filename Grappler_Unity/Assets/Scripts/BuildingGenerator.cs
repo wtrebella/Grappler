@@ -8,12 +8,13 @@ public class BuildingGenerator : MonoBehaviour {
 	public Action<Building> SignalCreatedBuilding;
 
 	[SerializeField] Building buildingPrefab;
-	[SerializeField] float margin = 8;
 	[SerializeField] float minWidth = 5;
 	[SerializeField] float maxWidth = 30;
 	[SerializeField] float minHeight = 50;
 	[SerializeField] float maxHeight = 100;
 	[SerializeField] float maxHeightDifference = 50;
+	[SerializeField] float minGapWidth = 5;
+	[SerializeField] float maxGapWidth = 20;
 
 	private List<Building> buildings;
 
@@ -34,7 +35,7 @@ public class BuildingGenerator : MonoBehaviour {
 		float x = GetNextX();
 		Vector2 size = GetNextSize();
 		Color color = GetNextColor();
-		Vector2 position = new Vector2(x, 0);
+		Vector3 position = new Vector3(x, 0, 0.1f);
 		
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
 		buildingAttributes.size = size;
@@ -108,8 +109,12 @@ public class BuildingGenerator : MonoBehaviour {
 	}
 
 	private float GetNextX() {
-		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x + margin;
+		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x + GetRandomGapWidth();
 		else return 0;
+	}
+
+	private float GetRandomGapWidth() {
+		return UnityEngine.Random.Range(minGapWidth, maxGapWidth);
 	}
 
 	private float GetNextWidth() {
