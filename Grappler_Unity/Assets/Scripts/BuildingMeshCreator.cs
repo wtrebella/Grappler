@@ -1,20 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class BuildingMeshCreator : MonoBehaviour {
 	[SerializeField] private int maxBuildingPieces = 3;
-	[SerializeField] private Vector3 minBuildingPieceDimensions = new Vector3(10, 50, 10);
-	[SerializeField] private Vector3 maxBuildingPieceDimensions = new Vector3(50, 300, 50);
+	[SerializeField] private Vector2 minWindowDimensions = new Vector2(2, 5);
+	[SerializeField] private Vector2 maxWindowDimensions = new Vector2(10, 25);
+	[SerializeField] private Vector3 minBuildingPieceSize = new Vector3(20, 50, 20);
+	[SerializeField] private Vector3 maxBuildingPieceSize = new Vector3(70, 300, 70);
 	[SerializeField] private float maxBuildingPieceInset = 20;
 
+	private List<Vector3> verts = new List<Vector3>();
+	private List<Vector2> uvs = new List<Vector2>();
+	private List<int> tris = new List<int>();
 	private MeshFilter meshFilter;
+	private UVRect windowUVRect;
+	private UVRect roofUVRect;
 
 	private void Awake() {
 		meshFilter = GetComponent<MeshFilter>();
 		meshFilter.mesh = new Mesh();
-
+		InitUVRects();
 		CreateMesh();
 	}
 
@@ -25,123 +33,281 @@ public class BuildingMeshCreator : MonoBehaviour {
 		}
 	}
 
+	private void InitUVRects() {
+		windowUVRect = new UVRect();
+		windowUVRect.bottomLeft = new Vector2(0, 0);
+		windowUVRect.topLeft = new Vector2(0, 1);
+		windowUVRect.topRight = new Vector2(0.5f, 1);
+		windowUVRect.bottomRight = new Vector2(0.5f, 0);
+
+		roofUVRect = new UVRect();
+		roofUVRect.bottomLeft = new Vector2(0.5f, 0);
+		roofUVRect.topLeft = new Vector2(0.5f, 1);
+		roofUVRect.topRight = new Vector2(1, 1);
+		roofUVRect.bottomRight = new Vector2(1, 0);
+	}
+
 	private void CreateMesh() {
 		int buildingPieces = Random.Range(1, maxBuildingPieces);
-
-		Vector3[] verts = new Vector3[16 * buildingPieces];
-		Vector2[] uvs = new Vector2[16 * buildingPieces];
-		int[] tris = new int[24 * buildingPieces]; // no need to draw the back or bottom faces, so 24 instead of 36
-		int vertIndex = 0;
-		int triIndex = 0;
-
+		
 		Vector3 previousDimensions = Vector3.zero;
 		Vector3 previousOrigin = Vector3.zero;
-		float previousInset = 0;
+
+		Vector2 windowDimensions = GetRandomWindowDimensions();
 
 		for (int i = 0; i < buildingPieces; i++) {
-			Vector3 dimensions = new Vector3(
-				Random.Range(minBuildingPieceDimensions.x, maxBuildingPieceDimensions.x),
-				Random.Range(minBuildingPieceDimensions.y, maxBuildingPieceDimensions.y),
-				Random.Range(minBuildingPieceDimensions.z, maxBuildingPieceDimensions.z)
-			);
-
-			float inset = Random.Range(0, maxBuildingPieceInset);
+			IntVector3 numWindows = GetRandomNumWindows(windowDimensions);
+			Vector3 buildingPieceDimensions = GetBuildingPieceDimensions(numWindows, windowDimensions);
+			float inset = GetRandomInset();
 
 			Vector3 origin = new Vector3(previousOrigin.x + previousDimensions.x, 0, inset);
 
-			// front face
-			verts[vertIndex + 0] = new Vector3(origin.x               , origin.y               , origin.z);
-			verts[vertIndex + 1] = new Vector3(origin.x               , origin.y + dimensions.y, origin.z);
-			verts[vertIndex + 2] = new Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z);
-			verts[vertIndex + 3] = new Vector3(origin.x + dimensions.x, origin.y               , origin.z);
+			Vector3 frontFaceOrigin = origin;
+			Vector3 rightFaceOrigin = new Vector3(origin.x + buildingPieceDimensions.x, origin.y, origin.z);
+			Vector3 leftFaceOrigin = new Vector3(origin.x, origin.y, origin.z + buildingPieceDimensions.z);
+			Vector3 topFaceOrigin = new Vector3(origin.x, origin.y + buildingPieceDimensions.y, origin.z);
+			
+			CreateFrontFace(frontFaceOrigin, numWindows, windowDimensions);
+			CreateRightFace(rightFaceOrigin, numWindows, windowDimensions);
+			CreateLeftFace(leftFaceOrigin, numWindows, windowDimensions);
+			CreateTopFace(topFaceOrigin, numWindows, windowDimensions);
 
-			// right face
-			verts[vertIndex + 4] = new Vector3(origin.x + dimensions.x, origin.y               , origin.z               );
-			verts[vertIndex + 5] = new Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z               );
-			verts[vertIndex + 6] = new Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z);
-			verts[vertIndex + 7] = new Vector3(origin.x + dimensions.x, origin.y               , origin.z + dimensions.z);
-
-			// left face
-			verts[vertIndex +  8] = new Vector3(origin.x               , origin.y               , origin.z + dimensions.z);
-			verts[vertIndex +  9] = new Vector3(origin.x               , origin.y + dimensions.y, origin.z + dimensions.z);
-			verts[vertIndex + 10] = new Vector3(origin.x               , origin.y + dimensions.y, origin.z               );
-			verts[vertIndex + 11] = new Vector3(origin.x               , origin.y               , origin.z               );
-
-			// top face
-			verts[vertIndex + 12] = new Vector3(origin.x               , origin.y + dimensions.y, origin.z               );
-			verts[vertIndex + 13] = new Vector3(origin.x               , origin.y + dimensions.y, origin.z + dimensions.z);
-			verts[vertIndex + 14] = new Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z + dimensions.z);
-			verts[vertIndex + 15] = new Vector3(origin.x + dimensions.x, origin.y + dimensions.y, origin.z               );
-
-			uvs[vertIndex + 0] = new Vector2(0, 0);
-			uvs[vertIndex + 1] = new Vector2(0, 1);
-			uvs[vertIndex + 2] = new Vector2(1, 1);
-			uvs[vertIndex + 3] = new Vector2(1, 0);
-
-			uvs[vertIndex + 4] = new Vector2(0, 0);
-			uvs[vertIndex + 5] = new Vector2(0, 1);
-			uvs[vertIndex + 6] = new Vector2(1, 1);
-			uvs[vertIndex + 7] = new Vector2(1, 0);
-
-			uvs[vertIndex +  8] = new Vector2(0, 0);
-			uvs[vertIndex +  9] = new Vector2(0, 1);
-			uvs[vertIndex + 10] = new Vector2(1, 1);
-			uvs[vertIndex + 11] = new Vector2(1, 0);
-
-			uvs[vertIndex + 12] = new Vector2(0, 0);
-			uvs[vertIndex + 13] = new Vector2(0, 1);
-			uvs[vertIndex + 14] = new Vector2(1, 1);
-			uvs[vertIndex + 15] = new Vector2(1, 0);
-
-			tris[triIndex + 0] = vertIndex + 0;
-			tris[triIndex + 1] = vertIndex + 1;
-			tris[triIndex + 2] = vertIndex + 2;
-
-			tris[triIndex + 3] = vertIndex + 2;
-			tris[triIndex + 4] = vertIndex + 3;
-			tris[triIndex + 5] = vertIndex + 0;
-
-			tris[triIndex + 6] = vertIndex + 4;
-			tris[triIndex + 7] = vertIndex + 5;
-			tris[triIndex + 8] = vertIndex + 6;
-
-			tris[triIndex +  9] = vertIndex + 6;
-			tris[triIndex + 10] = vertIndex + 7;
-			tris[triIndex + 11] = vertIndex + 4;
-
-			tris[triIndex + 12] = vertIndex +  8;
-			tris[triIndex + 13] = vertIndex +  9;
-			tris[triIndex + 14] = vertIndex + 10;
-
-			tris[triIndex + 15] = vertIndex + 10;
-			tris[triIndex + 16] = vertIndex + 11;
-			tris[triIndex + 17] = vertIndex +  8;
-
-			tris[triIndex + 18] = vertIndex + 12;
-			tris[triIndex + 19] = vertIndex + 13;
-			tris[triIndex + 20] = vertIndex + 14;
-
-			tris[triIndex + 21] = vertIndex + 14;
-			tris[triIndex + 22] = vertIndex + 15;
-			tris[triIndex + 23] = vertIndex + 12;
-
-			vertIndex += 16;
-			triIndex += 24;
-
-			previousDimensions = dimensions;
+			previousDimensions = buildingPieceDimensions;
 			previousOrigin = origin;
-			previousInset = inset;
 		}
 
-		meshFilter.mesh.vertices = verts;
-		meshFilter.mesh.triangles = tris;
-		meshFilter.mesh.uv = uvs;
+		meshFilter.mesh.vertices = verts.ToArray();
+		meshFilter.mesh.triangles = tris.ToArray();
+		meshFilter.mesh.uv = uvs.ToArray();
 
 		meshFilter.mesh.RecalculateBounds();
 		meshFilter.mesh.RecalculateNormals();
 	}
 
+	private void CreateFrontFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
+		for (int yWindow = 0; yWindow < numWindows.y; yWindow++) {
+			for (int xWindow = 0; xWindow < numWindows.x; xWindow++) {
+				int startIndex = verts.Count;
+				
+				verts.Add(new Vector3(
+					origin.x + (xWindow + 0) * windowDimensions.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z
+					));
+				
+				verts.Add(new Vector3(
+					origin.x + (xWindow + 0) * windowDimensions.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z
+					));
+				
+				verts.Add(new Vector3(
+					origin.x + (xWindow + 1) * windowDimensions.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z
+					));
+				
+				verts.Add(new Vector3(
+					origin.x + (xWindow + 1) * windowDimensions.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z
+					));
+				
+				uvs.Add(windowUVRect.bottomLeft);
+				uvs.Add(windowUVRect.topLeft);
+				uvs.Add(windowUVRect.topRight);
+				uvs.Add(windowUVRect.bottomRight);
+				
+				tris.Add(startIndex + 0);
+				tris.Add(startIndex + 1);
+				tris.Add(startIndex + 2);
+				
+				tris.Add(startIndex + 2);
+				tris.Add(startIndex + 3);
+				tris.Add(startIndex + 0);
+			}
+		}
+	}
+
+	private void CreateRightFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
+		for (int yWindow = 0; yWindow < numWindows.y; yWindow++) {
+			for (int xWindow = 0; xWindow < numWindows.x; xWindow++) {
+				int startIndex = verts.Count;
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z + (xWindow + 0) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z + (xWindow + 0) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z + (xWindow + 1) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z + (xWindow + 1) * windowDimensions.x
+					));
+				
+				uvs.Add(windowUVRect.bottomLeft);
+				uvs.Add(windowUVRect.topLeft);
+				uvs.Add(windowUVRect.topRight);
+				uvs.Add(windowUVRect.bottomRight);
+				
+				tris.Add(startIndex + 0);
+				tris.Add(startIndex + 1);
+				tris.Add(startIndex + 2);
+				
+				tris.Add(startIndex + 2);
+				tris.Add(startIndex + 3);
+				tris.Add(startIndex + 0);
+			}
+		}
+	}
+
+	private void CreateLeftFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
+		for (int yWindow = 0; yWindow < numWindows.y; yWindow++) {
+			for (int xWindow = 0; xWindow < numWindows.x; xWindow++) {
+				int startIndex = verts.Count;
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z - (xWindow + 0) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z - (xWindow + 0) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 1) * windowDimensions.y,
+					origin.z - (xWindow + 1) * windowDimensions.x
+					));
+				
+				verts.Add(new Vector3(
+					origin.x,
+					origin.y + (yWindow + 0) * windowDimensions.y,
+					origin.z - (xWindow + 1) * windowDimensions.x
+					));
+
+				Debug.Log(origin + ", " + verts[startIndex] + ", " + verts[startIndex+3]);
+				
+				uvs.Add(windowUVRect.bottomLeft);
+				uvs.Add(windowUVRect.topLeft);
+				uvs.Add(windowUVRect.topRight);
+				uvs.Add(windowUVRect.bottomRight);
+				
+				tris.Add(startIndex + 0);
+				tris.Add(startIndex + 1);
+				tris.Add(startIndex + 2);
+				
+				tris.Add(startIndex + 2);
+				tris.Add(startIndex + 3);
+				tris.Add(startIndex + 0);
+			}
+		}
+	}
+
+	private void CreateTopFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
+		int startIndex = verts.Count;
+		
+		verts.Add(new Vector3(
+			origin.x,
+			origin.y,
+			origin.z
+			));
+		
+		verts.Add(new Vector3(
+			origin.x,
+			origin.y,
+			origin.z + numWindows.x * windowDimensions.x
+			));
+		
+		verts.Add(new Vector3(
+			origin.x + numWindows.x * windowDimensions.x,
+			origin.y,
+			origin.z + numWindows.x * windowDimensions.x
+			));
+		
+		verts.Add(new Vector3(
+			origin.x + numWindows.x * windowDimensions.x,
+			origin.y,
+			origin.z
+			));
+		
+		uvs.Add(windowUVRect.bottomLeft);
+		uvs.Add(windowUVRect.topLeft);
+		uvs.Add(windowUVRect.topRight);
+		uvs.Add(windowUVRect.bottomRight);
+		
+		tris.Add(startIndex + 0);
+		tris.Add(startIndex + 1);
+		tris.Add(startIndex + 2);
+		
+		tris.Add(startIndex + 2);
+		tris.Add(startIndex + 3);
+		tris.Add(startIndex + 0);
+	}
+
+	private Vector3 GetBuildingPieceDimensions(IntVector3 numWindows, Vector2 windowDimensions) {
+		Vector3 v = new Vector3();
+		v.x = numWindows.x * windowDimensions.x;
+		v.y = numWindows.y * windowDimensions.y;
+		v.z = numWindows.z * windowDimensions.x;
+		return v;
+	}
+
+	private Vector2 GetRandomWindowDimensions() {
+		Vector2 windowDimensions = new Vector2(
+			Random.Range(minWindowDimensions.x, maxWindowDimensions.x),
+			Random.Range(minWindowDimensions.y, maxWindowDimensions.y)
+		);
+	
+		return windowDimensions;
+	}
+
+	private IntVector3 GetRandomNumWindows(Vector2 windowDimensions) {
+		IntVector3 minNumWindows = new IntVector3(
+			minBuildingPieceSize.x / windowDimensions.x,
+			minBuildingPieceSize.y / windowDimensions.y,
+			minBuildingPieceSize.z / windowDimensions.x
+		);
+
+		IntVector3 maxNumWindows = new IntVector3(
+			maxBuildingPieceSize.x / windowDimensions.x,
+			maxBuildingPieceSize.y / windowDimensions.y,
+			maxBuildingPieceSize.z / windowDimensions.x
+		);
+		
+		IntVector3 v = new IntVector3();
+		v.x = Random.Range(minNumWindows.x, maxNumWindows.x);
+		v.y = Random.Range(minNumWindows.y, maxNumWindows.y);
+		v.z = Random.Range(minNumWindows.z, maxNumWindows.z);
+
+		return v;
+	}
+
+	private float GetRandomInset() {
+		return Random.Range(0, maxBuildingPieceInset);
+	}
+
 	private void DestroyMesh() {
 		meshFilter.mesh = null;
+		verts.Clear();
+		uvs.Clear();
+		tris.Clear();
 	}
 }
