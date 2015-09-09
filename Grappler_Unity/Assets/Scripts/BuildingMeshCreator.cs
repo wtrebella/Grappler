@@ -5,31 +5,52 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class BuildingMeshCreator : MonoBehaviour {
+	[SerializeField] private Material mat1;
+	[SerializeField] private Material mat2;
+	[SerializeField] private Material mat3;
+
 	[SerializeField] private int maxBuildingPieces = 3;
 	[SerializeField] private Vector2 minWindowDimensions = new Vector2(2, 5);
 	[SerializeField] private Vector2 maxWindowDimensions = new Vector2(10, 25);
 	[SerializeField] private Vector3 minBuildingPieceSize = new Vector3(20, 50, 20);
 	[SerializeField] private Vector3 maxBuildingPieceSize = new Vector3(70, 300, 70);
-	[SerializeField] private float maxBuildingPieceInset = 20;
+	[SerializeField] private int maxNumWindowInset = 3;
 
 	private List<Vector3> verts = new List<Vector3>();
 	private List<Vector2> uvs = new List<Vector2>();
 	private List<int> tris = new List<int>();
 	private MeshFilter meshFilter;
+	private MeshRenderer meshRenderer;
 	private UVRect windowUVRect;
 	private UVRect roofUVRect;
 
 	private void Awake() {
 		meshFilter = GetComponent<MeshFilter>();
 		meshFilter.mesh = new Mesh();
+
+		meshRenderer = GetComponent<MeshRenderer>();
+
 		InitUVRects();
 		CreateMesh();
+		SetRandomMaterial();
+	}
+
+	private void SetRandomMaterial() {
+		GetComponent<MeshRenderer>().material = GetRandomMaterial();
+	}
+
+	private Material GetRandomMaterial() {
+		float val = Random.value;
+		if (val < 0.333f) return mat1;
+		else if (val < 0.666f) return mat2;
+		else return mat3;
 	}
 
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			DestroyMesh();
 			CreateMesh();
+			SetRandomMaterial();
 		}
 	}
 
@@ -48,7 +69,7 @@ public class BuildingMeshCreator : MonoBehaviour {
 	}
 
 	private void CreateMesh() {
-		int buildingPieces = Random.Range(1, maxBuildingPieces);
+		int buildingPieces = Random.Range(1, maxBuildingPieces + 1);
 		
 		Vector3 previousDimensions = Vector3.zero;
 		Vector3 previousOrigin = Vector3.zero;
@@ -58,15 +79,14 @@ public class BuildingMeshCreator : MonoBehaviour {
 		for (int i = 0; i < buildingPieces; i++) {
 			IntVector3 numWindows = GetRandomNumWindows(windowDimensions);
 			Vector3 buildingPieceDimensions = GetBuildingPieceDimensions(numWindows, windowDimensions);
-			float inset = GetRandomInset();
+			float inset = GetRandomInset(windowDimensions);
 
 			Vector3 origin = new Vector3(previousOrigin.x + previousDimensions.x, 0, inset);
-
 			Vector3 frontFaceOrigin = origin;
 			Vector3 rightFaceOrigin = new Vector3(origin.x + buildingPieceDimensions.x, origin.y, origin.z);
 			Vector3 leftFaceOrigin = new Vector3(origin.x, origin.y, origin.z + buildingPieceDimensions.z);
 			Vector3 topFaceOrigin = new Vector3(origin.x, origin.y + buildingPieceDimensions.y, origin.z);
-			
+
 			CreateFrontFace(frontFaceOrigin, numWindows, windowDimensions);
 			CreateRightFace(rightFaceOrigin, numWindows, windowDimensions);
 			CreateLeftFace(leftFaceOrigin, numWindows, windowDimensions);
@@ -131,33 +151,33 @@ public class BuildingMeshCreator : MonoBehaviour {
 
 	private void CreateRightFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
 		for (int yWindow = 0; yWindow < numWindows.y; yWindow++) {
-			for (int xWindow = 0; xWindow < numWindows.x; xWindow++) {
+			for (int zWindow = 0; zWindow < numWindows.z; zWindow++) {
 				int startIndex = verts.Count;
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 0) * windowDimensions.y,
-					origin.z + (xWindow + 0) * windowDimensions.x
+					origin.z + (zWindow + 0) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 1) * windowDimensions.y,
-					origin.z + (xWindow + 0) * windowDimensions.x
+					origin.z + (zWindow + 0) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 1) * windowDimensions.y,
-					origin.z + (xWindow + 1) * windowDimensions.x
+					origin.z + (zWindow + 1) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 0) * windowDimensions.y,
-					origin.z + (xWindow + 1) * windowDimensions.x
+					origin.z + (zWindow + 1) * windowDimensions.x
 					));
-				
+
 				uvs.Add(windowUVRect.bottomLeft);
 				uvs.Add(windowUVRect.topLeft);
 				uvs.Add(windowUVRect.topRight);
@@ -176,35 +196,33 @@ public class BuildingMeshCreator : MonoBehaviour {
 
 	private void CreateLeftFace(Vector3 origin, IntVector3 numWindows, Vector2 windowDimensions) {
 		for (int yWindow = 0; yWindow < numWindows.y; yWindow++) {
-			for (int xWindow = 0; xWindow < numWindows.x; xWindow++) {
+			for (int zWindow = 0; zWindow < numWindows.z; zWindow++) {
 				int startIndex = verts.Count;
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 0) * windowDimensions.y,
-					origin.z - (xWindow + 0) * windowDimensions.x
+					origin.z - (zWindow + 0) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 1) * windowDimensions.y,
-					origin.z - (xWindow + 0) * windowDimensions.x
+					origin.z - (zWindow + 0) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 1) * windowDimensions.y,
-					origin.z - (xWindow + 1) * windowDimensions.x
+					origin.z - (zWindow + 1) * windowDimensions.x
 					));
 				
 				verts.Add(new Vector3(
 					origin.x,
 					origin.y + (yWindow + 0) * windowDimensions.y,
-					origin.z - (xWindow + 1) * windowDimensions.x
+					origin.z - (zWindow + 1) * windowDimensions.x
 					));
 
-				Debug.Log(origin + ", " + verts[startIndex] + ", " + verts[startIndex+3]);
-				
 				uvs.Add(windowUVRect.bottomLeft);
 				uvs.Add(windowUVRect.topLeft);
 				uvs.Add(windowUVRect.topRight);
@@ -233,13 +251,13 @@ public class BuildingMeshCreator : MonoBehaviour {
 		verts.Add(new Vector3(
 			origin.x,
 			origin.y,
-			origin.z + numWindows.x * windowDimensions.x
+			origin.z + numWindows.z * windowDimensions.x
 			));
 		
 		verts.Add(new Vector3(
 			origin.x + numWindows.x * windowDimensions.x,
 			origin.y,
-			origin.z + numWindows.x * windowDimensions.x
+			origin.z + numWindows.z * windowDimensions.x
 			));
 		
 		verts.Add(new Vector3(
@@ -248,10 +266,10 @@ public class BuildingMeshCreator : MonoBehaviour {
 			origin.z
 			));
 		
-		uvs.Add(windowUVRect.bottomLeft);
-		uvs.Add(windowUVRect.topLeft);
-		uvs.Add(windowUVRect.topRight);
-		uvs.Add(windowUVRect.bottomRight);
+		uvs.Add(roofUVRect.bottomLeft);
+		uvs.Add(roofUVRect.topLeft);
+		uvs.Add(roofUVRect.topRight);
+		uvs.Add(roofUVRect.bottomRight);
 		
 		tris.Add(startIndex + 0);
 		tris.Add(startIndex + 1);
@@ -300,8 +318,10 @@ public class BuildingMeshCreator : MonoBehaviour {
 		return v;
 	}
 
-	private float GetRandomInset() {
-		return Random.Range(0, maxBuildingPieceInset);
+	private float GetRandomInset(Vector2 windowDimensions) {
+		int numWindowInset = Random.Range(0, maxNumWindowInset + 1);
+		float inset = numWindowInset * windowDimensions.x;
+		return inset;	
 	}
 
 	private void DestroyMesh() {
