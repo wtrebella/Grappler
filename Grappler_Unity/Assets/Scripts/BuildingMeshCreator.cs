@@ -57,23 +57,28 @@ public class BuildingMeshCreator : MonoBehaviour {
 	}
 
 	private void InitUVRects() {
+		float padding = 0.1f;
+
 		windowUVRect = new UVRect();
 		windowUVRect.bottomLeft = new Vector2(0, 0);
 		windowUVRect.topLeft = new Vector2(0, 0.5f);
 		windowUVRect.topRight = new Vector2(0.25f, 0.5f);
 		windowUVRect.bottomRight = new Vector2(0.25f, 0);
+		windowUVRect.SetPadding(padding);
 
 		roofUVRect = new UVRect();
 		roofUVRect.bottomLeft = new Vector2(0.5f, 0);
 		roofUVRect.topLeft = new Vector2(0.5f, 1);
 		roofUVRect.topRight = new Vector2(1, 1);
 		roofUVRect.bottomRight = new Vector2(1, 0);
+		roofUVRect.SetPadding(padding);
 
 		windowMarginUVRect = new UVRect();
 		windowMarginUVRect.bottomLeft = new Vector2(0.25f, 0);
 		windowMarginUVRect.topLeft = new Vector2(0.25f, 0.5f);
 		windowMarginUVRect.topRight = new Vector2(0.5f, 0.5f);
 		windowMarginUVRect.bottomRight = new Vector2(0.5f, 0);
+		windowMarginUVRect.SetPadding(padding);
 	}
 
 	private void CreateMesh() {
@@ -96,7 +101,7 @@ public class BuildingMeshCreator : MonoBehaviour {
 			Vector3 leftFaceOrigin = new Vector3(origin.x, origin.y, origin.z + buildingPieceDimensions.z);
 			Vector3 topFaceOrigin = new Vector3(origin.x, origin.y + buildingPieceDimensions.y, origin.z);
 
-			CreateFrontFace(frontFaceOrigin, numWindows, windowSize, marginSize);
+			CreateFrontFace(frontFaceOrigin, numWindows, windowSize, marginSize, buildingPieceDimensions);
 //			CreateRightFace(rightFaceOrigin, numWindows, windowSize, windowMargins);
 //			CreateLeftFace(leftFaceOrigin, numWindows, windowSize, windowMargins);
 //			CreateTopFace(topFaceOrigin, numWindows, windowSize, windowMargins);
@@ -112,8 +117,256 @@ public class BuildingMeshCreator : MonoBehaviour {
 		meshFilter.mesh.RecalculateBounds();
 		meshFilter.mesh.RecalculateNormals();
 	}
-	
-	private void CreateFrontFace(Vector3 origin, IntVector3 numWindows, Vector2 windowSize, Vector2 marginSize) {
+
+	private void CreateChunkWithNoWindow(int chunkX, int chunkY, IntVector3 chunkCount, Vector3 origin, IntVector3 numWindows, Vector3 buildingPieceDimensions) {
+		int startIndex = verts.Count;
+
+		Vector2 squareSize = Vector2.zero;
+		Vector2 squareOrigin = Vector2.zero;
+
+		if (numWindows.x == 0 && numWindows.y == 0) {
+			squareSize = new Vector2(buildingPieceDimensions.x, buildingPieceDimensions.y);
+			squareOrigin = origin;
+		}
+		else if (numWindows.x == 0) {
+			squareSize = new Vector2(buildingPieceDimensions.x, buildingPieceDimensions.y / chunkCount.y);
+			squareOrigin = new Vector2(origin.x, origin.y + squareSize.y * chunkY);
+		}
+		else if (numWindows.y == 0) {
+			squareSize = new Vector2(buildingPieceDimensions.x / chunkCount.x, buildingPieceDimensions.y);
+			squareOrigin = new Vector2(origin.x + squareSize.x * chunkX, origin.y);
+		}
+			
+		verts.Add(new Vector3(
+			squareOrigin.x,
+			squareOrigin.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			squareOrigin.x,
+			squareOrigin.y + squareSize.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			squareOrigin.x + squareSize.x,
+			squareOrigin.y + squareSize.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			squareOrigin.x + squareSize.x,
+			squareOrigin.y,
+			origin.z
+		));
+		
+		uvs.Add(windowMarginUVRect.bottomLeft);
+		uvs.Add(windowMarginUVRect.topLeft);
+		uvs.Add(windowMarginUVRect.topRight);
+		uvs.Add(windowMarginUVRect.bottomRight);
+		
+		tris.Add(startIndex + 0);
+		tris.Add(startIndex + 1);
+		tris.Add(startIndex + 2);
+		
+		tris.Add(startIndex + 2);
+		tris.Add(startIndex + 3);
+		tris.Add(startIndex + 0);
+	}
+
+	private void CreateChunkWithWindow(int chunkX, int chunkY, IntVector3 chunkCount, Vector3 origin, IntVector3 numWindows, Vector2 windowSize, Vector2 marginSize) {
+		int startIndex = verts.Count;
+		
+		Vector2 marginCornerOrigin = new Vector2(
+			origin.x + chunkX * (windowSize.x + marginSize.x),
+			origin.y + chunkY * (windowSize.y + marginSize.y)
+			);
+		
+		Vector2 marginHorizontalOrigin = new Vector2(
+			origin.x + chunkX * (windowSize.x + marginSize.x) + marginSize.x,
+			origin.y + chunkY * (windowSize.y + marginSize.y)
+			);
+		
+		Vector2 marginVerticalOrigin = new Vector2(
+			origin.x + chunkX * (windowSize.x + marginSize.x),
+			origin.y + chunkY * (windowSize.y + marginSize.y) + marginSize.y
+			);
+		
+		Vector2 windowOrigin = new Vector2(
+			origin.x + chunkX * (windowSize.x + marginSize.x) + marginSize.x,
+			origin.y + chunkY * (windowSize.y + marginSize.y) + marginSize.y
+			);
+		
+		bool atLastX = chunkX == chunkCount.x;
+		bool atLastY = chunkY == chunkCount.y;
+		
+		// corner margin
+		verts.Add(new Vector3(
+			marginCornerOrigin.x,
+			marginCornerOrigin.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			marginCornerOrigin.x,
+			marginCornerOrigin.y + marginSize.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			marginCornerOrigin.x + marginSize.x,
+			marginCornerOrigin.y + marginSize.y,
+			origin.z
+		));
+		
+		verts.Add(new Vector3(
+			marginCornerOrigin.x + marginSize.x,
+			marginCornerOrigin.y,
+			origin.z
+		));
+		
+		uvs.Add(windowMarginUVRect.bottomLeft);
+		uvs.Add(windowMarginUVRect.topLeft);
+		uvs.Add(windowMarginUVRect.topRight);
+		uvs.Add(windowMarginUVRect.bottomRight);
+		
+		tris.Add(startIndex + 0);
+		tris.Add(startIndex + 1);
+		tris.Add(startIndex + 2);
+		
+		tris.Add(startIndex + 2);
+		tris.Add(startIndex + 3);
+		tris.Add(startIndex + 0);
+		
+		startIndex += 4;
+		
+		// horizontal margin
+		if (!atLastX) {
+			verts.Add(new Vector3(
+				marginHorizontalOrigin.x,
+				marginHorizontalOrigin.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginHorizontalOrigin.x,
+				marginHorizontalOrigin.y + marginSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginHorizontalOrigin.x + windowSize.x,
+				marginHorizontalOrigin.y + marginSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginHorizontalOrigin.x + windowSize.x,
+				marginHorizontalOrigin.y,
+				origin.z
+			));
+			
+			uvs.Add(windowMarginUVRect.bottomLeft);
+			uvs.Add(windowMarginUVRect.topLeft);
+			uvs.Add(windowMarginUVRect.topRight);
+			uvs.Add(windowMarginUVRect.bottomRight);
+			
+			tris.Add(startIndex + 0);
+			tris.Add(startIndex + 1);
+			tris.Add(startIndex + 2);
+			
+			tris.Add(startIndex + 2);
+			tris.Add(startIndex + 3);
+			tris.Add(startIndex + 0);
+			
+			startIndex += 4;
+		}
+		
+		// vertical margin
+		if (!atLastY) {
+			verts.Add(new Vector3(
+				marginVerticalOrigin.x,
+				marginVerticalOrigin.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginVerticalOrigin.x,
+				marginVerticalOrigin.y + windowSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginVerticalOrigin.x + marginSize.x,
+				marginVerticalOrigin.y + windowSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				marginVerticalOrigin.x + marginSize.x,
+				marginVerticalOrigin.y,
+				origin.z
+			));
+			
+			uvs.Add(windowMarginUVRect.bottomLeft);
+			uvs.Add(windowMarginUVRect.topLeft);
+			uvs.Add(windowMarginUVRect.topRight);
+			uvs.Add(windowMarginUVRect.bottomRight);
+			
+			tris.Add(startIndex + 0);
+			tris.Add(startIndex + 1);
+			tris.Add(startIndex + 2);
+			
+			tris.Add(startIndex + 2);
+			tris.Add(startIndex + 3);
+			tris.Add(startIndex + 0);
+			
+			startIndex += 4;
+		}
+		
+		// window
+		if (!atLastX && !atLastY) {
+			verts.Add(new Vector3(
+				windowOrigin.x,
+				windowOrigin.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				windowOrigin.x,
+				windowOrigin.y + windowSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				windowOrigin.x + windowSize.x,
+				windowOrigin.y + windowSize.y,
+				origin.z
+			));
+			
+			verts.Add(new Vector3(
+				windowOrigin.x + windowSize.x,
+				windowOrigin.y,
+				origin.z
+			));
+			
+			uvs.Add(windowUVRect.bottomLeft);
+			uvs.Add(windowUVRect.topLeft);
+			uvs.Add(windowUVRect.topRight);
+			uvs.Add(windowUVRect.bottomRight);
+			
+			tris.Add(startIndex + 0);
+			tris.Add(startIndex + 1);
+			tris.Add(startIndex + 2);
+			
+			tris.Add(startIndex + 2);
+			tris.Add(startIndex + 3);
+			tris.Add(startIndex + 0);
+		}
+	}
+
+	private void CreateFrontFace(Vector3 origin, IntVector3 numWindows, Vector2 windowSize, Vector2 marginSize, Vector3 buildingPieceDimensions) {
 		IntVector3 chunkCount = new IntVector3(
 			Mathf.Max(numWindows.x, 1),
 			Mathf.Max(numWindows.y, 1),
@@ -122,198 +375,8 @@ public class BuildingMeshCreator : MonoBehaviour {
 
 		for (int y = 0; y <= chunkCount.y; y++) {
 			for (int x = 0; x <= chunkCount.x; x++) {
-				if (chunkCount.x == 1 || chunkCount.y == 1) {
-
-				}
-				else {
-					int startIndex = verts.Count;
-					bool atLastX = x == chunkCount.x;
-					bool atLastY = y == chunkCount.y;
-
-					Vector2 marginCornerOrigin = new Vector2(
-						origin.x + x * (windowSize.x + marginSize.x),
-						origin.y + y * (windowSize.y + marginSize.y)
-					);
-
-					Vector2 marginHorizontalOrigin = new Vector2(
-						origin.x + x * (windowSize.x + marginSize.x) + marginSize.x,
-						origin.y + y * (windowSize.y + marginSize.y)
-					);
-
-					Vector2 marginVerticalOrigin = new Vector2(
-						origin.x + x * (windowSize.x + marginSize.x),
-						origin.y + y * (windowSize.y + marginSize.y) + marginSize.y
-					);
-	
-					Vector2 windowOrigin = new Vector2(
-						origin.x + x * (windowSize.x + marginSize.x) + marginSize.x,
-						origin.y + y * (windowSize.y + marginSize.y) + marginSize.y
-					);
-
-					// corner margin
-					verts.Add(new Vector3(
-						marginCornerOrigin.x,
-						marginCornerOrigin.y,
-						origin.z
-					));
-					
-					verts.Add(new Vector3(
-						marginCornerOrigin.x,
-						marginCornerOrigin.y + marginSize.y,
-						origin.z
-					));
-					
-					verts.Add(new Vector3(
-						marginCornerOrigin.x + marginSize.x,
-						marginCornerOrigin.y + marginSize.y,
-						origin.z
-					));
-					
-					verts.Add(new Vector3(
-						marginCornerOrigin.x + marginSize.x,
-						marginCornerOrigin.y,
-						origin.z
-					));
-
-					uvs.Add(windowMarginUVRect.bottomLeft);
-					uvs.Add(windowMarginUVRect.topLeft);
-					uvs.Add(windowMarginUVRect.topRight);
-					uvs.Add(windowMarginUVRect.bottomRight);
-					
-					tris.Add(startIndex + 0);
-					tris.Add(startIndex + 1);
-					tris.Add(startIndex + 2);
-					
-					tris.Add(startIndex + 2);
-					tris.Add(startIndex + 3);
-					tris.Add(startIndex + 0);
-
-					startIndex += 4;
-
-					// horizontal margin
-					if (!atLastX) {
-						verts.Add(new Vector3(
-							marginHorizontalOrigin.x,
-							marginHorizontalOrigin.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							marginHorizontalOrigin.x,
-							marginHorizontalOrigin.y + marginSize.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							marginHorizontalOrigin.x + windowSize.x,
-							marginHorizontalOrigin.y + marginSize.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							marginHorizontalOrigin.x + windowSize.x,
-							marginHorizontalOrigin.y,
-							origin.z
-						));
-
-						uvs.Add(windowMarginUVRect.bottomLeft);
-						uvs.Add(windowMarginUVRect.topLeft);
-						uvs.Add(windowMarginUVRect.topRight);
-						uvs.Add(windowMarginUVRect.bottomRight);
-						
-						tris.Add(startIndex + 0);
-						tris.Add(startIndex + 1);
-						tris.Add(startIndex + 2);
-						
-						tris.Add(startIndex + 2);
-						tris.Add(startIndex + 3);
-						tris.Add(startIndex + 0);
-						
-						startIndex += 4;
-					}
-
-					// vertical margin
-					if (!atLastY) {
-						verts.Add(new Vector3(
-							marginVerticalOrigin.x,
-							marginVerticalOrigin.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							marginVerticalOrigin.x,
-							marginVerticalOrigin.y + windowSize.y,
-							origin.z
-						));
-					
-						verts.Add(new Vector3(
-							marginVerticalOrigin.x + marginSize.x,
-							marginVerticalOrigin.y + windowSize.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							marginVerticalOrigin.x + marginSize.x,
-							marginVerticalOrigin.y,
-							origin.z
-						));
-
-						uvs.Add(windowMarginUVRect.bottomLeft);
-						uvs.Add(windowMarginUVRect.topLeft);
-						uvs.Add(windowMarginUVRect.topRight);
-						uvs.Add(windowMarginUVRect.bottomRight);
-						
-						tris.Add(startIndex + 0);
-						tris.Add(startIndex + 1);
-						tris.Add(startIndex + 2);
-						
-						tris.Add(startIndex + 2);
-						tris.Add(startIndex + 3);
-						tris.Add(startIndex + 0);
-						
-						startIndex += 4;
-					}
-
-					// window
-					if (!atLastX && !atLastY) {
-						verts.Add(new Vector3(
-							windowOrigin.x,
-							windowOrigin.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							windowOrigin.x,
-							windowOrigin.y + windowSize.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							windowOrigin.x + windowSize.x,
-							windowOrigin.y + windowSize.y,
-							origin.z
-						));
-						
-						verts.Add(new Vector3(
-							windowOrigin.x + windowSize.x,
-							windowOrigin.y,
-							origin.z
-						));
-
-						uvs.Add(windowUVRect.bottomLeft);
-						uvs.Add(windowUVRect.topLeft);
-						uvs.Add(windowUVRect.topRight);
-						uvs.Add(windowUVRect.bottomRight);
-						
-						tris.Add(startIndex + 0);
-						tris.Add(startIndex + 1);
-						tris.Add(startIndex + 2);
-						
-						tris.Add(startIndex + 2);
-						tris.Add(startIndex + 3);
-						tris.Add(startIndex + 0);
-					}
-				}
+				if (numWindows.x == 0 || numWindows.y == 0) CreateChunkWithNoWindow(x, y, chunkCount, origin, numWindows, buildingPieceDimensions);
+				else CreateChunkWithWindow(x, y, chunkCount, origin, numWindows, windowSize, marginSize);
 			}
 		}
 	}
