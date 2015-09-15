@@ -131,31 +131,31 @@ public class BuildingMeshCreator : MonoBehaviour {
 		meshFilter.mesh.RecalculateNormals();
 	}
 
-	private void CreateSquare(Vector3 origin, Vector3 size, UVRect uvRect) {
+	private void CreateSquare(Vector3 squareOrigin, Vector3 squareSize, UVRect uvRect) {
 		int startIndex = verts.Count;
 
 		verts.Add(new Vector3(
-			origin.x,
-			origin.y,
-			origin.z
+			squareOrigin.x,
+			squareOrigin.y,
+			squareOrigin.z
 		));
 		
 		verts.Add(new Vector3(
-			origin.x,
-			origin.y + size.y,
-			origin.z
+			squareOrigin.x,
+			squareOrigin.y + squareSize.y,
+			squareOrigin.z
 		));
 		
 		verts.Add(new Vector3(
-			origin.x + size.x,
-			origin.y + size.y,
-			origin.z + size.z
+			squareOrigin.x + squareSize.x,
+			squareOrigin.y + squareSize.y,
+			squareOrigin.z + squareSize.z
 		));
 		
 		verts.Add(new Vector3(
-			origin.x + size.x,
-			origin.y,
-			origin.z + size.z
+			squareOrigin.x + squareSize.x,
+			squareOrigin.y,
+			squareOrigin.z + squareSize.z
 		));
 		
 		uvs.Add(uvRect.bottomLeft);
@@ -172,82 +172,32 @@ public class BuildingMeshCreator : MonoBehaviour {
 		tris.Add(startIndex + 0);
 	}
 
-	private void CreateChunkWithNoWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
-		int startIndex = verts.Count;
-
-		Vector3 squareSize = Vector3.zero;
-		Vector3 squareOrigin = Vector3.zero;
-
-		if (attributes.numWindows.x == 0 && attributes.numWindows.y == 0) {
-			squareSize = new Vector3(attributes.buildingPieceDimensions.x, attributes.buildingPieceDimensions.y, 0);
-			squareOrigin = attributes.origin;
-		}
-		else if (attributes.numWindows.x == 0) {
-			squareSize = new Vector3(attributes.buildingPieceDimensions.x, attributes.buildingPieceDimensions.y / attributes.chunkCount.y, 0);
-			squareOrigin = new Vector3(attributes.origin.x, attributes.origin.y + squareSize.y * chunkY, attributes.origin.z);
-		}
-		else if (attributes.numWindows.y == 0) {
-			squareSize = new Vector3(attributes.buildingPieceDimensions.x / attributes.chunkCount.x, attributes.buildingPieceDimensions.y, 0);
-			squareOrigin = new Vector3(attributes.origin.x + squareSize.x * chunkX, attributes.origin.y, attributes.origin.z);
-		}
+	private void CreateFrontFaceChunkWithNoWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
+		Vector3 squareSize = attributes.GetFrontFaceSquareSize();
+		Vector3 squareOrigin = attributes.GetFrontFaceNonWindowChunkOrigin(chunkX, chunkY, squareSize);
 			
 		CreateSquare(squareOrigin, squareSize, windowMarginUVRect);
 	}
 
-	private void CreateChunkWithWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
-		Vector3 marginCornerOrigin = new Vector3(
-			attributes.origin.x + chunkX * (attributes.windowSize.x + attributes.marginSize.x),
-			attributes.origin.y + chunkY * (attributes.windowSize.y + attributes.marginSize.y),
-			attributes.origin.z
-		);
-
-		Vector3 marginHorizontalOrigin = new Vector3(
-			attributes.origin.x + chunkX * (attributes.windowSize.x + attributes.marginSize.x) + attributes.marginSize.x,
-			attributes.origin.y + chunkY * (attributes.windowSize.y + attributes.marginSize.y),
-			attributes.origin.z
-		);
+	private void CreateFrontFaceChunkWithWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
+		Vector3 cornerMarginOrigin = attributes.GetFrontFaceCornerMarginOrigin(chunkX, chunkY);
+		Vector3 horizontalMarginOrigin = attributes.GetFrontFaceHorizontalMarginOrigin(chunkX, chunkY);
+		Vector3 verticalMarginOrigin = attributes.GetFrontFaceVerticalMarginOrigin(chunkX, chunkY);
+		Vector3 windowOrigin = attributes.GetFrontFaceWindowOrigin(chunkX, chunkY);
 		
-		Vector3 marginVerticalOrigin = new Vector3(
-			attributes.origin.x + chunkX * (attributes.windowSize.x + attributes.marginSize.x),
-			attributes.origin.y + chunkY * (attributes.windowSize.y + attributes.marginSize.y) + attributes.marginSize.y,
-			attributes.origin.z
-		);
-
-		Vector3 windowOrigin = new Vector3(
-			attributes.origin.x + chunkX * (attributes.windowSize.x + attributes.marginSize.x) + attributes.marginSize.x,
-			attributes.origin.y + chunkY * (attributes.windowSize.y + attributes.marginSize.y) + attributes.marginSize.y,
-			attributes.origin.z
-		);
-		
-		bool atLastX = chunkX == attributes.chunkCount.x;
-		bool atLastY = chunkY == attributes.chunkCount.y;
-		
-		// corner margin
-		CreateSquare(marginCornerOrigin, attributes.marginSize, windowMarginUVRect);
-	
-		// horizontal margin
-		if (!atLastX) {
-			Vector3 size = new Vector3(attributes.windowSize.x, attributes.marginSize.y, 0);
-			CreateSquare(marginHorizontalOrigin, size, windowMarginUVRect);
-		}
-		
-		// vertical margin
-		if (!atLastY) {
-			Vector3 size = new Vector3(attributes.marginSize.x, attributes.windowSize.y, 0);
-			CreateSquare(marginVerticalOrigin, size, windowMarginUVRect);
-		}
-		
-		// window
-		if (!atLastX && !atLastY) CreateSquare(windowOrigin, attributes.windowSize, windowUVRect);
+		CreateSquare(cornerMarginOrigin, attributes.GetFrontFaceCornerMarginSize(), windowMarginUVRect);
+		if (!attributes.IsLastChunkX(chunkX)) CreateSquare(horizontalMarginOrigin, attributes.GetFrontFaceHorizontalMarginSize(), windowMarginUVRect);
+		if (!attributes.IsLastChunkY(chunkY)) CreateSquare(verticalMarginOrigin, attributes.GetFrontFaceVerticalMarginSize(), windowMarginUVRect);
+		if (!attributes.IsLastChunkX(chunkX) && !attributes.IsLastChunkY(chunkY)) CreateSquare(windowOrigin, attributes.GetFrontFaceWindowSize(), windowUVRect);
 	}
 
 	private void CreateFrontFace(BuildingPieceAttributes attributes) {
-		Vector3 frontFaceOrigin = attributes.origin;
+		Vector3 frontFaceOrigin = attributes.GetFrontFaceOrigin();
 
 		for (int y = 0; y <= attributes.chunkCount.y; y++) {
 			for (int x = 0; x <= attributes.chunkCount.x; x++) {
-				if (attributes.numWindows.x == 0 || attributes.numWindows.y == 0) CreateChunkWithNoWindow(x, y, attributes);
-				else CreateChunkWithWindow(x, y, attributes);
+				if (attributes.numWindows.x == 0 || attributes.numWindows.y == 0) CreateFrontFaceChunkWithNoWindow(x, y, attributes);
+				else CreateFrontFaceChunkWithWindow(x, y, attributes);
 			}
 		}
 	}
