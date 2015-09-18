@@ -111,8 +111,9 @@ public class BuildingMeshCreator : MonoBehaviour {
 			buildingPieceAttributes.numWindows = numWindows;
 			buildingPieceAttributes.windowSize = windowSize;
 			buildingPieceAttributes.marginSize = marginSize;
-			buildingPieceAttributes.buildingPieceDimensions = buildingPieceDimensions;
+			buildingPieceAttributes.dimensions = buildingPieceDimensions;
 			buildingPieceAttributes.chunkCount = chunkCount;	
+			buildingPieceAttributes.InitializeFaceAttributes();
 
 			CreateFrontFace(buildingPieceAttributes);
 //			CreateRightFace(rightFaceOrigin, numWindows, windowSize, windowMargins);
@@ -131,31 +132,31 @@ public class BuildingMeshCreator : MonoBehaviour {
 		meshFilter.mesh.RecalculateNormals();
 	}
 
-	private void CreateSquare(Vector3 squareOrigin, Vector3 squareSize, UVRect uvRect) {
+	private void CreateChunk(Rect3D chunkRect, UVRect uvRect) {
 		int startIndex = verts.Count;
 
 		verts.Add(new Vector3(
-			squareOrigin.x,
-			squareOrigin.y,
-			squareOrigin.z
+			chunkRect.origin.x,
+			chunkRect.origin.y,
+			chunkRect.origin.z
 		));
 		
 		verts.Add(new Vector3(
-			squareOrigin.x,
-			squareOrigin.y + squareSize.y,
-			squareOrigin.z
+			chunkRect.origin.x,
+			chunkRect.origin.y + chunkRect.size.y,
+			chunkRect.origin.z
 		));
 		
 		verts.Add(new Vector3(
-			squareOrigin.x + squareSize.x,
-			squareOrigin.y + squareSize.y,
-			squareOrigin.z + squareSize.z
+			chunkRect.origin.x + chunkRect.size.x,
+			chunkRect.origin.y + chunkRect.size.y,
+			chunkRect.origin.z + chunkRect.size.z
 		));
 		
 		verts.Add(new Vector3(
-			squareOrigin.x + squareSize.x,
-			squareOrigin.y,
-			squareOrigin.z + squareSize.z
+			chunkRect.origin.x + chunkRect.size.x,
+			chunkRect.origin.y,
+			chunkRect.origin.z + chunkRect.size.z
 		));
 		
 		uvs.Add(uvRect.bottomLeft);
@@ -171,35 +172,33 @@ public class BuildingMeshCreator : MonoBehaviour {
 		tris.Add(startIndex + 3);
 		tris.Add(startIndex + 0);
 	}
-
-	private void CreateFrontFaceChunkWithNoWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
-		Vector3 squareSize = attributes.GetFrontFaceSquareSize();
-		Vector3 squareOrigin = attributes.GetFrontFaceNonWindowChunkOrigin(chunkX, chunkY, squareSize);
-			
-		CreateSquare(squareOrigin, squareSize, windowMarginUVRect);
-	}
-
-	private void CreateFrontFaceChunkWithWindow(int chunkX, int chunkY, BuildingPieceAttributes attributes) {
-		Vector3 cornerMarginOrigin = attributes.GetFrontFaceCornerMarginOrigin(chunkX, chunkY);
-		Vector3 horizontalMarginOrigin = attributes.GetFrontFaceHorizontalMarginOrigin(chunkX, chunkY);
-		Vector3 verticalMarginOrigin = attributes.GetFrontFaceVerticalMarginOrigin(chunkX, chunkY);
-		Vector3 windowOrigin = attributes.GetFrontFaceWindowOrigin(chunkX, chunkY);
-		
-		CreateSquare(cornerMarginOrigin, attributes.GetFrontFaceCornerMarginSize(), windowMarginUVRect);
-		if (!attributes.IsLastChunkX(chunkX)) CreateSquare(horizontalMarginOrigin, attributes.GetFrontFaceHorizontalMarginSize(), windowMarginUVRect);
-		if (!attributes.IsLastChunkY(chunkY)) CreateSquare(verticalMarginOrigin, attributes.GetFrontFaceVerticalMarginSize(), windowMarginUVRect);
-		if (!attributes.IsLastChunkX(chunkX) && !attributes.IsLastChunkY(chunkY)) CreateSquare(windowOrigin, attributes.GetFrontFaceWindowSize(), windowUVRect);
-	}
-
+	
 	private void CreateFrontFace(BuildingPieceAttributes attributes) {
-		Vector3 frontFaceOrigin = attributes.GetFrontFaceOrigin();
-
 		for (int y = 0; y <= attributes.chunkCount.y; y++) {
 			for (int x = 0; x <= attributes.chunkCount.x; x++) {
-				if (attributes.numWindows.x == 0 || attributes.numWindows.y == 0) CreateFrontFaceChunkWithNoWindow(x, y, attributes);
-				else CreateFrontFaceChunkWithWindow(x, y, attributes);
+				IntVector2 coordinates = new IntVector2(x, y);
+				if (attributes.frontFaceAttributes.HasWindows()) CreateFrontFaceWindowSection(coordinates, attributes);
+				else CreateFrontFaceBlankSection(coordinates, attributes);
 			}
 		}
+	}
+
+	private void CreateFrontFaceBlankSection(IntVector2 chunkCoordinates, BuildingPieceAttributes attributes) {
+		Rect3D chunkRect = attributes.frontFaceAttributes.GetBlankRect(chunkCoordinates);	
+		CreateChunk(chunkRect, windowMarginUVRect);
+	}
+
+	static int blah = 0;
+	private void CreateFrontFaceWindowSection(IntVector2 chunkCoordinates, BuildingPieceAttributes attributes) {
+		Rect3D cornerMarginRect = attributes.frontFaceAttributes.GetCornerMarginRect(chunkCoordinates);
+		Rect3D horizontalMarginRect = attributes.frontFaceAttributes.GetHorizontalMarginRect(chunkCoordinates);
+		Rect3D verticalMarginRect = attributes.frontFaceAttributes.GetVerticalMarginOrigin(chunkCoordinates);
+		Rect3D windowRect = attributes.frontFaceAttributes.GetWindowRect(chunkCoordinates);
+
+		CreateChunk(cornerMarginRect, windowMarginUVRect);
+		if (!attributes.IsLastChunkX(chunkCoordinates.x)) CreateChunk(horizontalMarginRect, windowMarginUVRect);
+		if (!attributes.IsLastChunkY(chunkCoordinates.y)) CreateChunk(verticalMarginRect, windowMarginUVRect);
+		if (!attributes.IsLastChunkX(chunkCoordinates.x) && !attributes.IsLastChunkY(chunkCoordinates.y)) CreateChunk(windowRect, windowUVRect);
 	}
 
 	private void CreateRightFace(Vector3 origin, IntVector3 numWindows, Vector2 windowSize, Vector2 windowMargins) {
