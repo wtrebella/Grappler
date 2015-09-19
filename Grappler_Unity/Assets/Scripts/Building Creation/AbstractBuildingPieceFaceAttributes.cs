@@ -1,5 +1,13 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+
+public enum BuildingFaceType {
+	Front,
+	Right,
+	Left,
+	Top,
+	None
+}
 
 public abstract class AbstractBuildingPieceFaceAttributes {
 	public BuildingPieceAttributes buildingPieceAttributes;

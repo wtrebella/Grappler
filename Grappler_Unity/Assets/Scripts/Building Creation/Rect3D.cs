@@ -6,7 +6,8 @@ public class Rect3D {
 	public Vector3 size;
 
 	public Rect3D() {
-
+		origin = Vector3.zero;
+		size = Vector3.zero;
 	}
 
 	public Rect3D(Vector3 origin, Vector3 size) {

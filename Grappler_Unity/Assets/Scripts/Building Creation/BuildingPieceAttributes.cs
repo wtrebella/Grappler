@@ -14,8 +14,16 @@ public class BuildingPieceAttributes {
 	private BuildingPieceFrontFaceAttributes _frontFaceAttributes;
 	public BuildingPieceFrontFaceAttributes frontFaceAttributes {
 		get {
-			if (!faceAttributesInitialized) Debug.LogError("face attributes not initialized! make sure you initialize them after you set the overall building attributes.");
+			AssertFaceAttributesAreInitialized();
 			return _frontFaceAttributes;
+		}
+	}
+
+	private BuildingPieceRightFaceAttributes _rightFaceAttributes;
+	public BuildingPieceRightFaceAttributes rightFaceAttributes {
+		get {
+			AssertFaceAttributesAreInitialized();
+			return _rightFaceAttributes;
 		}
 	}
 
@@ -48,10 +56,15 @@ public class BuildingPieceAttributes {
 	}
 
 	private void InitializeRightFaceAttributes() {
-		
+		_rightFaceAttributes = new BuildingPieceRightFaceAttributes();
+		_rightFaceAttributes.buildingPieceAttributes = this;
 	}
 
 	private void InitializeLeftFaceAttributes() {
 		
+	}
+
+	private void AssertFaceAttributesAreInitialized() {
+		if (!faceAttributesInitialized) Debug.LogError("face attributes not initialized! make sure you initialize them after you set the overall building attributes.");
 	}
 }
