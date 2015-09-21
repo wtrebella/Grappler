@@ -73,4 +73,8 @@ public class BuildingPieceFrontFaceAttributes : AbstractBuildingPieceFaceAttribu
 		
 		return chunkRect;
 	}
+
+	public override Rect3D GetFullBlankRect () {
+		throw new System.NotImplementedException ();
+	}
 }

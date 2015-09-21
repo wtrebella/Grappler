@@ -14,6 +14,7 @@ public abstract class AbstractBuildingPieceFaceAttributes {
 
 	public abstract bool HasWindows();
 	public abstract Vector3 GetOrigin();
+	public abstract Rect3D GetFullBlankRect();
 	public abstract Rect3D GetBlankRect(IntVector2 chunkCoordinates);
 	public abstract Rect3D GetCornerMarginRect(IntVector2 chunkCoordinates);
 	public abstract Rect3D GetHorizontalMarginRect(IntVector2 chunkCoordinates);

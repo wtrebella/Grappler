@@ -4,9 +4,9 @@ using System.Collections;
 public class BuildingPieceAttributes {
 	public IntVector3 numWindows;
 	public IntVector3 chunkCount;
+	public IntVector2 windowSize;
+	public IntVector2 marginSize;
 	public Vector3 origin;
-	public Vector2 windowSize;
-	public Vector2 marginSize;
 	public Vector3 dimensions;
 
 	public bool faceAttributesInitialized {get; private set;}
@@ -27,6 +27,22 @@ public class BuildingPieceAttributes {
 		}
 	}
 
+	private BuildingPieceLeftFaceAttributes _leftFaceAttributes;
+	public BuildingPieceLeftFaceAttributes leftFaceAttributes {
+		get {
+			AssertFaceAttributesAreInitialized();
+			return _leftFaceAttributes;
+		}
+	}
+
+	private BuildingPieceTopFaceAttributes _topFaceAttributes;
+	public BuildingPieceTopFaceAttributes topFaceAttributes {
+		get {
+			AssertFaceAttributesAreInitialized();
+			return _topFaceAttributes;
+		}
+	}
+
 	public BuildingPieceAttributes() {
 		faceAttributesInitialized = false;
 	}
@@ -35,6 +51,7 @@ public class BuildingPieceAttributes {
 		InitializeFrontFaceAttributes();
 		InitializeRightFaceAttributes();
 		InitializeLeftFaceAttributes();
+		InitializeTopFaceAttributes();
 		faceAttributesInitialized = true;
 	}
 
@@ -61,7 +78,13 @@ public class BuildingPieceAttributes {
 	}
 
 	private void InitializeLeftFaceAttributes() {
-		
+		_leftFaceAttributes = new BuildingPieceLeftFaceAttributes();
+		_leftFaceAttributes.buildingPieceAttributes = this;
+	}
+
+	private void InitializeTopFaceAttributes() {
+		_topFaceAttributes = new BuildingPieceTopFaceAttributes();
+		_topFaceAttributes.buildingPieceAttributes = this;
 	}
 
 	private void AssertFaceAttributesAreInitialized() {

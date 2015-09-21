@@ -10,9 +10,10 @@ public class BuildingPieceAttributeGenerator : MonoBehaviour {
 		return minBuildingPieceSize;
 	}
 
-	public BuildingPieceAttributes GetRandomBuildingPieceAttributes(Rect3D previousBuildingPieceRect, Vector2 windowSize, Vector2 marginSize) {
-		Vector3 buildingPieceDimensions = GetRandomBuildingPieceDimensions();
-		IntVector3 numWindows = GetNumWindows(buildingPieceDimensions, windowSize, marginSize);
+	public BuildingPieceAttributes GetRandomBuildingPieceAttributes(Rect3D previousBuildingPieceRect, IntVector2 windowSize, IntVector2 marginSize) {
+		Vector3 dimensions = GetRandomRoughBuildingPieceDimensions();
+		IntVector3 numWindows = GetNumWindows(dimensions, windowSize, marginSize);
+		dimensions = ClampDimensions(dimensions, numWindows, windowSize, marginSize);
 		float inset = GetRandomInset(windowSize, marginSize);
 		
 		Vector3 origin = new Vector3(previousBuildingPieceRect.origin.x + previousBuildingPieceRect.size.x, 0, inset);
@@ -28,34 +29,41 @@ public class BuildingPieceAttributeGenerator : MonoBehaviour {
 		buildingPieceAttributes.numWindows = numWindows;
 		buildingPieceAttributes.windowSize = windowSize;
 		buildingPieceAttributes.marginSize = marginSize;
-		buildingPieceAttributes.dimensions = buildingPieceDimensions;
+		buildingPieceAttributes.dimensions = dimensions;
 		buildingPieceAttributes.chunkCount = chunkCount;	
 		buildingPieceAttributes.InitializeFaceAttributes();
 
 		return buildingPieceAttributes;
 	}
 
-	private Vector3 GetRandomBuildingPieceDimensions() {
+	private Vector3 GetRandomRoughBuildingPieceDimensions() {
 		Vector3 v = new Vector3();
 		v.x = Random.Range(minBuildingPieceSize.x, maxBuildingPieceSize.x);
 		v.y = Random.Range(minBuildingPieceSize.y, maxBuildingPieceSize.y);
-		v.z = Random.Range(minBuildingPieceSize.z, maxBuildingPieceSize.z);
+		v.z = v.x;
 		return v;
 	}
+
+	private Vector3 ClampDimensions(Vector3 roughDimensions, IntVector3 numWindows, IntVector2 windowSize, IntVector2 marginSize) {
+		Vector3 dimensions = roughDimensions;
+		dimensions.x = (windowSize.x + marginSize.x) * numWindows.x + marginSize.x;
+		dimensions.y = (windowSize.y + marginSize.y) * numWindows.y + marginSize.y;
+		dimensions.z = dimensions.x;
+		return dimensions;
+	}
 	
-	private IntVector3 GetNumWindows(Vector3 buildingPieceDimensions, Vector2 windowSize, Vector2 marginSize) {
-		IntVector3 numWindows = new IntVector3(
-			(buildingPieceDimensions.x - marginSize.x) / (windowSize.x + marginSize.x),
-			(buildingPieceDimensions.y - marginSize.y) / (windowSize.y + marginSize.y),
-			(buildingPieceDimensions.z - marginSize.x) / (windowSize.x + marginSize.x)
-		);
-		
+	private IntVector3 GetNumWindows(Vector3 buildingPieceDimensions, IntVector2 windowSize, IntVector2 marginSize) {
+		IntVector3 numWindows = new IntVector3();
+		numWindows.x = (int)((buildingPieceDimensions.x - marginSize.x) / (windowSize.x + marginSize.x));
+		numWindows.y = (int)((buildingPieceDimensions.y - marginSize.y) / (windowSize.y + marginSize.y));
+		numWindows.z = numWindows.x;
 		return numWindows;
 	}
 	
-	private float GetRandomInset(Vector2 windowSize, Vector2 windowMargins) {
+	private int GetRandomInset(IntVector2 windowSize, IntVector2 marginSize) {
 		int numWindowInset = Random.Range(0, maxNumWindowInset + 1);
-		float inset = numWindowInset * (windowSize.x + windowMargins.x) + windowMargins.x;
+		int inset = numWindowInset * (windowSize.x + marginSize.x);
+		if (numWindowInset > 0) inset += marginSize.x;
 		return inset;	
 	}
 }
