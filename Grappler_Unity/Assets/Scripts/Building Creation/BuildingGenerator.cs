@@ -7,19 +7,15 @@ public class BuildingGenerator : MonoBehaviour {
 	public Action<Building> SignalCreatedFirstBuilding;
 	public Action<Building> SignalCreatedBuilding;
 
-	[SerializeField] Building buildingPrefab;
-	[SerializeField] float minWidth = 5;
-	[SerializeField] float maxWidth = 30;
-	[SerializeField] float minHeight = 50;
-	[SerializeField] float maxHeight = 100;
-	[SerializeField] float maxHeightDifference = 50;
-	[SerializeField] float minGapWidth = 5;
-	[SerializeField] float maxGapWidth = 20;
+	[SerializeField] private Building buildingPrefab;
 
+	private BuildingAttributeGenerator buildingAttributeGenerator;
+	private BuildingAttributes previousBuildingAttributes;
 	private List<Building> buildings;
 
 	private void Awake() {
 		buildings = new List<Building>();
+		buildingAttributeGenerator = GetComponent<BuildingAttributeGenerator>();
 	}
 
 	private void Start() {
@@ -32,17 +28,9 @@ public class BuildingGenerator : MonoBehaviour {
 	}
 
 	private void CreateBuilding() {
-		float x = GetNextX();
-		Vector2 size = GetNextSize();
-		Color color = GetNextColor();
-		Vector3 position = new Vector3(x, 0, 0.1f);
-		
-		BuildingAttributes buildingAttributes = new BuildingAttributes();
-		buildingAttributes.size = size;
-		buildingAttributes.color = color;
-		buildingAttributes.position = position;
-		
+		BuildingAttributes buildingAttributes = GetNextBuildingAttributes();
 		CreateBuilding(buildingAttributes);
+		previousBuildingAttributes = buildingAttributes;
 	}
 	
 	private void CreateBuilding(BuildingAttributes buildingAttributes) {
@@ -101,44 +89,7 @@ public class BuildingGenerator : MonoBehaviour {
 		return buildings.Count > 0;
 	}
 
-	private Vector2 GetNextSize() {
-		float width = GetNextWidth();
-		float height = GetNextHeight();
-		
-		return new Vector2(width, height);
-	}
-
-	private float GetNextX() {
-		if (BuildingsExist()) return GetLastBuilding().bottomRightCorner.x + GetRandomGapWidth();
-		else return 0;
-	}
-
-	private float GetRandomGapWidth() {
-		return UnityEngine.Random.Range(minGapWidth, maxGapWidth);
-	}
-
-	private float GetNextWidth() {
-		return UnityEngine.Random.Range(minWidth, maxWidth);
-	}
-
-	private float GetNextHeight() {
-		float height = 0;
-
-		if (BuildingsExist()) {
-			Building lastBuilding = GetLastBuilding();
-			float minNegativeDelta = Mathf.Max(minHeight - lastBuilding.height, -maxHeightDifference);
-			float maxPositiveDelta = Mathf.Min(maxHeight - lastBuilding.height, maxHeightDifference);
-			height = lastBuilding.height + UnityEngine.Random.Range(minNegativeDelta, maxPositiveDelta);
-		}
-		else {
-			height = UnityEngine.Random.Range(minHeight, maxHeight);
-		}
-	
-		return height;
-	}
-
-	private Color GetNextColor() {
-		float val = UnityEngine.Random.value;
-		return new Color(val, val, val);
+	private BuildingAttributes GetNextBuildingAttributes() {
+		return buildingAttributeGenerator.GetRandomBuildingAttributes(previousBuildingAttributes);
 	}
 }
