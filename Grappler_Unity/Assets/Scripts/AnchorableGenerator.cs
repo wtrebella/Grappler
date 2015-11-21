@@ -27,6 +27,7 @@ public class AnchorableGenerator : MonoBehaviour {
 	}
 
 	private void CreateAnchorableAtPoint(Vector2 position) {
+		Debug.Log("anchorable: " + position);
 		Anchorable anchorable = anchorablePrefab.Spawn();
 		anchorable.transform.parent = transform;
 		anchorable.transform.position = position;

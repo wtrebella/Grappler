@@ -22,14 +22,14 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 		if (previousBuildingAttributes != null) previousBuildingSkewedRect = previousBuildingAttributes.skewedRect;
 
 		Vector2 containingRectOrigin = new Vector2();
-		containingRectOrigin.x = (previousBuildingSkewedRect.bottomRight.x - previousBuildingSkewedRect.bottomLeft.x) / 2f + previousBuildingSkewedRect.bottomLeft.x;
+		containingRectOrigin.x = Mathf.Lerp(previousBuildingSkewedRect.bottomLeft.x, previousBuildingSkewedRect.bottomRight.x, Random.Range(0f, 0.3f));
 		containingRectOrigin.y = 0;
 		Rect containingRect = new Rect(containingRectOrigin, GetNextBuildingBoundsSize(previousBuildingAttributes));
 
 		Vector2 bottomLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), 0);
-		Vector2 bottomRight = new Vector2(Mathf.Max(minBuildingBoundsSize.x, Random.Range(bottomLeft.x, containingRect.xMax)), 0);
-		Vector2 topLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), Random.Range(minBuildingBoundsSize.y, maxBuildingBoundsSize.y));
-		Vector2 topRight = new Vector2(Mathf.Max(minBuildingBoundsSize.x, Random.Range(topLeft.x, containingRect.xMax)), Mathf.Min(maxBuildingBoundsSize.y, topLeft.y + Random.Range(-maxHeightDifferenceBetweenCorners, maxHeightDifferenceBetweenCorners)));
+		Vector2 bottomRight = new Vector2(Mathf.Max(bottomLeft.x + minBuildingBoundsSize.x, Random.Range(bottomLeft.x, containingRect.xMax)), 0);
+		Vector2 topLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), containingRect.yMax);// Random.Range(containingRect.y, maxBuildingBoundsSize.y));
+		Vector2 topRight = new Vector2(Mathf.Max(topLeft.x + minBuildingBoundsSize.x, Random.Range(topLeft.x, containingRect.xMax)), Mathf.Min(maxBuildingBoundsSize.y, topLeft.y + Random.Range(-maxHeightDifferenceBetweenCorners, maxHeightDifferenceBetweenCorners)));
 
 		SkewedRect skewedRect = new SkewedRect(bottomLeft, topLeft, bottomRight, topRight);
 		Debug.Log(skewedRect.bottomLeft + ", " + skewedRect.topLeft + ", " + skewedRect.topRight + ", " + skewedRect.bottomRight);

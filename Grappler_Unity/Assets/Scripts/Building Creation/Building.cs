@@ -58,18 +58,19 @@ public class Building : MonoBehaviour {
 	}
 
 	public void SetBuildingAttributes(BuildingAttributes buildingAttributes) {
-		transform.position = buildingAttributes.skewedRect.bottomLeft;
+//		transform.position = buildingAttributes.skewedRect.bounds.min;
 		this.buildingAttributes = buildingAttributes;
 		buildingMeshCreator.InitMesh(buildingAttributes);
 		meshRenderer.material.color = buildingAttributes.color;
 	}
 
 	public bool IsOffLeftOfScreen() {
-		return GameScreen.instance.IsOffLeftOfScreenWithMargin(bottomRightCorner.x);
+		AssertAttributesHaveBeenSet();
+		return GameScreen.instance.IsOffLeftOfScreenWithMargin(buildingAttributes.skewedRect.bounds.max.x);
 	}
 
 	public bool IsOffRightOfScreen() {
-		return GameScreen.instance.IsOffRightOfScreenWithMargin(bottomRightCorner.x);
+		return GameScreen.instance.IsOffRightOfScreenWithMargin(buildingAttributes.skewedRect.bounds.max.x);
 	}
 
 	private void AssertAttributesHaveBeenSet() {
