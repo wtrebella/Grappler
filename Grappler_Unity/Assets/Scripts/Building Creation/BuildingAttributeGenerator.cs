@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class BuildingAttributeGenerator : MonoBehaviour {
-	[SerializeField] private float maxHeightDifference = 50;
+	[SerializeField] private float maxHeightDifferenceBetweenBuildings = 5;
+	[SerializeField] private float maxHeightDifferenceBetweenCorners = 1;
 	[SerializeField] private Vector2 minBuildingBoundsSize = new Vector2(50, 100);
 	[SerializeField] private Vector2 maxBuildingBoundsSize = new Vector2(200, 400);
 
@@ -26,12 +27,12 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 		Rect containingRect = new Rect(containingRectOrigin, GetNextBuildingBoundsSize(previousBuildingAttributes));
 
 		Vector2 bottomLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), 0);
-		Vector2 topLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), Random.Range(0, maxBuildingBoundsSize.y));
-		Vector2 bottomRight = new Vector2(Random.Range(bottomLeft.x, containingRect.xMax), 0);
-		Vector2 topRight = new Vector2(Random.Range(topLeft.x, containingRect.xMax), Random.Range(0, maxBuildingBoundsSize.y));
+		Vector2 bottomRight = new Vector2(Mathf.Max(minBuildingBoundsSize.x, Random.Range(bottomLeft.x, containingRect.xMax)), 0);
+		Vector2 topLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), Random.Range(minBuildingBoundsSize.y, maxBuildingBoundsSize.y));
+		Vector2 topRight = new Vector2(Mathf.Max(minBuildingBoundsSize.x, Random.Range(topLeft.x, containingRect.xMax)), Mathf.Min(maxBuildingBoundsSize.y, topLeft.y + Random.Range(-maxHeightDifferenceBetweenCorners, maxHeightDifferenceBetweenCorners)));
 
 		SkewedRect skewedRect = new SkewedRect(bottomLeft, topLeft, bottomRight, topRight);
-
+		Debug.Log(skewedRect.bottomLeft + ", " + skewedRect.topLeft + ", " + skewedRect.topRight + ", " + skewedRect.bottomRight);
 		return skewedRect;
 	}
 
@@ -39,8 +40,8 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 		if (previousBuildingAttributes == null) return new Vector2(Random.Range(minBuildingBoundsSize.x, maxBuildingBoundsSize.x), Random.Range(minBuildingBoundsSize.y, maxBuildingBoundsSize.y));
 
 		float previousBuildingHeight = previousBuildingAttributes.skewedRect.bounds.size.y;
-		float minNegativeDelta = Mathf.Max(minBuildingBoundsSize.y - previousBuildingHeight, -maxHeightDifference);
-		float maxPositiveDelta = Mathf.Min(maxBuildingBoundsSize.y - previousBuildingHeight, maxHeightDifference);
+		float minNegativeDelta = Mathf.Max(minBuildingBoundsSize.y - previousBuildingHeight, -maxHeightDifferenceBetweenBuildings);
+		float maxPositiveDelta = Mathf.Min(maxBuildingBoundsSize.y - previousBuildingHeight, maxHeightDifferenceBetweenBuildings);
 		float height = previousBuildingHeight + UnityEngine.Random.Range(minNegativeDelta, maxPositiveDelta);
 
 		return new Vector2(Random.Range(minBuildingBoundsSize.x, maxBuildingBoundsSize.y), height);
