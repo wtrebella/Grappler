@@ -1,11 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SkewedRect {
+public class Quad {
 	public Vector2 bottomLeft = Vector2.zero;
 	public Vector2 topLeft = Vector2.zero;
 	public Vector2 bottomRight = Vector2.zero;
 	public Vector2 topRight = Vector2.zero;
+
+	public float bottomWidth {
+		get {return bottomRight.x - bottomLeft.x;}
+	}
+
+	public float averageHeight {
+		get {return (topLeft.y + topRight.y) / 2f;}
+	}
 
 	private bool boundsAreSet = false;
 
@@ -17,11 +25,11 @@ public class SkewedRect {
 		}
 	}
 
-	public SkewedRect() {
+	public Quad() {
 
 	}
 
-	public SkewedRect(Vector2 bottomLeft, Vector2 topLeft, Vector2 bottomRight, Vector2 topRight) {
+	public Quad(Vector2 bottomLeft, Vector2 topLeft, Vector2 bottomRight, Vector2 topRight) {
 		this.bottomLeft = bottomLeft;
 		this.topLeft = topLeft;
 		this.bottomRight = bottomRight;

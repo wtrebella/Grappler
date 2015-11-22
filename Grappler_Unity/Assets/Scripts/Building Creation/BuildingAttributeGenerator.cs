@@ -3,47 +3,43 @@ using System.Collections;
 
 public class BuildingAttributeGenerator : MonoBehaviour {
 	[SerializeField] private float maxHeightDifferenceBetweenBuildings = 5;
-	[SerializeField] private float maxHeightDifferenceBetweenCorners = 1;
-	[SerializeField] private Vector2 minBuildingBoundsSize = new Vector2(50, 100);
-	[SerializeField] private Vector2 maxBuildingBoundsSize = new Vector2(200, 400);
+	[SerializeField] private float maxTopCornerVerticalOffset = 1;
+	[SerializeField] private float maxHorizontalOffset = 20;
+	[SerializeField] private float minFaceWidth = 50;
+	[SerializeField] private float maxFaceWidth = 200;
+	[SerializeField] private float minAverageHeight = 100;
 
 	public BuildingAttributes GetRandomBuildingAttributes(BuildingAttributes previousBuildingAttributes) {
-		SkewedRect skewedRect = GetRandomSkewedRect(previousBuildingAttributes);
+		Quad skewedRect = GetRandomSkewedRect(previousBuildingAttributes);
 
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
-		buildingAttributes.skewedRect = skewedRect;
+		buildingAttributes.quad = skewedRect;
 		buildingAttributes.color = new Color(Random.value, Random.value, Random.value);
 
 		return buildingAttributes;
 	}
 
-	private SkewedRect GetRandomSkewedRect(BuildingAttributes previousBuildingAttributes) {
-		SkewedRect previousBuildingSkewedRect = new SkewedRect();
-		if (previousBuildingAttributes != null) previousBuildingSkewedRect = previousBuildingAttributes.skewedRect;
+	private Quad GetRandomSkewedRect(BuildingAttributes previousAttributes) {
+		Quad previousQuad = new Quad();
+		if (previousAttributes != null) previousQuad = previousAttributes.quad;
 
-		Vector2 containingRectOrigin = new Vector2();
-		containingRectOrigin.x = Mathf.Lerp(previousBuildingSkewedRect.bottomLeft.x, previousBuildingSkewedRect.bottomRight.x, Random.Range(0f, 0.3f));
-		containingRectOrigin.y = 0;
-		Rect containingRect = new Rect(containingRectOrigin, GetNextBuildingBoundsSize(previousBuildingAttributes));
+		float bottomLeftX = previousQuad.bottomRight.x + Random.Range(-previousQuad.bottomWidth / 2f, previousQuad.bottomWidth / 2f);
+		float bottomFaceWidth = Random.Range(minFaceWidth, maxFaceWidth);
+		float topFaceWidth = Random.Range(minFaceWidth, maxFaceWidth);
+		float horizontalOffset = Random.Range(-maxHorizontalOffset, maxHorizontalOffset);
+		float topCornerVerticalOffset = Random.Range(-maxTopCornerVerticalOffset, maxTopCornerVerticalOffset);
+		float heightDifferenceBetweenBuildings = Random.Range(-maxHeightDifferenceBetweenBuildings, maxHeightDifferenceBetweenBuildings);
+		float averageHeight = Mathf.Max(minAverageHeight, previousQuad.averageHeight + heightDifferenceBetweenBuildings);
+		float leftHeight = averageHeight - topCornerVerticalOffset / 2f;
+		float rightHeight = averageHeight + topCornerVerticalOffset / 2f;
 
-		Vector2 bottomLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), 0);
-		Vector2 bottomRight = new Vector2(Mathf.Max(bottomLeft.x + minBuildingBoundsSize.x, Random.Range(bottomLeft.x, containingRect.xMax)), 0);
-		Vector2 topLeft = new Vector2(Random.Range(containingRect.xMin, containingRect.xMax - minBuildingBoundsSize.x), containingRect.yMax);// Random.Range(containingRect.y, maxBuildingBoundsSize.y));
-		Vector2 topRight = new Vector2(Mathf.Max(topLeft.x + minBuildingBoundsSize.x, Random.Range(topLeft.x, containingRect.xMax)), Mathf.Min(maxBuildingBoundsSize.y, topLeft.y + Random.Range(-maxHeightDifferenceBetweenCorners, maxHeightDifferenceBetweenCorners)));
+		Vector2 bottomLeft = new Vector2(bottomLeftX, 0);
+		Vector2 bottomRight = new Vector2(bottomLeft.x + bottomFaceWidth, 0);
+		Vector2 topLeft = new Vector2(bottomLeft.x + horizontalOffset, leftHeight);
+		Vector2 topRight = new Vector2(bottomRight.x + horizontalOffset, rightHeight);
 
-		SkewedRect skewedRect = new SkewedRect(bottomLeft, topLeft, bottomRight, topRight);
-		Debug.Log(skewedRect.bottomLeft + ", " + skewedRect.topLeft + ", " + skewedRect.topRight + ", " + skewedRect.bottomRight);
-		return skewedRect;
-	}
-
-	private Vector2 GetNextBuildingBoundsSize(BuildingAttributes previousBuildingAttributes) {
-		if (previousBuildingAttributes == null) return new Vector2(Random.Range(minBuildingBoundsSize.x, maxBuildingBoundsSize.x), Random.Range(minBuildingBoundsSize.y, maxBuildingBoundsSize.y));
-
-		float previousBuildingHeight = previousBuildingAttributes.skewedRect.bounds.size.y;
-		float minNegativeDelta = Mathf.Max(minBuildingBoundsSize.y - previousBuildingHeight, -maxHeightDifferenceBetweenBuildings);
-		float maxPositiveDelta = Mathf.Min(maxBuildingBoundsSize.y - previousBuildingHeight, maxHeightDifferenceBetweenBuildings);
-		float height = previousBuildingHeight + UnityEngine.Random.Range(minNegativeDelta, maxPositiveDelta);
-
-		return new Vector2(Random.Range(minBuildingBoundsSize.x, maxBuildingBoundsSize.y), height);
+		Quad quad = new Quad(bottomLeft, topLeft, bottomRight, topRight);
+		Debug.Log(quad.bottomLeft + ", " + quad.topLeft + ", " + quad.topRight + ", " + quad.bottomRight);
+		return quad;
 	}
 }

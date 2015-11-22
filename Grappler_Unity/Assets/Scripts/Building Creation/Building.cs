@@ -11,54 +11,53 @@ public class Building : MonoBehaviour {
 	public Vector2 topLeftCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.topLeft;
+			return buildingAttributes.quad.topLeft;
 		}
 	}
 
 	public Vector2 topRightCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.topRight;
+			return buildingAttributes.quad.topRight;
 		}
 	}
 
 	public Vector2 bottomLeftCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.bottomLeft;
+			return buildingAttributes.quad.bottomLeft;
 		}
 	}
 
 	public Vector2 bottomRightCorner {
 		get {
 			AssertAttributesHaveBeenSet();			
-			return buildingAttributes.skewedRect.bottomRight;
+			return buildingAttributes.quad.bottomRight;
 		}
 	}
 
 	public Vector2 size {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.bounds.size;
+			return buildingAttributes.quad.bounds.size;
 		}
 	}
 
 	public float width {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.bounds.size.x;
+			return buildingAttributes.quad.bounds.size.x;
 		}
 	}
 
 	public float height {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.skewedRect.bounds.size.y;
+			return buildingAttributes.quad.bounds.size.y;
 		}
 	}
 
 	public void SetBuildingAttributes(BuildingAttributes buildingAttributes) {
-//		transform.position = buildingAttributes.skewedRect.bounds.min;
 		this.buildingAttributes = buildingAttributes;
 		buildingMeshCreator.InitMesh(buildingAttributes);
 		meshRenderer.material.color = buildingAttributes.color;
@@ -66,11 +65,11 @@ public class Building : MonoBehaviour {
 
 	public bool IsOffLeftOfScreen() {
 		AssertAttributesHaveBeenSet();
-		return GameScreen.instance.IsOffLeftOfScreenWithMargin(buildingAttributes.skewedRect.bounds.max.x);
+		return GameScreen.instance.IsOffLeftOfScreenWithMargin(buildingAttributes.quad.bounds.max.x);
 	}
 
 	public bool IsOffRightOfScreen() {
-		return GameScreen.instance.IsOffRightOfScreenWithMargin(buildingAttributes.skewedRect.bounds.max.x);
+		return GameScreen.instance.IsOffRightOfScreenWithMargin(buildingAttributes.quad.bounds.max.x);
 	}
 
 	private void AssertAttributesHaveBeenSet() {

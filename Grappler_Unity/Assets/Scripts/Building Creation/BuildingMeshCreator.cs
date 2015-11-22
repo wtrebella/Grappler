@@ -11,7 +11,7 @@ public class BuildingMeshCreator : MonoBehaviour {
 	private MeshFilter meshFilter;
 	
 	public void InitMesh(BuildingAttributes buildingAttributes) {
-		CreateBuilding(buildingAttributes.skewedRect);
+		CreateBuilding(buildingAttributes.quad);
 		ApplyToMesh();
 	}
 
@@ -29,13 +29,13 @@ public class BuildingMeshCreator : MonoBehaviour {
 		meshFilter.mesh.RecalculateNormals();
 	}
 
-	private void CreateBuilding(SkewedRect skewedRect) {
+	private void CreateBuilding(Quad quad) {
 		int startIndex = verts.Count;
 
-		verts.Add(new Vector3(skewedRect.bottomLeft.x, skewedRect.bottomLeft.y, 0));
-		verts.Add(new Vector3(skewedRect.topLeft.x, skewedRect.topLeft.y, 0));
-		verts.Add(new Vector3(skewedRect.topRight.x, skewedRect.topRight.y, 0));
-		verts.Add(new Vector3(skewedRect.bottomRight.x, skewedRect.bottomRight.y, 0));
+		verts.Add(new Vector3(quad.bottomLeft.x, quad.bottomLeft.y, 0));
+		verts.Add(new Vector3(quad.topLeft.x, quad.topLeft.y, 0));
+		verts.Add(new Vector3(quad.topRight.x, quad.topRight.y, 0));
+		verts.Add(new Vector3(quad.bottomRight.x, quad.bottomRight.y, 0));
 		
 		uvs.Add(new Vector2(0, 0));
 		uvs.Add(new Vector2(0, 1));
