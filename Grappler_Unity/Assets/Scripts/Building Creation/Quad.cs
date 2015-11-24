@@ -30,6 +30,10 @@ public class Quad {
 		return ContainsPoint(new Quad(bottomLeft, topLeft, topRight, bottomRight), point);
 	}
 
+	public static bool ContainsTopPointsFromOtherQuad(Quad containingQuad, Quad otherQuad) {
+		return containingQuad.ContainsPoint(otherQuad.topLeft) || containingQuad.ContainsPoint(otherQuad.topRight);
+	}
+
 	public static bool OverlapQuads(Quad quad1, Quad quad2) {
 		bool triIntersect1 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri1(), quad2.GetTri1());
 		bool triIntersect2 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri1(), quad2.GetTri2());
@@ -84,6 +88,10 @@ public class Quad {
 
 	public bool OverlapQuad(Quad quad) {
 		return Quad.OverlapQuads(this, quad);
+	}
+
+	public bool ContainsTopPointsFromOtherQuad(Quad otherQuad) {
+		return Quad.ContainsTopPointsFromOtherQuad(this, otherQuad);
 	}
 
 	private void CalculateBounds() {

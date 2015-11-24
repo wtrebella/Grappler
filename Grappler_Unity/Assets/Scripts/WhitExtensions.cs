@@ -75,6 +75,12 @@ public static class WhitExtensions {
 		return list[list.Count - 1];
 	}
 
+	public static T GetPenultimateItem<T>(this List<T> list) {
+		if (list.Count <= 1) return default(T);
+		
+		return list[list.Count - 2];
+	}
+
 	public static Transform GetItemClosestTo(this List<Transform> list, Vector2 point) {
 		float dist = Mathf.Infinity;
 		Transform closestItem = null;

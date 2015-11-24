@@ -30,7 +30,6 @@ public class BuildingGenerator : MonoBehaviour {
 	private void CreateBuilding() {
 		BuildingAttributes buildingAttributes = GetNextBuildingAttributes();
 		CreateBuilding(buildingAttributes);
-		CreateBuilding(null);
 	}
 	
 	private void CreateBuilding(BuildingAttributes buildingAttributes) {

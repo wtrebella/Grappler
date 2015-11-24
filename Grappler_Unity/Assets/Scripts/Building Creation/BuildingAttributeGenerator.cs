@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BuildingAttributeGenerator : MonoBehaviour {
+	[SerializeField] private int numBuildingsToCheck = 3;
 	[SerializeField] [Range(0, 1)] private float baseOverlap = 0.5f;
 	[SerializeField] [Range(10, 100)] private float maxHeightDifferenceBetweenBuildings = 50;
 	[SerializeField] [Range(10, 100)] private float maxTopCornerVerticalOffset = 50;
@@ -12,18 +13,62 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 	[SerializeField] [Range(100, 300)] private float minAverageHeight = 200;
 
 	public BuildingAttributes GetNewBuildingAttributes(List<Building> buildings) {
-		Quad quad = GetNewBuildingQuad(buildings);
-
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
-		buildingAttributes.quad = quad;
+		buildingAttributes.quad = GetNewBuildingQuad(buildings);
 		buildingAttributes.color = new Color(Random.value, Random.value, Random.value);
-		buildingAttributes.layer = 0;
+		buildingAttributes.sortingOrder = GetSortingOrder(buildingAttributes.quad, buildings);
+		Debug.Log(GetSortingOrder(buildingAttributes.quad, buildings));
 
 		return buildingAttributes;
 	}
 
 	private Quad GetNewBuildingQuad(List<Building> buildings) {
-		return GetNewRawBuildingQuad(buildings);
+		Quad newQuad = null;
+		int max = Mathf.Min(buildings.Count, numBuildingsToCheck);
+
+		do {
+			newQuad = GetNewRawBuildingQuad(buildings);
+			for (int i = 1; i <= max; i++) {
+				int index = buildings.Count - i;
+				Building otherBuilding = buildings[index];
+				Quad otherQuad = otherBuilding.attributes.quad;
+				if (!QuadsAreValidTogether(newQuad, otherQuad)) {
+					newQuad = null;
+					break;
+				}
+			}
+		} while (newQuad == null);
+
+		return newQuad;
+	}
+
+	private int GetSortingOrder(Quad newQuad, List<Building> buildings) {
+		int numberToCheck = Mathf.Min(buildings.Count, numBuildingsToCheck);
+		int sortingOrder;
+		int? sortingOrderUpperLimit = null;
+		int? sortingOrderLowerLimit = null;
+
+		for (int i = 1; i <= numberToCheck; i++) {
+			int index = buildings.Count - i;
+			Building otherBuilding = buildings[index];
+			Quad otherQuad = otherBuilding.attributes.quad;
+			if (!Quad.OverlapQuads(newQuad, otherQuad)) continue;
+			if (newQuad.ContainsTopPointsFromOtherQuad(otherQuad)) {
+				if (sortingOrderUpperLimit != null) sortingOrderUpperLimit = Mathf.Min((int)sortingOrderUpperLimit, otherBuilding.attributes.sortingOrder);
+				else sortingOrderUpperLimit = otherBuilding.attributes.sortingOrder;
+			}
+			else if (otherQuad.ContainsTopPointsFromOtherQuad(newQuad)) {
+				if (sortingOrderLowerLimit != null) sortingOrderLowerLimit = Mathf.Max((int)sortingOrderLowerLimit, otherBuilding.attributes.sortingOrder);
+				else sortingOrderLowerLimit = otherBuilding.attributes.sortingOrder;
+			}
+		}
+
+		if (sortingOrderLowerLimit == null && sortingOrderUpperLimit == null) sortingOrder = 1000;
+		else if (sortingOrderLowerLimit == null) sortingOrder = (int)sortingOrderUpperLimit - 10;
+		else if (sortingOrderUpperLimit == null) sortingOrder = (int)sortingOrderLowerLimit + 10;
+		else sortingOrder = ((int)sortingOrderUpperLimit + (int)sortingOrderLowerLimit) / 2;
+
+		return sortingOrder;
 	}
 
 	private Quad GetNewRawBuildingQuad(List<Building> buildings) {
@@ -51,5 +96,10 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 		
 		Quad quad = new Quad(bottomLeft, topLeft, topRight, bottomRight);
 		return quad;
+	}
+
+	private bool QuadsAreValidTogether(Quad quad1, Quad quad2) {
+		if (quad1.ContainsTopPointsFromOtherQuad(quad2) && quad2.ContainsTopPointsFromOtherQuad(quad1)) return false;
+		else return true;
 	}
 }
