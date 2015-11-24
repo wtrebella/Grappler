@@ -2,12 +2,12 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(QuadTest))]
-public class QuadTestEditor : Editor {
-	QuadTest quadTest;
+[CustomEditor(typeof(PointInQuadTest))]
+public class PointInQuadTestEditor : Editor {
+	PointInQuadTest quadTest;
 
 	void OnEnable() {
-		quadTest = target as QuadTest;
+		quadTest = target as PointInQuadTest;
 	}
 
 	void OnSceneGUI() {

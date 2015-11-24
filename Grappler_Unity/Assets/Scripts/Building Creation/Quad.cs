@@ -26,6 +26,14 @@ public class Quad {
 		return ContainsPoint(new Quad(bottomLeft, topLeft, topRight, bottomRight), point);
 	}
 
+	public static bool OverlapQuads(Quad quad1, Quad quad2) {
+		bool triIntersect1 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri1(), quad2.GetTri1());
+		bool triIntersect2 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri1(), quad2.GetTri2());
+		bool triIntersect3 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri2(), quad2.GetTri1());
+		bool triIntersect4 = TriTriIntersection.TriTriOverlap.TriTriIntersect(quad1.GetTri2(), quad2.GetTri2());
+		return triIntersect1 || triIntersect2 || triIntersect3 || triIntersect4;
+	}
+
 	public Vector2 bottomLeft = Vector2.zero;
 	public Vector2 topLeft = Vector2.zero;
 	public Vector2 topRight = Vector2.zero;
@@ -58,8 +66,20 @@ public class Quad {
 		CalculateBounds();
 	}
 
+	public Tri GetTri1() {
+		return new Tri(bottomLeft, topLeft, topRight);
+	}
+
+	public Tri GetTri2() {
+		return new Tri(topRight, bottomRight, bottomLeft);
+	}
+
 	public bool ContainsPoint(Vector2 point) {
 		return Quad.ContainsPoint(this, point);
+	}
+
+	public bool OverlapQuad(Quad quad) {
+		return Quad.OverlapQuads(this, quad);
 	}
 
 	private void CalculateBounds() {
