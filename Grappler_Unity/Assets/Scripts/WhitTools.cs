@@ -8,7 +8,7 @@ public static class WhitTools {
 	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
 
 	public static void Assert(bool condition, string errorString = "") {
-		if (!condition) throw new UnityException(errorString);
+		if (!condition) Debug.LogError(errorString);
 	}
 
 	public static Vector2 AngleToDirection(float angle) {

@@ -6,73 +6,82 @@ public class Building : MonoBehaviour {
 	[SerializeField] private BuildingMeshCreator buildingMeshCreator;
 	[SerializeField] private MeshRenderer meshRenderer;
 
-	private BuildingAttributes buildingAttributes;
+	private BuildingAttributes _attributes;
+	public BuildingAttributes attributes {
+		get {
+			AssertAttributesHaveBeenSet();
+			return _attributes;
+		} 
+	}
 
 	public Vector2 topLeftCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.topLeft;
+			return attributes.quad.topLeft;
 		}
 	}
 
 	public Vector2 topRightCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.topRight;
+			return attributes.quad.topRight;
 		}
 	}
 
 	public Vector2 bottomLeftCorner {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.bottomLeft;
+			return attributes.quad.bottomLeft;
 		}
 	}
 
 	public Vector2 bottomRightCorner {
 		get {
 			AssertAttributesHaveBeenSet();			
-			return buildingAttributes.quad.bottomRight;
+			return attributes.quad.bottomRight;
 		}
 	}
 
 	public Vector2 size {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.bounds.size;
+			return attributes.quad.bounds.size;
 		}
 	}
 
 	public float width {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.bounds.size.x;
+			return attributes.quad.bounds.size.x;
 		}
 	}
 
 	public float height {
 		get {
 			AssertAttributesHaveBeenSet();
-			return buildingAttributes.quad.bounds.size.y;
+			return attributes.quad.bounds.size.y;
 		}
 	}
 
-	public void SetBuildingAttributes(BuildingAttributes buildingAttributes) {
-		this.buildingAttributes = buildingAttributes;
-		buildingMeshCreator.InitMesh(buildingAttributes);
-		meshRenderer.material.color = buildingAttributes.color;
+	public void SetBuildingAttributes(BuildingAttributes newAttributes) {
+		_attributes = newAttributes;
+		buildingMeshCreator.InitMesh(_attributes);
+		meshRenderer.material.color = _attributes.color;
 	}
 
 	public bool IsOffLeftOfScreen() {
+		return false;
 		AssertAttributesHaveBeenSet();
-		return GameScreen.instance.IsOffLeftOfScreenWithMargin(buildingAttributes.quad.bounds.max.x);
+		return GameScreen.instance.IsOffLeftOfScreenWithMargin(attributes.quad.bounds.max.x);
 	}
 
 	public bool IsOffRightOfScreen() {
-		return GameScreen.instance.IsOffRightOfScreenWithMargin(buildingAttributes.quad.bounds.max.x);
+		return false;
+		AssertAttributesHaveBeenSet();
+		return GameScreen.instance.IsOffRightOfScreenWithMargin(attributes.quad.bounds.max.x);
 	}
 
 	private void AssertAttributesHaveBeenSet() {
-		WhitTools.Assert(buildingAttributes != null, "no attributes set!");
+		WhitTools.Assert(attributes != null, "no attributes set!");
 	}
 }

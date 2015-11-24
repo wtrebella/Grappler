@@ -21,6 +21,10 @@ public class Quad {
 		}
 		return result;
 	}
+
+	public static Quad zero {
+		get {return new Quad(Vector2.zero, Vector2.zero, Vector2.zero, Vector2.zero);}
+	}
 	
 	public static bool ContainsPoint(Vector2 bottomLeft, Vector2 topLeft, Vector2 topRight, Vector2 bottomRight, Vector2 point) {
 		return ContainsPoint(new Quad(bottomLeft, topLeft, topRight, bottomRight), point);
