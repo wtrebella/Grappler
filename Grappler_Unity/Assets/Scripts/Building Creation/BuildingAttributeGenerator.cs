@@ -15,11 +15,15 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 	public BuildingAttributes GetNewBuildingAttributes(List<Building> buildings) {
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
 		buildingAttributes.quad = GetNewBuildingQuad(buildings);
-		buildingAttributes.color = new Color(Random.value, Random.value, Random.value);
+		buildingAttributes.color = GetNewBuildingColor();
 		buildingAttributes.sortingOrder = GetSortingOrder(buildingAttributes.quad, buildings);
-		Debug.Log(GetSortingOrder(buildingAttributes.quad, buildings));
 
 		return buildingAttributes;
+	}
+
+	private Color GetNewBuildingColor() {
+		HSVColor color = new HSVColor(0.4f, Random.Range(0.3f, 0.5f), Random.Range(0.4f, 0.6f));
+		return color.HSVToRGB();
 	}
 
 	private Quad GetNewBuildingQuad(List<Building> buildings) {
