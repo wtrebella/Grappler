@@ -11,11 +11,18 @@ public enum FollowMovementType {
 	Immediate
 }
 
+public enum FollowAxisType {
+	X,
+	Y,
+	XandY
+}
+
 public class Follow : MonoBehaviour {
 	[SerializeField] private Transform objectToFollow;
 	[SerializeField] private Vector2 objectOffset;
 	[SerializeField] private FollowUpdateType updateType;
 	[SerializeField] private FollowMovementType movementType;
+	[SerializeField] private FollowAxisType axisType;
 	[SerializeField] private float smoothDampTime = 0.13f;
 
 	private float initialDistance;
@@ -60,6 +67,10 @@ public class Follow : MonoBehaviour {
 		Vector3 objectPosition = objectToFollow.position;
 		Vector3 offsetObjectPosition = new Vector3(objectPosition.x + objectOffset.x, objectPosition.y + objectOffset.y, objectPosition.z);
 		Vector3 targetPosition = offsetObjectPosition + initialDirection * initialDistance;
+		
+		if (axisType == FollowAxisType.X) targetPosition.y = transform.position.y;
+		else if (axisType == FollowAxisType.Y) targetPosition.x = transform.position.x;
+
 		return targetPosition;
 	}
 

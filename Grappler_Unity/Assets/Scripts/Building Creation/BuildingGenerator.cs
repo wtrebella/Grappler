@@ -41,7 +41,6 @@ public class BuildingGenerator : MonoBehaviour {
 		if (buildings.Count == 1) {
 			if (SignalCreatedFirstBuilding != null) SignalCreatedFirstBuilding(building);
 		}
-		building.GetComponentInChildren<SoftNormalsToVertexColor>().TryGenerate();
 	}
 
 	private void RecycleOffScreenBuildings() {

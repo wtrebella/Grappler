@@ -21,7 +21,7 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();
 		startPoint.z = -0.5f;
 		endPoint.z = -0.5f;
-		lineRenderer.sortingOrder = 2000;
+		lineRenderer.sortingOrder = 5000;
 		lineRenderer.SetPosition(0, startPoint);
 		lineRenderer.SetPosition(1, endPoint);
 		

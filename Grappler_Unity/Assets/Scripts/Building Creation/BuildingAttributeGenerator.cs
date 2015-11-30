@@ -4,13 +4,15 @@ using System.Collections.Generic;
 
 public class BuildingAttributeGenerator : MonoBehaviour {
 	[SerializeField] private int numBuildingsToCheck = 3;
-	[SerializeField] [Range(0, 1)] private float baseOverlap = 0.5f;
-	[SerializeField] [Range(10, 100)] private float maxHeightDifferenceBetweenBuildings = 50;
-	[SerializeField] [Range(10, 100)] private float maxTopCornerVerticalOffset = 50;
-	[SerializeField] [Range(10, 100)] private float maxHorizontalOffset = 50;
-	[SerializeField] [Range(10, 50)] private float minFaceWidth = 30;
+	[SerializeField] private int baseSortingOrder = 1000;
+	[SerializeField] [Range(0, 1)] private float hue = 0.4f;
+	[SerializeField] [Range(-1, 1)] private float baseOverlap = 0.5f;
+	[SerializeField] [Range(0, 100)] private float maxHeightDifferenceBetweenBuildings = 50;
+	[SerializeField] [Range(0, 100)] private float maxTopCornerVerticalOffset = 50;
+	[SerializeField] [Range(0, 100)] private float maxHorizontalOffset = 50;
+	[SerializeField] [Range(10, 150)] private float minFaceWidth = 30;
 	[SerializeField] [Range(70, 200)]private float maxFaceWidth = 100;
-	[SerializeField] [Range(100, 300)] private float minAverageHeight = 200;
+	[SerializeField] [Range(100, 500)] private float minAverageHeight = 200;
 
 	public BuildingAttributes GetNewBuildingAttributes(List<Building> buildings) {
 		BuildingAttributes buildingAttributes = new BuildingAttributes();
@@ -22,7 +24,7 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 	}
 
 	private Color GetNewBuildingColor() {
-		HSVColor color = new HSVColor(0.4f, Random.Range(0.3f, 0.5f), Random.Range(0.4f, 0.6f));
+		HSVColor color = new HSVColor(hue, Random.Range(0.4f, 0.6f), Random.Range(0.7f, 0.9f));
 		return color.HSVToRGB();
 	}
 
@@ -67,7 +69,7 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 			}
 		}
 
-		if (sortingOrderLowerLimit == null && sortingOrderUpperLimit == null) sortingOrder = 1000;
+		if (sortingOrderLowerLimit == null && sortingOrderUpperLimit == null) sortingOrder = baseSortingOrder;
 		else if (sortingOrderLowerLimit == null) sortingOrder = (int)sortingOrderUpperLimit - 10;
 		else if (sortingOrderUpperLimit == null) sortingOrder = (int)sortingOrderLowerLimit + 10;
 		else sortingOrder = ((int)sortingOrderUpperLimit + (int)sortingOrderLowerLimit) / 2;
