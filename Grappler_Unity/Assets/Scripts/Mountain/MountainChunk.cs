@@ -3,17 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PolygonCollider2D))]
+[RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunk : MonoBehaviour {
+	[SerializeField] private int numPoints = 50;
 	[SerializeField] private float slope = 0.5f;
 	[SerializeField] private float pointDist = 5;
 	[SerializeField] private float pointDistVar = 2;
 	[SerializeField] private float perpDistVar = 10;
 
 	private PolygonCollider2D polygonCollider;
+	private MountainChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
 
 	private void Awake () {
 		polygonCollider = GetComponent<PolygonCollider2D>();
+		meshCreator = GetComponent<MountainChunkMeshCreator>();
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slope * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slope * Mathf.PI / 2f);
@@ -31,24 +35,27 @@ public class MountainChunk : MonoBehaviour {
 		List<Vector2> points = new List<Vector2>();
 		GenerateBasicShape(ref points);
 		RandomizeEdge(ref points);
-		polygonCollider.points = points.ToArray();
+		Vector2[] pointsArray = points.ToArray();
+		polygonCollider.points = pointsArray;
+		meshCreator.InitMesh(pointsArray);
 	}
 
 	private void GenerateBasicShape(ref List<Vector2> points) {
 		Vector2 prevPoint = Vector2.zero;
 		points.Add(prevPoint);
 		
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < numPoints; i++) {
 			float dist = pointDist + Random.Range(-pointDistVar, pointDistVar);
 			Vector2 delta = slopeVector * dist;
 			Vector2 point = prevPoint + delta;
-			
-			prevPoint = point;
+			if (i == numPoints - 1) point.y += 100;
 			points.Add(point);
+
+			prevPoint = point;
 		}
 		
 		points.Add(new Vector2(-100, prevPoint.y));
-		points.Add(new Vector2(-100, 0));
+		points.Add(new Vector2(-100, -100));
 	}
 
 	private void RandomizeEdge(ref List<Vector2> points) {
