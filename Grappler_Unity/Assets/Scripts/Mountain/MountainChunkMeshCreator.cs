@@ -1,13 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public class MountainChunkMeshCreator : MonoBehaviour {
-	public Action SignalMountainCreated;
-
 	private List<Vector3> verts = new List<Vector3>();
 	private List<int> tris = new List<int>();
 	private MeshFilter meshFilter;
@@ -30,8 +27,6 @@ public class MountainChunkMeshCreator : MonoBehaviour {
 
 		foreach (int vertexNum in triArray) tris.Add(vertexNum);
 		foreach (Vector2 point in points) verts.Add(point);
-
-		if (SignalMountainCreated != null) SignalMountainCreated();
 	}
 
 	private void ApplyToMesh() {

@@ -3,40 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Vectrosity;
 
-[RequireComponent(typeof(PolygonCollider2D))]
-[RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunkVectorLine : MonoBehaviour {
-	[SerializeField] private float width = 30;
-	[SerializeField] private Camera gameCamera;
+	[SerializeField] private float width = 20;
 
 	private VectorLine line;
-	private PolygonCollider2D polygonCollider;
-	private MountainChunkMeshCreator meshCreator;
 
-	private void Awake() {
-		polygonCollider = GetComponent<PolygonCollider2D>();
-		meshCreator = GetComponent<MountainChunkMeshCreator>();
-		meshCreator.SignalMountainCreated += HandleMountainCreated;
+	public void AddToLine(MountainChunk mountainChunk) {
+		if (line == null) InitLine();
+
+		List<Vector2> points = mountainChunk.GetListOfLinePoints();
+		if (line.points3.Count > 0) points.RemoveAt(0);
+		foreach (Vector2 point in points) line.points3.Add(new Vector3(point.x, point.y, -0.1f));
+		line.endPointsUpdate = points.Count;
+
+		line.Draw3DAuto();
 	}
 
 	private void InitLine() {
-		line = new VectorLine("Mountain Chunk Line", GetListOfLinePoints(), width, LineType.Continuous, Joins.Weld);
+		VectorManager.useDraw3D = true;
+		line = new VectorLine("Mountain Chunk Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
 		line.SetColor(new Color32(1, 1, 1, 1));
-	}
-
-	private void HandleMountainCreated() {
-		DrawLine();
-	}
-
-	private List<Vector3> GetListOfLinePoints() {
-		List<Vector3> list = new List<Vector3>();
-		for (int i = 0; i < polygonCollider.points.Length - 3; i++) list.Add(polygonCollider.points[i]);
-		return list;
-	}
-
-	private void DrawLine() {
-		if (line == null) InitLine();
-		else line.points3 = GetListOfLinePoints();
-		line.Draw3D();
 	}
 }
