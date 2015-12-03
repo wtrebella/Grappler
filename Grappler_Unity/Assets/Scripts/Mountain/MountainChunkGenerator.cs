@@ -19,6 +19,15 @@ public class MountainChunkGenerator : MonoBehaviour {
 		GenerateMountainChunks(30);
 	}
 
+	private void Update() {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			foreach (MountainChunk chunk in mountainChunks) Destroy(chunk.gameObject);
+			mountainChunkVectorLine.DestroyLine();
+			mountainChunks.Clear();
+			GenerateMountainChunks(30);
+		}
+	}
+
 	private void GenerateMountainChunks(int numToGenerate) {
 		for (int i = 0; i < numToGenerate; i++) GenerateMountainChunk();
 	}

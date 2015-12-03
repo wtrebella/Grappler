@@ -6,12 +6,12 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunk : MonoBehaviour {
 	[SerializeField] private int numPoints = 30;
-	[SerializeField] private float avgSlope = 0.7f;
-	[SerializeField] private float slopeVar = 0.2f;
-	[SerializeField] private float pointDist = 25;
-	[SerializeField] private float pointDistVar = 12;
-	[SerializeField] private float perpDistVar = 28;
-	[SerializeField] private float marginSize = 100;
+	[SerializeField] private float avgSlope = 0.65f;
+	[SerializeField] private float slopeVar = 0.25f;
+	[SerializeField] private float pointDist = 2.5f;
+	[SerializeField] private float pointDistVar = 1.2f;
+	[SerializeField] private float perpDistVar = 2.8f;
+	[SerializeField] private float marginSize = 60.0f;
 
 	private List<Vector2> linePoints;
 	private PolygonCollider2D polygonCollider;

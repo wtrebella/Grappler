@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Vectrosity;
 
 public class MountainChunkVectorLine : MonoBehaviour {
-	[SerializeField] private float width = 20;
+	[SerializeField] private float width = 2;
 
 	private VectorLine line;
 
@@ -13,10 +13,14 @@ public class MountainChunkVectorLine : MonoBehaviour {
 
 		List<Vector2> points = mountainChunk.GetListOfLinePoints();
 		if (line.points3.Count > 0) points.RemoveAt(0);
-		foreach (Vector2 point in points) line.points3.Add(new Vector3(point.x, point.y, -0.1f));
+		foreach (Vector2 point in points) line.points3.Add(new Vector3(point.x, point.y, -0.01f));
 		line.endPointsUpdate = points.Count;
 
 		line.Draw3DAuto();
+	}
+
+	public void DestroyLine() {
+		VectorLine.Destroy(ref line);
 	}
 
 	private void InitLine() {
