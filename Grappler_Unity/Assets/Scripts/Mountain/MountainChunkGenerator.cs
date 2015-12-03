@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(MountainChunkVectorLine))]
 public class MountainChunkGenerator : MonoBehaviour {
+	public Action<MountainChunk> SignalMountainChunkCreated;
+
 	[SerializeField] private MountainChunk mountainChunkPrefab;
 
 	private MountainChunkVectorLine mountainChunkVectorLine;
@@ -16,16 +18,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 	}
 
 	private void Start() {
-		GenerateMountainChunks(30);
-	}
-
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.Space)) {
-			foreach (MountainChunk chunk in mountainChunks) Destroy(chunk.gameObject);
-			mountainChunkVectorLine.DestroyLine();
-			mountainChunks.Clear();
-			GenerateMountainChunks(30);
-		}
+		GenerateMountainChunks(5);
 	}
 
 	private void GenerateMountainChunks(int numToGenerate) {
@@ -40,5 +33,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 
 		mountainChunks.Add(mountainChunk);
 		mountainChunkVectorLine.AddToLine(mountainChunk);
+
+		if (SignalMountainChunkCreated != null) SignalMountainChunkCreated(mountainChunk);
 	}
 }

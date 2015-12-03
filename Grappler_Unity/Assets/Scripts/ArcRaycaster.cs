@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ArcRaycaster : MonoBehaviour {
 	[SerializeField] private bool drawDebugRays = false;
@@ -11,70 +12,46 @@ public class ArcRaycaster : MonoBehaviour {
 	[SerializeField] private float upwardCheckAmount = 45;
 	[SerializeField] private float downwardCheckAmount = 135;
 
-	public bool FindCollider(out Collider2D foundCollider) {
-		if (FindAnyCollider(out foundCollider)) return true;
-		else return false;
-	}
+	public bool FindAnchorable(out Anchorable foundAnchorable) {
+		var colliders = RaycastAtAllAngles();
+		foundAnchorable = null;
 
-	private bool FindAnyCollider(out Collider2D foundCollider) {
-		float distance = maxDistance;
-		
-		while (true) {
-			if (FindColliderAtInitialAngleAndDistance(out foundCollider, distance)) return true;
-			distance -= incrementDistance;
-			if (distance < 0) {
-				foundCollider = null;
-				return false;
+		foreach (Collider2D collider in colliders) {
+			Anchorable anchorable = collider.GetComponent<Anchorable>();
+			if (foundAnchorable != null) {
+				if (anchorable.anchorableID > foundAnchorable.anchorableID) foundAnchorable = anchorable;
 			}
+			else foundAnchorable = anchorable;
 		}
+		
+		return foundAnchorable != null;
 	}
 
-	private bool FindColliderAtInitialAngleAndDistance(out Collider2D foundCollider, float minDistance) {
+	private Collider2D[] RaycastAtAllAngles() {
 		float upAngle = initialAngle;
 		float downAngle = initialAngle - incrementAngle;
 		float maxAngle = initialAngle + upwardCheckAmount;
 		float minAngle = initialAngle - downwardCheckAmount;
 
+		var colliders = new List<Collider2D>();
+
 		while (true) {
-			if (upAngle <= maxAngle) {
-				if (FindColliderAtAngleAndDistance(out foundCollider, upAngle, minDistance)) return true;
-			}
-
-			if (downAngle >= minAngle) {
-				if (FindColliderAtAngleAndDistance(out foundCollider, downAngle, minDistance)) return true;
-			}
-
+			if (upAngle <= maxAngle) colliders.AddItems(RaycastAtAngle(upAngle));
+			if (downAngle >= minAngle) colliders.AddItems(RaycastAtAngle(downAngle));
+			
 			upAngle += incrementAngle;
 			downAngle -= incrementAngle;
-
-			if (upAngle > maxAngle && downAngle < minAngle) {
-				foundCollider = null;
-				return false;
-			}
+			
+			if (upAngle > maxAngle && downAngle < minAngle) break;
 		}
-	}
 
-	private bool FindColliderAtAngleAndDistance(out Collider2D foundCollider, float angle, float minDistance) {
-		Collider2D[] colliders = RaycastAtAngle(angle);
-		foreach (Collider2D c in colliders) {
-			float checkedDist = GetDistance(c.transform);
-			if (checkedDist >= minDistance) {
-				foundCollider = c;
-				return true;
-			}
-		}
-		foundCollider = null;
-		return false;
-	}
-
-	private float GetDistance(Transform distanceFrom) {
-		return (distanceFrom.position - transform.position).magnitude;
+		return colliders.ToArray();
 	}
 
 	private Collider2D[] RaycastAtAngle(float angle) {
 		Vector2 direction = WhitTools.AngleToDirection(angle);
 		RaycastHit2D[] raycastHits = Physics2D.RaycastAll(transform.position, direction, maxDistance, layerMask);
-		if (drawDebugRays) Debug.DrawRay(transform.position, direction * maxDistance, Color.green, 1);
+		if (drawDebugRays) Debug.DrawRay(transform.position, direction * maxDistance, Color.green, Time.fixedDeltaTime);
 		Collider2D[] colliders = new Collider2D[raycastHits.Length];
 		for (int i = 0; i < raycastHits.Length; i++) colliders[i] = raycastHits[i].collider;
 		return colliders;

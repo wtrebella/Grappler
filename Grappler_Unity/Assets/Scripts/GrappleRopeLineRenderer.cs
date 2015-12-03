@@ -12,7 +12,7 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 		lineRenderer = GetComponent<LineRenderer>();
 	}
 	
-	private void Update() {
+	private void FixedUpdate() {
 		DrawRope();
 	}
 	
@@ -21,6 +21,7 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();
 		startPoint.z = -0.5f;
 		endPoint.z = -0.5f;
+		lineRenderer.SetWidth(0.075f, 0.075f);
 		lineRenderer.sortingOrder = 5000;
 		lineRenderer.SetPosition(0, startPoint);
 		lineRenderer.SetPosition(1, endPoint);

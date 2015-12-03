@@ -5,23 +5,14 @@ using System;
 [RequireComponent(typeof(SpringJoint2D))]
 public class GrappleRope : StateMachine {
 	public Action Signal_Retracted_EnterState;
-	public Action Signal_Retracting_EnterState;
 	public Action Signal_Connected_EnterState;
 
 	public Action Signal_Retracted_UpdateState;
-	public Action Signal_Retracting_UpdateState;
 	public Action Signal_Connected_UpdateState;
-
-	[SerializeField] private float retractionDuration = 0.5f;
-
-	private enum GrappleRopeStates {Retracted, Retracting, Connected}
+	
+	private enum GrappleRopeStates {Retracted, Connected}
 	private Anchorable connectedAnchorable;
 	private SpringJoint2D springJoint;
-	private float retractionTimer = 0;
-
-	public bool IsRetracting() {
-		return (GrappleRopeStates)currentState == GrappleRopeStates.Retracting;
-	}
 
 	public bool IsRetracted() {
 		return (GrappleRopeStates)currentState == GrappleRopeStates.Retracted;
@@ -48,29 +39,13 @@ public class GrappleRope : StateMachine {
 		springJoint.enabled = false;
 		connectedAnchorable.HandleRelease();
 		connectedAnchorable = null;
-		currentState = GrappleRopeStates.Retracting;
-	}
-	
-	public float GetRetractionPercent() {
-		float clampedRetractionTimer = Mathf.Clamp(retractionTimer, 0, retractionDuration);
-		float percent = clampedRetractionTimer / retractionDuration;
-		return percent;
+		currentState = GrappleRopeStates.Retracted;
 	}
 	
 	private void Awake() {
 		springJoint = GetComponent<SpringJoint2D>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;
-	}
-
-	private void Retracting_EnterState() {
-		ResetRetractionTimer();
-		if (Signal_Retracting_EnterState != null) Signal_Retracting_EnterState();
-	}
-	
-	private void Retracting_UpdateState() {
-		UpdateRetraction();
-		if (Signal_Retracting_UpdateState != null) Signal_Retracting_UpdateState();
 	}
 
 	private void Retracted_EnterState() {
@@ -97,14 +72,5 @@ public class GrappleRope : StateMachine {
 		WhitTools.Assert(HasConnectedAnchorable(), "hasn't ever connected to any anchorables!");
 		
 		return springJoint.GetConnectedAnchorInWorldPosition();
-	}
-
-	private void ResetRetractionTimer() {
-		retractionTimer = 0;
-	}
-
-	private void UpdateRetraction() {
-		retractionTimer += Time.deltaTime;
-		if (retractionTimer >= retractionDuration) currentState = GrappleRopeStates.Retracted;
 	}
 }

@@ -4,9 +4,15 @@ using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Anchorable : MonoBehaviour {
+	public int anchorableID {get; private set;}
+
 	public bool isConnected {get; private set;}
 	public Rigidbody2D rigid {get; private set;}
 	private AnchorPoint anchorPoint;
+
+	public void SetAnchorableID(int id) {
+		anchorableID = id;
+	}
 
 	private void Awake() {
 		rigid = GetComponent<Rigidbody2D>();

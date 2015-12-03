@@ -69,6 +69,10 @@ public static class WhitExtensions {
 		return index;
 	}
 
+	public static void AddItems<T>(this List<T> list, T[] array) {
+		foreach (T item in array) list.Add(item);
+	}
+
 	public static T GetLastItem<T>(this List<T> list) {
 		if (list.Count == 0) return default(T);
 
