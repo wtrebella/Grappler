@@ -30,8 +30,7 @@ public class MountainChunkVectorLine : MonoBehaviour {
 
 	private List<Vector3> GetListOfLinePoints() {
 		List<Vector3> list = new List<Vector3>();
-		list.Add(polygonCollider.points[polygonCollider.points.Length - 1]);
-		for (int i = 0; i < polygonCollider.points.Length - 2; i++) list.Add(polygonCollider.points[i]);
+		for (int i = 0; i < polygonCollider.points.Length - 3; i++) list.Add(polygonCollider.points[i]);
 		return list;
 	}
 

@@ -1,9 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class SpikeBallGenerator : MonoBehaviour {
-	[SerializeField] private AnchorableGenerator anchorableGenerator;
+	[SerializeField] private OldAnchorableGenerator anchorableGenerator;
 	[SerializeField] private SpikeBall spikeBallPrefab;
 
 	private int anchorableCounter = 0;
