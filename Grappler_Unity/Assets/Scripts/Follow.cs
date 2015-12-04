@@ -29,6 +29,10 @@ public class Follow : MonoBehaviour {
 	private Vector3 initialDirection;
 	private Vector3 smoothDampVelocity;
 
+	public void UpdateMovementImmediateNow() {
+		UpdateMovementImmediate();
+	}
+
 	private void Awake() {
 		initialDistance = GetObjectToThisDistance();
 		initialDirection = GetObjectToThisDirection();

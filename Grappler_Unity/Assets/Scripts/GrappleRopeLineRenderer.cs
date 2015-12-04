@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Vectrosity;
 
-[RequireComponent(typeof(LineRenderer))]
 [RequireComponent(typeof(GrappleRopeEndPoints))]
 public class GrappleRopeLineRenderer : MonoBehaviour {
-	private GrappleRopeEndPoints grappleRopeEndPoints;
-	private LineRenderer lineRenderer;
+	[SerializeField] private float width = 2;
 	
+	private VectorLine line;
+	private GrappleRopeEndPoints grappleRopeEndPoints;
+
 	private void Awake() {
 		grappleRopeEndPoints = GetComponent<GrappleRopeEndPoints>();
-		lineRenderer = GetComponent<LineRenderer>();
+		InitLine();
 	}
 	
 	private void FixedUpdate() {
@@ -19,17 +22,17 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 	private void DrawRope() {
 		Vector3 startPoint = grappleRopeEndPoints.GetStartPoint().ToVector3();
 		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();
-		startPoint.z = -0.5f;
-		endPoint.z = -0.5f;
-		lineRenderer.SetWidth(0.075f, 0.075f);
-		lineRenderer.sortingOrder = 5000;
-		lineRenderer.SetPosition(0, startPoint);
-		lineRenderer.SetPosition(1, endPoint);
-		
-		if (!lineRenderer.enabled) lineRenderer.enabled = true;
+		startPoint.z = -0.01f;
+		endPoint.z = -0.01f;
+		line.points3.Clear();
+		line.points3.Add(startPoint);
+		line.points3.Add(endPoint);
+		line.Draw3D();
 	}
-	
-	private void DrawNothing() {
-		if (lineRenderer.enabled) lineRenderer.enabled = false;
+
+	private void InitLine() {
+		VectorManager.useDraw3D = true;
+		line = new VectorLine("Rope Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
+		line.color = new Color32(186, 150, 112, 255);
 	}
 }

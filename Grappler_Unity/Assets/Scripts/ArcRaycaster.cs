@@ -7,7 +7,6 @@ public class ArcRaycaster : MonoBehaviour {
 	[SerializeField] private LayerMask layerMask;
 	[SerializeField] private float maxDistance = 20;
 	[SerializeField] [Range(1, 10)] private float incrementAngle = 5;
-	[SerializeField] [Range(1, 10)] private float incrementDistance = 5;
 	[SerializeField] private float initialAngle = 45;
 	[SerializeField] private float upwardCheckAmount = 45;
 	[SerializeField] private float downwardCheckAmount = 135;

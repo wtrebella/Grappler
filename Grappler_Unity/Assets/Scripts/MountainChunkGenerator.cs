@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(MountainChunkVectorLine))]
 public class MountainChunkGenerator : MonoBehaviour {
+	public int numMountainChunksCreated {get; private set;}
+
 	public Action<MountainChunk> SignalMountainChunkCreated;
 
 	[SerializeField] private MountainChunk mountainChunkPrefab;
@@ -13,6 +15,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private List<MountainChunk> mountainChunks;
 
 	private void Awake() {
+		numMountainChunksCreated = 0;
 		mountainChunkVectorLine = GetComponent<MountainChunkVectorLine>();
 		mountainChunks = new List<MountainChunk>();
 	}
@@ -26,6 +29,8 @@ public class MountainChunkGenerator : MonoBehaviour {
 	}
 
 	private void GenerateMountainChunk() {
+		numMountainChunksCreated++;
+
 		MountainChunk mountainChunk = Instantiate(mountainChunkPrefab);
 
 		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero);

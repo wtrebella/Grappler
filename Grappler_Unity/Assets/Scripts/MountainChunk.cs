@@ -21,6 +21,10 @@ public class MountainChunk : MonoBehaviour {
 	public Vector2 GetLastLinePoint() {
 		return linePoints.GetLastItem();
 	}
+
+	public Vector2 GetFirstLinePoint() {
+		return linePoints[0];
+	}
 	
 	public void Generate(Vector2 origin) {
 		List<Vector2> points = new List<Vector2>();

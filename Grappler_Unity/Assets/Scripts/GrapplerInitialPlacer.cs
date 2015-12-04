@@ -1,0 +1,29 @@
+﻿using UnityEngine;
+using System.Collections;
+
+[RequireComponent(typeof(GrapplerManualMover))]
+public class GrapplerInitialPlacer : MonoBehaviour {
+	[SerializeField] private Vector2 mountainChunkFirstPointOffset = new Vector2(0, -2);
+	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+
+	private GrapplerManualMover manualMover;
+
+	private void Awake() {
+		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
+		manualMover = GetComponent<GrapplerManualMover>();
+	}
+
+	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {
+		if (mountainChunkGenerator.numMountainChunksCreated == 1) Place(mountainChunk);
+		else mountainChunkGenerator.SignalMountainChunkCreated -= HandleMountainChunkCreated;
+	}
+
+	private void Place(MountainChunk mountainChunk) {
+		Vector3 chunkOrigin = mountainChunk.GetFirstLinePoint();
+		Vector3 playerPosition = chunkOrigin;
+		playerPosition.x += mountainChunkFirstPointOffset.x;
+		playerPosition.y += mountainChunkFirstPointOffset.y;
+
+		manualMover.InstanlyMoveTo(playerPosition);
+	}
+}
