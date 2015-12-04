@@ -5,7 +5,7 @@ using System;
 public class SwipeDetector : MonoBehaviour {
 	public static SwipeDetector instance;
 
-	public Action<Vector2> SignalSwipe;
+	public Action<Vector2, float> SignalSwipe;
 
 	[SerializeField] private float minSwipeLength = 50;
 	[SerializeField] private float maxSwipeDuration = 0.3f;
@@ -13,6 +13,7 @@ public class SwipeDetector : MonoBehaviour {
 	private Vector2 beginningSwipePosition;
 	private Vector2 endSwipePosition;
 	private Vector2 currentSwipeVector;
+	private float currentSwipeMagnitude;
 	private float beginningSwipeTime;
 
 	private void Awake() {
@@ -28,8 +29,8 @@ public class SwipeDetector : MonoBehaviour {
 		return Time.time - beginningSwipeTime;
 	}
 
-	private void HandleSwipe(Vector2 swipeVector) {
-		if (SignalSwipe != null) SignalSwipe(currentSwipeVector);
+	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
+		if (SignalSwipe != null) SignalSwipe(swipeDirection, swipeMagnitude);
 	}
 
 	// TOUCH SWIPES
@@ -61,11 +62,15 @@ public class SwipeDetector : MonoBehaviour {
 		endSwipePosition = touch.position;
 
 		currentSwipeVector = new Vector2(endSwipePosition.x - beginningSwipePosition.x, endSwipePosition.y - beginningSwipePosition.y);
-		if (currentSwipeVector.magnitude >= minSwipeLength) {
-			currentSwipeVector.Normalize();
-			HandleSwipe(currentSwipeVector);
+		currentSwipeMagnitude = currentSwipeVector.magnitude;
+		if (currentSwipeMagnitude >= minSwipeLength) {
+			Vector2 swipeDirection = currentSwipeVector.normalized;
+			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
 	}
+
+
+
 
 	// MOUSE SWIPES
 
@@ -91,9 +96,10 @@ public class SwipeDetector : MonoBehaviour {
 		endSwipePosition = Input.mousePosition.ToVector2();
 		
 		currentSwipeVector = new Vector2(endSwipePosition.x - beginningSwipePosition.x, endSwipePosition.y - beginningSwipePosition.y);
-		if (currentSwipeVector.magnitude >= minSwipeLength) {
-			currentSwipeVector.Normalize();
-			HandleSwipe(currentSwipeVector);
+		currentSwipeMagnitude = currentSwipeVector.magnitude;
+		if (currentSwipeMagnitude >= minSwipeLength) {
+			Vector2 swipeDirection = currentSwipeVector.normalized;
+			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
 	}
 }

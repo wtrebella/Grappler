@@ -9,11 +9,11 @@ public class AnchorableFinder : MonoBehaviour {
 		arcRaycasters = GetComponentsInChildren<ArcRaycaster>();
 	}
 
-	public bool FindAnchorable(out Anchorable anchorable) {
+	public bool FindAnchorable(out Anchorable anchorable, Vector2 direction) {
 		anchorable = null;
 
 		foreach (ArcRaycaster arcRaycaster in arcRaycasters) {
-			if (arcRaycaster.FindAnchorable(out anchorable)) break;
+			if (arcRaycaster.FindAnchorable(out anchorable, direction)) break;
 		}
 
 		return anchorable != null;
