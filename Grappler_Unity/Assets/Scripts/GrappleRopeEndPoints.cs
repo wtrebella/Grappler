@@ -24,6 +24,7 @@ public class GrappleRopeEndPoints : MonoBehaviour {
 
 		grappleRope.Signal_Connected_UpdateState += Connected_UpdateState;
 		grappleRope.Signal_Retracted_UpdateState += Retracted_UpdateState;
+		grappleRope.Signal_FreeFlowing_UpdateState += FreeFlowing_UpdateState;
 
 		startTransform = new GameObject("Grapple Rope Start Transform").transform;
 		endTransform = new GameObject("Grapple Rope End Transform").transform;
@@ -41,5 +42,9 @@ public class GrappleRopeEndPoints : MonoBehaviour {
 		Vector2 endAnchor = springJoint.GetConnectedAnchorInWorldPosition();
 		startTransform.position = startAnchor;
 		endTransform.position = endAnchor;
+	}
+
+	private void FreeFlowing_UpdateState() {
+
 	}
 }

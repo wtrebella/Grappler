@@ -6,11 +6,13 @@ using System;
 public class GrappleRope : StateMachine {
 	public Action Signal_Retracted_EnterState;
 	public Action Signal_Connected_EnterState;
+	public Action Signal_FreeFlowing_EnterState;
 
 	public Action Signal_Retracted_UpdateState;
 	public Action Signal_Connected_UpdateState;
+	public Action Signal_FreeFlowing_UpdateState;
 	
-	private enum GrappleRopeStates {Retracted, Connected}
+	private enum GrappleRopeStates {Retracted, FreeFlowing, Connected}
 	private Anchorable connectedAnchorable;
 	private SpringJoint2D springJoint;
 
@@ -20,6 +22,10 @@ public class GrappleRope : StateMachine {
 
 	public bool IsConnected() {
 		return (GrappleRopeStates)currentState == GrappleRopeStates.Connected;
+	}
+
+	public bool IsFreeFlowing() {
+		return (GrappleRopeStates)currentState == GrappleRopeStates.FreeFlowing;
 	}
 	
 	public void Connect(Anchorable anchorable) {
@@ -31,6 +37,12 @@ public class GrappleRope : StateMachine {
 		connectedAnchorable = anchorable;
 		anchorable.HandleConnected();
 		currentState = GrappleRopeStates.Connected;
+	}
+
+	public void Misfire(Vector2 direction) {
+		WhitTools.Assert(!HasConnectedAnchorable(), "can't misfire if already connected!");
+
+
 	}
 
 	public void Release() {
@@ -56,12 +68,20 @@ public class GrappleRope : StateMachine {
 		if (Signal_Retracted_UpdateState != null) Signal_Retracted_UpdateState();
 	}
 
+	private void FreeFlowing_UpdateState() {
+		if (Signal_FreeFlowing_UpdateState != null) Signal_FreeFlowing_UpdateState();
+	}
+
 	private void Connected_EnterState() {
 		if (Signal_Connected_EnterState != null) Signal_Connected_EnterState();
 	}
 
 	private void Connected_UpdateState() {
 		if (Signal_Connected_UpdateState != null) Signal_Connected_UpdateState();
+	}
+
+	private void FreeFlowing_UpdateState() {
+		if (Signal_FreeFlowing_UpdateState != null) Signal_FreeFlowing_UpdateState();
 	}
 
 	private bool HasConnectedAnchorable() {

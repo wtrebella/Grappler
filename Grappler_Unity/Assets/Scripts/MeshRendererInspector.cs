@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿/*using UnityEngine;
 using UnityEditor;
 using System.Reflection;
 using System;
@@ -59,10 +59,7 @@ public class MeshRendererInspector : Editor
 		base.OnInspectorGUI ();
 		
 		EditorGUILayout.Space();
-		
-		/**
-		 * SORTING Layer
-		 **/
+
 		EditorGUI.BeginChangeCheck();
 		
 		//UI
@@ -80,9 +77,7 @@ public class MeshRendererInspector : Editor
 		}
 		
 		
-		/**
-		 * SORTING ORDER
-		 **/
+
 		EditorGUI.BeginChangeCheck();
 		
 		//UI
@@ -108,4 +103,4 @@ public class MeshRendererInspector : Editor
 		return (string[])prop.GetValue(null, null);
 	}
 	
-}
+}*/

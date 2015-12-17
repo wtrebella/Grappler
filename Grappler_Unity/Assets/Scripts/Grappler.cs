@@ -4,15 +4,17 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrappleRope))]
-[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(GrapplerSwipeForcer))]
 public class Grappler : StateMachine {
 	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
+	private GrapplerSwipeForcer swipeForcer;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
+		swipeForcer = GetComponent<GrapplerSwipeForcer>();
 		currentState = GrapplerStates.Falling;
 	}
 
@@ -24,17 +26,9 @@ public class Grappler : StateMachine {
 		if (CurrentStateIs(GrapplerStates.Falling)) ConnectGrappleIfAble(swipeDirection);
 		else if (CurrentStateIs(GrapplerStates.Grappling)) {
 			ReleaseGrapple();
-			ApplySwipeForce(swipeDirection, swipeMagnitude);
+			swipeForcer.ApplySwipeForce(swipeDirection, swipeMagnitude);
 			currentState = GrapplerStates.Falling;
 		}
-	}
-
-	private void Falling_UpdateState() {
-
-	}
-	
-	private void Grappling_UpdateState() {
-
 	}
 
 	private void Dead_EnterState() {
@@ -42,12 +36,15 @@ public class Grappler : StateMachine {
 	}
 
 	private void ConnectGrappleIfAble(Vector2 direction) {
+		if (!grappleRope.IsRetracted()) return;
+
 		Anchorable anchorable;
 		if (FindAnchorable(out anchorable, direction)) {
-			if (grappleRope.IsRetracted()) {
-				ConnectGrapple(anchorable);
-				currentState = GrapplerStates.Grappling;
-			}
+			ConnectGrapple(anchorable);
+			currentState = GrapplerStates.Grappling;
+		}
+		else {
+			grappleRope.Misfire(direction);
 		}
 	}
 
@@ -56,22 +53,12 @@ public class Grappler : StateMachine {
 		currentState = GrapplerStates.Grappling;
 	}
 
-	private void ApplySwipeForce(Vector2 swipeDirection, float swipeMagnitude) {
-		Rigidbody2D rb = GetComponent<Rigidbody2D>();
-		rb.AddForce(swipeDirection * swipeMagnitude, ForceMode2D.Impulse);
-	}
-
 	private void ReleaseGrapple() {
 		grappleRope.Release();
 	}
 
 	private bool FindAnchorable(out Anchorable anchorable, Vector2 direction) {
 		return anchorableFinder.FindAnchorable(out anchorable, direction);
-	}
-
-	private void EnableRotation() {
-		Rigidbody2D r = GetComponent<Rigidbody2D>();
-		r.constraints = RigidbodyConstraints2D.None;
 	}
 
 	private bool CurrentStateIs(GrapplerStates grapplerState) {
