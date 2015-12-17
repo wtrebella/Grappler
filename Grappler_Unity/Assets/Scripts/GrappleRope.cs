@@ -3,7 +3,12 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
+[RequireComponent(typeof(GrappleRopeEndPoints))]
 public class GrappleRope : StateMachine {
+	public SpringJointAttributes retractedAttributes;
+	public SpringJointAttributes connectedAttributes;
+	public SpringJointAttributes freeFlowingAttributes;
+
 	public Action Signal_Retracted_EnterState;
 	public Action Signal_Connected_EnterState;
 	public Action Signal_FreeFlowing_EnterState;
@@ -14,7 +19,9 @@ public class GrappleRope : StateMachine {
 	
 	private enum GrappleRopeStates {Retracted, FreeFlowing, Connected}
 	private Anchorable connectedAnchorable;
+	private GrappleRopeEndPoints ropeEndPoints;
 	private SpringJoint2D springJoint;
+	private Rigidbody2D misfireBody;
 
 	public bool IsRetracted() {
 		return (GrappleRopeStates)currentState == GrappleRopeStates.Retracted;
@@ -30,7 +37,8 @@ public class GrappleRope : StateMachine {
 	
 	public void Connect(Anchorable anchorable) {
 		WhitTools.Assert(!HasConnectedAnchorable(), "already connected to something else! release before connecting.");
-		
+
+		springJoint.ApplyAttributes(connectedAttributes);
 		springJoint.connectedBody = anchorable.rigid;
 		springJoint.connectedAnchor = anchorable.GetAnchorPoint();
 		springJoint.enabled = true;
@@ -42,21 +50,20 @@ public class GrappleRope : StateMachine {
 	public void Misfire(Vector2 direction) {
 		WhitTools.Assert(!HasConnectedAnchorable(), "can't misfire if already connected!");
 
-		GameObject body = new GameObject("body", typeof(Rigidbody2D));
-		Rigidbody2D rigid = body.GetComponent<Rigidbody2D>();
-		rigid.mass = 0.1f;
-		rigid.isKinematic = true;
-		rigid.transform.position = springJoint.GetAnchorInWorldPosition() + direction * 3;
-		rigid.isKinematic = false;
+		springJoint.ApplyAttributes(freeFlowingAttributes);
+		misfireBody.isKinematic = true;
+		misfireBody.transform.position = springJoint.GetAnchorInWorldPosition() + direction * 3;
+		misfireBody.isKinematic = false;
 		springJoint.enabled = true;
-		springJoint.connectedBody = rigid;
+		springJoint.connectedBody = misfireBody;
 		springJoint.connectedAnchor = Vector2.zero;
 		currentState = GrappleRopeStates.FreeFlowing;
 	}
 
 	public void Release() {
 		WhitTools.Assert(HasConnectedAnchorable(), "not connected! can't release if not connected.");
-		
+
+		springJoint.ApplyAttributes(retractedAttributes);
 		springJoint.enabled = false;
 		connectedAnchorable.HandleRelease();
 		connectedAnchorable = null;
@@ -64,13 +71,13 @@ public class GrappleRope : StateMachine {
 	}
 	
 	private void Awake() {
+		misfireBody = new GameObject("Misfire Body").AddComponent<Rigidbody2D>();
+		misfireBody.mass = 0.1f;
+		misfireBody.isKinematic = true;
+		ropeEndPoints = GetComponent<GrappleRopeEndPoints>();
 		springJoint = GetComponent<SpringJoint2D>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;
-	}
-
-	private void Retracted_EnterState() {
-		if (Signal_Retracted_EnterState != null) Signal_Retracted_EnterState();
 	}
 
 	private void Retracted_UpdateState() {
@@ -79,14 +86,19 @@ public class GrappleRope : StateMachine {
 
 	private void FreeFlowing_UpdateState() {
 		if (Signal_FreeFlowing_UpdateState != null) Signal_FreeFlowing_UpdateState();
-	}
-
-	private void Connected_EnterState() {
-		if (Signal_Connected_EnterState != null) Signal_Connected_EnterState();
+		if (ropeEndPoints.EndPointsAreVeryClose()) currentState = GrappleRopeStates.Retracted;
 	}
 
 	private void Connected_UpdateState() {
 		if (Signal_Connected_UpdateState != null) Signal_Connected_UpdateState();
+	}
+
+	private void Retracted_EnterState() {
+		if (Signal_Retracted_EnterState != null) Signal_Retracted_EnterState();
+	}
+
+	private void Connected_EnterState() {
+		if (Signal_Connected_EnterState != null) Signal_Connected_EnterState();
 	}
 
 	private void FreeFlowing_EnterState() {

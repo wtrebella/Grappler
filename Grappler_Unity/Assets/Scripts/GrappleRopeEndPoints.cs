@@ -20,6 +20,10 @@ public class GrappleRopeEndPoints : MonoBehaviour {
 	public Vector2 GetEndPoint() {
 		return endTransform.position;
 	}
+	
+	public bool EndPointsAreVeryClose() {
+		return (startTransform.position - endTransform.position).magnitude < 0.1f;
+	}
 
 	private void Awake() {
 		springJoint = GetComponent<SpringJoint2D>();

@@ -12,6 +12,10 @@ public static class WhitExtensions {
 		return springJoint.transform.TransformPoint(springJoint.anchor);
 	}
 
+	public static void ApplyAttributes(this SpringJoint2D springJoint, SpringJointAttributes attributes) {
+		SpringJointAttributes.ApplyAttributes(springJoint, attributes);
+	}
+
 	public static Vector2 ToVector2(this Vector3 v) {
 		return new Vector2(v.x, v.y);
 	}
