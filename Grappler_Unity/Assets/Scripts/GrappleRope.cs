@@ -42,7 +42,16 @@ public class GrappleRope : StateMachine {
 	public void Misfire(Vector2 direction) {
 		WhitTools.Assert(!HasConnectedAnchorable(), "can't misfire if already connected!");
 
-
+		GameObject body = new GameObject("body", typeof(Rigidbody2D));
+		Rigidbody2D rigid = body.GetComponent<Rigidbody2D>();
+		rigid.mass = 0.1f;
+		rigid.isKinematic = true;
+		rigid.transform.position = springJoint.GetAnchorInWorldPosition() + direction * 3;
+		rigid.isKinematic = false;
+		springJoint.enabled = true;
+		springJoint.connectedBody = rigid;
+		springJoint.connectedAnchor = Vector2.zero;
+		currentState = GrappleRopeStates.FreeFlowing;
 	}
 
 	public void Release() {
@@ -80,8 +89,8 @@ public class GrappleRope : StateMachine {
 		if (Signal_Connected_UpdateState != null) Signal_Connected_UpdateState();
 	}
 
-	private void FreeFlowing_UpdateState() {
-		if (Signal_FreeFlowing_UpdateState != null) Signal_FreeFlowing_UpdateState();
+	private void FreeFlowing_EnterState() {
+		if (Signal_FreeFlowing_EnterState != null) Signal_FreeFlowing_EnterState();
 	}
 
 	private bool HasConnectedAnchorable() {

@@ -12,13 +12,14 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 
 	private void Awake() {
 		grappleRopeEndPoints = GetComponent<GrappleRopeEndPoints>();
+		grappleRopeEndPoints.SignalRopeEndPointsUpdated += HandleRopeEndPointsUpdated;
 		InitLine();
 	}
-	
-	private void FixedUpdate() {
+
+	private void HandleRopeEndPointsUpdated() {
 		DrawRope();
 	}
-	
+
 	private void DrawRope() {
 		Vector3 startPoint = grappleRopeEndPoints.GetStartPoint().ToVector3();
 		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();

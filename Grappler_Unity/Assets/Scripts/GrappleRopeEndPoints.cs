@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
 [RequireComponent(typeof(GrappleRope))]
 public class GrappleRopeEndPoints : MonoBehaviour {
+	public Action SignalRopeEndPointsUpdated;
+
 	private GrappleRope grappleRope;
 	private SpringJoint2D springJoint;
 	private Transform startTransform;
@@ -35,6 +38,7 @@ public class GrappleRopeEndPoints : MonoBehaviour {
 	private void Retracted_UpdateState() {
 		Vector2 startAnchor = springJoint.GetAnchorInWorldPosition();
 		startTransform.position = endTransform.position = startAnchor;
+		if (SignalRopeEndPointsUpdated != null) SignalRopeEndPointsUpdated();
 	}
 
 	private void Connected_UpdateState() {
@@ -42,9 +46,14 @@ public class GrappleRopeEndPoints : MonoBehaviour {
 		Vector2 endAnchor = springJoint.GetConnectedAnchorInWorldPosition();
 		startTransform.position = startAnchor;
 		endTransform.position = endAnchor;
+		if (SignalRopeEndPointsUpdated != null) SignalRopeEndPointsUpdated();
 	}
 
 	private void FreeFlowing_UpdateState() {
-
+		Vector2 startAnchor = springJoint.GetAnchorInWorldPosition();
+		Vector2 endAnchor = springJoint.GetConnectedAnchorInWorldPosition();
+		startTransform.position = startAnchor;
+		endTransform.position = endAnchor;
+		if (SignalRopeEndPointsUpdated != null) SignalRopeEndPointsUpdated();
 	}
 }
