@@ -20,6 +20,7 @@ public class Grappler : StateMachine {
 
 	private void Start() {
 		SwipeDetector.instance.SignalSwipe += HandleSwipe;
+		SwipeDetector.instance.SignalTap += HandleTap;
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
@@ -27,6 +28,13 @@ public class Grappler : StateMachine {
 		else if (CurrentStateIs(GrapplerStates.Grappling)) {
 			ReleaseGrapple();
 			swipeForcer.ApplySwipeForce(swipeDirection, swipeMagnitude);
+			currentState = GrapplerStates.Falling;
+		}
+	}
+
+	private void HandleTap() {
+		if (CurrentStateIs(GrapplerStates.Grappling)) {
+			ReleaseGrapple();
 			currentState = GrapplerStates.Falling;
 		}
 	}

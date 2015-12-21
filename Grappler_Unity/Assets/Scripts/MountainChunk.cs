@@ -14,9 +14,18 @@ public class MountainChunk : MonoBehaviour {
 	[SerializeField] private float marginSize = 60.0f;
 
 	private List<Vector2> linePoints;
+	private Dictionary<int, float> distances;
 	private PolygonCollider2D polygonCollider;
 	private MountainChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
+
+	public int GetRandomPointIndex() {
+		return Random.Range(0, linePoints.Count);
+	}
+
+	public int GetPointsCount() {
+		return linePoints.Count;
+	}
 
 	public Vector2 GetLastLinePoint() {
 		return linePoints.GetLastItem();
@@ -24,6 +33,41 @@ public class MountainChunk : MonoBehaviour {
 
 	public Vector2 GetFirstLinePoint() {
 		return linePoints[0];
+	}
+
+	public float GetTotalDistance() {
+		return distances[linePoints.Count - 1];
+	}
+
+	public Vector2 GetLinePoint(int index) {
+		if (index < 0 || index >= linePoints.Count) {
+			Debug.LogError("invalid line point. returning Vector2.zero.");
+			return Vector2.zero;
+		}
+
+		return linePoints[index];
+	}
+	float prevLerpDistance = 0;
+	public Vector2 GetPositionAlongLine(float lerp) {
+		lerp = Mathf.Clamp01(lerp);
+		float totalDistance = GetTotalDistance();
+		float lerpDistance = totalDistance * lerp;
+		int firstPointIndex = GetFirstPointIndexAtDistance(lerpDistance);
+		int secondPointIndex = firstPointIndex+1;
+		if (firstPointIndex >= linePoints.Count - 1) Debug.LogError("distance greater than end of cliff line...");
+		float thisPointDistance = distances[firstPointIndex];
+		float nextPointDistance = distances[secondPointIndex];
+		float deltaDistance = lerpDistance - thisPointDistance;
+		float betweenPointsDistance = nextPointDistance - thisPointDistance;
+		float pointLerp = deltaDistance / betweenPointsDistance;
+		return GetPositionBetweenLinePoints(firstPointIndex, secondPointIndex, pointLerp);
+	}
+
+	public Vector2 GetPositionBetweenLinePoints(int indexA, int indexB, float lerp) {
+		lerp = Mathf.Clamp01(lerp);
+		Vector2 pointA = GetLinePoint(indexA);
+		Vector2 pointB = GetLinePoint(indexB);
+		return Vector2.Lerp(pointA, pointB, lerp);
 	}
 	
 	public void Generate(Vector2 origin) {
@@ -33,6 +77,7 @@ public class MountainChunk : MonoBehaviour {
 		Vector2[] pointsArray = points.ToArray();
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
+		CalculateDistances();
 	}
 
 	public List<Vector2> GetListOfLinePoints() {
@@ -47,6 +92,33 @@ public class MountainChunk : MonoBehaviour {
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
+	}
+
+	private void CalculateDistances() {
+		distances = new Dictionary<int, float>();
+		distances.Add(0, 0);
+		for (int i = 1; i < linePoints.Count; i++) {
+			float previousDistance = distances[i-1];
+			Vector2 pointA = linePoints[i-1];
+			Vector2 pointB = linePoints[i];
+			float deltaDistance = (pointB - pointA).magnitude;
+			float distance = previousDistance + deltaDistance;
+			distances.Add(i, distance);
+		}
+	}
+
+	private int GetFirstPointIndexAtDistance(float distance) {
+		int index = 0;
+
+		for (int i = 1; i < linePoints.Count; i++) {
+			float tempDistance = distances[i];
+			if (tempDistance >= distance) {
+				index = i-1;
+				break;
+			}
+		}
+
+		return index;
 	}
 
 	private void GenerateBasicShape(ref List<Vector2> points, Vector2 origin) {

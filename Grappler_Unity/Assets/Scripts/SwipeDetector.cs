@@ -6,6 +6,7 @@ public class SwipeDetector : MonoBehaviour {
 	public static SwipeDetector instance;
 
 	public Action<Vector2, float> SignalSwipe;
+	public Action SignalTap;
 
 	[SerializeField] private float minSwipeLength = 50;
 	[SerializeField] private float maxSwipeDuration = 0.3f;
@@ -27,6 +28,10 @@ public class SwipeDetector : MonoBehaviour {
 
 	private float GetSwipeDeltaTime() {
 		return Time.time - beginningSwipeTime;
+	}
+
+	private void HandleTap() {
+		if (SignalTap != null) SignalTap();
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
@@ -67,6 +72,7 @@ public class SwipeDetector : MonoBehaviour {
 			Vector2 swipeDirection = currentSwipeVector.normalized;
 			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
+		else HandleTap();
 	}
 
 
@@ -101,5 +107,6 @@ public class SwipeDetector : MonoBehaviour {
 			Vector2 swipeDirection = currentSwipeVector.normalized;
 			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
+		else HandleTap();
 	}
 }
