@@ -5,6 +5,7 @@ using Vectrosity;
 
 [RequireComponent(typeof(GrappleRopeEndPoints))]
 public class GrappleRopeLineRenderer : MonoBehaviour {
+	[SerializeField] private Camera cam;
 	[SerializeField] private float width = 2;
 	
 	private VectorLine line;
@@ -34,6 +35,8 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 	private void InitLine() {
 		VectorManager.useDraw3D = true;
 		line = new VectorLine("Rope Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
+		line.layer = LayerMask.NameToLayer("Default");
 		line.color = new Color32(186, 150, 112, 255);
+
 	}
 }

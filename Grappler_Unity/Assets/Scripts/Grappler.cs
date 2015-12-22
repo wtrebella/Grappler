@@ -5,13 +5,17 @@ using System.Collections.Generic;
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrappleRope))]
 [RequireComponent(typeof(GrapplerSwipeForcer))]
+[RequireComponent(typeof(GrapplerEnemyInteraction))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
+	private GrapplerEnemyInteraction enemyInteraction;
 	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private GrapplerSwipeForcer swipeForcer;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
+		enemyInteraction = GetComponent<GrapplerEnemyInteraction>();
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
 		swipeForcer = GetComponent<GrapplerSwipeForcer>();
@@ -21,6 +25,11 @@ public class Grappler : StateMachine {
 	private void Start() {
 		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		SwipeDetector.instance.SignalTap += HandleTap;
+		enemyInteraction.SignalHitEnemy += HandleHitEnemy;
+	}
+
+	private void HandleHitEnemy(Enemy enemy) {
+		currentState = GrapplerStates.Dead;
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {

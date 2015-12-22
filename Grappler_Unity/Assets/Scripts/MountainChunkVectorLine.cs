@@ -26,6 +26,7 @@ public class MountainChunkVectorLine : MonoBehaviour {
 	private void InitLine() {
 		VectorManager.useDraw3D = true;
 		line = new VectorLine("Mountain Chunk Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
+		line.layer = LayerMask.NameToLayer("Default");
 		line.SetColor(new Color32(1, 1, 1, 1));
 	}
 }

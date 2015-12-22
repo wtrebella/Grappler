@@ -47,7 +47,7 @@ public class MountainChunk : MonoBehaviour {
 
 		return linePoints[index];
 	}
-	float prevLerpDistance = 0;
+
 	public Vector2 GetPositionAlongLine(float lerp) {
 		lerp = Mathf.Clamp01(lerp);
 		float totalDistance = GetTotalDistance();
