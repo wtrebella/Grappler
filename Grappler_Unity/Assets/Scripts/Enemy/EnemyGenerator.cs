@@ -14,7 +14,7 @@ public class EnemyGenerator : MonoBehaviour {
 	}
 
 	private void CreateEnemy(MountainChunk mountainChunk) {
-		Enemy enemy = Instantiate(enemyPrefab) as Enemy;
+		Enemy enemy = enemyPrefab.Spawn();
 		enemy.transform.parent = transform;
 		enemy.transform.localPosition = Vector3.zero;
 		enemy.SetMountainChunk(mountainChunk);
