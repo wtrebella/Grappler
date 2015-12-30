@@ -20,9 +20,9 @@ public class EagleGenerator : MonoBehaviour {
 		eagle.transform.parent = transform;
 		Vector3 position = Vector3.zero;
 		position.x = GameScreen.instance.lowerRightWithMargin.x;
-		float lowerQuarterY = GameScreen.instance.minY + GameScreen.instance.height * 0.25f;
-		float upperQuarterY = GameScreen.instance.maxY - GameScreen.instance.height * 0.25f;
-		position.y = Mathf.Lerp(lowerQuarterY, upperQuarterY, Random.value);
+		float minY = GameScreen.instance.center.y;
+		float maxY = GameScreen.instance.center.y + GameScreen.instance.height;
+		position.y = Mathf.Lerp(minY, maxY, Random.value);
 		eagle.transform.position = position;
 		eagle.StartFlying();
 	}

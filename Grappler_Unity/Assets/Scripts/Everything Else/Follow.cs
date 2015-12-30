@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public enum FollowUpdateType {
 	Update,
@@ -18,6 +19,9 @@ public enum FollowAxisType {
 }
 
 public class Follow : MonoBehaviour {
+	[HideInInspector, NonSerialized] public float minX = Mathf.NegativeInfinity;
+	[HideInInspector, NonSerialized] public float minY = Mathf.NegativeInfinity;
+
 	[SerializeField] private Transform objectToFollow;
 	[SerializeField] private Vector2 objectOffset;
 	[SerializeField] private FollowUpdateType updateType;
@@ -31,6 +35,10 @@ public class Follow : MonoBehaviour {
 
 	public void UpdateMovementImmediateNow() {
 		UpdateMovementImmediate();
+	}
+
+	public void SetAxisType(FollowAxisType axisType) {
+		this.axisType = axisType;
 	}
 
 	private void Awake() {
@@ -74,6 +82,9 @@ public class Follow : MonoBehaviour {
 		
 		if (axisType == FollowAxisType.X) targetPosition.y = transform.position.y;
 		else if (axisType == FollowAxisType.Y) targetPosition.x = transform.position.x;
+
+		targetPosition.x = Mathf.Max(minX, targetPosition.x);
+		targetPosition.y = Mathf.Max(minY, targetPosition.y);
 
 		return targetPosition;
 	}

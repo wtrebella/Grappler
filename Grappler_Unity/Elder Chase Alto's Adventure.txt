@@ -1,0 +1,12 @@
+Unfortunately it wasn’t as simple as I’d have liked - ended up having to layer up a bunch of factors to getting feeling just right. Here’s how I explained it back when I added it in the build:
+
+- We start by having the elder match the player's speed exactly at all times, so the horizontal distance between them is fixed (looks very unnatural at this stage, like they're attached with a metal rod)
+- We then apply a manual 'speed offset' value (+1 means the elder is gaining on the player at a rate of 1m/s. -1 means the player is escaping at 1m/s etc… think of the metal rod getting shorter/longer)
+- The default speed offset is positive, so the elder is always catching up (slowly)
+- As the elder approaches the player, he slows down a little to stretch the moment out and make it feel more intense (and give you time to escape)
+- He also holds back and keeps his distance while you're grinding (waiting patiently for the right moment to strike!)
+- If you land a trick and increase your boost speed, the offset is reduced and the player can escape for a short period of time.
+- If the elder falls very far behind, the offset is increased to keep him going too far (currently around 30m). This way he's always close enough to catchup and spend more time on screen
+- All of the above speed changes are delayed slightly to give the elder a more natural 'reaction time' and disguise the unrealistic attachment to the player.
+- The elder's llama run cycle animation is also blended with a constant frame rate to help disguise the sudden speed fluctuations.
+- I've also experimented with having the players 'true' speed (i.e. velocity from the physics system) factor into how quickly you can escape - I've settled on having this be very minimal, allowing you to slightly stay ahead of the elder on steep hills and gain a meter or two when falling a long distance.

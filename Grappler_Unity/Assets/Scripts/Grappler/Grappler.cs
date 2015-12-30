@@ -1,20 +1,26 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrappleRope))]
 [RequireComponent(typeof(GrapplerSwipeForcer))]
 [RequireComponent(typeof(GrapplerEnemyInteraction))]
+[RequireComponent(typeof(GrapplerLavaInteraction))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
+	public Action SignalGrapplerDied;
+
 	private GrapplerEnemyInteraction enemyInteraction;
+	private GrapplerLavaInteraction lavaInteraction;
 	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private GrapplerSwipeForcer swipeForcer;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
+		lavaInteraction = GetComponent<GrapplerLavaInteraction>();
 		enemyInteraction = GetComponent<GrapplerEnemyInteraction>();
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
@@ -26,9 +32,15 @@ public class Grappler : StateMachine {
 		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		SwipeDetector.instance.SignalTap += HandleTap;
 		enemyInteraction.SignalHitEnemy += HandleHitEnemy;
+		lavaInteraction.SignalEnteredLava += HandleEnteredLava;
 	}
 
 	private void HandleHitEnemy(MountainEnemy enemy) {
+		ReleaseGrappleIfConnected();
+	}
+
+	private void HandleEnteredLava() {
+		ReleaseGrappleIfConnected();
 		currentState = GrapplerStates.Dead;
 	}
 
@@ -42,14 +54,12 @@ public class Grappler : StateMachine {
 	}
 
 	private void HandleTap() {
-		if (CurrentStateIs(GrapplerStates.Grappling)) {
-			ReleaseGrapple();
-			currentState = GrapplerStates.Falling;
-		}
+		ReleaseGrappleIfConnected();
 	}
 
 	private void Dead_EnterState() {
 		if (grappleRope.IsConnected()) ReleaseGrapple();
+		if (SignalGrapplerDied != null) SignalGrapplerDied();
 	}
 
 	private void ConnectGrappleIfAble(Vector2 direction) {
@@ -72,6 +82,13 @@ public class Grappler : StateMachine {
 
 	private void ReleaseGrapple() {
 		grappleRope.Release();
+	}
+
+	private void ReleaseGrappleIfConnected() {
+		if (CurrentStateIs(GrapplerStates.Grappling)) {
+			ReleaseGrapple();
+			currentState = GrapplerStates.Falling;
+		}
 	}
 
 	private bool FindAnchorable(out Anchorable anchorable, Vector2 direction) {

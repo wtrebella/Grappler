@@ -27,16 +27,7 @@ public class GrapplerEnemyInteraction : MonoBehaviour {
 	}
 
 	private void ApplyTorque(float torqueStrength) {
-		EnableRotation();
 		float torque = UnityEngine.Random.Range(-1.0f, 1.0f) * torqueStrength;
 		rigid.AddTorque(torque);
-	}
-
-	private void EnableRotation() {
-		rigid.constraints = RigidbodyConstraints2D.None;
-	}
-	
-	private void DisableRotation() {
-		rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
 	}
 }
