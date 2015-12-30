@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class GrapplerEnemyInteraction : MonoBehaviour {
-	public Action<Enemy> SignalHitEnemy;
+	public Action<MountainEnemy> SignalHitEnemy;
 	
 	private Rigidbody2D rigid;
 
@@ -13,7 +13,7 @@ public class GrapplerEnemyInteraction : MonoBehaviour {
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider) {
-		Enemy enemy = collider.GetComponent<Enemy>();
+		MountainEnemy enemy = collider.GetComponent<MountainEnemy>();
 		if (enemy) {
 			ApplyForce(enemy.GetForceStrength());
 			ApplyTorque(enemy.GetTorqueStrength());

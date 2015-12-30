@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
+public class MountainEnemy : MonoBehaviour {
 	public float linePosition {get; private set;}
 
 	[SerializeField] private float forceStrength = 1;
@@ -20,7 +20,6 @@ public class Enemy : MonoBehaviour {
 
 	public void SetMountainChunk(MountainChunk mountainChunk) {
 		this.mountainChunk = mountainChunk;
-		SetExactLinePosition(Random.value);
 	}
 
 	public void SetExactLinePosition(float linePosition) {

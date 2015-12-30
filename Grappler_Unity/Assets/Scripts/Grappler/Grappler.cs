@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -28,7 +28,7 @@ public class Grappler : StateMachine {
 		enemyInteraction.SignalHitEnemy += HandleHitEnemy;
 	}
 
-	private void HandleHitEnemy(Enemy enemy) {
+	private void HandleHitEnemy(MountainEnemy enemy) {
 		currentState = GrapplerStates.Dead;
 	}
 

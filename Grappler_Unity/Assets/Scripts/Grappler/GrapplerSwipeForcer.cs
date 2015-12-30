@@ -12,6 +12,6 @@ public class GrapplerSwipeForcer : MonoBehaviour {
 	}
 
 	public void ApplySwipeForce(Vector2 swipeDirection, float swipeMagnitude) {
-		rigid.AddForce(swipeDirection * swipeMagnitude * 0.1f * strength, ForceMode2D.Impulse);
+		rigid.AddForce(swipeDirection * swipeMagnitude * 0.01f * strength, ForceMode2D.Impulse);
 	}
 }
