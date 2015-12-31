@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
-[RequireComponent(typeof(GrappleRopeEndPoints))]
+[RequireComponent(typeof(GrappleSpringJointRopeEndPoints))]
 public class GrappleRope : StateMachine {
 	public SpringJointAttributes retractedAttributes;
 	public SpringJointAttributes connectedAttributes;
@@ -19,7 +19,7 @@ public class GrappleRope : StateMachine {
 	
 	private enum GrappleRopeStates {Retracted, FreeFlowing, Connected}
 	private Anchorable connectedAnchorable;
-	private GrappleRopeEndPoints ropeEndPoints;
+	private GrappleSpringJointRopeEndPoints ropeEndPoints;
 	private SpringJoint2D springJoint;
 	private Rigidbody2D misfireBody;
 
@@ -33,6 +33,18 @@ public class GrappleRope : StateMachine {
 
 	public bool IsFreeFlowing() {
 		return (GrappleRopeStates)currentState == GrappleRopeStates.FreeFlowing;
+	}
+
+	public Vector2 GetVector() {
+		return ropeEndPoints.GetEndPoint() - ropeEndPoints.GetStartPoint();
+	}
+
+	public Vector2 GetStartPoint() {
+		return ropeEndPoints.GetStartPoint();
+	}
+
+	public Vector2 GetEndPoint() {
+		return ropeEndPoints.GetEndPoint();
 	}
 	
 	public void Connect(Anchorable anchorable) {
@@ -74,7 +86,7 @@ public class GrappleRope : StateMachine {
 		misfireBody = new GameObject("Misfire Body").AddComponent<Rigidbody2D>();
 		misfireBody.mass = 0.1f;
 		misfireBody.isKinematic = true;
-		ropeEndPoints = GetComponent<GrappleRopeEndPoints>();
+		ropeEndPoints = GetComponent<GrappleSpringJointRopeEndPoints>();
 		springJoint = GetComponent<SpringJoint2D>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;

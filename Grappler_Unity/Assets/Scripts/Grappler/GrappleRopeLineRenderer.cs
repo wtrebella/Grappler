@@ -3,24 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using Vectrosity;
 
-[RequireComponent(typeof(GrappleRopeEndPoints))]
+[RequireComponent(typeof(GrappleSpringJointRopeEndPoints))]
 public class GrappleRopeLineRenderer : MonoBehaviour {
 	[SerializeField] private Camera cam;
 	[SerializeField] private float width = 2;
 	
 	private VectorLine line;
-	private GrappleRopeEndPoints grappleRopeEndPoints;
-
-	private void Awake() {
-		grappleRopeEndPoints = GetComponent<GrappleRopeEndPoints>();
+	private GrappleSpringJointRopeEndPoints grappleRopeEndPoints;
+	
+	private void Start() {
+		grappleRopeEndPoints = GetComponent<GrappleSpringJointRopeEndPoints>();
 		grappleRopeEndPoints.SignalRopeEndPointsUpdated += HandleRopeEndPointsUpdated;
 		InitLine();
 	}
-
+	
 	private void HandleRopeEndPointsUpdated() {
 		DrawRope();
 	}
-
+	
 	private void DrawRope() {
 		Vector3 startPoint = grappleRopeEndPoints.GetStartPoint().ToVector3();
 		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();
@@ -31,12 +31,12 @@ public class GrappleRopeLineRenderer : MonoBehaviour {
 		line.points3.Add(endPoint);
 		line.Draw3D();
 	}
-
+	
 	private void InitLine() {
 		VectorManager.useDraw3D = true;
 		line = new VectorLine("Rope Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
 		line.layer = LayerMask.NameToLayer("Default");
 		line.color = new Color32(186, 150, 112, 255);
-
+		
 	}
 }

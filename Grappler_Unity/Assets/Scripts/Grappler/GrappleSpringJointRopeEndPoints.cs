@@ -4,7 +4,7 @@ using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
 [RequireComponent(typeof(GrappleRope))]
-public class GrappleRopeEndPoints : MonoBehaviour {
+public class GrappleSpringJointRopeEndPoints : MonoBehaviour {
 	public Action SignalRopeEndPointsUpdated;
 
 	private GrappleRope grappleRope;
