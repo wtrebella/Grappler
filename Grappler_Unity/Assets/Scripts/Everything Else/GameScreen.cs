@@ -97,6 +97,18 @@ public class GameScreen : MonoBehaviour {
 		get {return new Vector2(upperRightAnchor.transform.position.x + onscreenMargin, upperRightAnchor.transform.position.y + onscreenMargin);}
 	}
 
+	public bool IsOnscreenHorizontally(float x) {
+		return x >= lowerLeft.x && x <= lowerRight.x;
+	}
+	
+	public bool IsOnscreenVertically(float y) {
+		return y >= lowerLeft.y && y <= upperLeft.y;
+	}
+	
+	public bool IsOnscreen(Vector2 point) {
+		return IsOnscreenHorizontally(point.x) && IsOnscreenVertically(point.y);
+	}
+
 	public bool IsOnscreenHorizontallyWithMargin(float x) {
 		return x >= lowerLeftWithMargin.x && x <= lowerRightWithMargin.x;
 	}

@@ -28,16 +28,17 @@ public class ArcRaycaster : MonoBehaviour {
 
 	public bool FindAnchorable(out Anchorable foundAnchorable, Vector2 direction) {
 		var colliders = RaycastArc(direction);
-		foundAnchorable = GetFurthestAnchorableAmongColliders(colliders);
+		foundAnchorable = GetFurthestReachableAnchorableAmongColliders(colliders);
 		return foundAnchorable != null;
 	}
 
-	private Anchorable GetFurthestAnchorableAmongColliders(Collider2D[] colliders) {
+	private Anchorable GetFurthestReachableAnchorableAmongColliders(Collider2D[] colliders) {
 		Anchorable furthestAnchorable = null;
 
 		foreach (Collider2D collider in colliders) {
 			Anchorable anchorable = collider.GetComponent<Anchorable>();
 			if (!CanDirectlyReachAnchorable(anchorable)) continue;
+			if (!GameScreen.instance.IsOnscreen(collider.transform.position)) continue;
 			if (furthestAnchorable != null) {
 				if (anchorable.anchorableID > furthestAnchorable.anchorableID) furthestAnchorable = anchorable;
 			}
