@@ -26,6 +26,14 @@ public class GrapplerArmEndPoints : MonoBehaviour {
 	public Vector2 GetElbowPoint() {
 		return elbowTransform.position;
 	}
+
+	public Vector2 GetUpperArmVector() {
+		return GetElbowPoint() - GetStartPoint();
+	}
+
+	public Vector2 GetLowerArmVector() {
+		return GetEndPoint() - GetElbowPoint();
+	}
 	
 	public bool EndPointsAreVeryClose() {
 		return (startTransform.position - endTransform.position).magnitude < 0.1f;
