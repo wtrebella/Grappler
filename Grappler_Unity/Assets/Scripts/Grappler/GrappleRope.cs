@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
-[RequireComponent(typeof(GrappleSpringJointRopeEndPoints))]
+[RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrappleRope : StateMachine {
 	public SpringJointAttributes retractedAttributes;
 	public SpringJointAttributes connectedAttributes;
@@ -19,7 +19,7 @@ public class GrappleRope : StateMachine {
 	
 	private enum GrappleRopeStates {Retracted, FreeFlowing, Connected}
 	private Anchorable connectedAnchorable;
-	private GrappleSpringJointRopeEndPoints ropeEndPoints;
+	private GrapplerRopeEndPoints ropeEndPoints;
 	private SpringJoint2D springJoint;
 	private Rigidbody2D misfireBody;
 
@@ -45,6 +45,10 @@ public class GrappleRope : StateMachine {
 
 	public Vector2 GetEndPoint() {
 		return ropeEndPoints.GetEndPoint();
+	}
+
+	public Vector2 GetGrabPoint() {
+		return ropeEndPoints.GetGrabPoint();
 	}
 	
 	public void Connect(Anchorable anchorable) {
@@ -86,7 +90,7 @@ public class GrappleRope : StateMachine {
 		misfireBody = new GameObject("Misfire Body").AddComponent<Rigidbody2D>();
 		misfireBody.mass = 0.1f;
 		misfireBody.isKinematic = true;
-		ropeEndPoints = GetComponent<GrappleSpringJointRopeEndPoints>();
+		ropeEndPoints = GetComponent<GrapplerRopeEndPoints>();
 		springJoint = GetComponent<SpringJoint2D>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;

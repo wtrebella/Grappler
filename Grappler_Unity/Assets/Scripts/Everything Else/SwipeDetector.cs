@@ -100,7 +100,7 @@ public class SwipeDetector : MonoBehaviour {
 
 	private void DoMouseSwipeEndedPhase() {
 		endSwipePosition = Input.mousePosition.ToVector2();
-		
+
 		currentSwipeVector = new Vector2(endSwipePosition.x - beginningSwipePosition.x, endSwipePosition.y - beginningSwipePosition.y);
 		currentSwipeMagnitude = currentSwipeVector.magnitude;
 		if (currentSwipeMagnitude >= minSwipeLength) {

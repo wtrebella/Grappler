@@ -3,16 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Vectrosity;
 
-[RequireComponent(typeof(GrappleSpringJointRopeEndPoints))]
+[RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrappleRopeLineRenderer : MonoBehaviour {
 	[SerializeField] private Camera cam;
 	[SerializeField] private float width = 2;
 	
 	private VectorLine line;
-	private GrappleSpringJointRopeEndPoints grappleRopeEndPoints;
+	private GrapplerRopeEndPoints grappleRopeEndPoints;
 	
 	private void Start() {
-		grappleRopeEndPoints = GetComponent<GrappleSpringJointRopeEndPoints>();
+		grappleRopeEndPoints = GetComponent<GrapplerRopeEndPoints>();
 		grappleRopeEndPoints.SignalRopeEndPointsUpdated += HandleRopeEndPointsUpdated;
 		InitLine();
 	}

@@ -5,7 +5,6 @@ using System;
 
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrappleRope))]
-[RequireComponent(typeof(GrapplerSwipeForcer))]
 [RequireComponent(typeof(GrapplerEnemyInteraction))]
 [RequireComponent(typeof(GrapplerLavaInteraction))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -16,7 +15,6 @@ public class Grappler : StateMachine {
 	private GrapplerLavaInteraction lavaInteraction;
 	private GrappleRope grappleRope;
 	private AnchorableFinder anchorableFinder;
-	private GrapplerSwipeForcer swipeForcer;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
@@ -24,7 +22,6 @@ public class Grappler : StateMachine {
 		enemyInteraction = GetComponent<GrapplerEnemyInteraction>();
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrappleRope>();
-		swipeForcer = GetComponent<GrapplerSwipeForcer>();
 		currentState = GrapplerStates.Falling;
 	}
 
@@ -46,11 +43,7 @@ public class Grappler : StateMachine {
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
 		if (CurrentStateIs(GrapplerStates.Falling)) ConnectGrappleIfAble(swipeDirection);
-		else if (CurrentStateIs(GrapplerStates.Grappling)) {
-			ReleaseGrapple();
-			swipeForcer.ApplySwipeForce(swipeDirection, swipeMagnitude);
-			currentState = GrapplerStates.Falling;
-		}
+		else ReleaseGrappleIfConnected();
 	}
 
 	private void HandleTap() {
