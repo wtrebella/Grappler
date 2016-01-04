@@ -3,16 +3,23 @@ using System.Collections;
 using Vectrosity;
 using System.Collections.Generic;
 
-public enum ArmType {
-	Left,
-	Right
-}
-
-[RequireComponent(typeof(GrapplerArmEndPoints))]
+[RequireComponent(typeof(GrapplerArmGrabber))]
 public class GrapplerArm : MonoBehaviour {
-	[SerializeField] private ArmType armType;
-	
-	public ArmType GetArmType() {
-		return armType;
+	public bool isGrabbing {get; private set;}
+
+	private GrapplerArmGrabber grip;
+
+	public void Grab() {
+		isGrabbing = true;
+		grip.Grab();
+	}
+
+	public void Release() {
+		isGrabbing = false;
+		grip.Release();
+	}
+
+	private void Awake() {
+		grip = GetComponent<GrapplerArmGrabber>();
 	}
 }

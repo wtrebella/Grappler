@@ -4,7 +4,7 @@ using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
 [RequireComponent(typeof(GrapplerRopeEndPoints))]
-public class GrappleRope : StateMachine {
+public class GrapplerRope : StateMachine {
 	public SpringJointAttributes retractedAttributes;
 	public SpringJointAttributes connectedAttributes;
 	public SpringJointAttributes freeFlowingAttributes;

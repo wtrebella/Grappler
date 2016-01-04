@@ -4,16 +4,19 @@ using System.Collections.Generic;
 using System;
 
 [RequireComponent(typeof(AnchorableFinder))]
-[RequireComponent(typeof(GrappleRope))]
+[RequireComponent(typeof(GrapplerRope))]
 [RequireComponent(typeof(GrapplerEnemyInteraction))]
 [RequireComponent(typeof(GrapplerLavaInteraction))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
 	public Action SignalGrapplerDied;
 
+	[SerializeField] private GrapplerArm leftArm;
+	[SerializeField] private GrapplerArm rightArm;
+
 	private GrapplerEnemyInteraction enemyInteraction;
 	private GrapplerLavaInteraction lavaInteraction;
-	private GrappleRope grappleRope;
+	private GrapplerRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
@@ -21,7 +24,7 @@ public class Grappler : StateMachine {
 		lavaInteraction = GetComponent<GrapplerLavaInteraction>();
 		enemyInteraction = GetComponent<GrapplerEnemyInteraction>();
 		anchorableFinder = GetComponent<AnchorableFinder>();
-		grappleRope = GetComponent<GrappleRope>();
+		grappleRope = GetComponent<GrapplerRope>();
 		currentState = GrapplerStates.Falling;
 	}
 
@@ -70,11 +73,23 @@ public class Grappler : StateMachine {
 
 	private void ConnectGrapple(Anchorable anchorable) {
 		grappleRope.Connect(anchorable);
+		GrabRopeWithArms();
 		currentState = GrapplerStates.Grappling;
 	}
 
 	private void ReleaseGrapple() {
 		grappleRope.Release();
+		ReleaseRopeWithArms();
+	}
+
+	private void GrabRopeWithArms() {
+		leftArm.Grab();
+		rightArm.Grab();
+	}
+
+	private void ReleaseRopeWithArms() {
+		leftArm.Release();
+		rightArm.Release();
 	}
 
 	private void ReleaseGrappleIfConnected() {

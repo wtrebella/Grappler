@@ -3,14 +3,14 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
-[RequireComponent(typeof(GrappleRope))]
+[RequireComponent(typeof(GrapplerRope))]
 public class GrapplerRopeEndPoints : MonoBehaviour {
 	public Action SignalRopeEndPointsUpdated;
 
-	[SerializeField] private float grabPointMaxDistance = 0.3f;
+	[SerializeField] private Transform grabPoint;
 	[SerializeField] private Transform topOfHead;
 
-	private GrappleRope grappleRope;
+	private GrapplerRope grappleRope;
 	private SpringJoint2D springJoint;
 	private Transform startTransform;
 	private Transform endTransform;
@@ -29,16 +29,12 @@ public class GrapplerRopeEndPoints : MonoBehaviour {
 	}
 
 	public Vector2 GetGrabPoint() {
-		Vector2 top = topOfHead.position;
-		Vector2 ropeVector = grappleRope.GetVector();
-		Vector2 vectorToGrabPoint = ropeVector.normalized * Mathf.Min(grabPointMaxDistance, ropeVector.magnitude);
-		Vector2 grabPoint = top += vectorToGrabPoint;
-		return grabPoint;
+		return grabPoint.position;
 	}
 
 	private void Awake() {
 		springJoint = GetComponent<SpringJoint2D>();
-		grappleRope = GetComponent<GrappleRope>();
+		grappleRope = GetComponent<GrapplerRope>();
 
 		grappleRope.Signal_Connected_UpdateState += Connected_UpdateState;
 		grappleRope.Signal_Retracted_UpdateState += Retracted_UpdateState;
