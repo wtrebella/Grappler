@@ -36,7 +36,6 @@ public class GrapplerRopeLineRenderer : MonoBehaviour {
 		VectorManager.useDraw3D = true;
 		line = new VectorLine("Rope Line", new List<Vector3>(), width, LineType.Continuous, Joins.Weld);
 		line.layer = LayerMask.NameToLayer("Default");
-		line.color = new Color32(186, 150, 112, 255);
-		
+		line.color = new Color32(54, 54, 54, 255);
 	}
 }
