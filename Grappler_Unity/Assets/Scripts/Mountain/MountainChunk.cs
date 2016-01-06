@@ -6,6 +6,9 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunk : MonoBehaviour {
 	[SerializeField] private int numPoints = 30;
+	[SerializeField] private float bumpWidthAvg = 0.01f;
+	[SerializeField] private float bumpWidthVar = 0.005f;
+	[SerializeField] private float maxBumpHeight = 0.1f;
 	[SerializeField] private float avgSlope = 0.65f;
 	[SerializeField] private float slopeVar = 0.25f;
 	[SerializeField] private float pointDist = 2.5f;
@@ -72,8 +75,9 @@ public class MountainChunk : MonoBehaviour {
 	
 	public void Generate(Vector2 origin) {
 		List<Vector2> points = new List<Vector2>();
-		GenerateBasicShape(ref points, origin);
-		RandomizeEdge(ref points);
+		GenerateBasicShape(points, origin);
+		MacroRandomizeEdges(points);
+		MicroRandomizeEdges(points);
 		Vector2[] pointsArray = points.ToArray();
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
@@ -121,7 +125,7 @@ public class MountainChunk : MonoBehaviour {
 		return index;
 	}
 
-	private void GenerateBasicShape(ref List<Vector2> points, Vector2 origin) {
+	private void GenerateBasicShape(List<Vector2> points, Vector2 origin) {
 		Vector2 prevPoint = origin;
 		points.Add(prevPoint);
 		
@@ -140,7 +144,7 @@ public class MountainChunk : MonoBehaviour {
 		points.Add(new Vector2(origin.x - marginSize, origin.y));
 	}
 
-	private void RandomizeEdge(ref List<Vector2> points) {
+	private void MacroRandomizeEdges(List<Vector2> points) {
 		Vector2 firstPoint = linePoints[0];
 		Vector2 lastPoint = linePoints.GetLastItem();
 		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
@@ -167,6 +171,26 @@ public class MountainChunk : MonoBehaviour {
 			point += slopeVectorPerp * perpDist;
 			points[i] = point;
 			linePoints[i] = point;
+		}
+	}
+
+	private void MicroRandomizeEdges(List<Vector2> points) {
+		for (int j = 0; j < linePoints.Count - 1; j++) {
+			Vector2 pointA = linePoints[j];
+			Vector2 pointB = linePoints[j+1];
+			float segmentMagnitude = (pointB - pointA).magnitude;
+			Vector2 segmentDirection = (pointB - pointA).normalized;
+			Vector2 segmentDirectionPerp = new Vector2(segmentDirection.y, -segmentDirection.x);
+			float bumpWidth = bumpWidthAvg + Random.Range(-bumpWidthVar, bumpWidthVar);
+			float bumpHeight = Random.Range(-maxBumpHeight, maxBumpHeight);
+			int numBumps = (int)(segmentMagnitude / bumpWidth);
+			bumpWidth = segmentMagnitude / (numBumps + 1);
+			for (int i = 1; i < numBumps; i++) {
+				Vector2 bumpPoint = pointA + segmentDirection * (i * bumpWidth);
+				bumpPoint += segmentDirectionPerp * bumpHeight;
+				linePoints.Insert(j+i, bumpPoint);
+				points.Insert(j+i, bumpPoint);
+			}
 		}
 	}
 }
