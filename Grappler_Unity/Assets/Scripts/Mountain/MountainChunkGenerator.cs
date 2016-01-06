@@ -15,6 +15,16 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private MountainChunkNeededDetector neededDetector;
 	private List<MountainChunk> mountainChunks;
 
+	public MountainChunk GetMountainChunkAtDist(float lerpDist) {
+		int index = (int)lerpDist;
+		if (index >= numMountainChunksCreated) index = numMountainChunksCreated - 1;
+		return mountainChunks[index];
+	}
+
+	public int GetMountainChunkNumAtDist(float lerpDist) {
+		return (int)lerpDist;
+	}
+
 	private void Awake() {
 		numMountainChunksCreated = 0;
 		neededDetector = GetComponent<MountainChunkNeededDetector>();
