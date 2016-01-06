@@ -2,6 +2,12 @@
 using System.Collections;
 
 public class ClimberPlacer : MonoBehaviour {
+	private float _placeOnMountain = 0;
+	public float placeOnMountain {
+		get {return _placeOnMountain;}
+		set {PlaceOnMountain(value);}
+	}
+
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 	[SerializeField] private float sizeOfRotationCheck = 0.05f;
 	[SerializeField] private float smoothTime = 0.1f;
@@ -9,13 +15,11 @@ public class ClimberPlacer : MonoBehaviour {
 
 	private Vector3 positionVelocity;
 	private float rotationVelocity;
-	private float placeOnMountain = 0;
 
-	private void PlaceOnMountainChunks(float place) {
-		if (place == placeOnMountain) return;
-		placeOnMountain = place;
-		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtDist(place);
-		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtDist(place);
+	private void PlaceOnMountain(float place) {
+		_placeOnMountain = place;
+		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtDist(_placeOnMountain);
+		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtDist(_placeOnMountain);
 		Vector3 position = Vector3.SmoothDamp(transform.position, chunk.GetPositionAlongLine(placeOnChunk), ref positionVelocity, smoothTime);
 		Vector3 rotation = new Vector3(0, 0, Mathf.SmoothDampAngle(transform.eulerAngles.z, GetRotationAtPlace(chunk, placeOnChunk), ref rotationVelocity, smoothTime));
 		transform.position = position;
@@ -33,7 +37,15 @@ public class ClimberPlacer : MonoBehaviour {
 		return angle;
 	}
 
-	private void Update() {
-		PlaceOnMountainChunks(placeOnMountain + speed * Time.deltaTime);
+	void Start() {
+		Go.to(this, 5, new GoTweenConfig().floatProp("placeOnMountain", 3));
+
+		StartCoroutine(Blah());
+	}
+
+	private IEnumerator Blah() {
+		yield return new WaitForSeconds(1);
+
+		Go.to(this, 10, new GoTweenConfig().floatProp("placeOnMountain", 0));
 	}
 }
