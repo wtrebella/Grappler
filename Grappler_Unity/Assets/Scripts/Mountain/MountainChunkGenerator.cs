@@ -34,6 +34,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 		numMountainChunksCreated++;
 
 		MountainChunk mountainChunk = Instantiate(mountainChunkPrefab);
+		mountainChunk.transform.parent = transform;
 
 		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero);
 		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint());
