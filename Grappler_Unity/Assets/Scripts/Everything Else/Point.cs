@@ -2,17 +2,17 @@
 using System.Collections;
 
 public class Point {
-	public Vector2 point;
+	public Vector2 pointVector;
 
 	public Point() {
-		point = Vector2.zero;
+		pointVector = Vector2.zero;
 	}
 
 	public Point(float x, float y) {
-		point = new Vector2(x, y);
+		pointVector = new Vector2(x, y);
 	}
 
 	public Point(Vector2 point) {
-		this.point = point;
+		this.pointVector = point;
 	}
 }
