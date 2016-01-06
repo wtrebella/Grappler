@@ -4,6 +4,9 @@ using System.Collections;
 public class Point {
 	public Vector2 pointVector;
 
+	public float x {get {return pointVector.x;}}
+	public float y {get {return pointVector.y;}}
+
 	public Point() {
 		pointVector = Vector2.zero;
 	}

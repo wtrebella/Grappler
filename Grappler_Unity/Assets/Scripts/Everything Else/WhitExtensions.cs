@@ -25,7 +25,7 @@ public static class WhitExtensions {
 	}
 
 	public static void SortWithTwoPeasantsPolygonAlgorithm(this List<Vector2> points) {
-		WhitTools.SortWithTwoPeasantsPolygonAlgorithm(ref points);
+		WhitTools.SortWithTwoPeasantsPolygonAlgorithm(points);
 	}
 
 	public static List<Transform> Copy(this List<Transform> list) {
