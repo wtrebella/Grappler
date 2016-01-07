@@ -9,12 +9,13 @@ public class ClimberPlacer : MonoBehaviour {
 	}
 
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	[SerializeField] private float sizeOfRotationCheck = 0.05f;
-	[SerializeField] private float smoothTime = 0.1f;
-	[SerializeField] private float speed = 0.1f;
+	[SerializeField] private float sizeOfTangentCheck = 0.01f;
+	[SerializeField] private float smoothTimeRotation = 0.1f;
+	[SerializeField] private Transform body;
+	[SerializeField] private Transform feet;
 
-	private Vector3 positionVelocity;
-	private float rotationVelocity;
+	private float bodyRotationVelocity;
+	private float feetRotationVelocity;
 
 	private void Start() {
 		StartCoroutine(Climb());
@@ -24,25 +25,22 @@ public class ClimberPlacer : MonoBehaviour {
 		_placeOnMountain = place;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtDist(_placeOnMountain);
 		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtDist(_placeOnMountain);
-		Vector3 position = chunk.GetPositionAlongLine(placeOnChunk);//Vector3.SmoothDamp(transform.position, chunk.GetPositionAlongLine(placeOnChunk), ref positionVelocity, smoothTime);
-		Vector3 rotation = new Vector3(0, 0, GetRotationAtPlace(chunk, placeOnChunk));//new Vector3(0, 0, Mathf.SmoothDampAngle(transform.eulerAngles.z, GetRotationAtPlace(chunk, placeOnChunk), ref rotationVelocity, smoothTime));
+		Vector3 position = chunk.GetPositionAlongLine(placeOnChunk);
+
+		body.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(body.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk + 0.01f), ref bodyRotationVelocity, smoothTimeRotation));
+		feet.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(feet.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk - 0.01f), ref feetRotationVelocity, smoothTimeRotation));
+
 		transform.position = position;
-		transform.eulerAngles = rotation;
 	}
 
-	private float GetRotationAtPlace(MountainChunk chunk, float place) {
-		float minPlace = place - sizeOfRotationCheck / 2f;
-		float maxPlace = place + sizeOfRotationCheck / 2f;
+	private float GetTangentAtPlace(MountainChunk chunk, float place) {
+		float minPlace = place - sizeOfTangentCheck / 2f;
+		float maxPlace = place + sizeOfTangentCheck / 2f;
 		Vector2 minPosition = chunk.GetPositionAlongLine(minPlace);
 		Vector2 maxPosition = chunk.GetPositionAlongLine(maxPlace);
 		Vector2 vector = maxPosition - minPosition;
 		float angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg - 90;
-
 		return angle;
-	}
-
-	private void Update() {
-//		PlaceOnMountain(placeOnMountain + speed * Time.deltaTime);
 	}
 
 	private IEnumerator Climb() {
