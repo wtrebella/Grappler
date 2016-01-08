@@ -8,6 +8,9 @@ using System;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
 	public Action SignalEnteredGrapplingState;
+	public Action SignalEnteredFallingState;
+
+	[SerializeField] private float wallPushStrength = 5;
 
 	private GrapplerRope grappleRope;
 	private AnchorableFinder anchorableFinder;
@@ -56,6 +59,11 @@ public class Grappler : StateMachine {
 
 	private void Grappling_EnterState() {
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
+		WallPush();
+	}
+
+	private void Falling_EnterState() {
+		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
@@ -80,5 +88,9 @@ public class Grappler : StateMachine {
 
 	private bool CurrentStateIs(GrapplerStates grapplerState) {
 		return (GrapplerStates)currentState == grapplerState;
+	}
+
+	private void WallPush() {
+		GetComponent<Rigidbody2D>().AddForce(new Vector2(wallPushStrength, 3), ForceMode2D.Impulse);
 	}
 }
