@@ -44,11 +44,11 @@ public class Grappler : StateMachine {
 
 	private void ConnectGrappleIfAble(Vector2 direction) {
 		if (!grappleRope.IsRetracted()) return;
-		Debug.Log("connect");
 		Anchorable anchorable;
 		if (FindAnchorable(out anchorable, direction)) {
 			ConnectGrapple(anchorable);
 			currentState = GrapplerStates.Grappling;
+			GetComponentInParent<ClimberPlacer>().Stop();
 		}
 		else {
 			grappleRope.Misfire(direction);

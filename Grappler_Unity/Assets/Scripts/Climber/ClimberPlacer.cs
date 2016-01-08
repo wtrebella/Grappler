@@ -18,7 +18,14 @@ public class ClimberPlacer : MonoBehaviour {
 	private float feetRotationVelocity;
 
 	private void Start() {
-		StartCoroutine(Climb());
+		StartCoroutine("Climb");
+	}
+
+	public void Stop() {
+		StopCoroutine("Climb");
+		Go.killAllTweensWithTarget(this);
+		var rs = GetComponentsInChildren<Rigidbody2D>();
+		foreach (Rigidbody2D r in rs) r.isKinematic = false;
 	}
 
 	private void PlaceOnMountain(float place) {

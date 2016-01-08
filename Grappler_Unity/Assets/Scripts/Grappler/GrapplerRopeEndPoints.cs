@@ -3,7 +3,6 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(SpringJoint2D))]
-[RequireComponent(typeof(GrapplerRope))]
 public class GrapplerRopeEndPoints : MonoBehaviour {
 	public Action SignalRopeEndPointsUpdated;
 
