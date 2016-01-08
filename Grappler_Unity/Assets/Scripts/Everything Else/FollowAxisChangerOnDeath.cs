@@ -10,7 +10,6 @@ public class FollowAxisChangerOnDeath : MonoBehaviour {
 
 	private void Awake() {
 		follow = GetComponent<Follow>();
-		grappler.SignalGrapplerDied += HandleGrapplerDied;
 	}
 
 	private void HandleGrapplerDied() {

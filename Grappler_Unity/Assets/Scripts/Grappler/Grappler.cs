@@ -7,7 +7,7 @@ using System;
 [RequireComponent(typeof(GrapplerRope))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
-	public Action SignalGrapplerDied;
+	public Action SignalEnteredGrapplingState;
 
 	private GrapplerRope grappleRope;
 	private AnchorableFinder anchorableFinder;
@@ -39,7 +39,6 @@ public class Grappler : StateMachine {
 
 	private void Dead_EnterState() {
 		if (grappleRope.IsConnected()) ReleaseGrapple();
-		if (SignalGrapplerDied != null) SignalGrapplerDied();
 	}
 
 	private void ConnectGrappleIfAble(Vector2 direction) {
@@ -48,11 +47,15 @@ public class Grappler : StateMachine {
 		if (FindAnchorable(out anchorable, direction)) {
 			ConnectGrapple(anchorable);
 			currentState = GrapplerStates.Grappling;
-			GetComponentInParent<ClimberPlacer>().Stop();
+			GetComponentInParent<ClimberMover>().StopClimbing();
 		}
 		else {
 			grappleRope.Misfire(direction);
 		}
+	}
+
+	private void Grappling_EnterState() {
+		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {

@@ -79,7 +79,7 @@ public class Follow : MonoBehaviour {
 		Vector3 objectPosition = objectToFollow.position;
 		Vector3 offsetObjectPosition = new Vector3(objectPosition.x + objectOffset.x, objectPosition.y + objectOffset.y, objectPosition.z);
 		Vector3 targetPosition = offsetObjectPosition + initialDirection * initialDistance;
-		
+
 		if (axisType == FollowAxisType.X) targetPosition.y = transform.position.y;
 		else if (axisType == FollowAxisType.Y) targetPosition.x = transform.position.x;
 

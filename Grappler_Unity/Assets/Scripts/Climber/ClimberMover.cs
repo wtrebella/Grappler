@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClimberPlacer : MonoBehaviour {
+public class ClimberMover : MonoBehaviour {
 	private float _placeOnMountain = 0;
 	public float placeOnMountain {
 		get {return _placeOnMountain;}
@@ -18,14 +18,16 @@ public class ClimberPlacer : MonoBehaviour {
 	private float feetRotationVelocity;
 
 	private void Start() {
+		StartClimbing();
+	}
+
+	public void StartClimbing() {
 		StartCoroutine("Climb");
 	}
 
-	public void Stop() {
+	public void StopClimbing() {
 		StopCoroutine("Climb");
 		Go.killAllTweensWithTarget(this);
-		var rs = GetComponentsInChildren<Rigidbody2D>();
-		foreach (Rigidbody2D r in rs) r.isKinematic = false;
 	}
 
 	private void PlaceOnMountain(float place) {
