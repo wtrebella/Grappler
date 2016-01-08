@@ -45,7 +45,7 @@ public class ClimberPlacer : MonoBehaviour {
 
 	private IEnumerator Climb() {
 		while (true) {
-			GoTween tween = new GoTween(this, 0.22f, new GoTweenConfig().floatProp("placeOnMountain", 0.02f, true).setDelay(0.22f).setEaseType(GoEaseType.SineInOut));
+			GoTween tween = new GoTween(this, Random.Range(0.2f, 0.3f), new GoTweenConfig().floatProp("placeOnMountain", 0.02f, true).setDelay(Random.Range(0.2f, 0.3f)).setEaseType(GoEaseType.SineInOut));
 			Go.addTween(tween);
 			tween.play();
 			yield return StartCoroutine(tween.waitForCompletion());

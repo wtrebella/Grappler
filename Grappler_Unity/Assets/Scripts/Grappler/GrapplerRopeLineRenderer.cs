@@ -5,7 +5,6 @@ using Vectrosity;
 
 [RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrapplerRopeLineRenderer : MonoBehaviour {
-	[SerializeField] private Camera cam;
 	[SerializeField] private float width = 2;
 	
 	private VectorLine line;

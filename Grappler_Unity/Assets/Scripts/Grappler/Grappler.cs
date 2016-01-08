@@ -5,24 +5,15 @@ using System;
 
 [RequireComponent(typeof(AnchorableFinder))]
 [RequireComponent(typeof(GrapplerRope))]
-[RequireComponent(typeof(GrapplerEnemyInteraction))]
-[RequireComponent(typeof(GrapplerLavaInteraction))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
 	public Action SignalGrapplerDied;
 
-	[SerializeField] private GrapplerArm leftArm;
-	[SerializeField] private GrapplerArm rightArm;
-
-	private GrapplerEnemyInteraction enemyInteraction;
-	private GrapplerLavaInteraction lavaInteraction;
 	private GrapplerRope grappleRope;
 	private AnchorableFinder anchorableFinder;
 	private enum GrapplerStates {Falling, Grappling, Dead};
 
 	private void Awake() {
-		lavaInteraction = GetComponent<GrapplerLavaInteraction>();
-		enemyInteraction = GetComponent<GrapplerEnemyInteraction>();
 		anchorableFinder = GetComponent<AnchorableFinder>();
 		grappleRope = GetComponent<GrapplerRope>();
 		currentState = GrapplerStates.Falling;
@@ -31,17 +22,10 @@ public class Grappler : StateMachine {
 	private void Start() {
 		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		SwipeDetector.instance.SignalTap += HandleTap;
-		enemyInteraction.SignalHitEnemy += HandleHitEnemy;
-		lavaInteraction.SignalEnteredLava += HandleEnteredLava;
 	}
 
 	private void HandleHitEnemy(MountainEnemy enemy) {
 		ReleaseGrappleIfConnected();
-	}
-
-	private void HandleEnteredLava() {
-		ReleaseGrappleIfConnected();
-		currentState = GrapplerStates.Dead;
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
@@ -60,7 +44,7 @@ public class Grappler : StateMachine {
 
 	private void ConnectGrappleIfAble(Vector2 direction) {
 		if (!grappleRope.IsRetracted()) return;
-
+		Debug.Log("connect");
 		Anchorable anchorable;
 		if (FindAnchorable(out anchorable, direction)) {
 			ConnectGrapple(anchorable);
@@ -73,23 +57,11 @@ public class Grappler : StateMachine {
 
 	private void ConnectGrapple(Anchorable anchorable) {
 		grappleRope.Connect(anchorable);
-		GrabRopeWithArms();
 		currentState = GrapplerStates.Grappling;
 	}
 
 	private void ReleaseGrapple() {
 		grappleRope.Release();
-		ReleaseRopeWithArms();
-	}
-
-	private void GrabRopeWithArms() {
-		leftArm.Grab();
-		rightArm.Grab();
-	}
-
-	private void ReleaseRopeWithArms() {
-		leftArm.Release();
-		rightArm.Release();
 	}
 
 	private void ReleaseGrappleIfConnected() {
