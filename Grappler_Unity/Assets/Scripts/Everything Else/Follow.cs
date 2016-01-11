@@ -19,12 +19,13 @@ public enum FollowAxisType {
 }
 
 public class Follow : MonoBehaviour {
+	public FollowUpdateType updateType;
+
 	[HideInInspector, NonSerialized] public float minX = Mathf.NegativeInfinity;
 	[HideInInspector, NonSerialized] public float minY = Mathf.NegativeInfinity;
 
 	[SerializeField] private Transform objectToFollow;
 	[SerializeField] private Vector2 objectOffset;
-	[SerializeField] private FollowUpdateType updateType;
 	[SerializeField] private FollowMovementType movementType;
 	[SerializeField] private FollowAxisType axisType;
 	[SerializeField] private float smoothDampTime = 0.13f;

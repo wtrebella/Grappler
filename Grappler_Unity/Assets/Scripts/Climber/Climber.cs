@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(ClimberAnimator))]
 [RequireComponent(typeof(ClimberMover))]
 [RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(TriggerSwitcher))]
 public class Climber : StateMachine {
+	public Action SignalEnteredClimbingState;
+	public Action SignalEnteredGrapplingState;
+	public Action SignalEnteredFallingState;
+
 	[SerializeField] private Grappler grappler;
 
 	private enum ClimberStates {Climbing, Grappling, Falling};
@@ -17,14 +22,17 @@ public class Climber : StateMachine {
 
 	public void SetClimbingState() {
 		currentState = ClimberStates.Climbing;
+		if (SignalEnteredClimbingState != null) SignalEnteredClimbingState();
 	}
 
 	public void SetGrapplingState() {
 		currentState = ClimberStates.Grappling;
+		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
 	}
 
 	public void SetFallingState() {
 		currentState = ClimberStates.Falling;
+		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
 
 	private void Awake() {
