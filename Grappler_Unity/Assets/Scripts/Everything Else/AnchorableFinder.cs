@@ -2,13 +2,8 @@
 using System.Collections;
 
 public class AnchorableFinder : MonoBehaviour {
-	private ArcRaycaster[] arcRaycasters;
-	private CircleOverlapper[] circleOverlappers;
-
-	private void Awake() {
-		arcRaycasters = GetComponentsInChildren<ArcRaycaster>();
-		circleOverlappers = GetComponentsInChildren<CircleOverlapper>();
-	}
+	[SerializeField] private ArcRaycaster[] arcRaycasters;
+	[SerializeField] private CircleOverlapper[] circleOverlappers;
 
 	public bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
 		anchorable = null;

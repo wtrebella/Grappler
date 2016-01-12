@@ -1,153 +1,104 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
-using System;
 
-[RequireComponent(typeof(ClimberAnimator))]
-[RequireComponent(typeof(ClimberMover))]
-[RequireComponent(typeof(KinematicSwitcher))]
-[RequireComponent(typeof(TriggerSwitcher))]
-public class Climber : StateMachine {
-	public Action SignalEnteredClimbingState;
-	public Action SignalEnteredGrapplingState;
-	public Action SignalEnteredFallingState;
-
-	[SerializeField] private AnchorableFinder anchorableFinder;
-	[SerializeField] private Grappler grappler;
-	[SerializeField] private ClimberMountainCollision bodyMountainCollision;
-	[SerializeField] private ClimberMountainCollision feetMountainCollision;
-
-	private enum ClimberStates {Climbing, Grappling, Falling};
-
-	private ClimberAnimator climberAnimator;
-	private KinematicSwitcher kinematicSwitcher;
-	private TriggerSwitcher triggerSwitcher;
-	private ClimberMover climberMover;
-
-	public void SetClimbingState(float place) {
-		currentState = ClimberStates.Climbing;
-		climberMover.StartClimbing(place);
+public class Climber : MonoBehaviour {
+	private float _placeOnMountain = 0;
+	public float placeOnMountain {
+		get {return _placeOnMountain;}
+		set {PlaceOnMountain(value);}
 	}
 
-	public void SetGrapplingState() {
-		currentState = ClimberStates.Grappling;
+	[SerializeField] private Player player;
+	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private float sizeOfTangentCheck = 0.01f;
+	[SerializeField] private float smoothTimeRotation = 0.1f;
+	[SerializeField] private Transform body;
+	[SerializeField] private Transform feet;
+
+	private float bodyRotationVelocity;
+	private float feetRotationVelocity;
+	private bool isClimbing = false;
+
+	public void StartClimbing() {
+		if (isClimbing) return;
+		PlaceOnMountain(0);//GetPlaceNearestPoint(transform.position));
+		StartCoroutine("Climb");
+		isClimbing = true;
 	}
 
-	public void SetFallingState() {
-		currentState = ClimberStates.Falling;
+	public void StopClimbing() {
+		if (!isClimbing) return;
+
+		StopCoroutine("Climb");
+		Go.killAllTweensWithTarget(this);
+		isClimbing = false;
 	}
 
-	public bool IsClimbing() {
-		return (ClimberStates)currentState == ClimberStates.Climbing;
+//	private float GetPlaceNearestPoint(MountainChunk mountainChunk, Vector2 point) {
+//		float goalPlace;
+//		Anchorable anchorable;
+//		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
+//			// 1. get the Point of the anchorable
+//			Point linePoint = anchorable.linePoint;
+//			
+//			// 2. find out if it's this Point and the NEXT or the PREVIOUS
+//			Point pointA = null;
+//			Point pointB = null;
+//			if (linePoint.y > point.y) {
+//				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
+//				if (linePointIndex == 0) return 0;
+//				else {
+//					pointA = mountainChunk.GetLinePoint(linePointIndex - 1);
+//					pointB = linePoint;
+//				}
+//			}
+//			else if (linePoint.y < point.y) {
+//				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
+//				if (linePointIndex == mountainChunk.GetListOfLinePoints().Count - 1) {
+//					return 1;
+//				}
+//				else {
+//					pointA = linePoint;
+//					pointB = mountainChunk.GetLinePoint(linePointIndex + 1);
+//				}
+//			}
+//			
+//			// 3. float goalPlace = pointAPlace + (point - pointA).magnitude / (pointB - pointA).magnitude
+//			float pointAPlace = mountainChunk.GetPlaceAtPoint(pointA);
+//			goalPlace = pointAPlace + (point - pointA.pointVector).magnitude / (pointB.pointVector - pointA.pointVector).magnitude;
+//			return goalPlace;
+//		}
+//		return 0;
+//	}
+
+	private void PlaceOnMountain(float place) {
+		_placeOnMountain = place;
+		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtPlace(_placeOnMountain);
+		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtPlace(_placeOnMountain);
+		Vector3 position = chunk.GetPositionFromPlace(placeOnChunk);
+
+		body.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(body.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk + 0.01f), ref bodyRotationVelocity, smoothTimeRotation));
+		feet.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(feet.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk - 0.01f), ref feetRotationVelocity, smoothTimeRotation));
+
+		player.transform.position = position;
 	}
 
-	public bool IsGrappling() {
-		return (ClimberStates)currentState == ClimberStates.Grappling;
+	private float GetTangentAtPlace(MountainChunk chunk, float place) {
+		float minPlace = place - sizeOfTangentCheck / 2f;
+		float maxPlace = place + sizeOfTangentCheck / 2f;
+		Vector2 minPosition = chunk.GetPositionFromPlace(minPlace);
+		Vector2 maxPosition = chunk.GetPositionFromPlace(maxPlace);
+		Vector2 vector = maxPosition - minPosition;
+		float angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg - 90;
+		return angle;
 	}
 
-	public bool IsFalling() {
-		return (ClimberStates)currentState == ClimberStates.Falling;
-	}
-
-	private void Awake() {
-		grappler.SignalEnteredConnectedState += HandleGrapplerEnteredConnectedState;
-		grappler.SignalEnteredDisconnectedState += HandleGrapplerEnteredDisconnectedState;
-		bodyMountainCollision.SignalMountainCollision += HandleBodyMountainCollision;
-		feetMountainCollision.SignalMountainCollision += HandleFeetMountainCollision;
-		triggerSwitcher = GetComponent<TriggerSwitcher>();
-		climberAnimator = GetComponent<ClimberAnimator>();
-		kinematicSwitcher = GetComponent<KinematicSwitcher>();
-		climberMover = GetComponent<ClimberMover>();
-	}
-
-	private void Start() {
-		StartCoroutine(WaitThenClimb());
-	}
-
-	private IEnumerator WaitThenClimb() {
-		yield return new WaitForSeconds(1);
-		SetClimbingState(0);
-	}
-
-	private void HandleBodyMountainCollision(MountainChunk mountainChunk, Vector2 point) {
-		if (!IsClimbing()) SetClimbingState(GetPlaceNearestPoint(mountainChunk, point));
-	}
-
-	private void HandleFeetMountainCollision(MountainChunk mountainChunk, Vector2 point) {
-		if (!IsClimbing()) SetClimbingState(GetPlaceNearestPoint(mountainChunk, point));
-	}
-
-	private float GetPlaceNearestPoint(MountainChunk mountainChunk, Vector2 point) {
-		float goalPlace;
-		Anchorable anchorable;
-		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
-			// 1. get the Point of the anchorable
-			Point linePoint = anchorable.linePoint;
-			
-			// 2. find out if it's this Point and the NEXT or the PREVIOUS
-			Point pointA = null;
-			Point pointB = null;
-			if (linePoint.y > point.y) {
-				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
-				if (linePointIndex == 0) return 0;
-				else {
-					pointA = mountainChunk.GetLinePoint(linePointIndex - 1);
-					pointB = linePoint;
-				}
-			}
-			else if (linePoint.y < point.y) {
-				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
-				if (linePointIndex == mountainChunk.GetListOfLinePoints().Count - 1) {
-					return 1;
-				}
-				else {
-					pointA = linePoint;
-					pointB = mountainChunk.GetLinePoint(linePointIndex + 1);
-				}
-			}
-			
-			// 3. float goalPlace = pointAPlace + (point - pointA).magnitude / (pointB - pointA).magnitude
-			float pointAPlace = mountainChunk.GetPlaceAtPoint(pointA);
-			goalPlace = pointAPlace + (point - pointA.pointVector).magnitude / (pointB.pointVector - pointA.pointVector).magnitude;
-			return goalPlace;
+	private IEnumerator Climb() {
+		while (true) {
+			GoTween tween = new GoTween(this, Random.Range(0.2f, 0.3f), new GoTweenConfig().floatProp("placeOnMountain", 0.02f, true).setDelay(Random.Range(0.2f, 0.3f)).setEaseType(GoEaseType.SineInOut));
+			Go.addTween(tween);
+			tween.play();
+			yield return StartCoroutine(tween.waitForCompletion());
 		}
-		return 0;
-	}
-
-	private void HandleGrapplerEnteredConnectedState() {
-		StopClimbingIfNeeded();
-		SetGrapplingState();
-	}
-
-	private void HandleGrapplerEnteredDisconnectedState() {
-		StopClimbingIfNeeded();
-		SetFallingState();
-	}
-
-	private void StopClimbingIfNeeded() {
-		if (IsClimbing()) climberMover.StopClimbing();
-	}
-
-	private void Climbing_EnterState() {
-		if (SignalEnteredClimbingState != null) SignalEnteredClimbingState();
-
-		kinematicSwitcher.SetKinematic();
-		triggerSwitcher.SetAsTrigger(0.3f);
-		grappler.ReleaseGrappleIfConnected();
-		climberAnimator.PlayClimbingAnimations();
-	}
-
-	private void Grappling_EnterState() {
-		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
-
-		triggerSwitcher.SetAsNonTrigger(0.3f);
-		kinematicSwitcher.SetNonKinematic();
-		climberMover.StopClimbing();
-		climberAnimator.PlayGrapplingAnimations();
-	}
-
-	private void Falling_EnterState() {
-		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
-
-		climberAnimator.PlayFallingAnimations();
 	}
 }

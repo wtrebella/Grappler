@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClimberAnimator : MonoBehaviour {
+public class PlayerAnimator : MonoBehaviour {
 	[SerializeField] private string climbingClipName = "Climbing";
 	[SerializeField] private string grapplingClipName = "Grappling";
 	[SerializeField] private string fallingClipName = "Falling";

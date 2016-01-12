@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Follow))]
-public class ClimberFollowUpdateSwitcher : MonoBehaviour {
-	[SerializeField] private Climber climber;
+public class PlayerFollowUpdateSwitcher : MonoBehaviour {
+	[SerializeField] private Player player;
 
 	private Follow follow;
 	
 	private void Awake() {
 		follow = GetComponent<Follow>();
-		climber.SignalEnteredClimbingState += HandleClimberEnteredClimbingState;
-		climber.SignalEnteredFallingState += HandleClimberEnteredFallingState;
-		climber.SignalEnteredGrapplingState += HandleClimberEnteredGrapplingState;
+		player.SignalEnteredClimbingState += HandleClimberEnteredClimbingState;
+		player.SignalEnteredFallingState += HandleClimberEnteredFallingState;
+		player.SignalEnteredGrapplingState += HandleClimberEnteredGrapplingState;
 	}
 
 	private void HandleClimberEnteredClimbingState() {
