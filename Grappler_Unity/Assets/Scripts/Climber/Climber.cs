@@ -12,9 +12,11 @@ public class Climber : StateMachine {
 	public Action SignalEnteredFallingState;
 
 	[SerializeField] private Grappler grappler;
+	[SerializeField] private ClimberMountainCollision bodyMountainCollision;
+	[SerializeField] private ClimberMountainCollision feetMountainCollision;
 
 	private enum ClimberStates {Climbing, Grappling, Falling};
-
+	
 	private ClimberAnimator climberAnimator;
 	private KinematicSwitcher kinematicSwitcher;
 	private TriggerSwitcher triggerSwitcher;
@@ -35,26 +37,56 @@ public class Climber : StateMachine {
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
 
+	public bool IsClimbing() {
+		return (ClimberStates)currentState == ClimberStates.Climbing;
+	}
+
+	public bool IsGrappling() {
+		return (ClimberStates)currentState == ClimberStates.Grappling;
+	}
+
+	public bool IsFalling() {
+		return (ClimberStates)currentState == ClimberStates.Falling;
+	}
+
 	private void Awake() {
-		grappler.SignalEnteredGrapplingState += HandleEnteredGrapplingState;
-		grappler.SignalEnteredFallingState += HandleEnteredFallingState;
+		grappler.SignalEnteredConnectedState += HandleGrapplerEnteredConnectedState;
+		grappler.SignalEnteredDisconnectedState += HandleGrapplerEnteredDisconnectedState;
+		bodyMountainCollision.SignalMountainCollision += HandleBodyMountainCollision;
+		feetMountainCollision.SignalMountainCollision += HandleFeetMountainCollision;
 		triggerSwitcher = GetComponent<TriggerSwitcher>();
 		climberAnimator = GetComponent<ClimberAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
 		climberMover = GetComponent<ClimberMover>();
+		SetClimbingState();
 	}
 
-	private void HandleEnteredGrapplingState() {
+	private void HandleBodyMountainCollision() {
+		if (!IsClimbing()) SetClimbingState();
+	}
+
+	private void HandleFeetMountainCollision() {
+		if (!IsClimbing()) SetClimbingState();
+	}
+
+	private void HandleGrapplerEnteredConnectedState() {
+		StopClimbingIfNeeded();
 		SetGrapplingState();
 	}
 
-	private void HandleEnteredFallingState() {
+	private void HandleGrapplerEnteredDisconnectedState() {
+		StopClimbingIfNeeded();
 		SetFallingState();
+	}
+
+	private void StopClimbingIfNeeded() {
+		if (IsClimbing()) climberMover.StopClimbing();
 	}
 
 	private void Climbing_EnterState() {
 		kinematicSwitcher.SetKinematic();
 		triggerSwitcher.SetAsTrigger(0.3f);
+		grappler.ReleaseGrappleIfConnected();
 		climberMover.StartClimbing();
 		climberAnimator.PlayClimbingAnimations();
 	}

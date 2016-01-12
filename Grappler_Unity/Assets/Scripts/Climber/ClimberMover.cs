@@ -16,18 +16,21 @@ public class ClimberMover : MonoBehaviour {
 
 	private float bodyRotationVelocity;
 	private float feetRotationVelocity;
-
-	private void Start() {
-		StartClimbing();
-	}
+	private bool isClimbing = false;
 
 	public void StartClimbing() {
+		if (isClimbing) return;
+
 		StartCoroutine("Climb");
+		isClimbing = true;
 	}
 
 	public void StopClimbing() {
+		if (!isClimbing) return;
+
 		StopCoroutine("Climb");
 		Go.killAllTweensWithTarget(this);
+		isClimbing = false;
 	}
 
 	private void PlaceOnMountain(float place) {

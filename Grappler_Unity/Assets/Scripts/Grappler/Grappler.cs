@@ -7,19 +7,27 @@ using System;
 [RequireComponent(typeof(GrapplerRope))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class Grappler : StateMachine {
-	public Action SignalEnteredGrapplingState;
-	public Action SignalEnteredFallingState;
+	public Action SignalEnteredConnectedState;
+	public Action SignalEnteredDisconnectedState;
 
+	[SerializeField] private Climber climber;
 	[SerializeField] private float wallPushStrength = 5;
 
-	private GrapplerRope grappleRope;
+	private GrapplerRope grapplerRope;
 	private AnchorableFinder anchorableFinder;
-	private enum GrapplerStates {Falling, Grappling, Dead};
+	private enum GrapplerStates {Disconnected, Connected};
+
+	public void ReleaseGrappleIfConnected() {
+		if (CurrentStateIs(GrapplerStates.Connected)) {
+			ReleaseGrapple();
+			currentState = GrapplerStates.Disconnected;
+		}
+	}
 
 	private void Awake() {
 		anchorableFinder = GetComponent<AnchorableFinder>();
-		grappleRope = GetComponent<GrapplerRope>();
-		currentState = GrapplerStates.Falling;
+		grapplerRope = GetComponent<GrapplerRope>();
+		currentState = GrapplerStates.Disconnected;
 	}
 
 	private void Start() {
@@ -32,58 +40,64 @@ public class Grappler : StateMachine {
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-		if (CurrentStateIs(GrapplerStates.Falling)) ConnectGrappleIfAble(swipeDirection);
-		else ReleaseGrappleIfConnected();
+		if (climber.IsFalling()) ConnectGrappleInDirectionIfAble(swipeDirection);
+		else if (climber.IsClimbing()) ConnectGrappleInCircleIfAble();
+		else if (climber.IsGrappling()) ReleaseGrappleIfConnected();
 	}
 
 	private void HandleTap() {
 		ReleaseGrappleIfConnected();
 	}
 
-	private void Dead_EnterState() {
-		if (grappleRope.IsConnected()) ReleaseGrapple();
-	}
-
-	private void ConnectGrappleIfAble(Vector2 direction) {
-		if (!grappleRope.IsRetracted()) return;
+	private void ConnectGrappleInDirectionIfAble(Vector2 direction) {
+		if (!AbleToConnect()) return;
 		Anchorable anchorable;
-		if (FindAnchorable(out anchorable, direction)) {
+		if (FindAnchorableInDirection(out anchorable, direction)) {
 			ConnectGrapple(anchorable);
-			currentState = GrapplerStates.Grappling;
-			GetComponentInParent<ClimberMover>().StopClimbing();
+			currentState = GrapplerStates.Connected;
 		}
 		else {
-			grappleRope.Misfire(direction);
+			grapplerRope.Misfire(direction);
 		}
 	}
 
-	private void Grappling_EnterState() {
-		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
-		WallPush();
+	private void ConnectGrappleInCircleIfAble() {
+		if (!AbleToConnect()) return;
+		Anchorable anchorable;
+		if (FindAnchorableInCircle(out anchorable)) {
+			ConnectGrapple(anchorable);
+			WallPush();
+			currentState = GrapplerStates.Connected;
+		}
 	}
 
-	private void Falling_EnterState() {
-		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
+	private bool AbleToConnect() {
+		return grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
+	}
+
+	private void Connected_EnterState() {
+		if (SignalEnteredConnectedState != null) SignalEnteredConnectedState();
+	}
+
+	private void Disconnected_EnterState() {
+		if (SignalEnteredDisconnectedState != null) SignalEnteredDisconnectedState();
 	}
 
 	private void ConnectGrapple(Anchorable anchorable) {
-		grappleRope.Connect(anchorable);
-		currentState = GrapplerStates.Grappling;
+		grapplerRope.Connect(anchorable);
+		currentState = GrapplerStates.Connected;
 	}
 
 	private void ReleaseGrapple() {
-		grappleRope.Release();
+		grapplerRope.Release();
 	}
 
-	private void ReleaseGrappleIfConnected() {
-		if (CurrentStateIs(GrapplerStates.Grappling)) {
-			ReleaseGrapple();
-			currentState = GrapplerStates.Falling;
-		}
+	private bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
+		return anchorableFinder.FindAnchorableInDirection(out anchorable, direction);
 	}
 
-	private bool FindAnchorable(out Anchorable anchorable, Vector2 direction) {
-		return anchorableFinder.FindAnchorable(out anchorable, direction);
+	private bool FindAnchorableInCircle(out Anchorable anchorable) {
+		return anchorableFinder.FindAnchorableInCircle(out anchorable);
 	}
 
 	private bool CurrentStateIs(GrapplerStates grapplerState) {
