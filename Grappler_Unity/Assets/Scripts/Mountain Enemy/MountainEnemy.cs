@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MountainEnemy : MonoBehaviour {
@@ -41,7 +41,7 @@ public class MountainEnemy : MonoBehaviour {
 	}
 
 	private Vector3 GetExactPositionFromNewLinePosition(float linePosition) {
-		Vector3 positionAlongLine = mountainChunk.GetPositionAlongLine(linePosition);
+		Vector3 positionAlongLine = mountainChunk.GetPositionFromPlace(linePosition);
 		positionAlongLine.z = transform.position.z;
 		return positionAlongLine;
 	}

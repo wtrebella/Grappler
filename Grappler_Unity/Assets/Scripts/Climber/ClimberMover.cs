@@ -18,9 +18,9 @@ public class ClimberMover : MonoBehaviour {
 	private float feetRotationVelocity;
 	private bool isClimbing = false;
 
-	public void StartClimbing() {
+	public void StartClimbing(float place) {
 		if (isClimbing) return;
-
+		PlaceOnMountain(place);
 		StartCoroutine("Climb");
 		isClimbing = true;
 	}
@@ -35,9 +35,9 @@ public class ClimberMover : MonoBehaviour {
 
 	private void PlaceOnMountain(float place) {
 		_placeOnMountain = place;
-		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtDist(_placeOnMountain);
-		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtDist(_placeOnMountain);
-		Vector3 position = chunk.GetPositionAlongLine(placeOnChunk);
+		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtPlace(_placeOnMountain);
+		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtPlace(_placeOnMountain);
+		Vector3 position = chunk.GetPositionFromPlace(placeOnChunk);
 
 		body.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(body.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk + 0.01f), ref bodyRotationVelocity, smoothTimeRotation));
 		feet.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(feet.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk - 0.01f), ref feetRotationVelocity, smoothTimeRotation));
@@ -48,8 +48,8 @@ public class ClimberMover : MonoBehaviour {
 	private float GetTangentAtPlace(MountainChunk chunk, float place) {
 		float minPlace = place - sizeOfTangentCheck / 2f;
 		float maxPlace = place + sizeOfTangentCheck / 2f;
-		Vector2 minPosition = chunk.GetPositionAlongLine(minPlace);
-		Vector2 maxPosition = chunk.GetPositionAlongLine(maxPlace);
+		Vector2 minPosition = chunk.GetPositionFromPlace(minPlace);
+		Vector2 maxPosition = chunk.GetPositionFromPlace(maxPlace);
 		Vector2 vector = maxPosition - minPosition;
 		float angle = Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg - 90;
 		return angle;

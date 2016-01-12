@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -15,13 +15,13 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private MountainChunkNeededDetector neededDetector;
 	private List<MountainChunk> mountainChunks;
 
-	public MountainChunk GetMountainChunkAtDist(float lerpDist) {
-		int index = (int)lerpDist;
+	public MountainChunk GetMountainChunkAtPlace(float place) {
+		int index = (int)place;
 		if (index >= numMountainChunksCreated) index = numMountainChunksCreated - 1;
 		return mountainChunks[index];
 	}
 
-	public int GetMountainChunkNumAtDist(float lerpDist) {
+	public int GetMountainChunkNumAtPlace(float lerpDist) {
 		return (int)lerpDist;
 	}
 

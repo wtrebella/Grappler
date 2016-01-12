@@ -17,14 +17,15 @@ public class Climber : StateMachine {
 	[SerializeField] private ClimberMountainCollision feetMountainCollision;
 
 	private enum ClimberStates {Climbing, Grappling, Falling};
-	
+
 	private ClimberAnimator climberAnimator;
 	private KinematicSwitcher kinematicSwitcher;
 	private TriggerSwitcher triggerSwitcher;
 	private ClimberMover climberMover;
 
-	public void SetClimbingState() {
+	public void SetClimbingState(float place) {
 		currentState = ClimberStates.Climbing;
+		climberMover.StartClimbing(place);
 	}
 
 	public void SetGrapplingState() {
@@ -56,22 +57,60 @@ public class Climber : StateMachine {
 		climberAnimator = GetComponent<ClimberAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
 		climberMover = GetComponent<ClimberMover>();
-		SetClimbingState();
 	}
 
-	private void HandleBodyMountainCollision(Vector2 point) {
+	private void Start() {
+		StartCoroutine(WaitThenClimb());
+	}
+
+	private IEnumerator WaitThenClimb() {
+		yield return new WaitForSeconds(1);
+		SetClimbingState(0);
+	}
+
+	private void HandleBodyMountainCollision(MountainChunk mountainChunk, Vector2 point) {
+		if (!IsClimbing()) SetClimbingState(GetPlaceNearestPoint(mountainChunk, point));
+	}
+
+	private void HandleFeetMountainCollision(MountainChunk mountainChunk, Vector2 point) {
+		if (!IsClimbing()) SetClimbingState(GetPlaceNearestPoint(mountainChunk, point));
+	}
+
+	private float GetPlaceNearestPoint(MountainChunk mountainChunk, Vector2 point) {
+		float goalPlace;
 		Anchorable anchorable;
 		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
 			// 1. get the Point of the anchorable
+			Point linePoint = anchorable.linePoint;
+			
 			// 2. find out if it's this Point and the NEXT or the PREVIOUS
+			Point pointA = null;
+			Point pointB = null;
+			if (linePoint.y > point.y) {
+				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
+				if (linePointIndex == 0) return 0;
+				else {
+					pointA = mountainChunk.GetLinePoint(linePointIndex - 1);
+					pointB = linePoint;
+				}
+			}
+			else if (linePoint.y < point.y) {
+				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
+				if (linePointIndex == mountainChunk.GetListOfLinePoints().Count - 1) {
+					return 1;
+				}
+				else {
+					pointA = linePoint;
+					pointB = mountainChunk.GetLinePoint(linePointIndex + 1);
+				}
+			}
+			
 			// 3. float goalPlace = pointAPlace + (point - pointA).magnitude / (pointB - pointA).magnitude
+			float pointAPlace = mountainChunk.GetPlaceAtPoint(pointA);
+			goalPlace = pointAPlace + (point - pointA.pointVector).magnitude / (pointB.pointVector - pointA.pointVector).magnitude;
+			return goalPlace;
 		}
-
-		if (!IsClimbing()) SetClimbingState();
-	}
-
-	private void HandleFeetMountainCollision(Vector2 point) {
-		if (!IsClimbing()) SetClimbingState();
+		return 0;
 	}
 
 	private void HandleGrapplerEnteredConnectedState() {
@@ -94,7 +133,6 @@ public class Climber : StateMachine {
 		kinematicSwitcher.SetKinematic();
 		triggerSwitcher.SetAsTrigger(0.3f);
 		grappler.ReleaseGrappleIfConnected();
-		climberMover.StartClimbing();
 		climberAnimator.PlayClimbingAnimations();
 	}
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ public class RockGenerator : MonoBehaviour {
 		float distPerRock = 1f/(numRocksPerMountainChunk);
 		float dist = distPerRock;
 		for (int i = 0; i < numRocksPerMountainChunk; i++) {
-			Vector2 position = mountainChunk.GetPositionAlongLine(dist);
+			Vector2 position = mountainChunk.GetPositionFromPlace(dist);
 			GenerateRock(mountainChunk, position);
 			dist += distPerRock;
 		}

@@ -64,6 +64,7 @@ public class Grappler : StateMachine {
 	private void ConnectGrappleInCircleIfAble() {
 		if (!AbleToConnect()) return;
 		Anchorable anchorable;
+
 		if (FindAnchorableInCircle(out anchorable)) {
 			ConnectGrapple(anchorable);
 			WallPush();

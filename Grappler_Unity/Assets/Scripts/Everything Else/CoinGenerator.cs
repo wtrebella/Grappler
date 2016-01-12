@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CoinGenerator : MonoBehaviour {
@@ -18,7 +18,7 @@ public class CoinGenerator : MonoBehaviour {
 		coin.transform.parent = transform;
 		coin.transform.localPosition = Vector3.zero;
 		Vector3 deltaPos = new Vector3(1, -1);
-		Vector2 mountainPos = mountainChunk.GetPositionAlongLine(Random.value);
+		Vector2 mountainPos = mountainChunk.GetPositionFromPlace(Random.value);
 		Vector3 position = new Vector3(mountainPos.x + deltaPos.x, mountainPos.y + deltaPos.y, 0);
 		coin.transform.position = position;
 	}

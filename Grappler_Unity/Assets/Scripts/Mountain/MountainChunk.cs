@@ -38,6 +38,15 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints[0];
 	}
 
+	public int GetIndexOfLinePoint(Point point) {
+		for (int i = 0; i < linePoints.Count; i++) {
+			Point tempPoint = linePoints[i];
+			if (tempPoint == point) return i;
+		}
+		Debug.LogError("couldn't find point!");
+		return -1;
+	}
+
 	public float GetTotalDistance() {
 		return distances[linePoints.Count - 1];
 	}
@@ -51,16 +60,33 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints[index];
 	}
 
-	public Vector2 GetPositionAlongLine(float lerp) {
-		lerp = Mathf.Clamp01(lerp);
+	public float GetDistanceFromPlace(float place) {
 		float totalDistance = GetTotalDistance();
-		float lerpDistance = totalDistance * lerp;
-		int firstPointIndex = GetFirstPointIndexAtDistance(lerpDistance);
+		float placeDistance = totalDistance * place;
+		return placeDistance;
+	}
+
+	public float GetPlaceFromDistance(float distance) {
+		return distance / GetTotalDistance();
+	}
+
+	public float GetPlaceAtPoint(Point point) {
+		int index = GetIndexOfLinePoint(point);
+		float distance = distances[index];
+		float place = GetPlaceFromDistance(distance);
+		return place;
+	}
+
+	public Vector2 GetPositionFromPlace(float place) {
+		place = Mathf.Clamp01(place);
+		float totalDistance = GetTotalDistance();
+		float placeDistance = totalDistance * place;
+		int firstPointIndex = GetFirstPointIndexAtDistance(placeDistance);
 		int secondPointIndex = firstPointIndex+1;
 		if (firstPointIndex >= linePoints.Count - 1) Debug.LogError("distance greater than end of cliff line...");
 		float thisPointDistance = distances[firstPointIndex];
 		float nextPointDistance = distances[secondPointIndex];
-		float deltaDistance = lerpDistance - thisPointDistance;
+		float deltaDistance = placeDistance - thisPointDistance;
 		float betweenPointsDistance = nextPointDistance - thisPointDistance;
 		float pointLerp = deltaDistance / betweenPointsDistance;
 		return GetPositionBetweenLinePoints(firstPointIndex, secondPointIndex, pointLerp);
