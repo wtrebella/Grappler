@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(ArcRaycaster))]
 public class AnchorableFinder : MonoBehaviour {
 	private ArcRaycaster[] arcRaycasters;
 	private CircleOverlapper[] circleOverlappers;

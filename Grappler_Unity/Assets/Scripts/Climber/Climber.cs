@@ -11,6 +11,7 @@ public class Climber : StateMachine {
 	public Action SignalEnteredGrapplingState;
 	public Action SignalEnteredFallingState;
 
+	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private Grappler grappler;
 	[SerializeField] private ClimberMountainCollision bodyMountainCollision;
 	[SerializeField] private ClimberMountainCollision feetMountainCollision;
@@ -24,17 +25,14 @@ public class Climber : StateMachine {
 
 	public void SetClimbingState() {
 		currentState = ClimberStates.Climbing;
-		if (SignalEnteredClimbingState != null) SignalEnteredClimbingState();
 	}
 
 	public void SetGrapplingState() {
 		currentState = ClimberStates.Grappling;
-		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
 	}
 
 	public void SetFallingState() {
 		currentState = ClimberStates.Falling;
-		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
 
 	public bool IsClimbing() {
@@ -61,11 +59,18 @@ public class Climber : StateMachine {
 		SetClimbingState();
 	}
 
-	private void HandleBodyMountainCollision() {
+	private void HandleBodyMountainCollision(Vector2 point) {
+		Anchorable anchorable;
+		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
+			// 1. get the Point of the anchorable
+			// 2. find out if it's this Point and the NEXT or the PREVIOUS
+			// 3. float goalPlace = pointAPlace + (point - pointA).magnitude / (pointB - pointA).magnitude
+		}
+
 		if (!IsClimbing()) SetClimbingState();
 	}
 
-	private void HandleFeetMountainCollision() {
+	private void HandleFeetMountainCollision(Vector2 point) {
 		if (!IsClimbing()) SetClimbingState();
 	}
 
@@ -84,6 +89,8 @@ public class Climber : StateMachine {
 	}
 
 	private void Climbing_EnterState() {
+		if (SignalEnteredClimbingState != null) SignalEnteredClimbingState();
+
 		kinematicSwitcher.SetKinematic();
 		triggerSwitcher.SetAsTrigger(0.3f);
 		grappler.ReleaseGrappleIfConnected();
@@ -92,6 +99,8 @@ public class Climber : StateMachine {
 	}
 
 	private void Grappling_EnterState() {
+		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
+
 		triggerSwitcher.SetAsNonTrigger(0.3f);
 		kinematicSwitcher.SetNonKinematic();
 		climberMover.StopClimbing();
@@ -99,6 +108,8 @@ public class Climber : StateMachine {
 	}
 
 	private void Falling_EnterState() {
+		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
+
 		climberAnimator.PlayFallingAnimations();
 	}
 }

@@ -27,14 +27,15 @@ public class AnchorableGenerator : MonoBehaviour {
 
 	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {
 		var points = mountainChunk.GetListOfLinePoints();
-		foreach (Vector2 point in points) CreateAnchorableAtPoint(point);
+		foreach (Point point in points) CreateAnchorableAtPoint(point);
 	}
 
-	private void CreateAnchorableAtPoint(Vector2 position) {
+	private void CreateAnchorableAtPoint(Point point) {
 		Anchorable anchorable = anchorablePrefab.Spawn();
 		anchorable.transform.parent = transform;
-		anchorable.transform.position = position;
+		anchorable.transform.position = point.pointVector;
 		anchorable.SetAnchorableID(currentAnchorableID++);
+		anchorable.SetLinePoint(point);
 		anchorables.Add(anchorable);
 		if (SignalAnchorableCreated != null) SignalAnchorableCreated(anchorable);
 	}

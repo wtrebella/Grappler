@@ -16,7 +16,7 @@ public class MountainChunk : MonoBehaviour {
 	[SerializeField] private float perpDistVar = 2.8f;
 	[SerializeField] private float marginSize = 60.0f;
 
-	private List<Vector2> linePoints;
+	private List<Point> linePoints;
 	private Dictionary<int, float> distances;
 	private PolygonCollider2D polygonCollider;
 	private MountainChunkMeshCreator meshCreator;
@@ -30,11 +30,11 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints.Count;
 	}
 
-	public Vector2 GetLastLinePoint() {
+	public Point GetLastLinePoint() {
 		return linePoints.GetLastItem();
 	}
 
-	public Vector2 GetFirstLinePoint() {
+	public Point GetFirstLinePoint() {
 		return linePoints[0];
 	}
 
@@ -42,10 +42,10 @@ public class MountainChunk : MonoBehaviour {
 		return distances[linePoints.Count - 1];
 	}
 
-	public Vector2 GetLinePoint(int index) {
+	public Point GetLinePoint(int index) {
 		if (index < 0 || index >= linePoints.Count) {
-			Debug.LogError("invalid line point. returning Vector2.zero.");
-			return Vector2.zero;
+			Debug.LogError("invalid line point");
+			return null;
 		}
 
 		return linePoints[index];
@@ -68,9 +68,9 @@ public class MountainChunk : MonoBehaviour {
 
 	public Vector2 GetPositionBetweenLinePoints(int indexA, int indexB, float lerp) {
 		lerp = Mathf.Clamp01(lerp);
-		Vector2 pointA = GetLinePoint(indexA);
-		Vector2 pointB = GetLinePoint(indexB);
-		return Vector2.Lerp(pointA, pointB, lerp);
+		Point pointA = GetLinePoint(indexA);
+		Point pointB = GetLinePoint(indexB);
+		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
 	}
 	
 	public void Generate(Vector2 origin) {
@@ -84,12 +84,12 @@ public class MountainChunk : MonoBehaviour {
 		CalculateDistances();
 	}
 
-	public List<Vector2> GetListOfLinePoints() {
+	public List<Point> GetListOfLinePoints() {
 		return linePoints;
 	}
 
 	private void Awake () {
-		linePoints = new List<Vector2>();
+		linePoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<MountainChunkMeshCreator>();
 		float slopeVal = avgSlope + Random.Range(-slopeVar, slopeVar);
@@ -103,8 +103,8 @@ public class MountainChunk : MonoBehaviour {
 		distances.Add(0, 0);
 		for (int i = 1; i < linePoints.Count; i++) {
 			float previousDistance = distances[i-1];
-			Vector2 pointA = linePoints[i-1];
-			Vector2 pointB = linePoints[i];
+			Vector2 pointA = linePoints[i-1].pointVector;
+			Vector2 pointB = linePoints[i].pointVector;
 			float deltaDistance = (pointB - pointA).magnitude;
 			float distance = previousDistance + deltaDistance;
 			distances.Add(i, distance);
@@ -138,15 +138,18 @@ public class MountainChunk : MonoBehaviour {
 			prevPoint = point;
 		}
 
-		foreach (Vector2 point in points) linePoints.Add(point);
+		foreach (Vector2 point in points) {
+			Point pointObject = new Point(point);
+			linePoints.Add(pointObject);
+		}
 
 		points.Add(new Vector2(origin.x - marginSize, prevPoint.y));
 		points.Add(new Vector2(origin.x - marginSize, origin.y));
 	}
 
 	private void MacroRandomizeEdges(List<Vector2> points) {
-		Vector2 firstPoint = linePoints[0];
-		Vector2 lastPoint = linePoints.GetLastItem();
+		Vector2 firstPoint = linePoints[0].pointVector;
+		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
 		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
 
 		for (int i = 1; i < linePoints.Count - 1; i++) {
@@ -170,14 +173,14 @@ public class MountainChunk : MonoBehaviour {
 
 			point += slopeVectorPerp * perpDist;
 			points[i] = point;
-			linePoints[i] = point;
+			linePoints[i].pointVector = point;
 		}
 	}
 
 	private void MicroRandomizeEdges(List<Vector2> points) {
 		for (int j = 0; j < linePoints.Count - 1; j++) {
-			Vector2 pointA = linePoints[j];
-			Vector2 pointB = linePoints[j+1];
+			Vector2 pointA = linePoints[j].pointVector;
+			Vector2 pointB = linePoints[j+1].pointVector;
 			float segmentMagnitude = (pointB - pointA).magnitude;
 			Vector2 segmentDirection = (pointB - pointA).normalized;
 			Vector2 segmentDirectionPerp = new Vector2(segmentDirection.y, -segmentDirection.x);
@@ -188,7 +191,7 @@ public class MountainChunk : MonoBehaviour {
 			for (int i = 1; i < numBumps; i++) {
 				Vector2 bumpPoint = pointA + segmentDirection * (i * bumpWidth);
 				bumpPoint += segmentDirectionPerp * bumpHeight;
-				linePoints.Insert(j+i, bumpPoint);
+				linePoints.Insert(j+i, new Point(bumpPoint));
 				points.Insert(j+i, bumpPoint);
 			}
 		}

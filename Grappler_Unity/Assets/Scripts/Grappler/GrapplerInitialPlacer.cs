@@ -19,7 +19,7 @@ public class GrapplerInitialPlacer : MonoBehaviour {
 	}
 
 	private void Place(MountainChunk mountainChunk) {
-		Vector3 chunkOrigin = mountainChunk.GetFirstLinePoint();
+		Vector3 chunkOrigin = mountainChunk.GetFirstLinePoint().pointVector;
 		Vector3 playerPosition = chunkOrigin;
 		playerPosition.x += mountainChunkFirstPointOffset.x;
 		playerPosition.y += mountainChunkFirstPointOffset.y;

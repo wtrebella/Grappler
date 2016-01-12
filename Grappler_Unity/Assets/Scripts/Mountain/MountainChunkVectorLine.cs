@@ -11,9 +11,9 @@ public class MountainChunkVectorLine : MonoBehaviour {
 	public void AddToLine(MountainChunk mountainChunk) {
 		if (line == null) InitLine();
 
-		List<Vector2> points = mountainChunk.GetListOfLinePoints();
+		List<Point> points = mountainChunk.GetListOfLinePoints();
 		if (line.points3.Count > 0) points.RemoveAt(0);
-		foreach (Vector2 point in points) line.points3.Add(new Vector3(point.x, point.y, -0.01f));
+		foreach (Point point in points) line.points3.Add(new Vector3(point.x, point.y, -0.01f));
 		line.endPointsUpdate = points.Count;
 
 		line.Draw3DAuto();
