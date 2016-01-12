@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(MountainChunkNeededDetector))]
-[RequireComponent(typeof(MountainChunkNeededDetector))]
+[RequireComponent(typeof(AnchorableGenerator))]
 public class MountainChunkGenerator : MonoBehaviour {
 	public int numMountainChunksCreated {get; private set;}
-
-	public Action<MountainChunk> SignalMountainChunkCreated;
-
+	
 	[SerializeField] private MountainChunk mountainChunkPrefab;
 
+	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
 	private List<MountainChunk> mountainChunks;
 
@@ -28,11 +27,8 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private void Awake() {
 		numMountainChunksCreated = 0;
 		neededDetector = GetComponent<MountainChunkNeededDetector>();
-		neededDetector = GetComponent<MountainChunkNeededDetector>();
+		anchorableGenerator = GetComponent<AnchorableGenerator>();
 		mountainChunks = new List<MountainChunk>();
-	}
-
-	private void Start() {
 		GenerateMountainChunks(3);
 	}
 
@@ -51,7 +47,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 
 		mountainChunks.Add(mountainChunk);
 
-		if (SignalMountainChunkCreated != null) SignalMountainChunkCreated(mountainChunk);
+		anchorableGenerator.GenerateAnchorables(mountainChunk);
 	}
 
 	private void FixedUpdate() {

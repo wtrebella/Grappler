@@ -9,13 +9,11 @@ public class GrapplerInitialPlacer : MonoBehaviour {
 	private GrapplerManualMover manualMover;
 
 	private void Awake() {
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
 		manualMover = GetComponent<GrapplerManualMover>();
 	}
 
 	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {
 		if (mountainChunkGenerator.numMountainChunksCreated == 1) Place(mountainChunk);
-		else mountainChunkGenerator.SignalMountainChunkCreated -= HandleMountainChunkCreated;
 	}
 
 	private void Place(MountainChunk mountainChunk) {

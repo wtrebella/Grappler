@@ -3,10 +3,9 @@ using System.Collections;
 
 public class CoinGenerator : MonoBehaviour {
 	[SerializeField] private Coin coinPrefab;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	
+
 	private void Awake() {
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkGenerated;
+
 	}
 	
 	private void HandleMountainChunkGenerated(MountainChunk mountainChunk) {

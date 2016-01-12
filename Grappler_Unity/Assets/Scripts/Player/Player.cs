@@ -36,12 +36,6 @@ public class Player : StateMachine {
 		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		SwipeDetector.instance.SignalTap += HandleTap;
 
-		StartCoroutine(Blah ());
-	}
-
-	private IEnumerator Blah() {
-		yield return new WaitForSeconds(1);
-
 		currentState = PlayerStates.Climbing;
 	}
 

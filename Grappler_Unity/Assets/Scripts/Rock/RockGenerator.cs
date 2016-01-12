@@ -6,10 +6,9 @@ using System.Collections.Generic;
 public class RockGenerator : MonoBehaviour {
 	[SerializeField] private Transform rockPrefab;
 	[SerializeField] private int numRocksPerMountainChunk = 100;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 
 	private void Awake() {
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
+
 	}
 
 	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {

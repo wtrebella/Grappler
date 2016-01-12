@@ -3,29 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-[RequireComponent(typeof(MountainChunkGenerator))]
 public class AnchorableGenerator : MonoBehaviour {
 	private static int currentAnchorableID = 0;
-
-	public Action<Anchorable> SignalAnchorableCreated;
-
+	
 	[SerializeField] private Anchorable anchorablePrefab;
-
-	private MountainChunkGenerator mountainChunkGenerator;
 	
-	private List<Anchorable> anchorables;
+	private List<Anchorable> anchorables = new List<Anchorable>();
 
-	private void Awake() {
-		anchorables = new List<Anchorable>();
-		mountainChunkGenerator = GetComponent<MountainChunkGenerator>();
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
-	}
-	
 	private void FixedUpdate() {
 		RemoveOffscreenAnchorables();
 	}
 
-	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {
+	public void GenerateAnchorables(MountainChunk mountainChunk) {
 		var points = mountainChunk.GetListOfLinePoints();
 		foreach (Point point in points) CreateAnchorableAtPoint(point);
 	}
@@ -37,7 +26,6 @@ public class AnchorableGenerator : MonoBehaviour {
 		anchorable.SetAnchorableID(currentAnchorableID++);
 		anchorable.SetLinePoint(point);
 		anchorables.Add(anchorable);
-		if (SignalAnchorableCreated != null) SignalAnchorableCreated(anchorable);
 	}
 
 	private void RemoveOffscreenAnchorables() {

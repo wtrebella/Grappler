@@ -3,10 +3,9 @@ using System.Collections;
 
 public class MountainEnemyGenerator : MonoBehaviour {
 	[SerializeField] private MountainEnemy enemyPrefab;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	
+
 	private void Awake() {
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkGenerated;
+
 	}
 
 	private void HandleMountainChunkGenerated(MountainChunk mountainChunk) {
