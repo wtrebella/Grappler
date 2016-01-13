@@ -5,8 +5,11 @@ using System;
 public class SwipeDetector : MonoBehaviour {
 	public static SwipeDetector instance;
 
-	public Action<Vector2, float> SignalSwipe;
 	public Action SignalTap;
+	public Action SignalRightSwipe;
+	public Action SignalLeftSwipe;
+	public Action SignalUpSwipe;
+	public Action SignalDownSwipe;
 
 	[SerializeField] private float minSwipeLength = 50;
 	[SerializeField] private float maxSwipeDuration = 0.3f;
@@ -35,7 +38,32 @@ public class SwipeDetector : MonoBehaviour {
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-		if (SignalSwipe != null) SignalSwipe(swipeDirection, swipeMagnitude);
+		// horizontal swipe
+		if (Mathf.Abs(swipeDirection.x) > Mathf.Abs(swipeDirection.y)) {
+			if (swipeDirection.x > 0) HandleRightSwipe();
+			else HandleLeftSwipe();
+		}
+		// vertical swipe
+		else {
+			if (swipeDirection.y > 0) HandleUpSwipe();
+			else HandleDownSwipe();
+		}
+	}
+	
+	private void HandleLeftSwipe() {
+		if (SignalLeftSwipe != null) SignalLeftSwipe();
+	}
+	
+	private void HandleRightSwipe() {
+		if (SignalRightSwipe != null) SignalRightSwipe();
+	}
+	
+	private void HandleUpSwipe() {
+		if (SignalUpSwipe != null) SignalUpSwipe();
+	}
+	
+	private void HandleDownSwipe() {
+		if (SignalDownSwipe != null) SignalDownSwipe();
 	}
 
 	// TOUCH SWIPES

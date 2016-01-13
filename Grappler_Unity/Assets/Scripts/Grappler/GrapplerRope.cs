@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-[RequireComponent(typeof(SpringJoint2D))]
 [RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrapplerRope : StateMachine {
 	public SpringJointAttributes retractedAttributes;
@@ -16,11 +15,12 @@ public class GrapplerRope : StateMachine {
 	public Action Signal_Retracted_UpdateState;
 	public Action Signal_Connected_UpdateState;
 	public Action Signal_FreeFlowing_UpdateState;
-	
+
+	[SerializeField] private SpringJoint2D springJoint;
+
 	private enum GrappleRopeStates {Retracted, FreeFlowing, Connected}
 	private Anchorable connectedAnchorable;
 	private GrapplerRopeEndPoints ropeEndPoints;
-	private SpringJoint2D springJoint;
 	private Rigidbody2D misfireBody;
 
 	public bool IsRetracted() {
@@ -91,7 +91,6 @@ public class GrapplerRope : StateMachine {
 		misfireBody.mass = 0.1f;
 		misfireBody.isKinematic = true;
 		ropeEndPoints = GetComponent<GrapplerRopeEndPoints>();
-		springJoint = GetComponent<SpringJoint2D>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;
 	}

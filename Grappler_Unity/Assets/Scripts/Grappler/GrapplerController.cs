@@ -8,24 +8,37 @@ public class GrapplerController : MonoBehaviour {
 
 	[SerializeField] private Grappler grappler;
 	[SerializeField] private AnchorableFinder anchorableFinder;
-
-	public void HandleFallingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
+	
+	public void HandleRightSwipe(Player player) {
 		Anchorable anchorable;
+
+		if (player.IsClimbing()) {
+			if (anchorableFinder.FindAnchorableInCircle(out anchorable)) ConnectGrapplerIfReady(anchorable);
+		}
+	}
+
+	public void HandleLeftSwipe(Player player) {
 		
-		if (anchorableFinder.FindAnchorableInDirection(out anchorable, swipeDirection)) ConnectGrapplerIfReady(anchorable);
-		else grappler.Misfire(swipeDirection);
 	}
 
-	public void HandleClimbingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-		Anchorable anchorable;
+	public void HandleUpSwipe(Player player) {
 		
-		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) ConnectGrapplerIfReady(anchorable);
 	}
 
-	public void HandleGrapplingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-		DisconnectGrapplerIfReady();
+	public void HandleDownSwipe(Player player) {
+		
 	}
 
+//	Anchorable anchorable;
+//	
+//	if (player.IsFalling()) {
+//		if (anchorableFinder.FindAnchorableInDirection(out anchorable, swipeDirection)) ConnectGrapplerIfReady(anchorable);
+//		else grappler.Misfire(swipeDirection);
+//	}
+//	else if (player.IsGrappling()) {
+//		DisconnectGrapplerIfReady();
+//	}
+//
 	public void HandleTap() {
 		DisconnectGrapplerIfReady();
 	}

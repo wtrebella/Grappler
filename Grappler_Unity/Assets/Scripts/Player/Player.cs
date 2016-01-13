@@ -20,6 +20,18 @@ public class Player : StateMachine {
 	private GrapplerController grapplerController;
 	private ClimberController climberController;
 
+	public bool IsFalling() {
+		return CurrentStateIs(PlayerStates.Falling);
+	}
+
+	public bool IsClimbing() {
+		return CurrentStateIs(PlayerStates.Climbing);
+	}
+
+	public bool IsGrappling() {
+		return CurrentStateIs(PlayerStates.Grappling);
+	}
+
 	private void Awake() {
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
@@ -33,8 +45,11 @@ public class Player : StateMachine {
 	}
 
 	private void Start() {
-		SwipeDetector.instance.SignalSwipe += HandleSwipe;
 		SwipeDetector.instance.SignalTap += HandleTap;
+		SwipeDetector.instance.SignalLeftSwipe += HandleLeftSwipe;
+		SwipeDetector.instance.SignalRightSwipe += HandleRightSwipe;
+		SwipeDetector.instance.SignalUpSwipe += HandleUpSwipe;
+		SwipeDetector.instance.SignalDownSwipe += HandleDownSwipe;
 
 		currentState = PlayerStates.Climbing;
 	}
@@ -47,19 +62,24 @@ public class Player : StateMachine {
 		currentState = PlayerStates.Falling;
 	}
 
-	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-		if (CurrentStateIs(PlayerStates.Falling)) {
-			grapplerController.HandleFallingSwipe(swipeDirection, swipeMagnitude);
-			climberController.HandleFallingSwipe(swipeDirection, swipeMagnitude);
-		}
-		else if (CurrentStateIs(PlayerStates.Climbing)) {
-			grapplerController.HandleClimbingSwipe(swipeDirection, swipeMagnitude);
-			climberController.HandleClimbingSwipe(swipeDirection, swipeMagnitude);
-		}
-		else if (CurrentStateIs(PlayerStates.Grappling)) {
-			grapplerController.HandleGrapplingSwipe(swipeDirection, swipeMagnitude);
-			climberController.HandleClimbingSwipe(swipeDirection, swipeMagnitude);
-		}
+	private void HandleLeftSwipe() {
+		grapplerController.HandleLeftSwipe(this);
+		climberController.HandleLeftSwipe(this);
+	}
+
+	private void HandleRightSwipe() {
+		grapplerController.HandleRightSwipe(this);
+		climberController.HandleRightSwipe(this);
+	}
+
+	private void HandleUpSwipe() {
+		grapplerController.HandleUpSwipe(this);
+		climberController.HandleUpSwipe(this);
+	}
+
+	private void HandleDownSwipe() {
+		grapplerController.HandleDownSwipe(this);
+		climberController.HandleDownSwipe(this);
 	}
 
 	private void HandleTap() {
@@ -71,6 +91,7 @@ public class Player : StateMachine {
 	}
 
 	private void Falling_EnterState() {
+		climberController.StopClimbing();
 		kinematicSwitcher.SetNonKinematic();
 		playerAnimator.PlayFallingAnimations();
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
@@ -84,6 +105,7 @@ public class Player : StateMachine {
 	}
 
 	private void Grappling_EnterState() {
+		climberController.StopClimbing();
 		kinematicSwitcher.SetNonKinematic();
 		playerAnimator.PlayGrapplingAnimations();
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();

@@ -2,15 +2,14 @@
 using System.Collections;
 using System;
 
-[RequireComponent(typeof(SpringJoint2D))]
 public class GrapplerRopeEndPoints : MonoBehaviour {
 	public Action SignalRopeEndPointsUpdated;
 
 	[SerializeField] private Transform grabPoint;
 	[SerializeField] private Transform topOfHead;
+	[SerializeField] private SpringJoint2D springJoint;
 
 	private GrapplerRope grappleRope;
-	private SpringJoint2D springJoint;
 	private Transform startTransform;
 	private Transform endTransform;
 	private Vector2 localEndPointAtRelease;
@@ -32,7 +31,6 @@ public class GrapplerRopeEndPoints : MonoBehaviour {
 	}
 
 	private void Awake() {
-		springJoint = GetComponent<SpringJoint2D>();
 		grappleRope = GetComponent<GrapplerRope>();
 
 		grappleRope.Signal_Connected_UpdateState += Connected_UpdateState;

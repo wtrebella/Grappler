@@ -14,19 +14,23 @@ public class ClimberController : MonoBehaviour {
 		climber.StopClimbing();
 	}
 
-	public void HandleFallingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-
+	public void HandleRightSwipe(Player player) {
+		
 	}
 	
-	public void HandleClimbingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-
+	public void HandleLeftSwipe(Player player) {
+		
 	}
 	
-	public void HandleGrapplingSwipe(Vector2 swipeDirection, float swipeMagnitude) {
-
+	public void HandleUpSwipe(Player player) {
+		
+	}
+	
+	public void HandleDownSwipe(Player player) {
+		
 	}
 
-	public void HandleTap() {
+	public void HandleTap(Player player) {
 
 	}
 }
