@@ -77,10 +77,14 @@ public class Climbing : MonoBehaviour {
 		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtPlace(_placeOnMountain);
 		Vector3 position = chunk.GetPositionFromPlace(placeOnChunk);
 
-		body.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(body.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk + 0.01f), ref bodyRotationVelocity, smoothTimeRotation));
-		feet.transform.localEulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(feet.transform.localEulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk - 0.01f), ref feetRotationVelocity, smoothTimeRotation));
+		SetBodyRotations(chunk, placeOnChunk);
 
 		player.transform.position = position;
+	}
+
+	private void SetBodyRotations(MountainChunk chunk, float placeOnChunk) {
+		body.transform.eulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(body.transform.eulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk + 0.01f), ref bodyRotationVelocity, smoothTimeRotation));
+		feet.transform.eulerAngles = new Vector3(0, 0, Mathf.SmoothDampAngle(feet.transform.eulerAngles.z, GetTangentAtPlace(chunk, placeOnChunk - 0.01f), ref feetRotationVelocity, smoothTimeRotation));
 	}
 
 	private float GetTangentAtPlace(MountainChunk chunk, float place) {

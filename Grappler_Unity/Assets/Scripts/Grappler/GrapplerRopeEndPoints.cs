@@ -21,6 +21,10 @@ public class GrapplerRopeEndPoints : MonoBehaviour {
 	public Vector2 GetEndPoint() {
 		return endTransform.position;
 	}
+
+	public float GetDistanceBetweenEndPoints() {
+		return (endTransform.position - startTransform.position).magnitude;
+	}
 	
 	public bool EndPointsAreVeryClose() {
 		return (startTransform.position - endTransform.position).magnitude < 0.1f;
