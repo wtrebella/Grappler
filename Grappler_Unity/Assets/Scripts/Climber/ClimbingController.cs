@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(Player))]
 public class ClimbingController : PlayerComponentController {
 	[SerializeField] private Climbing climbing;
 	[SerializeField] private AnchorableFinder anchorableFinder;

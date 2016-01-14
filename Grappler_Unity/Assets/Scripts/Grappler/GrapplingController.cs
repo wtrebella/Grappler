@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(Player))]
 public class GrapplingController : PlayerComponentController {
 	[SerializeField] private Grappling grappling;
 	[SerializeField] private AnchorableFinder anchorableFinder;
@@ -45,7 +46,7 @@ public class GrapplingController : PlayerComponentController {
 	}
 
 	public override void HandleLeftSwipe() {
-		
+
 	}
 	
 	public override void HandleRightSwipe() {
@@ -53,7 +54,7 @@ public class GrapplingController : PlayerComponentController {
 	}
 	
 	public override void HandleUpSwipe() {
-		
+
 	}
 	
 	public override void HandleDownSwipe() {
@@ -62,5 +63,9 @@ public class GrapplingController : PlayerComponentController {
 	
 	public override void HandleTap() {
 		DisconnectGrapplerIfPossible();
+	}
+
+	private void OnComplete(AbstractGoTween tween) {
+		Debug.Log("fdoifah");
 	}
 }

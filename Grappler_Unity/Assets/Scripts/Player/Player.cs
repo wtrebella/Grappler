@@ -5,7 +5,6 @@ using System;
 [RequireComponent(typeof(GrapplingController))]
 [RequireComponent(typeof(ClimbingController))]
 [RequireComponent(typeof(FallingController))]
-[RequireComponent(typeof(ForcerController))]
 [RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(TriggerSwitcher))]
 [RequireComponent(typeof(PlayerAnimator))]
@@ -16,7 +15,8 @@ public class Player : StateMachine {
 
 	public enum PlayerStates {Falling, Climbing, Grappling}
 
-	[HideInInspector, NonSerialized] public ForcerController forcerController;
+	public Forcer forcer;
+
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
 	[HideInInspector, NonSerialized] public TriggerSwitcher triggerSwitcher;
 	[HideInInspector, NonSerialized] public KinematicSwitcher kinematicSwitcher;
@@ -44,7 +44,6 @@ public class Player : StateMachine {
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
 		triggerSwitcher = GetComponent<TriggerSwitcher>();
-		forcerController = GetComponent<ForcerController>();
 		fallingController = GetComponent<FallingController>();
 		grapplingController = GetComponent<GrapplingController>();
 		climbingController = GetComponent<ClimbingController>();

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Player))]
 public class FallingController : PlayerComponentController {
 	public override void EnterState() {
 		player.playerAnimator.PlayFallingAnimations();
