@@ -3,7 +3,17 @@ using System.Collections;
 using System;
 
 public class SwipeDetector : MonoBehaviour {
-	public static SwipeDetector instance;
+	private static SwipeDetector _instance;
+	public static SwipeDetector instance {
+		get {
+			if (_instance == null) {
+				GameObject go = new GameObject("Swipe Detector");
+				_instance = go.AddComponent<SwipeDetector>();
+				DontDestroyOnLoad(go);
+			}
+			return _instance;
+		}
+	}
 
 	public Action SignalTap;
 	public Action SignalRightSwipe;
@@ -11,18 +21,14 @@ public class SwipeDetector : MonoBehaviour {
 	public Action SignalUpSwipe;
 	public Action SignalDownSwipe;
 
-	[SerializeField] private float minSwipeLength = 50;
-	[SerializeField] private float maxSwipeDuration = 0.3f;
+	private float minSwipeLength = 50;
+	private float maxSwipeDuration = 0.3f;
 
 	private Vector2 beginningSwipePosition;
 	private Vector2 endSwipePosition;
 	private Vector2 currentSwipeVector;
 	private float currentSwipeMagnitude;
 	private float beginningSwipeTime;
-
-	private void Awake() {
-		instance = this;
-	}
 
 	private void Update() {
 		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchSwipes();

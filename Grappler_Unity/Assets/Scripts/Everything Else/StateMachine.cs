@@ -11,6 +11,11 @@ public class StateMachine : MonoBehaviour {
 		public Action DoFixedUpdateState = DoNothing;
         public Action EnterState = DoNothing;
         public Action ExitState = DoNothing;
+		public Action LeftSwipe = DoNothing;
+		public Action RightSwipe = DoNothing;
+		public Action UpSwipe = DoNothing;
+		public Action DownSwipe = DoNothing;
+		public Action Tap = DoNothing;
 
         public Enum currentState;
     }
@@ -30,6 +35,27 @@ public class StateMachine : MonoBehaviour {
 
 	private State state = new State();
 	private Dictionary<Enum, Dictionary<string, Delegate>> allStateDelegates = new Dictionary<Enum, Dictionary<string, Delegate>>();
+	private bool swipeDetectionInitiated = false;
+
+	private void HandleLeftSwipe() {
+		state.LeftSwipe();
+	}
+	
+	private void HandleRightSwipe() {
+		state.RightSwipe();
+	}
+	
+	private void HandleUpSwipe() {
+		state.UpSwipe();
+	}
+	
+	private void HandleDownSwipe() {
+		state.DownSwipe();
+	}
+	
+	private void HandleTap() {
+		state.Tap();
+	}
 
 	private void Update() {
 		PreUpdateState();
@@ -49,12 +75,19 @@ public class StateMachine : MonoBehaviour {
     }
 
 	private void ConfigureCurrentState() {
+		if (!swipeDetectionInitiated) InitiateSwipeDetection();
+
         if (state.ExitState != null) state.ExitState();
 
 		state.DoUpdateState = ConfigureDelegate<Action>("UpdateState", DoNothing);
 		state.DoFixedUpdateState = ConfigureDelegate<Action>("FixedUpdateState", DoNothing);
         state.EnterState = ConfigureDelegate<Action>("EnterState", DoNothing);
         state.ExitState = ConfigureDelegate<Action>("ExitState", DoNothing);
+		state.LeftSwipe = ConfigureDelegate<Action>("LeftSwipe", DoNothing);
+		state.RightSwipe = ConfigureDelegate<Action>("RightSwipe", DoNothing);
+		state.UpSwipe = ConfigureDelegate<Action>("UpSwipe", DoNothing);
+		state.DownSwipe = ConfigureDelegate<Action>("DownSwipe", DoNothing);
+		state.Tap = ConfigureDelegate<Action>("Tap", DoNothing);
 
         if (state.EnterState != null) state.EnterState();
     }
@@ -92,6 +125,16 @@ public class StateMachine : MonoBehaviour {
 
 	protected virtual void PreFixedUpdateState() {}
 	protected virtual void PostFixedUpdateState() {}
+
+	private void InitiateSwipeDetection() {
+		swipeDetectionInitiated = true;
+
+		SwipeDetector.instance.SignalTap += HandleTap;
+		SwipeDetector.instance.SignalLeftSwipe += HandleLeftSwipe;
+		SwipeDetector.instance.SignalRightSwipe += HandleRightSwipe;
+		SwipeDetector.instance.SignalUpSwipe += HandleUpSwipe;
+		SwipeDetector.instance.SignalDownSwipe += HandleDownSwipe;
+	}
 
     static void DoNothing() {}
 }

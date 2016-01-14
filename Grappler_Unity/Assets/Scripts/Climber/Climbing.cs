@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Climber : MonoBehaviour {
+public class Climbing : MonoBehaviour {
 	private float _placeOnMountain = 0;
 	public float placeOnMountain {
 		get {return _placeOnMountain;}
@@ -21,7 +21,7 @@ public class Climber : MonoBehaviour {
 
 	public void StartClimbing() {
 		if (isClimbing) return;
-		PlaceOnMountain(0);//GetPlaceNearestPoint(transform.position));
+		PlaceOnMountain(_placeOnMountain);//GetPlaceNearestPoint(transform.position));
 		StartCoroutine("Climb");
 		isClimbing = true;
 	}
