@@ -3,12 +3,15 @@ using System.Collections;
 
 [RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrapplerRopeClimber : MonoBehaviour {
+	[SerializeField] private Transform grabPoint;
+	[SerializeField] private Transform bodySprite;
+	[SerializeField] private Transform feetSprite;
 	[SerializeField] private float moveToStartPointSmoothTime = 0.15f;
 	[SerializeField] private float moveToStartPointSpeed = 50;
 	[SerializeField] private float climbSmoothTime = 0.15f;
 	[SerializeField] private float climbSpeed = 0.5f;
-	[SerializeField] private Transform climbingObject;
 
+	private Transform climbingObject;
 	private Vector3 moveToStartPointVelocity;
 	private Vector3 climbVelocity;
 	private GrapplerRopeEndPoints endPoints;
@@ -22,7 +25,18 @@ public class GrapplerRopeClimber : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (Input.GetKeyDown(KeyCode.UpArrow)) StartCoroutine(MoveToStartPointThenClimb());	
+		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			PrepareToClimb();
+			StartCoroutine(MoveToStartPointThenClimb());	
+		}
+	}
+
+	private void PrepareToClimb() {
+		Transform spriteContainer = new GameObject("Sprite Container").transform;
+		spriteContainer.position = grabPoint.position;
+		bodySprite.parent = spriteContainer;
+		feetSprite.parent = bodySprite;
+		climbingObject = spriteContainer;
 	}
 
 	private IEnumerator MoveToStartPointThenClimb() {
