@@ -12,16 +12,25 @@ public class ClimbingState : MonoBehaviour {
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 	[SerializeField] private float sizeOfTangentCheck = 0.01f;
 	[SerializeField] private float smoothTimeRotation = 0.1f;
+	[SerializeField] private float climbStepDuration = 0.2f;
 	[SerializeField] private Transform body;
 	[SerializeField] private Transform feet;
 
+	private Vector2 initialBodyLocalPosition;
 	private float bodyRotationVelocity;
 	private float feetRotationVelocity;
 	private bool isClimbing = false;
 
 	public void StartClimbing() {
 		if (isClimbing) return;
-		PlaceOnMountain(_placeOnMountain);//GetPlaceNearestPoint(transform.position));
+		PlaceOnMountain(0);
+		StartCoroutine("Climb");
+		isClimbing = true;
+	}
+
+	public void StartClimbing(float y) {
+		if (isClimbing) return;
+		PlaceOnMountainBasedOnY(y);
 		StartCoroutine("Climb");
 		isClimbing = true;
 	}
@@ -34,52 +43,28 @@ public class ClimbingState : MonoBehaviour {
 		isClimbing = false;
 	}
 
-//	private float GetPlaceNearestPoint(MountainChunk mountainChunk, Vector2 point) {
-//		float goalPlace;
-//		Anchorable anchorable;
-//		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
-//			// 1. get the Point of the anchorable
-//			Point linePoint = anchorable.linePoint;
-//			
-//			// 2. find out if it's this Point and the NEXT or the PREVIOUS
-//			Point pointA = null;
-//			Point pointB = null;
-//			if (linePoint.y > point.y) {
-//				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
-//				if (linePointIndex == 0) return 0;
-//				else {
-//					pointA = mountainChunk.GetLinePoint(linePointIndex - 1);
-//					pointB = linePoint;
-//				}
-//			}
-//			else if (linePoint.y < point.y) {
-//				int linePointIndex = mountainChunk.GetIndexOfLinePoint(linePoint);
-//				if (linePointIndex == mountainChunk.GetListOfLinePoints().Count - 1) {
-//					return 1;
-//				}
-//				else {
-//					pointA = linePoint;
-//					pointB = mountainChunk.GetLinePoint(linePointIndex + 1);
-//				}
-//			}
-//			
-//			// 3. float goalPlace = pointAPlace + (point - pointA).magnitude / (pointB - pointA).magnitude
-//			float pointAPlace = mountainChunk.GetPlaceAtPoint(pointA);
-//			goalPlace = pointAPlace + (point - pointA.pointVector).magnitude / (pointB.pointVector - pointA.pointVector).magnitude;
-//			return goalPlace;
-//		}
-//		return 0;
-//	}
+	private void Awake() {
+		initialBodyLocalPosition = body.localPosition;
+	}
 
 	private void PlaceOnMountain(float place) {
 		_placeOnMountain = place;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtPlace(_placeOnMountain);
-		float placeOnChunk = placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtPlace(_placeOnMountain);
+		float placeOnChunk = _placeOnMountain - mountainChunkGenerator.GetMountainChunkNumAtPlace(_placeOnMountain);
 		Vector3 position = chunk.GetPositionFromPlace(placeOnChunk);
-
 		SetBodyRotations(chunk, placeOnChunk);
-
 		player.transform.position = position;
+	}
+
+	private void PlaceOnMountainBasedOnY(float y) {
+		int chunkIndex = mountainChunkGenerator.GetMountainChunkIndexAtY(y);
+		MountainChunk chunk = mountainChunkGenerator.GetMountainChunk(chunkIndex);
+		float place = chunk.GetPlaceAtY(y);
+		_placeOnMountain = place + chunkIndex;
+		Vector3 position = chunk.GetPositionFromPlace(place);
+		SetBodyRotations(chunk, place);
+		player.transform.position = position;
+		body.transform.localPosition = initialBodyLocalPosition;
 	}
 
 	private void SetBodyRotations(MountainChunk chunk, float placeOnChunk) {
@@ -99,7 +84,7 @@ public class ClimbingState : MonoBehaviour {
 
 	private IEnumerator Climb() {
 		while (true) {
-			GoTween tween = new GoTween(this, Random.Range(0.2f, 0.3f), new GoTweenConfig().floatProp("placeOnMountain", 0.02f, true).setDelay(Random.Range(0.2f, 0.3f)).setEaseType(GoEaseType.SineInOut));
+			GoTween tween = new GoTween(this, climbStepDuration, new GoTweenConfig().floatProp("placeOnMountain", 0.02f, true).setDelay(Random.Range(0.2f, 0.3f)).setEaseType(GoEaseType.SineInOut));
 			Go.addTween(tween);
 			tween.play();
 			yield return StartCoroutine(tween.waitForCompletion());

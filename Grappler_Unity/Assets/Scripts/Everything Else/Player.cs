@@ -19,6 +19,8 @@ public class Player : StateMachine {
 
 	public Forcer forcer;
 
+	[SerializeField] private Transform body;
+
 	[HideInInspector, NonSerialized] public ClimbingRopeStateController climbingRopeController;
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
 	[HideInInspector, NonSerialized] public TriggerSwitcher triggerSwitcher;
@@ -41,6 +43,10 @@ public class Player : StateMachine {
 
 	public bool IsGrappling() {
 		return CurrentStateIs(PlayerStates.Grappling);
+	}
+
+	public Vector3 GetBodyPosition() {
+		return body.position;
 	}
 
 	private void Awake() {

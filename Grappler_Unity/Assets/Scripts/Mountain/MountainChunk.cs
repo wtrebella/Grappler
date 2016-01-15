@@ -5,6 +5,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunk : MonoBehaviour {
+	public Vector2 origin {get; private set;}
+
 	[SerializeField] private int numPoints = 30;
 	[SerializeField] private float bumpWidthAvg = 0.01f;
 	[SerializeField] private float bumpWidthVar = 0.005f;
@@ -60,6 +62,19 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints[index];
 	}
 
+	public float GetPlaceAtY(float y) {
+		int index = GetIndexOfNearestLinePointBelowY(y);
+		Point pointA = linePoints[index];
+		Point pointB = linePoints[index+1];
+		float placeAtPointA = GetPlaceAtPoint(pointA);
+		float placeAtPointB = GetPlaceAtPoint(pointB);
+		float segDistY = pointB.y - pointA.y;
+		float deltaY = y - pointA.y;
+		float lerp = deltaY / segDistY;
+		float place = Mathf.Lerp(placeAtPointA, placeAtPointB, lerp);
+		return place;
+	}
+
 	public float GetDistanceFromPlace(float place) {
 		float totalDistance = GetTotalDistance();
 		float placeDistance = totalDistance * place;
@@ -108,6 +123,7 @@ public class MountainChunk : MonoBehaviour {
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
 		CalculateDistances();
+		this.origin = origin;
 	}
 
 	public List<Point> GetListOfLinePoints() {
@@ -122,6 +138,17 @@ public class MountainChunk : MonoBehaviour {
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
+	}
+
+	private int GetIndexOfNearestLinePointBelowY(float y) {
+		if (y < linePoints[0].y) return 0;
+		for (int i = 0; i < linePoints.Count - 1; i++) {
+			Point pointA = linePoints[i];
+			Point pointB = linePoints[i+1];
+			if (y >= pointA.y && y <= pointB.y) return i;
+		}
+		Debug.LogError("didn't find point below y: " + y);
+		return -1;
 	}
 
 	private void CalculateDistances() {

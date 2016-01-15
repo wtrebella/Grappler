@@ -20,6 +20,23 @@ public class MountainChunkGenerator : MonoBehaviour {
 		return mountainChunks[index];
 	}
 
+	public MountainChunk GetMountainChunk(int index) {
+		if (index < 0 || index > mountainChunks.Count) Debug.LogError("index (" + index + ") out of range!");
+		return mountainChunks[index];
+	}
+	
+	public int GetMountainChunkIndexAtY(float y) {
+		if (y < GetMountainChunk(0).origin.y) return 0;
+
+		for (int i = 0; i < mountainChunks.Count - 1; i++) {
+			MountainChunk chunkA = mountainChunks[i];
+			MountainChunk chunkB = mountainChunks[i+1];
+			if (y >= chunkA.origin.y && y <= chunkB.origin.y) return i;
+		}
+		Debug.LogError("couldn't find mountain chunk that includes y: " + y);
+		return -1;
+	}
+
 	public int GetMountainChunkNumAtPlace(float lerpDist) {
 		return (int)lerpDist;
 	}

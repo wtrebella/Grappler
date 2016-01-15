@@ -20,7 +20,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleLeftSwipe() {
-		
+		player.SetState(Player.PlayerStates.Climbing);
 	}
 	
 	public override void HandleRightSwipe() {

@@ -9,7 +9,7 @@ public class ClimbingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		player.playerAnimator.PlayClimbingAnimations();
-		climbingState.StartClimbing();
+		climbingState.StartClimbing(player.GetBodyPosition().y);
 	}
 	
 	public override void ExitState() {
