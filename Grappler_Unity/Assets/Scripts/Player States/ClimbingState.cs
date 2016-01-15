@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Climbing : MonoBehaviour {
+public class ClimbingState : MonoBehaviour {
 	private float _placeOnMountain = 0;
 	public float placeOnMountain {
 		get {return _placeOnMountain;}

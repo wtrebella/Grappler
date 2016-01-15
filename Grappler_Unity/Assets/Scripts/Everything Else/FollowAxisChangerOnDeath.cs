@@ -3,7 +3,7 @@ using System.Collections;
 
 [RequireComponent(typeof(Follow))]
 public class FollowAxisChangerOnDeath : MonoBehaviour {
-	[SerializeField] private Grappling grappler;
+	[SerializeField] private GrapplingState grappler;
 	[SerializeField] private FollowAxisType axisTypeToChangeTo = FollowAxisType.Y;
 
 	private Follow follow;

@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(Player))]
-public class GrapplingController : PlayerComponentController {
-	[SerializeField] private Grappling grappling;
+public class GrapplingStateController : PlayerStateController {
+	[SerializeField] private GrapplingState grappling;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
 	public void ConnectGrapplerIfPossible() {
@@ -54,11 +54,11 @@ public class GrapplingController : PlayerComponentController {
 	}
 	
 	public override void HandleUpSwipe() {
-
+		player.SetState(Player.PlayerStates.ClimbingRope);
 	}
 	
 	public override void HandleDownSwipe() {
-		
+
 	}
 	
 	public override void HandleTap() {

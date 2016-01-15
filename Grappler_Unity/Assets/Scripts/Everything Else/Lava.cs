@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Lava : MonoBehaviour {
-	[SerializeField] private Grappling grappler;
+	[SerializeField] private GrapplingState grappler;
 
 	private float speed_belowScreen = 10.0f;
 	private float speed_onScreen = 1.5f;

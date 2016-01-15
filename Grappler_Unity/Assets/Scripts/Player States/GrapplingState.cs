@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 [RequireComponent(typeof(GrapplerRope))]
-public class Grappling : MonoBehaviour {
+public class GrapplingState : MonoBehaviour {
 	[SerializeField] private Player player;
 
 	private GrapplerRope grapplerRope;

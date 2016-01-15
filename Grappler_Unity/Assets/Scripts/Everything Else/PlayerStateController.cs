@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Player))]
-public class PlayerComponentController : MonoBehaviour {
+public class PlayerStateController : MonoBehaviour {
 	protected Player player;
 
 	private void Awake() {

@@ -1,19 +1,14 @@
 using UnityEngine;
 using System.Collections;
-using System;
 
 [RequireComponent(typeof(Player))]
-public class ClimbingController : PlayerComponentController {
-	[SerializeField] private Climbing climbing;
-	[SerializeField] private AnchorableFinder anchorableFinder;
-
+public class FallingStateController : PlayerStateController {
 	public override void EnterState() {
-		player.playerAnimator.PlayClimbingAnimations();
-		climbing.StartClimbing();
+		player.playerAnimator.PlayFallingAnimations();
 	}
 	
 	public override void ExitState() {
-		climbing.StopClimbing();
+		
 	}
 	
 	public override void UpdateState() {
@@ -29,7 +24,7 @@ public class ClimbingController : PlayerComponentController {
 	}
 	
 	public override void HandleRightSwipe() {
-		player.grapplingController.ConnectGrapplerIfPossible();
+
 	}
 	
 	public override void HandleUpSwipe() {
