@@ -12,6 +12,7 @@ public class PlayerFollowUpdateSwitcher : MonoBehaviour {
 		player.SignalEnteredClimbingState += HandleClimberEnteredClimbingState;
 		player.SignalEnteredFallingState += HandleClimberEnteredFallingState;
 		player.SignalEnteredGrapplingState += HandleClimberEnteredGrapplingState;
+		player.SignalEnteredClimbingRopeState += HandleClimberEnteredClimbingRopeState;
 	}
 
 	private void HandleClimberEnteredClimbingState() {
@@ -24,6 +25,10 @@ public class PlayerFollowUpdateSwitcher : MonoBehaviour {
 
 	private void HandleClimberEnteredGrapplingState() {
 		SetFollowFixedUpdate();
+	}
+
+	private void HandleClimberEnteredClimbingRopeState() {
+		SetFollowUpdate();
 	}
 
 	private void SetFollowUpdate() {

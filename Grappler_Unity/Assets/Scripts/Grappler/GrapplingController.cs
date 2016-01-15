@@ -64,8 +64,4 @@ public class GrapplingController : PlayerComponentController {
 	public override void HandleTap() {
 		DisconnectGrapplerIfPossible();
 	}
-
-	private void OnComplete(AbstractGoTween tween) {
-		Debug.Log("fdoifah");
-	}
 }

@@ -12,8 +12,9 @@ public class Player : StateMachine {
 	public Action SignalEnteredClimbingState;
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
+	public Action SignalEnteredClimbingRopeState;
 
-	public enum PlayerStates {Falling, Climbing, Grappling}
+	public enum PlayerStates {Falling, Climbing, Grappling, ClimbingRope}
 
 	public Forcer forcer;
 
