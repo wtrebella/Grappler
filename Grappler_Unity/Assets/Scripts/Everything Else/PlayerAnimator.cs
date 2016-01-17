@@ -11,22 +11,23 @@ public class PlayerAnimator : MonoBehaviour {
 	[SerializeField] private tk2dSpriteAnimator feetAnimator;
 
 	public void PlayClimbingAnimations() {
-		bodyAnimator.Play(climbingClipName);
-		feetAnimator.Play(climbingClipName);
+		PlayAnimations(climbingClipName);
 	}
 
 	public void PlayGrapplingAnimations() {
-		bodyAnimator.Play(grapplingClipName);
-		feetAnimator.Play(grapplingClipName);
+		PlayAnimations(grapplingClipName);
 	}
 
 	public void PlayFallingAnimations() {
-		bodyAnimator.Play(fallingClipName);
-		feetAnimator.Play(fallingClipName);
+		PlayAnimations(fallingClipName);
 	}
 
 	public void PlayClimbingRopeAnimations() {
-		bodyAnimator.Play(climbingRopeClipName);
-		feetAnimator.Play(climbingRopeClipName);
+		PlayAnimations(climbingRopeClipName);
+	}
+
+	private void PlayAnimations(string clipName) {
+		if (bodyAnimator != null) bodyAnimator.Play(clipName);
+		if (feetAnimator != null) bodyAnimator.Play(clipName);
 	}
 }

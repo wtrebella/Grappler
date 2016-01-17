@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class KinematicSwitcher : MonoBehaviour {
-	[SerializeField] private Rigidbody2D[] rigidbodies;
+	[SerializeField] private List<Rigidbody2D> rigidbodies;
 
 	public void SetKinematic() {
 		foreach (Rigidbody2D r in rigidbodies) r.isKinematic = true;
@@ -10,5 +11,9 @@ public class KinematicSwitcher : MonoBehaviour {
 
 	public void SetNonKinematic() {
 		foreach (Rigidbody2D r in rigidbodies) r.isKinematic = false;
+	}
+
+	private void OnDestroy() {
+		rigidbodies.Clear();
 	}
 }

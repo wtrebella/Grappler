@@ -3,6 +3,8 @@ using System.Collections;
 
 [RequireComponent(typeof(Player))]
 public class FallingStateController : PlayerStateController {
+	[SerializeField] private AnchorableFinder anchorableFinder;
+
 	public override void EnterState() {
 		player.playerAnimator.PlayFallingAnimations();
 	}
@@ -28,7 +30,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleUpSwipe() {
-		
+		player.SetState(Player.PlayerStates.Grappling);
 	}
 	
 	public override void HandleDownSwipe() {

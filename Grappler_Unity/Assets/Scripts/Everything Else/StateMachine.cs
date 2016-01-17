@@ -136,5 +136,17 @@ public class StateMachine : MonoBehaviour {
 		SwipeDetector.instance.SignalDownSwipe += HandleDownSwipe;
 	}
 
+	private void RemoveSwipeDetection() {
+		SwipeDetector.instance.SignalTap -= HandleTap;
+		SwipeDetector.instance.SignalLeftSwipe -= HandleLeftSwipe;
+		SwipeDetector.instance.SignalRightSwipe -= HandleRightSwipe;
+		SwipeDetector.instance.SignalUpSwipe -= HandleUpSwipe;
+		SwipeDetector.instance.SignalDownSwipe -= HandleDownSwipe;
+	}
+
     static void DoNothing() {}
+
+	private void OnDestroy() {
+		RemoveSwipeDetection();
+	}
 }
