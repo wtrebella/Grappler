@@ -30,7 +30,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleUpSwipe() {
-		player.SetState(Player.PlayerStates.Grappling);
+		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleDownSwipe() {

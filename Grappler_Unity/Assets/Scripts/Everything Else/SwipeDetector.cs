@@ -7,9 +7,13 @@ public class SwipeDetector : MonoBehaviour {
 	public static SwipeDetector instance {
 		get {
 			if (_instance == null) {
-				GameObject go = new GameObject("Swipe Detector");
-				_instance = go.AddComponent<SwipeDetector>();
-				DontDestroyOnLoad(go);
+				SwipeDetector detector = GameObject.FindObjectOfType<SwipeDetector>();
+				if (detector) _instance = detector;
+				else {
+					GameObject go = new GameObject("Swipe Detector");
+					_instance = go.AddComponent<SwipeDetector>();
+					DontDestroyOnLoad(go);
+				}
 			}
 			return _instance;
 		}
@@ -142,5 +146,9 @@ public class SwipeDetector : MonoBehaviour {
 			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
 		else HandleTap();
+	}
+
+	private void OnApplicationQuit() {
+		if (this.enabled) Destroy(gameObject);
 	}
 }

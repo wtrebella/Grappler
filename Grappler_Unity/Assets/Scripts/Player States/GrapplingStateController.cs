@@ -19,6 +19,7 @@ public class GrapplingStateController : PlayerStateController {
 		Anchorable anchorable;
 		if (anchorableFinder.FindAnchorableInBoxCast(out anchorable)) {
 			ConnectGrapplerIfPossible(anchorable);
+			player.SetState(Player.PlayerStates.Grappling);
 		}
 	}
 	
@@ -38,7 +39,6 @@ public class GrapplingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		player.playerAnimator.PlayGrapplingAnimations();
-		ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void ExitState() {
