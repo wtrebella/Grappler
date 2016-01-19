@@ -212,7 +212,7 @@ public class MountainChunk : MonoBehaviour {
 		Vector2 firstPoint = linePoints[0].pointVector;
 		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
 		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
-
+		float clampVal = 0.5f;
 		for (int i = 1; i < linePoints.Count - 1; i++) {
 			Vector2 point = points[i];
 			Vector2 tempPoint = point;
@@ -233,6 +233,7 @@ public class MountainChunk : MonoBehaviour {
 			else perpDist = UnityEngine.Random.Range(-perpDistVar, perpDistVar);
 
 			point += slopeVectorPerp * perpDist;
+			if (point.y >= lastPoint.y) point.y = lastPoint.y - clampVal;
 			points[i] = point;
 			linePoints[i].pointVector = point;
 			macroLinePoints[i].pointVector = point;
@@ -240,6 +241,9 @@ public class MountainChunk : MonoBehaviour {
 	}
 
 	private void MicroRandomizeEdges(List<Vector2> points) {
+		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
+		float clampVal = 0.5f;
+
 		for (int j = 0; j < linePoints.Count - 1; j++) {
 			Vector2 pointA = linePoints[j].pointVector;
 			Vector2 pointB = linePoints[j+1].pointVector;
@@ -253,6 +257,7 @@ public class MountainChunk : MonoBehaviour {
 			for (int i = 1; i < numBumps; i++) {
 				Vector2 bumpPoint = pointA + segmentDirection * (i * bumpWidth);
 				bumpPoint += segmentDirectionPerp * bumpHeight;
+				if (bumpPoint.y >= lastPoint.y) bumpPoint.y = lastPoint.y - clampVal;
 				linePoints.Insert(j+i, new Point(bumpPoint));
 				points.Insert(j+i, bumpPoint);
 			}
