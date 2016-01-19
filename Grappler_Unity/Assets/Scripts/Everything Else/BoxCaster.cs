@@ -9,53 +9,29 @@ public class BoxCaster : MonoBehaviour {
 	[SerializeField] private bool drawDebugRays = false;
 
 	public bool FindAnchorable(out Anchorable foundAnchorable) {
-		foundAnchorable = null;
-		Collider2D collider = BoxCast();
-		if (collider == null) return false;
-		foundAnchorable = collider.GetComponent<Anchorable>();
+		foundAnchorable = BoxCast();
 		return foundAnchorable != null;
 	}
 
-	private Collider2D BoxCast() {
-		float height = 1;
-		Vector2 center = new Vector2(GameScreen.instance.center.x, GameScreen.instance.maxY - height);
-		Vector2 size = new Vector2(GameScreen.instance.width, height);
-		Vector2 direction = Vector2.down;
-		float distance = GameScreen.instance.height;
-		if (drawDebugRays) StartCoroutine(DrawBoxCast(center, size, distance, direction));
-		RaycastHit2D[] hits = Physics2D.BoxCastAll(center, size, 0, direction, distance, anchorableLayerMask);
-		foreach (RaycastHit2D hit in hits) {
-			Anchorable anchorable = hit.collider.GetComponent<Anchorable>();
-			if (CanDirectlyReachAnchorable(anchorable)) return hit.collider;
+	private Anchorable BoxCast() {
+		Collider2D[] colliders = Physics2D.OverlapAreaAll(GameScreen.instance.lowerLeft, GameScreen.instance.upperRight, anchorableLayerMask);
+		List<Anchorable> anchorables = new List<Anchorable>();
+		foreach (Collider2D collider in colliders) {
+			Anchorable anchorable = collider.GetComponent<Anchorable>();
+			if (anchorable) anchorables.Add(anchorable);
 		}
-		Debug.Log("can't reach any anchorables directly. " + hits.Length + " anchorables found.");
-		return null;
-	}
-	
-	private IEnumerator DrawBoxCast(Vector2 center, Vector2 size, float distance, Vector2 direction) {
-		Vector2 position = center;
-		Vector2 previousPosition = position;
-		float distanceCovered = 0;
-		float debugCastMultiplier = 30;
-		while (distanceCovered < distance) {
-			DrawBox(position, size, 0.5f);
-			previousPosition = position;
-			position += Time.fixedDeltaTime * direction * debugCastMultiplier;
-			distanceCovered += (position - previousPosition).magnitude;
-			yield return new WaitForFixedUpdate();
-		}
-	}
 
-	private void DrawBox(Vector2 center, Vector2 size, float duration) {
-		Color color = Color.blue;
-		Vector2 lowerLeft = new Vector2(center.x - size.x / 2f, center.y - size.y / 2f);
-		Vector2 lowerRight = new Vector2(lowerLeft.x + size.x, lowerLeft.y);
-		Vector2 upperRight = new Vector2(lowerLeft.x + size.x, lowerLeft.y + size.y);
-		Vector2 upperLeft = new Vector2(lowerLeft.x, lowerLeft.y + size.y);
-		Debug.DrawLine(lowerLeft, lowerRight, color, duration);
-		Debug.DrawLine(lowerRight, upperRight, color, duration);
-		Debug.DrawLine(upperRight, upperLeft, color, duration);
-		Debug.DrawLine(upperLeft, lowerLeft, color, duration);
+		anchorables.Sort(delegate(Anchorable a, Anchorable b) {
+			if (a.anchorableID > b.anchorableID) return -1;
+			else if (a.anchorableID < b.anchorableID) return 1;
+			else return 0;
+		});
+
+		foreach (Anchorable anchorable in anchorables) {
+			if (CanDirectlyReachAnchorable(anchorable)) return anchorable;
+		}
+
+		return null;
 	}
 
 	public bool CanDirectlyReachAnchorable(Anchorable anchorable) {
