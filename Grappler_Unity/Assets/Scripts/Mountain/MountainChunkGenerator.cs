@@ -6,6 +6,8 @@ using System.Collections.Generic;
 [RequireComponent(typeof(MountainChunkNeededDetector))]
 [RequireComponent(typeof(AnchorableGenerator))]
 public class MountainChunkGenerator : MonoBehaviour {
+	public Action<MountainChunk> SignalMountainChunkCreated;
+
 	public int numMountainChunksCreated {get; private set;}
 	
 	[SerializeField] private MountainChunk mountainChunkPrefab;
@@ -65,6 +67,8 @@ public class MountainChunkGenerator : MonoBehaviour {
 		mountainChunks.Add(mountainChunk);
 
 		anchorableGenerator.GenerateAnchorables(mountainChunk);
+
+		if (SignalMountainChunkCreated != null) SignalMountainChunkCreated(mountainChunk);
 	}
 
 	private void FixedUpdate() {

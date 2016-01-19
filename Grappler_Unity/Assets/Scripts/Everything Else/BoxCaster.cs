@@ -17,8 +17,9 @@ public class BoxCaster : MonoBehaviour {
 	}
 
 	private Collider2D BoxCast() {
-		Vector2 center = new Vector2(GameScreen.instance.center.x, GameScreen.instance.maxY);
-		Vector2 size = new Vector2(GameScreen.instance.width, 2);
+		float height = 1;
+		Vector2 center = new Vector2(GameScreen.instance.center.x, GameScreen.instance.maxY - height);
+		Vector2 size = new Vector2(GameScreen.instance.width, height);
 		Vector2 direction = Vector2.down;
 		float distance = GameScreen.instance.height;
 		if (drawDebugRays) StartCoroutine(DrawBoxCast(center, size, distance, direction));

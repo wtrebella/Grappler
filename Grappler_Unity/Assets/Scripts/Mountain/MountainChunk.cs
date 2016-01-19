@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(MountainChunkMeshCreator))]
@@ -18,6 +19,7 @@ public class MountainChunk : MonoBehaviour {
 	[SerializeField] private float perpDistVar = 2.8f;
 	[SerializeField] private float marginSize = 60.0f;
 
+	private List<Point> macroLinePoints;
 	private List<Point> linePoints;
 	private Dictionary<int, float> distances;
 	private PolygonCollider2D polygonCollider;
@@ -25,7 +27,7 @@ public class MountainChunk : MonoBehaviour {
 	private Vector2 slopeVector;
 
 	public int GetRandomPointIndex() {
-		return Random.Range(0, linePoints.Count);
+		return UnityEngine.Random.Range(0, linePoints.Count);
 	}
 
 	public int GetPointsCount() {
@@ -130,11 +132,16 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints;
 	}
 
+	public List<Point> GetListOfMacroLinePoints() {
+		return macroLinePoints;
+	}
+
 	private void Awake () {
 		linePoints = new List<Point>();
+		macroLinePoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<MountainChunkMeshCreator>();
-		float slopeVal = avgSlope + Random.Range(-slopeVar, slopeVar);
+		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
@@ -183,7 +190,7 @@ public class MountainChunk : MonoBehaviour {
 		points.Add(prevPoint);
 		
 		for (int i = 0; i < numPoints; i++) {
-			float dist = pointDist + Random.Range(-pointDistVar, pointDistVar);
+			float dist = pointDist + UnityEngine.Random.Range(-pointDistVar, pointDistVar);
 			Vector2 delta = slopeVector * dist;
 			Vector2 point = prevPoint + delta;
 			points.Add(point);
@@ -194,6 +201,7 @@ public class MountainChunk : MonoBehaviour {
 		foreach (Vector2 point in points) {
 			Point pointObject = new Point(point);
 			linePoints.Add(pointObject);
+			macroLinePoints.Add(pointObject);
 		}
 
 		points.Add(new Vector2(origin.x - marginSize, prevPoint.y));
@@ -212,21 +220,22 @@ public class MountainChunk : MonoBehaviour {
 
 			if (i == 1) {
 				do {
-					perpDist = Random.Range(-perpDistVar, perpDistVar);
+					perpDist = UnityEngine.Random.Range(-perpDistVar, perpDistVar);
 					tempPoint = point + slopeVectorPerp * perpDist;
 				} while (tempPoint.y < firstPoint.y);
 			}
 			else if (i == linePoints.Count - 2) {
 				do {
-					perpDist = Random.Range(-perpDistVar, perpDistVar);
+					perpDist = UnityEngine.Random.Range(-perpDistVar, perpDistVar);
 					tempPoint = point + slopeVectorPerp * perpDist;
 				} while (tempPoint.y > lastPoint.y);
 			}
-			else perpDist = Random.Range(-perpDistVar, perpDistVar);
+			else perpDist = UnityEngine.Random.Range(-perpDistVar, perpDistVar);
 
 			point += slopeVectorPerp * perpDist;
 			points[i] = point;
 			linePoints[i].pointVector = point;
+			macroLinePoints[i].pointVector = point;
 		}
 	}
 
@@ -237,8 +246,8 @@ public class MountainChunk : MonoBehaviour {
 			float segmentMagnitude = (pointB - pointA).magnitude;
 			Vector2 segmentDirection = (pointB - pointA).normalized;
 			Vector2 segmentDirectionPerp = new Vector2(segmentDirection.y, -segmentDirection.x);
-			float bumpWidth = bumpWidthAvg + Random.Range(-bumpWidthVar, bumpWidthVar);
-			float bumpHeight = Random.Range(-maxBumpHeight, maxBumpHeight);
+			float bumpWidth = bumpWidthAvg + UnityEngine.Random.Range(-bumpWidthVar, bumpWidthVar);
+			float bumpHeight = UnityEngine.Random.Range(-maxBumpHeight, maxBumpHeight);
 			int numBumps = (int)(segmentMagnitude / bumpWidth);
 			bumpWidth = segmentMagnitude / (numBumps + 1);
 			for (int i = 1; i < numBumps; i++) {

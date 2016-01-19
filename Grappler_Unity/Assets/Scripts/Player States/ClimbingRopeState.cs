@@ -2,6 +2,11 @@
 using System.Collections;
 
 public class ClimbingRopeState : MonoBehaviour {
+	public float springJointFrequency {
+		get {return ropeSpringJoint.frequency;}
+		set {ropeSpringJoint.frequency = value;}
+	}
+
 	[SerializeField] private SpringJoint2D ropeSpringJoint;
 	[SerializeField] private float targetFrequency = 3;
 	[SerializeField] private float climbDuration = 1;
@@ -11,6 +16,7 @@ public class ClimbingRopeState : MonoBehaviour {
 	}
 
 	private void TweenSpringJointFrequency() {
-		Go.to(ropeSpringJoint, climbDuration, new GoTweenConfig().floatProp("frequency", targetFrequency).setUpdateType(GoUpdateType.FixedUpdate).setEaseType(GoEaseType.SineInOut));
+		Debug.Log(ropeSpringJoint);
+		Go.to(this, climbDuration, new GoTweenConfig().floatProp("springJointFrequency", targetFrequency).setUpdateType(GoUpdateType.FixedUpdate).setEaseType(GoEaseType.SineInOut));
 	}
 }

@@ -19,6 +19,10 @@ public class SwipeDetector : MonoBehaviour {
 		}
 	}
 
+	public static bool IsInstantiated() {
+		return _instance != null;
+	}
+
 	public Action SignalTap;
 	public Action SignalRightSwipe;
 	public Action SignalLeftSwipe;
@@ -146,9 +150,5 @@ public class SwipeDetector : MonoBehaviour {
 			HandleSwipe(swipeDirection, currentSwipeMagnitude);
 		}
 		else HandleTap();
-	}
-
-	private void OnApplicationQuit() {
-		if (this.enabled) Destroy(gameObject);
 	}
 }

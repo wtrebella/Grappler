@@ -2,42 +2,38 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpikeBallGenerator : MonoBehaviour {
-	[SerializeField] private OldAnchorableGenerator anchorableGenerator;
+public class SpikesGenerator : MonoBehaviour {
 	[SerializeField] private SpikeBall spikeBallPrefab;
+	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 
-	private int anchorableCounter = 0;
 	private List<SpikeBall> spikeBalls;
 	
 	private void Awake() {
 		spikeBalls = new List<SpikeBall>();
-		anchorableGenerator.SignalAnchorableCreated += HandleAnchorableCreated;
+		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
 	}
 	
 	private void FixedUpdate() {
 		RemoveOffscreenSpikeBalls();
 	}
+
+	private void HandleMountainChunkCreated(MountainChunk chunk) {
+		int num = 10;
+		float chanceOfSpawn = 0.3f;
+		float dist = 1f / ((float)num + 1f);
+		for (int i = 1; i <= num; i++) {
+			if (Random.value < chanceOfSpawn) CreateSpikeBall(chunk, dist * i);
+		}
+	}
 	
-	private void CreateSpikeBall(Anchorable nearbyAnchorable) {
+	private void CreateSpikeBall(MountainChunk chunk, float place) {
 		SpikeBall spikeBall = spikeBallPrefab.Spawn();
-		spikeBall.transform.position = GetNewSpikeBallPosition(nearbyAnchorable);
+		spikeBall.transform.parent = chunk.transform;
+		spikeBall.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 359));
+		Vector3 position = chunk.GetPositionFromPlace(place);;
+		position.z += 0.1f;
+		spikeBall.transform.position = position;
 		spikeBalls.Add(spikeBall);
-	}
-	
-	private Vector2 GetNewSpikeBallPosition(Anchorable anchorable) {
-		Vector2 anchorablePosition = anchorable.transform.position;
-		Vector2 delta = Random.insideUnitCircle * 5;
-		Vector2 spikeBallPosition = anchorablePosition + delta;
-		return spikeBallPosition;
-	}
-	
-	private bool ShouldCreateSpikeBall() {
-		return anchorableCounter % 5 == 0;
-	}
-	
-	private void HandleAnchorableCreated(Anchorable anchorable) {
-		anchorableCounter++;
-		if (ShouldCreateSpikeBall()) CreateSpikeBall(anchorable);
 	}
 
 	private void RemoveOffscreenSpikeBalls() {

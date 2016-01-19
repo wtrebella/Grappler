@@ -62,14 +62,14 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void HandleUpSwipe() {
-		player.SetState(Player.PlayerStates.ClimbingRope);
+
 	}
 	
 	public override void HandleDownSwipe() {
+		DisconnectGrapplerIfPossible();
 
 	}
 	
 	public override void HandleTap() {
-		DisconnectGrapplerIfPossible();
 	}
 }

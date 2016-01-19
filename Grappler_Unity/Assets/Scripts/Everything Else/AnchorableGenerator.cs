@@ -15,13 +15,13 @@ public class AnchorableGenerator : MonoBehaviour {
 	}
 
 	public void GenerateAnchorables(MountainChunk mountainChunk) {
-		var points = mountainChunk.GetListOfLinePoints();
-		foreach (Point point in points) CreateAnchorableAtPoint(point);
+		var points = mountainChunk.GetListOfMacroLinePoints();
+		foreach (Point point in points) CreateAnchorableAtPoint(mountainChunk, point);
 	}
 
-	private void CreateAnchorableAtPoint(Point point) {
+	private void CreateAnchorableAtPoint(MountainChunk chunk, Point point) {
 		Anchorable anchorable = anchorablePrefab.Spawn();
-		anchorable.transform.parent = transform;
+		anchorable.transform.parent = chunk.transform;
 		anchorable.transform.position = point.pointVector;
 		anchorable.SetAnchorableID(currentAnchorableID++);
 		anchorable.SetLinePoint(point);

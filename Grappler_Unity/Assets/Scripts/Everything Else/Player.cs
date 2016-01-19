@@ -60,7 +60,7 @@ public class Player : StateMachine {
 	}
 
 	private void Start() {
-		SetState(PlayerStates.Climbing);
+		SetState(PlayerStates.Falling);
 	}
 
 	private bool CurrentStateIs(PlayerStates playerState) {

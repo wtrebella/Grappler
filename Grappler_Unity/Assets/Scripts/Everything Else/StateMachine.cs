@@ -137,6 +137,8 @@ public class StateMachine : MonoBehaviour {
 	}
 
 	private void RemoveSwipeDetection() {
+		if (!SwipeDetector.IsInstantiated()) return;
+
 		SwipeDetector.instance.SignalTap -= HandleTap;
 		SwipeDetector.instance.SignalLeftSwipe -= HandleLeftSwipe;
 		SwipeDetector.instance.SignalRightSwipe -= HandleRightSwipe;
