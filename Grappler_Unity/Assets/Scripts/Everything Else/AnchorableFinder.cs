@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class AnchorableFinder : MonoBehaviour {
 	[SerializeField] private ArcRaycaster[] arcRaycasters;
 	[SerializeField] private CircleOverlapper[] circleOverlappers;
-	[SerializeField] private ScreenOverlapper screenOverlapper;
+	[SerializeField] private AreaOverlapper screenOverlapper;
 
 	public bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
 		anchorable = null;
