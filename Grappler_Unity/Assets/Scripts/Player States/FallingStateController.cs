@@ -14,7 +14,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void UpdateState() {
-		
+		if (Input.GetMouseButtonDown(0)) player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void FixedUpdateState() {
@@ -30,7 +30,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleUpSwipe() {
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
+
 	}
 	
 	public override void HandleDownSwipe() {

@@ -46,11 +46,11 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void UpdateState() {
-		
+		if (Input.GetMouseButtonUp(0)) DisconnectGrapplerIfPossible();
 	}
 	
 	public override void FixedUpdateState() {
-		
+
 	}
 
 	public override void HandleLeftSwipe() {
@@ -67,9 +67,9 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void HandleDownSwipe() {
 		DisconnectGrapplerIfPossible();
-
 	}
 	
 	public override void HandleTap() {
+
 	}
 }

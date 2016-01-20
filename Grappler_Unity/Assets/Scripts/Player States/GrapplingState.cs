@@ -32,12 +32,4 @@ public class GrapplingState : MonoBehaviour {
 	public void ReleaseGrapple() {
 		grapplerRope.Release();
 	}
-
-	public void ClimbUp() {
-
-	}
-
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.UpArrow)) ClimbUp();
-	}
 }
