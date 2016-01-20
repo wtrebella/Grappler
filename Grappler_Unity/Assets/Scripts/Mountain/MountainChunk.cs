@@ -204,7 +204,9 @@ public class MountainChunk : MonoBehaviour {
 			macroLinePoints.Add(pointObject);
 		}
 
-		points.Add(new Vector2(origin.x - marginSize, prevPoint.y));
+		int add = 10;
+		points.Add(new Vector2(prevPoint.x, prevPoint.y + add));
+		points.Add(new Vector2(origin.x - marginSize, prevPoint.y + add));
 		points.Add(new Vector2(origin.x - marginSize, origin.y));
 	}
 
