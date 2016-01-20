@@ -111,7 +111,7 @@ public class InputManager : MonoBehaviour {
 		
 		Touch touch = Input.GetTouch(0);
 		
-		if (TouchIsDown(touch)) HandleTouchUp();
+		if (TouchIsUp(touch)) HandleTouchUp();
 	}
 
 	private void DetectTouchSwipes() {
@@ -136,7 +136,7 @@ public class InputManager : MonoBehaviour {
 	}
 	
 	private bool TouchIsUp(Touch touch) {
-		return touch.phase == TouchPhase.Ended && touch.phase == TouchPhase.Canceled;
+		return touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled;
 	}
 
 	private void DoTouchSwipeBeganPhase(Touch touch) {
