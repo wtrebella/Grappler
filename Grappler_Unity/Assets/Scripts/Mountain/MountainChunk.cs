@@ -94,7 +94,7 @@ public class MountainChunk : MonoBehaviour {
 		return place;
 	}
 
-	public Vector2 GetPositionFromPlace(float place) {
+	public Vector2 GetPositionAtPlace(float place) {
 		place = Mathf.Clamp01(place);
 		float totalDistance = GetTotalDistance();
 		float placeDistance = totalDistance * place;
@@ -107,6 +107,16 @@ public class MountainChunk : MonoBehaviour {
 		float betweenPointsDistance = nextPointDistance - thisPointDistance;
 		float pointLerp = deltaDistance / betweenPointsDistance;
 		return GetPositionBetweenLinePoints(firstPointIndex, secondPointIndex, pointLerp);
+	}
+
+	public float GetAverageYAtX(float x) {
+		Vector2 firstPoint = GetFirstLinePoint().pointVector;
+		Vector2 lastPoint = GetLastLinePoint().pointVector;
+		float width = lastPoint.x - firstPoint.x;
+		float xDelta = x - firstPoint.x;
+		float percent = xDelta / width;
+		Vector2 position = Vector2.Lerp(firstPoint, lastPoint, percent);
+		return position.y;
 	}
 
 	public Vector2 GetPositionBetweenLinePoints(int indexA, int indexB, float lerp) {

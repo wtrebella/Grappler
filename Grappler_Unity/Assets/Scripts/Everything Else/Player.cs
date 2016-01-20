@@ -3,30 +3,23 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(GrapplingStateController))]
-[RequireComponent(typeof(ClimbingStateController))]
+[RequireComponent(typeof(DeadStateController))]
 [RequireComponent(typeof(FallingStateController))]
-[RequireComponent(typeof(KinematicSwitcher))]
-[RequireComponent(typeof(TriggerSwitcher))]
 [RequireComponent(typeof(PlayerAnimator))]
-[RequireComponent(typeof(ClimbingRopeStateController))]
 public class Player : StateMachine {
-	public Action SignalEnteredClimbingState;
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
-	public Action SignalEnteredClimbingRopeState;
+	public Action SignalEnteredDeadState;
 
-	public enum PlayerStates {Falling, Climbing, Grappling, ClimbingRope}
+	public enum PlayerStates {Falling, Grappling, Dead}
 
 	public Forcer forcer;
 
 	[SerializeField] private Transform body;
-
-	[HideInInspector, NonSerialized] public ClimbingRopeStateController climbingRopeController;
+	
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
-	[HideInInspector, NonSerialized] public TriggerSwitcher triggerSwitcher;
-	[HideInInspector, NonSerialized] public KinematicSwitcher kinematicSwitcher;
+	[HideInInspector, NonSerialized] public DeadStateController deadController;
 	[HideInInspector, NonSerialized] public GrapplingStateController grapplingController;
-	[HideInInspector, NonSerialized] public ClimbingStateController climbingController;
 	[HideInInspector, NonSerialized] public FallingStateController fallingController;
 
 	public void SetState(PlayerStates state) {
@@ -37,12 +30,12 @@ public class Player : StateMachine {
 		return CurrentStateIs(PlayerStates.Falling);
 	}
 
-	public bool IsClimbing() {
-		return CurrentStateIs(PlayerStates.Climbing);
-	}
-
 	public bool IsGrappling() {
 		return CurrentStateIs(PlayerStates.Grappling);
+	}
+
+	public bool IsDead() {
+		return CurrentStateIs(PlayerStates.Dead);
 	}
 
 	public Vector3 GetBodyPosition() {
@@ -50,13 +43,10 @@ public class Player : StateMachine {
 	}
 
 	private void Awake() {
-		climbingRopeController = GetComponent<ClimbingRopeStateController>();
 		playerAnimator = GetComponent<PlayerAnimator>();
-		kinematicSwitcher = GetComponent<KinematicSwitcher>();
-		triggerSwitcher = GetComponent<TriggerSwitcher>();
 		fallingController = GetComponent<FallingStateController>();
 		grapplingController = GetComponent<GrapplingStateController>();
-		climbingController = GetComponent<ClimbingStateController>();
+		deadController = GetComponent<DeadStateController>();
 	}
 
 	private void Start() {
@@ -67,17 +57,24 @@ public class Player : StateMachine {
 		return (PlayerStates)currentState == playerState;
 	}
 
+	private void KillIfBelowScreen() {
+		float minY = GameScreen.instance.lowerLeft.y - 5;
+		if (body.position.y < minY) currentState = PlayerStates.Dead;
+	}
+
+	protected override void PreUpdateState() {
+
+	}
+
+	protected override void PostUpdateState() {
+		KillIfBelowScreen();
+	}
 
 
 
 
-//   _______    ___       __       __       __  .__   __.   _______ 
-//	|   ____|  /   \     |  |     |  |     |  | |  \ |  |  /  _____|
-//	|  |__    /  ^  \    |  |     |  |     |  | |   \|  | |  |  __  
-//	|   __|  /  /_\  \   |  |     |  |     |  | |  . `  | |  | |_ | 
-//	|  |    /  _____  \  |  `----.|  `----.|  | |  |\   | |  |__| | 
-//	|__|   /__/     \__\ |_______||_______||__| |__| \__|  \______| 
-//
+
+	// falling
 
 	private void Falling_LeftSwipe() {
 		fallingController.HandleLeftSwipe();
@@ -108,9 +105,6 @@ public class Player : StateMachine {
 	}
 
 	private void Falling_EnterState() {
-		kinematicSwitcher.SetNonKinematic();
-		playerAnimator.PlayFallingAnimations();
-
 		fallingController.EnterState();
 
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
@@ -133,62 +127,52 @@ public class Player : StateMachine {
 
 
 
-
-//    ______  __       __  .___  ___. .______    __  .__   __.   _______ 
-//   /      ||  |     |  | |   \/   | |   _  \  |  | |  \ |  |  /  _____|
-//  |  ,----'|  |     |  | |  \  /  | |  |_)  | |  | |   \|  | |  |  __  
-//  |  |     |  |     |  | |  |\/|  | |   _  <  |  | |  . `  | |  | |_ | 
-//  |  `----.|  `----.|  | |  |  |  | |  |_)  | |  | |  |\   | |  |__| | 
-//   \______||_______||__| |__|  |__| |______/  |__| |__| \__|  \______| 
-//                                                                       
-
-	private void Climbing_LeftSwipe() {
-		climbingController.HandleLeftSwipe();
+	// dead
+	
+	private void Dead_LeftSwipe() {
+		deadController.HandleLeftSwipe();
 	}
 	
-	private void Climbing_RightSwipe() {
-		climbingController.HandleRightSwipe();
+	private void Dead_RightSwipe() {
+		deadController.HandleRightSwipe();
 	}
 	
-	private void Climbing_UpSwipe() {
-		climbingController.HandleUpSwipe();
+	private void Dead_UpSwipe() {
+		deadController.HandleUpSwipe();
 	}
 	
-	private void Climbing_DownSwipe() {
-		climbingController.HandleDownSwipe();
+	private void Dead_DownSwipe() {
+		deadController.HandleDownSwipe();
 	}
 	
-	private void Climbing_Tap() {
-		climbingController.HandleTap();
-	}
-
-	private void Climbing_TouchUp() {
-		climbingController.HandleTouchUp();
+	private void Dead_Tap() {
+		deadController.HandleTap();
 	}
 	
-	private void Climbing_TouchDown() {
-		climbingController.HandleTouchDown();
-	}
-
-	private void Climbing_EnterState() {
-		kinematicSwitcher.SetKinematic();
-		playerAnimator.PlayClimbingAnimations();
-
-		climbingController.EnterState();
-
-		if (SignalEnteredClimbingState != null) SignalEnteredClimbingState();
+	private void Dead_TouchUp() {
+		deadController.HandleTouchUp();
 	}
 	
-	private void Climbing_ExitState() {
-		climbingController.ExitState();
+	private void Dead_TouchDown() {
+		deadController.HandleTouchDown();
 	}
 	
-	private void Climbing_UpdateState() {
-		climbingController.UpdateState();
+	private void Dead_EnterState() {
+		deadController.EnterState();
+		
+		if (SignalEnteredDeadState != null) SignalEnteredDeadState();
 	}
 	
-	private void Climbing_FixedUpdateState() {
-		climbingController.FixedUpdateState();
+	private void Dead_ExitState() {
+		deadController.ExitState();
+	}
+	
+	private void Dead_UpdateState() {
+		deadController.UpdateState();
+	}
+	
+	private void Dead_FixedUpdateState() {
+		deadController.FixedUpdateState();
 	}
 
 
@@ -196,13 +180,10 @@ public class Player : StateMachine {
 
 
 
-//    _______ .______          ___      .______   .______    __       __  .__   __.   _______ 
-//   /  _____||   _  \        /   \     |   _  \  |   _  \  |  |     |  | |  \ |  |  /  _____|
-//  |  |  __  |  |_)  |      /  ^  \    |  |_)  | |  |_)  | |  |     |  | |   \|  | |  |  __  
-//  |  | |_ | |      /      /  /_\  \   |   ___/  |   ___/  |  |     |  | |  . `  | |  | |_ | 
-//  |  |__| | |  |\  \----./  _____  \  |  |      |  |      |  `----.|  | |  |\   | |  |__| | 
-//   \______| | _| `._____/__/     \__\ | _|      | _|      |_______||__| |__| \__|  \______| 
-//
+
+
+
+	// grappling
 
 	private void Grappling_LeftSwipe() {
 		grapplingController.HandleLeftSwipe();
@@ -233,9 +214,6 @@ public class Player : StateMachine {
 	}
 
 	private void Grappling_EnterState() {
-		kinematicSwitcher.SetNonKinematic();
-		playerAnimator.PlayGrapplingAnimations();
-
 		grapplingController.EnterState();
 
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
@@ -251,65 +229,5 @@ public class Player : StateMachine {
 	
 	private void Grappling_FixedUpdateState() {
 		grapplingController.FixedUpdateState();
-	}
-
-
-
-
-
-
-
-//    ______  __       __  .___  ___. .______    __  .__   __.   _______    .______        ______   .______    _______ 
-//   /      ||  |     |  | |   \/   | |   _  \  |  | |  \ |  |  /  _____|   |   _  \      /  __  \  |   _  \  |   ____|
-//  |  ,----'|  |     |  | |  \  /  | |  |_)  | |  | |   \|  | |  |  __     |  |_)  |    |  |  |  | |  |_)  | |  |__   
-//  |  |     |  |     |  | |  |\/|  | |   _  <  |  | |  . `  | |  | |_ |    |      /     |  |  |  | |   ___/  |   __|  
-//  |  `----.|  `----.|  | |  |  |  | |  |_)  | |  | |  |\   | |  |__| |    |  |\  \----.|  `--'  | |  |      |  |____ 
-//   \______||_______||__| |__|  |__| |______/  |__| |__| \__|  \______|    | _| `._____| \______/  | _|      |_______|
-//
-
-	private void ClimbingRope_LeftSwipe() {
-		climbingRopeController.HandleLeftSwipe();
-	}
-	
-	private void ClimbingRope_RightSwipe() {
-		climbingRopeController.HandleRightSwipe();
-	}
-	
-	private void ClimbingRope_UpSwipe() {
-		climbingRopeController.HandleUpSwipe();
-	}
-	
-	private void ClimbingRope_DownSwipe() {
-		climbingRopeController.HandleDownSwipe();
-	}
-	
-	private void ClimbingRope_Tap() {
-		climbingRopeController.HandleTap();
-	}
-
-	private void ClimbingRope_TouchUp() {
-		climbingRopeController.HandleTouchUp();
-	}
-	
-	private void ClimbingRope_TouchDown() {
-		climbingRopeController.HandleTouchDown();
-	}
-	
-	private void ClimbingRope_EnterState() {
-		climbingRopeController.EnterState();
-		
-		if (SignalEnteredClimbingRopeState != null) SignalEnteredClimbingRopeState();
-	}
-	
-	private void ClimbingRope_ExitState() {
-		climbingRopeController.ExitState();
-	}
-	
-	private void ClimbingRope_UpdateState() {
-		climbingRopeController.UpdateState();
-	}
-	
-	private void ClimbingRope_FixedUpdateState() {
-		climbingRopeController.FixedUpdateState();
 	}
 }

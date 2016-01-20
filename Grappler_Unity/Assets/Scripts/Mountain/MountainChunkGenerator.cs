@@ -22,6 +22,15 @@ public class MountainChunkGenerator : MonoBehaviour {
 		return mountainChunks[index];
 	}
 
+	public MountainChunk GetMountainChunkAtX(float x) {
+		foreach (MountainChunk chunk in mountainChunks) {
+			float lastX = chunk.GetLastLinePoint().pointVector.x;
+			if (x < lastX) return chunk;
+		}
+
+		return mountainChunks[mountainChunks.Count - 1];
+	}
+
 	public MountainChunk GetMountainChunk(int index) {
 		if (index < 0 || index > mountainChunks.Count) Debug.LogError("index (" + index + ") out of range!");
 		return mountainChunks[index];

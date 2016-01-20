@@ -30,7 +30,7 @@ public class SpikesGenerator : MonoBehaviour {
 		SpikeBall spikeBall = spikeBallPrefab.Spawn();
 		spikeBall.transform.parent = chunk.transform;
 		spikeBall.transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 359));
-		Vector3 position = chunk.GetPositionFromPlace(place);;
+		Vector3 position = chunk.GetPositionAtPlace(place);;
 		position.z += 0.1f;
 		spikeBall.transform.position = position;
 		spikeBalls.Add(spikeBall);

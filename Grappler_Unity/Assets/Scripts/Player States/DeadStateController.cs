@@ -1,31 +1,29 @@
 using UnityEngine;
 using System.Collections;
-using System;
 
 [RequireComponent(typeof(Player))]
-public class ClimbingStateController : PlayerStateController {
-	[SerializeField] private ClimbingState climbingState;
-	[SerializeField] private AnchorableFinder anchorableFinder;
+public class DeadStateController : PlayerStateController {
+	[SerializeField] private Rigidbody2D bodyRigidbody;
 
 	public override void EnterState() {
-		player.playerAnimator.PlayClimbingAnimations();
-		climbingState.StartClimbing(player.GetBodyPosition().y);
+		player.grapplingController.DisconnectGrapplerIfPossible();
+		bodyRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
 	}
 	
 	public override void ExitState() {
-		climbingState.StopClimbing();
+		
 	}
 	
 	public override void UpdateState() {
-		
+
 	}
 	
 	public override void FixedUpdateState() {
-		
+
 	}
 	
 	public override void HandleLeftSwipe() {
-		
+
 	}
 	
 	public override void HandleRightSwipe() {
@@ -37,7 +35,7 @@ public class ClimbingStateController : PlayerStateController {
 	}
 	
 	public override void HandleDownSwipe() {
-		player.grapplingController.ConnectGrapplerIfPossible();
+		
 	}
 	
 	public override void HandleTap() {
@@ -49,6 +47,6 @@ public class ClimbingStateController : PlayerStateController {
 	}
 	
 	public override void HandleTouchDown() {
-		
+
 	}
 }

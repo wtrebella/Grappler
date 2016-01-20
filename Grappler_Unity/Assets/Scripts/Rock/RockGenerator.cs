@@ -15,7 +15,7 @@ public class RockGenerator : MonoBehaviour {
 		float distPerRock = 1f/(numRocksPerMountainChunk);
 		float dist = distPerRock;
 		for (int i = 0; i < numRocksPerMountainChunk; i++) {
-			Vector2 position = mountainChunk.GetPositionFromPlace(dist);
+			Vector2 position = mountainChunk.GetPositionAtPlace(dist);
 			GenerateRock(mountainChunk, position);
 			dist += distPerRock;
 		}

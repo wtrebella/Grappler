@@ -24,11 +24,12 @@ public class GrapplingStateController : PlayerStateController {
 		}
 	}
 	
-	public void DisconnectGrapplerIfPossible() {
+	public bool DisconnectGrapplerIfPossible() {
 		if (grappling.ReadyToDisconnect()) {
 			grappling.ReleaseGrapple();
-			player.SetState(Player.PlayerStates.Falling);
+			return true;
 		}
+		else return false;
 	}
 	
 	public void ConnectGrapplerIfPossible(Anchorable anchorable) {
@@ -75,7 +76,7 @@ public class GrapplingStateController : PlayerStateController {
 	}
 
 	public override void HandleTouchUp() {
-		DisconnectGrapplerIfPossible();
+		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 	
 	public override void HandleTouchDown() {

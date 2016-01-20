@@ -9,10 +9,8 @@ public class PlayerFollowUpdateSwitcher : MonoBehaviour {
 	
 	private void Awake() {
 		follow = GetComponent<Follow>();
-		player.SignalEnteredClimbingState += HandleClimberEnteredClimbingState;
 		player.SignalEnteredFallingState += HandleClimberEnteredFallingState;
 		player.SignalEnteredGrapplingState += HandleClimberEnteredGrapplingState;
-		player.SignalEnteredClimbingRopeState += HandleClimberEnteredClimbingRopeState;
 	}
 
 	private void HandleClimberEnteredClimbingState() {
