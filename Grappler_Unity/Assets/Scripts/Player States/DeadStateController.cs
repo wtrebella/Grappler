@@ -4,10 +4,12 @@ using System.Collections;
 [RequireComponent(typeof(Player))]
 public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D bodyRigidbody;
+	[SerializeField] private Rigidbody2D feetRigidbody;
 
 	public override void EnterState() {
 		player.grapplingController.DisconnectGrapplerIfPossible();
 		bodyRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
+		feetRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
 	}
 	
 	public override void ExitState() {

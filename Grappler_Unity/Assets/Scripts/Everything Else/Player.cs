@@ -16,7 +16,7 @@ public class Player : StateMachine {
 	public Forcer forcer;
 
 	[SerializeField] private Transform body;
-	
+
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
 	[HideInInspector, NonSerialized] public DeadStateController deadController;
 	[HideInInspector, NonSerialized] public GrapplingStateController grapplingController;
