@@ -43,4 +43,12 @@ public class ClimbingStateController : PlayerStateController {
 	public override void HandleTap() {
 		
 	}
+
+	public override void HandleTouchUp() {
+		
+	}
+	
+	public override void HandleTouchDown() {
+		
+	}
 }

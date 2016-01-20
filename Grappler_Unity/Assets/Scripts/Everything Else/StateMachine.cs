@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +16,8 @@ public class StateMachine : MonoBehaviour {
 		public Action UpSwipe = DoNothing;
 		public Action DownSwipe = DoNothing;
 		public Action Tap = DoNothing;
+		public Action TouchUp = DoNothing;
+		public Action TouchDown = DoNothing;
 
         public Enum currentState;
     }
@@ -57,6 +59,14 @@ public class StateMachine : MonoBehaviour {
 		state.Tap();
 	}
 
+	private void HandleTouchUp() {
+		state.TouchUp();
+	}
+	
+	private void HandleTouchDown() {
+		state.TouchDown();
+	}
+
 	private void Update() {
 		PreUpdateState();
 		state.DoUpdateState();
@@ -88,6 +98,8 @@ public class StateMachine : MonoBehaviour {
 		state.UpSwipe = ConfigureDelegate<Action>("UpSwipe", DoNothing);
 		state.DownSwipe = ConfigureDelegate<Action>("DownSwipe", DoNothing);
 		state.Tap = ConfigureDelegate<Action>("Tap", DoNothing);
+		state.TouchUp = ConfigureDelegate<Action>("TouchUp", DoNothing);
+		state.TouchDown = ConfigureDelegate<Action>("TouchDown", DoNothing);
 
         if (state.EnterState != null) state.EnterState();
     }
@@ -129,21 +141,25 @@ public class StateMachine : MonoBehaviour {
 	private void InitiateSwipeDetection() {
 		swipeDetectionInitiated = true;
 
-		SwipeDetector.instance.SignalTap += HandleTap;
-		SwipeDetector.instance.SignalLeftSwipe += HandleLeftSwipe;
-		SwipeDetector.instance.SignalRightSwipe += HandleRightSwipe;
-		SwipeDetector.instance.SignalUpSwipe += HandleUpSwipe;
-		SwipeDetector.instance.SignalDownSwipe += HandleDownSwipe;
+		InputManager.instance.SignalTap += HandleTap;
+		InputManager.instance.SignalLeftSwipe += HandleLeftSwipe;
+		InputManager.instance.SignalRightSwipe += HandleRightSwipe;
+		InputManager.instance.SignalUpSwipe += HandleUpSwipe;
+		InputManager.instance.SignalDownSwipe += HandleDownSwipe;
+		InputManager.instance.SignalTouchDown += HandleTouchDown;
+		InputManager.instance.SignalTouchUp += HandleTouchUp;
 	}
 
 	private void RemoveSwipeDetection() {
-		if (!SwipeDetector.IsInstantiated()) return;
+		if (!InputManager.IsInstantiated()) return;
 
-		SwipeDetector.instance.SignalTap -= HandleTap;
-		SwipeDetector.instance.SignalLeftSwipe -= HandleLeftSwipe;
-		SwipeDetector.instance.SignalRightSwipe -= HandleRightSwipe;
-		SwipeDetector.instance.SignalUpSwipe -= HandleUpSwipe;
-		SwipeDetector.instance.SignalDownSwipe -= HandleDownSwipe;
+		InputManager.instance.SignalTap -= HandleTap;
+		InputManager.instance.SignalLeftSwipe -= HandleLeftSwipe;
+		InputManager.instance.SignalRightSwipe -= HandleRightSwipe;
+		InputManager.instance.SignalUpSwipe -= HandleUpSwipe;
+		InputManager.instance.SignalDownSwipe -= HandleDownSwipe;
+		InputManager.instance.SignalTouchDown -= HandleTouchDown;
+		InputManager.instance.SignalTouchUp -= HandleTouchUp;
 	}
 
     static void DoNothing() {}

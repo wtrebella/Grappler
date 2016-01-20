@@ -16,6 +16,7 @@ public class GrapplingStateController : PlayerStateController {
 	}
 
 	public void ConnectGrapplerToHighestAnchorable() {
+		if (!grappling.ReadyToConnect()) return;
 		Anchorable anchorable;
 		if (anchorableFinder.FindAnchorableInBoxCast(out anchorable)) {
 			ConnectGrapplerIfPossible(anchorable);
@@ -46,7 +47,7 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void UpdateState() {
-		if (Input.GetMouseButtonUp(0)) DisconnectGrapplerIfPossible();
+
 	}
 	
 	public override void FixedUpdateState() {
@@ -66,10 +67,18 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void HandleDownSwipe() {
-		DisconnectGrapplerIfPossible();
+
 	}
 	
 	public override void HandleTap() {
 
+	}
+
+	public override void HandleTouchUp() {
+		DisconnectGrapplerIfPossible();
+	}
+	
+	public override void HandleTouchDown() {
+		
 	}
 }

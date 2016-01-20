@@ -2,16 +2,16 @@
 using System.Collections;
 using System;
 
-public class SwipeDetector : MonoBehaviour {
-	private static SwipeDetector _instance;
-	public static SwipeDetector instance {
+public class InputManager : MonoBehaviour {
+	private static InputManager _instance;
+	public static InputManager instance {
 		get {
 			if (_instance == null) {
-				SwipeDetector detector = GameObject.FindObjectOfType<SwipeDetector>();
+				InputManager detector = GameObject.FindObjectOfType<InputManager>();
 				if (detector) _instance = detector;
 				else {
-					GameObject go = new GameObject("Swipe Detector");
-					_instance = go.AddComponent<SwipeDetector>();
+					GameObject go = new GameObject("Input Manager");
+					_instance = go.AddComponent<InputManager>();
 					DontDestroyOnLoad(go);
 				}
 			}
@@ -28,6 +28,8 @@ public class SwipeDetector : MonoBehaviour {
 	public Action SignalLeftSwipe;
 	public Action SignalUpSwipe;
 	public Action SignalDownSwipe;
+	public Action SignalTouchDown;
+	public Action SignalTouchUp;
 
 	private float minSwipeLength = 50;
 	private float maxSwipeDuration = 0.3f;
@@ -39,8 +41,8 @@ public class SwipeDetector : MonoBehaviour {
 	private float beginningSwipeTime;
 
 	private void Update() {
-		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchSwipes();
-		else if (SystemInfo.deviceType == DeviceType.Desktop) DetectMouseSwipes();
+		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
+		else if (SystemInfo.deviceType == DeviceType.Desktop) DetectMouseInput();
 	}
 
 	private float GetSwipeDeltaTime() {
@@ -49,6 +51,14 @@ public class SwipeDetector : MonoBehaviour {
 
 	private void HandleTap() {
 		if (SignalTap != null) SignalTap();
+	}
+
+	private void HandleTouchUp() {
+		if (SignalTouchUp != null) SignalTouchUp();
+	}
+
+	private void HandleTouchDown() {
+		if (SignalTouchDown != null) SignalTouchDown();
 	}
 
 	private void HandleSwipe(Vector2 swipeDirection, float swipeMagnitude) {
@@ -80,7 +90,29 @@ public class SwipeDetector : MonoBehaviour {
 		if (SignalDownSwipe != null) SignalDownSwipe();
 	}
 
-	// TOUCH SWIPES
+	// TOUCH
+
+	private void DetectTouchInput() {
+		DetectTouchSwipes();
+		DetectTouchDown();
+		DetectTouchUp();
+	}
+
+	private void DetectTouchDown() {
+		if (Input.touches.Length == 0) return;
+		
+		Touch touch = Input.GetTouch(0);
+
+		if (TouchIsDown(touch)) HandleTouchDown();
+	}
+
+	private void DetectTouchUp() {
+		if (Input.touches.Length == 0) return;
+		
+		Touch touch = Input.GetTouch(0);
+		
+		if (TouchIsDown(touch)) HandleTouchUp();
+	}
 
 	private void DetectTouchSwipes() {
 		if (Input.touches.Length == 0) return;
@@ -99,6 +131,13 @@ public class SwipeDetector : MonoBehaviour {
 		return touch.phase == TouchPhase.Ended && GetSwipeDeltaTime() <= maxSwipeDuration;
 	}
 
+	private bool TouchIsDown(Touch touch) {
+		return touch.phase == TouchPhase.Began;
+	}
+	
+	private bool TouchIsUp(Touch touch) {
+		return touch.phase == TouchPhase.Ended && touch.phase == TouchPhase.Canceled;
+	}
 
 	private void DoTouchSwipeBeganPhase(Touch touch) {
 		beginningSwipePosition = touch.position;
@@ -120,11 +159,25 @@ public class SwipeDetector : MonoBehaviour {
 
 
 
-	// MOUSE SWIPES
+	// MOUSE
+
+	private void DetectMouseInput() {
+		DetectMouseSwipes();
+		DetectMouseDown();
+		DetectMouseUp();
+	}
 
 	private void DetectMouseSwipes() {			
 		if (MouseSwipeBegan()) DoMouseSwipeBeganPhase();
 		else if (MouseSwipeEnded()) DoMouseSwipeEndedPhase();
+	}
+
+	private void DetectMouseUp() {
+		if (Input.GetMouseButtonUp(0)) HandleTouchUp();
+	}
+	
+	private void DetectMouseDown() {
+		if (Input.GetMouseButtonDown(0)) HandleTouchDown();
 	}
 	
 	private bool MouseSwipeBegan() {

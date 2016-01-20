@@ -99,6 +99,14 @@ public class Player : StateMachine {
 		fallingController.HandleTap();
 	}
 
+	private void Falling_TouchUp() {
+		fallingController.HandleTouchUp();
+	}
+
+	private void Falling_TouchDown() {
+		fallingController.HandleTouchDown();
+	}
+
 	private void Falling_EnterState() {
 		kinematicSwitcher.SetNonKinematic();
 		playerAnimator.PlayFallingAnimations();
@@ -152,6 +160,14 @@ public class Player : StateMachine {
 	
 	private void Climbing_Tap() {
 		climbingController.HandleTap();
+	}
+
+	private void Climbing_TouchUp() {
+		climbingController.HandleTouchUp();
+	}
+	
+	private void Climbing_TouchDown() {
+		climbingController.HandleTouchDown();
 	}
 
 	private void Climbing_EnterState() {
@@ -208,6 +224,14 @@ public class Player : StateMachine {
 		grapplingController.HandleTap();
 	}
 
+	private void Grappling_TouchUp() {
+		grapplingController.HandleTouchUp();
+	}
+	
+	private void Grappling_TouchDown() {
+		grapplingController.HandleTouchDown();
+	}
+
 	private void Grappling_EnterState() {
 		kinematicSwitcher.SetNonKinematic();
 		playerAnimator.PlayGrapplingAnimations();
@@ -261,6 +285,14 @@ public class Player : StateMachine {
 	
 	private void ClimbingRope_Tap() {
 		climbingRopeController.HandleTap();
+	}
+
+	private void ClimbingRope_TouchUp() {
+		climbingRopeController.HandleTouchUp();
+	}
+	
+	private void ClimbingRope_TouchDown() {
+		climbingRopeController.HandleTouchDown();
 	}
 	
 	private void ClimbingRope_EnterState() {
