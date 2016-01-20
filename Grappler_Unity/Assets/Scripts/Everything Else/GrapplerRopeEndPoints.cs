@@ -39,7 +39,6 @@ public class GrapplerRopeEndPoints : MonoBehaviour {
 
 		grappleRope.Signal_Connected_UpdateState += Connected_UpdateState;
 		grappleRope.Signal_Retracted_UpdateState += Retracted_UpdateState;
-		grappleRope.Signal_FreeFlowing_UpdateState += FreeFlowing_UpdateState;
 
 		startTransform = new GameObject("Grappler Rope Start Transform").transform;
 		endTransform = new GameObject("Grappler Rope End Transform").transform;

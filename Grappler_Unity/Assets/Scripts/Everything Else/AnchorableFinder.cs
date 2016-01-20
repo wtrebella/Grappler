@@ -4,7 +4,7 @@ using System.Collections;
 public class AnchorableFinder : MonoBehaviour {
 	[SerializeField] private ArcRaycaster[] arcRaycasters;
 	[SerializeField] private CircleOverlapper[] circleOverlappers;
-	[SerializeField] private BoxCaster boxCaster;
+	[SerializeField] private ScreenOverlapper screenOverlapper;
 
 	public bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
 		anchorable = null;
@@ -26,9 +26,9 @@ public class AnchorableFinder : MonoBehaviour {
 		return anchorable != null;
 	}
 
-	public bool FindAnchorableInBoxCast(out Anchorable anchorable) {
+	public bool FindAnchorableInScreenOverlap(out Anchorable anchorable) {
 		anchorable = null;
 		
-		return boxCaster.FindAnchorable(out anchorable);
+		return screenOverlapper.FindAnchorable(out anchorable);
 	}
 }

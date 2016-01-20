@@ -18,7 +18,7 @@ public class GrapplingStateController : PlayerStateController {
 	public void ConnectGrapplerToHighestAnchorable() {
 		if (!grappling.ReadyToConnect()) return;
 		Anchorable anchorable;
-		if (anchorableFinder.FindAnchorableInBoxCast(out anchorable)) {
+		if (anchorableFinder.FindAnchorableInScreenOverlap(out anchorable)) {
 			ConnectGrapplerIfPossible(anchorable);
 			player.SetState(Player.PlayerStates.Grappling);
 		}

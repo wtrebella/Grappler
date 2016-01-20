@@ -25,10 +25,6 @@ public class GrapplingState : MonoBehaviour {
 		cooldownTimer = cooldown;
 	}
 
-	public void Misfire(Vector2 direction) {
-		grapplerRope.Misfire(direction);
-	}
-
 	public bool ReadyToConnect() {
 		return isReady && grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
 	}

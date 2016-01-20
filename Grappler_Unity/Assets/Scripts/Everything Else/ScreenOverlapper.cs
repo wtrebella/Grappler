@@ -3,17 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 
-public class BoxCaster : MonoBehaviour {
+public class ScreenOverlapper : MonoBehaviour {
 	[SerializeField] private LayerMask anchorableLayerMask;
 	[SerializeField] private LayerMask mountainLayerMask;
 	[SerializeField] private bool drawDebugRays = false;
 
 	public bool FindAnchorable(out Anchorable foundAnchorable) {
-		foundAnchorable = BoxCast();
+		foundAnchorable = ScreenOverlap();
 		return foundAnchorable != null;
 	}
 
-	private Anchorable BoxCast() {
+	private Anchorable ScreenOverlap() {
 		Collider2D[] colliders = Physics2D.OverlapAreaAll(GameScreen.instance.lowerLeft, GameScreen.instance.upperRight, anchorableLayerMask);
 		List<Anchorable> anchorables = new List<Anchorable>();
 		foreach (Collider2D collider in colliders) {
