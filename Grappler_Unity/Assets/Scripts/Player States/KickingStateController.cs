@@ -4,8 +4,14 @@ using System;
 
 [RequireComponent(typeof(Player))]
 public class KickingStateController : PlayerStateController {
-	public override void EnterState() {
+	[SerializeField] private KickingState kickingState;
 
+	public override void EnterState() {
+		player.grapplingController.DisconnectGrapplerIfPossible();
+		player.kinematicSwitcher.SetKinematic();
+		player.playerAnimator.PlayKickingAnimations();
+		player.trail.Kick();
+		kickingState.Kick();
 	}
 	
 	public override void ExitState() {

@@ -2,10 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(GrapplingStateController))]
 [RequireComponent(typeof(DeadStateController))]
 [RequireComponent(typeof(FallingStateController))]
 [RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(Trail))]
 public class Player : StateMachine {
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
@@ -14,11 +16,13 @@ public class Player : StateMachine {
 
 	public enum PlayerStates {Falling, Grappling, Kicking, Dead}
 
+	public Trail trail;
 	public Forcer forcer;
 
 	[SerializeField] private Transform body;
 
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
+	[HideInInspector, NonSerialized] public KinematicSwitcher kinematicSwitcher;
 	[HideInInspector, NonSerialized] public DeadStateController deadController;
 	[HideInInspector, NonSerialized] public KickingStateController kickingController;
 	[HideInInspector, NonSerialized] public GrapplingStateController grapplingController;
@@ -30,6 +34,7 @@ public class Player : StateMachine {
 
 	private void Awake() {
 		playerAnimator = GetComponent<PlayerAnimator>();
+		kinematicSwitcher = GetComponent<KinematicSwitcher>();
 		kickingController = GetComponent<KickingStateController>();
 		fallingController = GetComponent<FallingStateController>();
 		grapplingController = GetComponent<GrapplingStateController>();
@@ -45,9 +50,13 @@ public class Player : StateMachine {
 	}
 
 	private void KillIfBelowScreen() {
+		if (IsBelowScreen()) currentState = PlayerStates.Dead;
+	}
+
+	private bool IsBelowScreen() {
 		float margin = -5;
 		float minY = GameScreen.instance.lowerLeft.y + margin;
-		if (body.position.y < minY) currentState = PlayerStates.Dead;
+		return body.position.y < minY;
 	}
 
 	protected override void PreUpdateState() {

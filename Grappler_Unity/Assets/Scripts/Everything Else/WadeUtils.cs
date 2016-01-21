@@ -482,7 +482,7 @@ public static class WadeUtils
 			float max = hsbColor.v;
 			float dif = hsbColor.v * hsbColor.s;
 			float min = hsbColor.v - dif;
-			
+
 			float h = hsbColor.h * 360f;
 			
 			if ( h < 60f )

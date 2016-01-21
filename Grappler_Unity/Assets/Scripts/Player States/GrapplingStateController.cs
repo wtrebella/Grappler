@@ -60,7 +60,7 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void HandleRightSwipe() {
-		
+		player.SetState(Player.PlayerStates.Kicking);
 	}
 	
 	public override void HandleUpSwipe() {
