@@ -39,8 +39,9 @@ public class AreaOverlapper : MonoBehaviour {
 
 	public bool CanDirectlyReachAnchorable(Anchorable anchorable) {
 		Vector2 vector = anchorable.transform.position - transform.position;
-		Vector2 direction = vector.normalized;
 		float distance = vector.magnitude;
+
+		Vector2 direction = vector.normalized;
 		distance -= 0.01f;
 		var colliders = RaycastDirectionDirect(direction, distance);
 		

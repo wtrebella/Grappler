@@ -9,9 +9,10 @@ using System;
 public class Player : StateMachine {
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
+	public Action SignalEnteredKickingState;
 	public Action SignalEnteredDeadState;
 
-	public enum PlayerStates {Falling, Grappling, Dead}
+	public enum PlayerStates {Falling, Grappling, Kicking, Dead}
 
 	public Forcer forcer;
 
@@ -19,6 +20,7 @@ public class Player : StateMachine {
 
 	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
 	[HideInInspector, NonSerialized] public DeadStateController deadController;
+	[HideInInspector, NonSerialized] public KickingStateController kickingController;
 	[HideInInspector, NonSerialized] public GrapplingStateController grapplingController;
 	[HideInInspector, NonSerialized] public FallingStateController fallingController;
 
@@ -26,24 +28,9 @@ public class Player : StateMachine {
 		currentState = state;
 	}
 
-	public bool IsFalling() {
-		return CurrentStateIs(PlayerStates.Falling);
-	}
-
-	public bool IsGrappling() {
-		return CurrentStateIs(PlayerStates.Grappling);
-	}
-
-	public bool IsDead() {
-		return CurrentStateIs(PlayerStates.Dead);
-	}
-
-	public Vector3 GetBodyPosition() {
-		return body.position;
-	}
-
 	private void Awake() {
 		playerAnimator = GetComponent<PlayerAnimator>();
+		kickingController = GetComponent<KickingStateController>();
 		fallingController = GetComponent<FallingStateController>();
 		grapplingController = GetComponent<GrapplingStateController>();
 		deadController = GetComponent<DeadStateController>();
@@ -58,7 +45,8 @@ public class Player : StateMachine {
 	}
 
 	private void KillIfBelowScreen() {
-		float minY = GameScreen.instance.lowerLeft.y - 5;
+		float margin = -5;
+		float minY = GameScreen.instance.lowerLeft.y + margin;
 		if (body.position.y < minY) currentState = PlayerStates.Dead;
 	}
 
@@ -178,6 +166,55 @@ public class Player : StateMachine {
 
 
 
+
+
+	// kicking
+	
+	private void Kicking_LeftSwipe() {
+		kickingController.HandleLeftSwipe();
+	}
+	
+	private void Kicking_RightSwipe() {
+		kickingController.HandleRightSwipe();
+	}
+	
+	private void Kicking_UpSwipe() {
+		kickingController.HandleUpSwipe();
+	}
+	
+	private void Kicking_DownSwipe() {
+		kickingController.HandleDownSwipe();
+	}
+	
+	private void Kicking_Tap() {
+		kickingController.HandleTap();
+	}
+	
+	private void Kicking_TouchUp() {
+		kickingController.HandleTouchUp();
+	}
+	
+	private void Kicking_TouchDown() {
+		kickingController.HandleTouchDown();
+	}
+	
+	private void Kicking_EnterState() {
+		kickingController.EnterState();
+		
+		if (SignalEnteredKickingState != null) SignalEnteredKickingState();
+	}
+	
+	private void Kicking_ExitState() {
+		kickingController.ExitState();
+	}
+	
+	private void Kicking_UpdateState() {
+		kickingController.UpdateState();
+	}
+	
+	private void Kicking_FixedUpdateState() {
+		kickingController.FixedUpdateState();
+	}
 
 
 
