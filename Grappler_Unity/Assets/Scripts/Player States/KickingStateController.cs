@@ -6,12 +6,15 @@ using System;
 public class KickingStateController : PlayerStateController {
 	[SerializeField] private KickingState kickingState;
 
-	public override void EnterState() {
+	private void Kick() {
 		player.grapplingController.DisconnectGrapplerIfPossible();
-		player.kinematicSwitcher.SetKinematic();
 		player.playerAnimator.PlayKickingAnimations();
 		player.trail.Kick();
 		kickingState.Kick();
+	}
+
+	public override void EnterState() {
+		Kick();
 	}
 	
 	public override void ExitState() {

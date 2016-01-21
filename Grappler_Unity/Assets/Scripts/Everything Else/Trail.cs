@@ -10,10 +10,10 @@ public class Trail : MonoBehaviour {
 	private HSVColor currentColor;
 
 	public void Kick() {
-		StartCoroutine(KickCoroutine());
+		StartCoroutine(DoKickTrailColor());
 	}
 
-	private IEnumerator KickCoroutine() {
+	private IEnumerator DoKickTrailColor() {
 		HSVColor color = currentColor;
 		color.h = initialHue;
 		color.s = 1;
@@ -29,7 +29,7 @@ public class Trail : MonoBehaviour {
 			color.v = Mathf.Clamp01(color.v += Time.deltaTime);
 			timer -= Time.deltaTime;
 			Color newColor = color.HSVToRGB();
-			trailMat.SetColor("_Color", newColor);
+			SetTrailColor(newColor);
 			currentColor = color;
 			yield return null;
 		}
@@ -37,8 +37,12 @@ public class Trail : MonoBehaviour {
 		Go.to(trailMat, 0.2f, new GoTweenConfig().materialColor(Color.white));
 	}
 
+	public void SetTrailColor(Color color) {
+		trailMat.SetColor("_Color", color);
+	}
+
 	private void Awake() {
-		trailMat.color = Color.white;
+		SetTrailColor(Color.white);
 		initialHue = new HSVColor(trailMat.color).h;
 	}
 
