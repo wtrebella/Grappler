@@ -5,6 +5,7 @@ using System.Collections;
 public class Trail : MonoBehaviour {
 	[SerializeField] private Material trailMat;
 	[SerializeField] private KickingState kickingState;
+	[SerializeField] private float alpha;
 
 	private float initialHue;
 	private HSVColor currentColor;
@@ -18,7 +19,7 @@ public class Trail : MonoBehaviour {
 		color.h = initialHue;
 		color.s = 1;
 		color.v = 1;
-		color.a = 0.5f;
+		color.a = alpha;
 
 		float timer = kickingState.GetKickDuration();
 		while (timer > 0) {
@@ -42,7 +43,7 @@ public class Trail : MonoBehaviour {
 	}
 
 	private void Awake() {
-		SetTrailColor(Color.white);
+		SetTrailColor(new Color(0, 0, 0, alpha));
 		initialHue = new HSVColor(trailMat.color).h;
 	}
 

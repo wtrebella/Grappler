@@ -21,6 +21,12 @@ public class GameScreen : MonoBehaviour {
 		}
 	}
 
+	public Rect worldRect {
+		get {
+			return new Rect(lowerLeft, size);
+		}
+	}
+
 	public Vector2 origin {
 		get {return lowerLeftAnchor.transform.position;}
 	}
@@ -31,6 +37,10 @@ public class GameScreen : MonoBehaviour {
 
 	public float height {
 		get {return upperRightAnchor.transform.position.y - lowerLeftAnchor.transform.position.y;}
+	}
+
+	public Vector2 size {
+		get {return new Vector2(width, height);}
 	}
 
 	public float minX {
