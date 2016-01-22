@@ -39,7 +39,13 @@ public class GrapplingState : MonoBehaviour {
 
 	public void ReleaseGrapple() {
 		grapplerRope.Release();
-		StartCoroutine(Cooldown());
+		StartCoroutine("Cooldown");
+	}
+
+	public void FinishCooldown() {
+		StopCoroutine("Cooldown");
+		isReady = true;
+		cooldownTimer = cooldown;
 	}
 
 	private IEnumerator Cooldown() {

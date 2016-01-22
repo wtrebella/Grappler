@@ -39,6 +39,10 @@ public class GrapplingStateController : PlayerStateController {
 		}
 	}
 
+	public void FinishCooldown() {
+		grappling.FinishCooldown();
+	}
+
 	public override void EnterState() {
 		player.playerAnimator.PlayGrapplingAnimations();
 	}

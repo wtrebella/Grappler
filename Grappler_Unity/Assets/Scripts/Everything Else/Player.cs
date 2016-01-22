@@ -37,7 +37,7 @@ public class Player : StateMachine {
 			FirTree firTree = collision.collider.GetComponentInParent<FirTree>();
 			if (!firTree.hasBeenSliced) {
 				float speed = body.GetComponent<Rigidbody2D>().velocity.magnitude;
-				if (speed > 10) SetState(PlayerStates.Dead);
+//				if (speed > 10) SetState(PlayerStates.Dead);
 			}
 		}
 	}

@@ -18,7 +18,7 @@ public class KickingStateController : PlayerStateController {
 	}
 	
 	public override void ExitState() {
-		
+
 	}
 	
 	public override void UpdateState() {
