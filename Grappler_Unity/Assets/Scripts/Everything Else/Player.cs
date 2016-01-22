@@ -32,6 +32,10 @@ public class Player : StateMachine {
 		currentState = state;
 	}
 
+	public void HandleCollision(Collision2D collision) {
+
+	}
+
 	private void Awake() {
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();

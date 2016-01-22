@@ -18,7 +18,7 @@ public static class WhitTools {
 	}
 
 	public static bool CompareLayers(int intLayer, string nameLayer) {
-		return layer == LayerMask.NameToLayer(nameLayer);
+		return intLayer == LayerMask.NameToLayer(nameLayer);
 	}
 
 	public static float DirectionToAngle(Vector2 direction) {
