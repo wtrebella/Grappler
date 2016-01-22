@@ -4,12 +4,15 @@ using System.Collections;
 public class GameScreen : MonoBehaviour {
 	public static GameScreen instance;
 
+	public Camera cam {get; private set;}
+
 	[SerializeField] private tk2dCameraAnchor lowerLeftAnchor;
 	[SerializeField] private tk2dCameraAnchor upperRightAnchor;
 	[SerializeField] private float onscreenMargin = 10;
-
+	
 	private void Awake() {
 		instance = this;
+		cam = GetComponent<Camera>();
 	}
 
 	public Vector2 center {
@@ -22,15 +25,33 @@ public class GameScreen : MonoBehaviour {
 	}
 
 	public Rect worldRect {
-		get {
-			return new Rect(lowerLeft, size);
-		}
+		get {return new Rect(lowerLeft, size);}
+	}
+
+	public Vector2 GetRandomScreenPoint() {
+		float x = Random.Range(0, Screen.width);
+		float y = Random.Range(0, Screen.height);
+		return new Vector2(x, y);
+	}
+
+	public Vector3 GetRandomWorldPoint(float z) {
+		Vector2 screenPoint = GetRandomScreenPoint();
+		Vector3 worldPoint = cam.ScreenToWorldPoint(new Vector3(screenPoint.x, screenPoint.y, z));
+		return worldPoint;
+	}
+
+	public Vector3 WorldPointToScreenPoint(Vector3 worldPoint) {
+		return cam.WorldToScreenPoint(worldPoint);
+	}
+
+	public Vector3 ScreenPointToWorldPoint(Vector2 screenPoint, float z) {
+		return cam.ScreenToWorldPoint(new Vector3(screenPoint.x, screenPoint.y, z));
 	}
 
 	public Vector2 origin {
 		get {return lowerLeftAnchor.transform.position;}
 	}
-	
+
 	public float width {
 		get {return upperRightAnchor.transform.position.x - lowerLeftAnchor.transform.position.x;}
 	}

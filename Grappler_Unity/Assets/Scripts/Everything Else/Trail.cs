@@ -35,7 +35,7 @@ public class Trail : MonoBehaviour {
 			yield return null;
 		}
 
-		Go.to(trailMat, 0.2f, new GoTweenConfig().materialColor(Color.white));
+		Go.to(trailMat, 0.2f, new GoTweenConfig().materialColor(new Color(1, 1, 1, alpha)));
 	}
 
 	public void SetTrailColor(Color color) {
@@ -43,7 +43,7 @@ public class Trail : MonoBehaviour {
 	}
 
 	private void Awake() {
-		SetTrailColor(new Color(0, 0, 0, alpha));
+		SetTrailColor(new Color(1, 1, 1, alpha));
 		initialHue = new HSVColor(trailMat.color).h;
 	}
 
