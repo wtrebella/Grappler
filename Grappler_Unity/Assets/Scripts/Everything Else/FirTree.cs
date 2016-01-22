@@ -8,23 +8,27 @@ public class FirTree : MonoBehaviour {
 	
 	public void HandleSlice() {
 		if (hasBeenSliced) return;
-
 		hasBeenSliced = true;
-
-		sliceParticles.Play();
-
-		StartCoroutine(WaitThenRecycle());
+		PlayParticles();
+		Recycle(3);
 	}
 
-	private IEnumerator WaitThenRecycle() {
-		yield return new WaitForSeconds(3);
+	private void Recycle(float delay) {
+		StartCoroutine(WaitThenRecycle(delay));
+	}
+
+	private IEnumerator WaitThenRecycle(float delay) {
+		yield return new WaitForSeconds(delay);
 		this.Recycle();
 	}
 
 	public void HandleCollision(Collision2D collision) {
 		if (hasBeenSliced) return;
+		PlayParticles();
+	}
 
-
+	private void PlayParticles() {
+		sliceParticles.Play();
 	}
 
 	private void Awake() {

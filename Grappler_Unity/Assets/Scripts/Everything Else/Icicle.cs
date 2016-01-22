@@ -3,8 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Icicle : MonoBehaviour {
+	private Rigidbody2D rigid;
+
+	private void Awake() {
+		rigid = GetComponent<Rigidbody2D>();
+	}
+
 	private void OnCollisionEnter2D(Collision2D collision) {
-		Rigidbody2D rigid = GetComponent<Rigidbody2D>();
 		rigid.gravityScale = 1;
 		SpriteSlicer2D.ExplodeSprite(gameObject, 3, 10);
 	}

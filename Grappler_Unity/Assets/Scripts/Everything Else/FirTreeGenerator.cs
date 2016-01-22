@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class FirTreeGenerator : MonoBehaviour {
-	[SerializeField] private float minDistanceToMountain = 3;
-	[SerializeField] private float maxDistanceToMountain = 10;
+	[SerializeField] private float minDistToMountain = 3;
+	[SerializeField] private float maxDistToMountain = 10;
 	[SerializeField] private FirTree firTreePrefab;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 
@@ -21,7 +21,7 @@ public class FirTreeGenerator : MonoBehaviour {
 	}
 
 	private void GenerateTree(Point chunkLinePoint) {
-		float distance = Random.Range(minDistanceToMountain, maxDistanceToMountain);
+		float distance = Random.Range(minDistToMountain, maxDistToMountain);
 		Vector3 linePoint = chunkLinePoint.pointVector.ToVector3();
 		Vector3 distanceVector = new Vector3(0, 0, distance);
 		Vector3 position = linePoint - distanceVector;

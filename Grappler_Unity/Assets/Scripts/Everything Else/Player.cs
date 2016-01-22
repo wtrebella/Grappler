@@ -19,27 +19,17 @@ public class Player : StateMachine {
 	public Trail trail;
 	public Forcer forcer;
 
-	[SerializeField] private Transform body;
+	[SerializeField] private PlayerBodyPart body;
 
-	[HideInInspector, NonSerialized] public PlayerAnimator playerAnimator;
-	[HideInInspector, NonSerialized] public KinematicSwitcher kinematicSwitcher;
-	[HideInInspector, NonSerialized] public DeadStateController deadController;
-	[HideInInspector, NonSerialized] public KickingStateController kickingController;
-	[HideInInspector, NonSerialized] public GrapplingStateController grapplingController;
-	[HideInInspector, NonSerialized] public FallingStateController fallingController;
+	[HideInInspector] public PlayerAnimator playerAnimator;
+	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
+	[HideInInspector] public DeadStateController deadController;
+	[HideInInspector] public KickingStateController kickingController;
+	[HideInInspector] public GrapplingStateController grapplingController;
+	[HideInInspector] public FallingStateController fallingController;
 
 	public void SetState(PlayerStates state) {
 		currentState = state;
-	}
-
-	public void HandleCollision(Collision2D collision) {
-		if (collision.gameObject.layer == LayerMask.NameToLayer("Tree")) {
-			FirTree firTree = collision.collider.GetComponentInParent<FirTree>();
-			if (!firTree.hasBeenSliced) {
-				float speed = body.GetComponent<Rigidbody2D>().velocity.magnitude;
-//				if (speed > 10) SetState(PlayerStates.Dead);
-			}
-		}
 	}
 
 	private void Awake() {
@@ -60,13 +50,7 @@ public class Player : StateMachine {
 	}
 
 	private void KillIfBelowScreen() {
-		if (IsBelowScreen()) currentState = PlayerStates.Dead;
-	}
-
-	private bool IsBelowScreen() {
-		float margin = -5;
-		float minY = GameScreen.instance.lowerLeft.y + margin;
-		return body.position.y < minY;
+		if (body.IsBelowScreen()) SetState(PlayerStates.Dead);
 	}
 
 	protected override void PreUpdateState() {
