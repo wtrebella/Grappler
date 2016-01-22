@@ -10,25 +10,36 @@ public class KickingState : MonoBehaviour {
 	[SerializeField] private Rigidbody2D feet;
 	[SerializeField] private KinematicSwitcher kinematicSwitcher;
 
-	[SerializeField] private Vector3 kickStart;
-	[SerializeField] private Vector3 kickEnd;
 	[SerializeField] private float duration = 0.3f;
 	[SerializeField] private float distance = 2;
+	[SerializeField] private float extensionDistance = 4;
+	[SerializeField] private float vertical = 0.5f;
 	[SerializeField] private GoEaseType easeType = GoEaseType.CubicOut;
 
+	private string playerLayerName = "Player";
+	private Vector3 kickStart;
+	private Vector3 kickEnd;
+	private Vector3 extendedStart;
+	private Vector3 extendedEnd;
 	private List<GameObject> spritesIntersectingKickPath;
 
 	public void Kick() {
 		kinematicSwitcher.SetKinematic();
 		isKicking = true;
 
-		kickStart = body.position;
-		kickEnd = kickStart + Vector3.right * distance;
+		Vector3 direction = new Vector3(1, vertical, 0);
+		direction.Normalize();
+		kickStart = body.transform.position;
+		kickEnd = body.transform.position + direction * distance;
+		Vector3 kickDirection = (kickEnd - kickStart).normalized;
+		extendedStart = kickStart - kickDirection * extensionDistance;
+		extendedEnd = kickEnd + kickDirection * extensionDistance;
 
-		var sprites = IntersectWithKick(kickStart, kickEnd);
-		Debug.Log(sprites.Count);
-		Debug.DrawLine(kickStart, kickEnd, Color.red, 5);
+		var sprites = IntersectWithKick(extendedStart, extendedEnd);
 		foreach (GameObject sprite in sprites) spritesIntersectingKickPath.Add(sprite);
+		StartCoroutine(SliceIntersectingSprites());
+
+		Debug.DrawLine(extendedStart, extendedEnd, Color.red, 2);
 
 		Go.to(body.transform, duration, new GoTweenConfig()
 		      .setEaseType(easeType)
@@ -49,16 +60,34 @@ public class KickingState : MonoBehaviour {
 	}
 
 	private List<GameObject> IntersectWithKick(Vector2 startPos, Vector2 endPos) {
+		float kickDistance = (endPos - startPos).magnitude;
 		List<GameObject> sprites = new List<GameObject>();
-		var results = Physics2D.RaycastAll(startPos, endPos, distance);
+		var results = Physics2D.RaycastAll(startPos, endPos, kickDistance, ~(1 << LayerMask.NameToLayer(playerLayerName)));
 		foreach (RaycastHit2D result in results) {
 			if (result.rigidbody) sprites.Add(result.rigidbody.gameObject);
 		}
 		return sprites;
 	}
 
-	private float GetDistanceTraveled() {
-		return (transform.position - kickStart).magnitude;
+	private IEnumerator SliceIntersectingSprites() {
+		while (spritesIntersectingKickPath.Count > 0) {
+			var spritesToSlice = new List<GameObject>();
+			foreach (GameObject sprite in spritesIntersectingKickPath) {
+				if (body.transform.position.x > sprite.transform.position.x) spritesToSlice.Add(sprite);
+			}
+			
+			foreach (GameObject sprite in spritesToSlice) {
+				Rigidbody2D rigid = sprite.GetComponent<Rigidbody2D>();
+				rigid.gravityScale = 1;
+				rigid.constraints = RigidbodyConstraints2D.None;
+				Vector3 kickDirection = (kickEnd - kickStart).normalized;
+				Vector3 sliceStart = extendedStart - kickDirection * 10;
+				Vector3 sliceEnd = extendedEnd + kickDirection * 10;
+				SpriteSlicer2D.SliceSprite(sliceStart, sliceEnd, sprite);
+				spritesIntersectingKickPath.Remove(sprite);
+			}
+			yield return null;
+		}
 	}
 
 	private void KickDone(AbstractGoTween tween) {
@@ -73,30 +102,5 @@ public class KickingState : MonoBehaviour {
 
 	private void Start() {
 	
-	}
-	
-	private void Update() {
-		if (isKicking) {
-			float distanceTraveled = GetDistanceTraveled();
-			var spritesToSlice = new List<GameObject>();
-			foreach (GameObject sprite in spritesIntersectingKickPath) {
-				float spriteDistance = (sprite.transform.position - kickStart).magnitude;
-				if (distanceTraveled > spriteDistance) spritesToSlice.Add(sprite);
-			}
-			foreach (GameObject sprite in spritesToSlice) {
-				Rigidbody2D rigid = sprite.GetComponent<Rigidbody2D>();
-				rigid.gravityScale = 1;
-				rigid.constraints = RigidbodyConstraints2D.None;
-				var infoList = new List<SpriteSlicer2DSliceInfo>();
-				SpriteSlicer2D.SliceSprite(kickStart, kickEnd, sprite, true, ref infoList);
-				foreach (SpriteSlicer2DSliceInfo info in infoList) {
-					var childObjects = info.ChildObjects;
-					foreach (GameObject childObject in childObjects) {
-						childObject.GetComponent<Rigidbody2D>().AddForce(Random.insideUnitCircle * 2, ForceMode2D.Impulse);
-					}
-				}
-				spritesIntersectingKickPath.Remove(sprite);
-			}
-		}
 	}
 }

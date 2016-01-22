@@ -8,6 +8,11 @@ public class DeadStateController : PlayerStateController {
 
 	public override void EnterState() {
 		player.grapplingController.DisconnectGrapplerIfPossible();
+		StartCoroutine(WaitThenFreezeX());
+	}
+
+	private IEnumerator WaitThenFreezeX() {
+		yield return new WaitForSeconds(3);
 		bodyRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
 		feetRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
 	}

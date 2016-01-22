@@ -32,6 +32,16 @@ public class Player : StateMachine {
 		currentState = state;
 	}
 
+	public void HandleCollision(Collision2D collision) {
+		if (collision.gameObject.layer == LayerMask.NameToLayer("Tree")) {
+			FirTree firTree = collision.collider.GetComponentInParent<FirTree>();
+			if (!firTree.hasBeenSliced) {
+				float speed = body.GetComponent<Rigidbody2D>().velocity.magnitude;
+				if (speed > 10) SetState(PlayerStates.Dead);
+			}
+		}
+	}
+
 	private void Awake() {
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
