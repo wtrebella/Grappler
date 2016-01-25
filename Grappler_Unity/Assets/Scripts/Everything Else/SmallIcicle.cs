@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Icicle : MonoBehaviour {
+public class SmallIcicle : MonoBehaviour {
 	private Rigidbody2D rigid;
 
 	private void Awake() {
