@@ -12,13 +12,13 @@ public class KickingState : MonoBehaviour {
 	[SerializeField] private Vector3 direction = new Vector3(1, 0.5f);
 	[SerializeField] private GoEaseType easeType = GoEaseType.CubicOut;
 
+	private GameObject intersectingSprite;
 	private Vector3 kickStart;
 	private Vector3 kickEnd;
-	private Vector3 kickDirection;
 
 	public void Kick() {
 		PrepareKick();
-		SliceIntersectingSprites();
+		StartCoroutine(SliceIntersectingSprite());
 		MovePlayer();
 	}
 	
@@ -26,10 +26,24 @@ public class KickingState : MonoBehaviour {
 		return duration;
 	}
 
+	private void CancelMove() {
+		Go.killAllTweensWithTarget(body.transform);
+		Go.killAllTweensWithTarget(feet.transform);
+		HandleKickDone(null);
+	}
+
 	private void MovePlayer() {
+		Vector2 endPos;
+
+		if (intersectingSprite != null) {
+			endPos = kickStart;
+			endPos.x = intersectingSprite.transform.position.x;
+		}
+		else endPos = kickEnd;
+
 		Go.to(body.transform, duration, new GoTweenConfig()
 		      .setEaseType(easeType)
-		      .position(kickEnd)
+		      .position(endPos)
 		      .onComplete(HandleKickDone));
 		
 		Go.to(body.transform, duration / 4, new GoTweenConfig()
@@ -41,46 +55,33 @@ public class KickingState : MonoBehaviour {
 		      .rotation(Vector3.zero));
 	}
 
-	private List<GameObject> IntersectWithKick() {
-		int layerMask = ~(1 << LayerMask.NameToLayer("Player"));
-		var results = Physics2D.RaycastAll(kickStart, kickEnd, distance, layerMask);
+	private GameObject IntersectWithKick() {
+		int layerMask = 1 << LayerMask.NameToLayer("Kickable");
+		var result = Physics2D.Raycast(kickStart, kickEnd, distance, layerMask);
 
-		List<GameObject> sprites = new List<GameObject>();
-		foreach (RaycastHit2D result in results) {
-			if (result.rigidbody) sprites.Add(result.rigidbody.gameObject);
-		}
-		return sprites;
+		if (result.rigidbody) return result.rigidbody.gameObject;
+		else return null;
 	}
 
-	private void SliceIntersectingSprites() {
-		StartCoroutine(SliceIntersectingSpritesCoroutine());
-	}
+	private IEnumerator SliceIntersectingSprite() {
+		intersectingSprite = IntersectWithKick();
 
-	private IEnumerator SliceIntersectingSpritesCoroutine() {
-		var intersectingSprites = IntersectWithKick();
+		if (intersectingSprite != null) {
+			while (body.transform.position.x < intersectingSprite.transform.position.x - 1) yield return null;
 
-		while (intersectingSprites.Count > 0) {
-			var spritesToSlice = new List<GameObject>();
-			foreach (GameObject sprite in intersectingSprites) {
-				if (body.transform.position.x > sprite.transform.position.x) spritesToSlice.Add(sprite);
-			}
-			
-			foreach (GameObject sprite in spritesToSlice) {
-				Rigidbody2D rigid = sprite.GetComponent<Rigidbody2D>();
-				rigid.gravityScale = 1;
-				rigid.constraints = RigidbodyConstraints2D.None;
-				Vector3 sliceStart = kickStart - kickDirection * 10;
-				Vector3 sliceEnd = kickEnd + kickDirection * 10;
-				SpriteSlicer2D.SliceSprite(sliceStart, sliceEnd, sprite);
-				intersectingSprites.Remove(sprite);
-			}
-			yield return null;
+			Rigidbody2D rigid = intersectingSprite.GetComponent<Rigidbody2D>();
+			rigid.gravityScale = 1;
+			rigid.constraints = RigidbodyConstraints2D.None;
+			SpriteSlicer2D.ExplodeSprite(intersectingSprite, 5, 5);
 		}
+
+		yield return null;
 	}
 
 	private void HandleKickDone(AbstractGoTween tween) {
 		player.kinematicSwitcher.SetNonKinematic();
 		player.SetState(Player.PlayerStates.Falling);
+		ScreenShaker.instance.Shake();
 	}
 
 	private void PrepareKick() {
@@ -88,7 +89,6 @@ public class KickingState : MonoBehaviour {
 		
 		kickStart = body.transform.position;
 		kickEnd = body.transform.position + direction * distance;
-		kickDirection = (kickEnd - kickStart).normalized;
 	}
 	
 	private void Awake() {
@@ -97,5 +97,10 @@ public class KickingState : MonoBehaviour {
 
 	private void Start() {
 	
+	}
+
+	private void OnDestroy() {
+		Go.killAllTweensWithTarget(body.transform);
+		Go.killAllTweensWithTarget(feet.transform);
 	}
 }
