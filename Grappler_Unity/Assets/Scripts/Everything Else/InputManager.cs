@@ -137,15 +137,17 @@ public class InputManager : MonoBehaviour {
 		for (int i = 0; i < Input.touchCount; i++) {
 			Touch touch = Input.GetTouch(i);
 
-			if (TouchIsDown(touch)) HandleTouchDown();
+			if (TouchIsDown(touch)) {
+				HandleTouchDown();
 
-			if (IsOnLeftOfScreen(touch.position)) {
-				leftTouchID = touch.fingerId;
-				HandleLeftTouchDown();
-			}
-			else {
-				rightTouchID = touch.fingerId;
-				HandleRightTouchDown();
+				if (IsOnLeftOfScreen(touch.position)) {
+					leftTouchID = touch.fingerId;
+					HandleLeftTouchDown();
+				}
+				else {
+					rightTouchID = touch.fingerId;
+					HandleRightTouchDown();
+				}
 			}
 		}
 	}
@@ -154,10 +156,12 @@ public class InputManager : MonoBehaviour {
 		for (int i = 0; i < Input.touchCount; i++) {
 			Touch touch = Input.GetTouch(i);
 		
-			if (TouchIsUp(touch)) HandleTouchUp();
+			if (TouchIsUp(touch)) {
+				HandleTouchUp();
 
-			if (touch.fingerId == leftTouchID) HandleLeftTouchUp();
-			else if (touch.fingerId == rightTouchID) HandleRightTouchUp();
+				if (touch.fingerId == leftTouchID) HandleLeftTouchUp();
+				else if (touch.fingerId == rightTouchID) HandleRightTouchUp();
+			}
 		}
 	}
 
