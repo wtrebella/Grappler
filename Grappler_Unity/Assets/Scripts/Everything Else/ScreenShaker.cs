@@ -8,8 +8,7 @@ public class ScreenShaker : MonoBehaviour {
 	[SerializeField] private float shakeAmount = 0.7f;
 	[SerializeField] private float shakeDuration = 0.3f;
 	[SerializeField] private float shakeTimeLeft = 0.0f;
-	[SerializeField] private float decreaseFactor = 1.0f;
-	
+
 	public void Shake() {
 		shakeTimeLeft = shakeDuration;
 	}

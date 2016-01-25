@@ -18,6 +18,10 @@ public class StateMachine : MonoBehaviour {
 		public Action Tap = DoNothing;
 		public Action TouchUp = DoNothing;
 		public Action TouchDown = DoNothing;
+		public Action LeftTouchDown = DoNothing;
+		public Action LeftTouchUp = DoNothing;
+		public Action RightTouchDown = DoNothing;
+		public Action RightTouchUp = DoNothing;
 
         public Enum currentState;
     }
@@ -53,6 +57,22 @@ public class StateMachine : MonoBehaviour {
 	
 	private void HandleDownSwipe() {
 		state.DownSwipe();
+	}
+
+	private void HandleLeftTouchDown() {
+		state.LeftTouchDown();
+	}
+
+	private void HandleLeftTouchUp() {
+		state.LeftTouchUp();
+	}
+
+	private void HandleRightTouchDown() {
+		state.RightTouchDown();
+	}
+
+	private void HandleRightTouchUp() {
+		state.RightTouchUp();
 	}
 	
 	private void HandleTap() {
@@ -100,6 +120,10 @@ public class StateMachine : MonoBehaviour {
 		state.Tap = ConfigureDelegate<Action>("Tap", DoNothing);
 		state.TouchUp = ConfigureDelegate<Action>("TouchUp", DoNothing);
 		state.TouchDown = ConfigureDelegate<Action>("TouchDown", DoNothing);
+		state.LeftTouchDown = ConfigureDelegate<Action>("LeftTouchDown", DoNothing);
+		state.LeftTouchUp = ConfigureDelegate<Action>("LeftTouchUp", DoNothing);
+		state.RightTouchDown = ConfigureDelegate<Action>("RightTouchDown", DoNothing);
+		state.RightTouchUp = ConfigureDelegate<Action>("RightTouchUp", DoNothing);
 
         if (state.EnterState != null) state.EnterState();
     }
@@ -148,6 +172,10 @@ public class StateMachine : MonoBehaviour {
 		InputManager.instance.SignalDownSwipe += HandleDownSwipe;
 		InputManager.instance.SignalTouchDown += HandleTouchDown;
 		InputManager.instance.SignalTouchUp += HandleTouchUp;
+		InputManager.instance.SignalLeftTouchDown += HandleLeftTouchDown;
+		InputManager.instance.SignalLeftTouchUp += HandleLeftTouchUp;
+		InputManager.instance.SignalRightTouchDown += HandleRightTouchDown;
+		InputManager.instance.SignalRightTouchUp += HandleRightTouchUp;
 	}
 
 	private void RemoveSwipeDetection() {
@@ -160,6 +188,10 @@ public class StateMachine : MonoBehaviour {
 		InputManager.instance.SignalDownSwipe -= HandleDownSwipe;
 		InputManager.instance.SignalTouchDown -= HandleTouchDown;
 		InputManager.instance.SignalTouchUp -= HandleTouchUp;
+		InputManager.instance.SignalLeftTouchDown -= HandleLeftTouchDown;
+		InputManager.instance.SignalLeftTouchUp -= HandleLeftTouchUp;
+		InputManager.instance.SignalRightTouchDown -= HandleRightTouchDown;
+		InputManager.instance.SignalRightTouchUp -= HandleRightTouchUp;
 	}
 
     static void DoNothing() {}

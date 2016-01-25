@@ -26,7 +26,7 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleRightSwipe() {
-		player.SetState(Player.PlayerStates.Kicking);
+	
 	}
 	
 	public override void HandleUpSwipe() {
@@ -46,6 +46,22 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleTouchDown() {
+
+	}
+
+	public override void HandleLeftTouchDown() {
 		player.grapplingController.ConnectGrapplerToHighestAnchorable();
+	}
+	
+	public override void HandleLeftTouchUp() {
+		
+	}
+	
+	public override void HandleRightTouchDown() {
+		player.SetState(Player.PlayerStates.Kicking);
+	}
+	
+	public override void HandleRightTouchUp() {
+		
 	}
 }

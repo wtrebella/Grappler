@@ -56,4 +56,20 @@ public class DeadStateController : PlayerStateController {
 	public override void HandleTouchDown() {
 
 	}
+
+	public override void HandleLeftTouchDown() {
+
+	}
+
+	public override void HandleLeftTouchUp() {
+		
+	}
+
+	public override void HandleRightTouchDown() {
+		
+	}
+
+	public override void HandleRightTouchUp() {
+		
+	}
 }

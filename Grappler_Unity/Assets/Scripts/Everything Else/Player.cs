@@ -71,207 +71,85 @@ public class Player : StateMachine {
 
 	// falling
 
-	private void Falling_LeftSwipe() {
-		fallingController.HandleLeftSwipe();
-	}
-
-	private void Falling_RightSwipe() {
-		fallingController.HandleRightSwipe();
-	}
-
-	private void Falling_UpSwipe() {
-		fallingController.HandleUpSwipe();
-	}
-	
-	private void Falling_DownSwipe() {
-		fallingController.HandleDownSwipe();
-	}
-
-	private void Falling_Tap() {
-		fallingController.HandleTap();
-	}
-
-	private void Falling_TouchUp() {
-		fallingController.HandleTouchUp();
-	}
-
-	private void Falling_TouchDown() {
-		fallingController.HandleTouchDown();
-	}
-
+	private void Falling_LeftSwipe() {fallingController.HandleLeftSwipe();}
+	private void Falling_RightSwipe() {fallingController.HandleRightSwipe();}
+	private void Falling_UpSwipe() {fallingController.HandleUpSwipe();}
+	private void Falling_DownSwipe() {fallingController.HandleDownSwipe();}
+	private void Falling_Tap() {fallingController.HandleTap();}
+	private void Falling_TouchUp() {fallingController.HandleTouchUp();}
+	private void Falling_TouchDown() {fallingController.HandleTouchDown();}
+	private void Falling_ExitState() {fallingController.ExitState();}
+	private void Falling_UpdateState() {fallingController.UpdateState();}
+	private void Falling_FixedUpdateState() {fallingController.FixedUpdateState();}
+	private void Falling_LeftTouchDown() {fallingController.HandleLeftTouchDown();}
+	private void Falling_LeftTouchUp() {fallingController.HandleLeftTouchUp();}
+	private void Falling_RightTouchDown() {fallingController.HandleRightTouchDown();}
+	private void Falling_RightTouchUp() {fallingController.HandleRightTouchUp();}
 	private void Falling_EnterState() {
 		fallingController.EnterState();
-
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
-	
-	private void Falling_ExitState() {
-		fallingController.ExitState();
-	}
-	
-	private void Falling_UpdateState() {
-		fallingController.UpdateState();
-	}
-	
-	private void Falling_FixedUpdateState() {
-		fallingController.FixedUpdateState();
-	}
-
-
-
-
-
 
 	// dead
 	
-	private void Dead_LeftSwipe() {
-		deadController.HandleLeftSwipe();
-	}
-	
-	private void Dead_RightSwipe() {
-		deadController.HandleRightSwipe();
-	}
-	
-	private void Dead_UpSwipe() {
-		deadController.HandleUpSwipe();
-	}
-	
-	private void Dead_DownSwipe() {
-		deadController.HandleDownSwipe();
-	}
-	
-	private void Dead_Tap() {
-		deadController.HandleTap();
-	}
-	
-	private void Dead_TouchUp() {
-		deadController.HandleTouchUp();
-	}
-	
-	private void Dead_TouchDown() {
-		deadController.HandleTouchDown();
-	}
-	
+	private void Dead_LeftSwipe() {deadController.HandleLeftSwipe();}
+	private void Dead_RightSwipe() {deadController.HandleRightSwipe();}
+	private void Dead_UpSwipe() {deadController.HandleUpSwipe();}
+	private void Dead_DownSwipe() {deadController.HandleDownSwipe();}
+	private void Dead_Tap() {deadController.HandleTap();}
+	private void Dead_TouchUp() {deadController.HandleTouchUp();}
+	private void Dead_TouchDown() {deadController.HandleTouchDown();}	
+	private void Dead_ExitState() {deadController.ExitState();}	
+	private void Dead_UpdateState() {deadController.UpdateState();}	
+	private void Dead_FixedUpdateState() {deadController.FixedUpdateState();}
+	private void Dead_LeftTouchDown() {deadController.HandleLeftTouchDown();}	
+	private void Dead_LeftTouchUp() {deadController.HandleLeftTouchUp();}	
+	private void Dead_RightTouchDown() {deadController.HandleRightTouchDown();}	
+	private void Dead_RightTouchUp() {deadController.HandleRightTouchUp();}
 	private void Dead_EnterState() {
 		deadController.EnterState();
-		
 		if (SignalEnteredDeadState != null) SignalEnteredDeadState();
 	}
-	
-	private void Dead_ExitState() {
-		deadController.ExitState();
-	}
-	
-	private void Dead_UpdateState() {
-		deadController.UpdateState();
-	}
-	
-	private void Dead_FixedUpdateState() {
-		deadController.FixedUpdateState();
-	}
-
-
-
-
-
 
 	// kicking
 	
-	private void Kicking_LeftSwipe() {
-		kickingController.HandleLeftSwipe();
-	}
-	
-	private void Kicking_RightSwipe() {
-		kickingController.HandleRightSwipe();
-	}
-	
-	private void Kicking_UpSwipe() {
-		kickingController.HandleUpSwipe();
-	}
-	
-	private void Kicking_DownSwipe() {
-		kickingController.HandleDownSwipe();
-	}
-	
-	private void Kicking_Tap() {
-		kickingController.HandleTap();
-	}
-	
-	private void Kicking_TouchUp() {
-		kickingController.HandleTouchUp();
-	}
-	
-	private void Kicking_TouchDown() {
-		kickingController.HandleTouchDown();
-	}
-	
+	private void Kicking_LeftSwipe() {kickingController.HandleLeftSwipe();}
+	private void Kicking_RightSwipe() {kickingController.HandleRightSwipe();}	
+	private void Kicking_UpSwipe() {kickingController.HandleUpSwipe();}	
+	private void Kicking_DownSwipe() {kickingController.HandleDownSwipe();}	
+	private void Kicking_Tap() {kickingController.HandleTap();}	
+	private void Kicking_TouchUp() {kickingController.HandleTouchUp();}	
+	private void Kicking_TouchDown() {kickingController.HandleTouchDown();}	
+	private void Kicking_ExitState() {kickingController.ExitState();}	
+	private void Kicking_UpdateState() {kickingController.UpdateState();}	
+	private void Kicking_FixedUpdateState() {kickingController.FixedUpdateState();}
+	private void Kicking_LeftTouchDown() {kickingController.HandleLeftTouchDown();}	
+	private void Kicking_LeftTouchUp() {kickingController.HandleLeftTouchUp();}	
+	private void Kicking_RightTouchDown() {kickingController.HandleRightTouchDown();}	
+	private void Kicking_RightTouchUp() {kickingController.HandleRightTouchUp();}
 	private void Kicking_EnterState() {
 		kickingController.EnterState();
-		
 		if (SignalEnteredKickingState != null) SignalEnteredKickingState();
 	}
-	
-	private void Kicking_ExitState() {
-		kickingController.ExitState();
-	}
-	
-	private void Kicking_UpdateState() {
-		kickingController.UpdateState();
-	}
-	
-	private void Kicking_FixedUpdateState() {
-		kickingController.FixedUpdateState();
-	}
-
-
-
-
 
 	// grappling
 
-	private void Grappling_LeftSwipe() {
-		grapplingController.HandleLeftSwipe();
-	}
-	
-	private void Grappling_RightSwipe() {
-		grapplingController.HandleRightSwipe();
-	}
-	
-	private void Grappling_UpSwipe() {
-		grapplingController.HandleUpSwipe();
-	}
-	
-	private void Grappling_DownSwipe() {
-		grapplingController.HandleDownSwipe();
-	}
-	
-	private void Grappling_Tap() {
-		grapplingController.HandleTap();
-	}
-
-	private void Grappling_TouchUp() {
-		grapplingController.HandleTouchUp();
-	}
-	
-	private void Grappling_TouchDown() {
-		grapplingController.HandleTouchDown();
-	}
-
+	private void Grappling_LeftSwipe() {grapplingController.HandleLeftSwipe();}	
+	private void Grappling_RightSwipe() {grapplingController.HandleRightSwipe();}	
+	private void Grappling_UpSwipe() {grapplingController.HandleUpSwipe();}
+	private void Grappling_DownSwipe() {grapplingController.HandleDownSwipe();}	
+	private void Grappling_Tap() {grapplingController.HandleTap();}
+	private void Grappling_TouchUp() {grapplingController.HandleTouchUp();}	
+	private void Grappling_TouchDown() {grapplingController.HandleTouchDown();}	
+	private void Grappling_ExitState() {grapplingController.ExitState();}	
+	private void Grappling_UpdateState() {grapplingController.UpdateState();}	
+	private void Grappling_FixedUpdateState() {grapplingController.FixedUpdateState();}
+	private void Grappling_LeftTouchDown() {grapplingController.HandleLeftTouchDown();}	
+	private void Grappling_LeftTouchUp() {grapplingController.HandleLeftTouchUp();}	
+	private void Grappling_RightTouchDown() {grapplingController.HandleRightTouchDown();}	
+	private void Grappling_RightTouchUp() {grapplingController.HandleRightTouchUp();}
 	private void Grappling_EnterState() {
 		grapplingController.EnterState();
-
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
-	}
-	
-	private void Grappling_ExitState() {
-		grapplingController.ExitState();
-	}
-	
-	private void Grappling_UpdateState() {
-		grapplingController.UpdateState();
-	}
-	
-	private void Grappling_FixedUpdateState() {
-		grapplingController.FixedUpdateState();
 	}
 }

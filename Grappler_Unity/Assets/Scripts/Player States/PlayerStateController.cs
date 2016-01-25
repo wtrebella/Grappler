@@ -52,4 +52,20 @@ public class PlayerStateController : MonoBehaviour {
 	public virtual void HandleTouchDown() {
 		
 	}
+
+	public virtual void HandleLeftTouchDown() {
+		
+	}
+	
+	public virtual void HandleLeftTouchUp() {
+		
+	}
+	
+	public virtual void HandleRightTouchDown() {
+		
+	}
+	
+	public virtual void HandleRightTouchUp() {
+		
+	}
 }

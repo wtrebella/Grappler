@@ -30,6 +30,10 @@ public class InputManager : MonoBehaviour {
 	public Action SignalDownSwipe;
 	public Action SignalTouchDown;
 	public Action SignalTouchUp;
+	public Action SignalLeftTouchDown;
+	public Action SignalLeftTouchUp;
+	public Action SignalRightTouchDown;
+	public Action SignalRightTouchUp;
 
 	private float minSwipeLength = 50;
 	private float maxSwipeDuration = 0.3f;
@@ -39,6 +43,10 @@ public class InputManager : MonoBehaviour {
 	private Vector2 currentSwipeVector;
 	private float currentSwipeMagnitude;
 	private float beginningSwipeTime;
+	private int leftTouchID;
+	private int rightTouchID;
+	private bool isTouchingLeft = false;
+	private bool isTouchingRight = false;
 
 	private void Update() {
 		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
@@ -90,6 +98,33 @@ public class InputManager : MonoBehaviour {
 		if (SignalDownSwipe != null) SignalDownSwipe();
 	}
 
+	private void HandleLeftTouchDown() {
+		isTouchingLeft = true;
+		if (SignalLeftTouchDown != null) SignalLeftTouchDown();
+	}
+
+	private void HandleLeftTouchUp() {
+		isTouchingLeft = false;
+		if (SignalLeftTouchUp != null) SignalLeftTouchUp();
+	}
+
+	private void HandleRightTouchDown() {
+		isTouchingRight = true;
+		if (SignalRightTouchDown != null) SignalRightTouchDown();
+	}
+
+	private void HandleRightTouchUp() {
+		isTouchingRight = false;
+		if (SignalRightTouchUp != null) SignalRightTouchUp();
+	}
+
+	private bool IsOnLeftOfScreen(Vector2 position) {
+		return position.x < Screen.width / 2f;
+	}
+
+
+
+
 	// TOUCH
 
 	private void DetectTouchInput() {
@@ -99,19 +134,31 @@ public class InputManager : MonoBehaviour {
 	}
 
 	private void DetectTouchDown() {
-		if (Input.touches.Length == 0) return;
-		
-		Touch touch = Input.GetTouch(0);
+		for (int i = 0; i < Input.touchCount; i++) {
+			Touch touch = Input.GetTouch(i);
 
-		if (TouchIsDown(touch)) HandleTouchDown();
+			if (TouchIsDown(touch)) HandleTouchDown();
+
+			if (IsOnLeftOfScreen(touch.position)) {
+				leftTouchID = touch.fingerId;
+				HandleLeftTouchDown();
+			}
+			else {
+				rightTouchID = touch.fingerId;
+				HandleRightTouchDown();
+			}
+		}
 	}
 
 	private void DetectTouchUp() {
-		if (Input.touches.Length == 0) return;
+		for (int i = 0; i < Input.touchCount; i++) {
+			Touch touch = Input.GetTouch(i);
 		
-		Touch touch = Input.GetTouch(0);
-		
-		if (TouchIsUp(touch)) HandleTouchUp();
+			if (TouchIsUp(touch)) HandleTouchUp();
+
+			if (touch.fingerId == leftTouchID) HandleLeftTouchUp();
+			else if (touch.fingerId == rightTouchID) HandleRightTouchUp();
+		}
 	}
 
 	private void DetectTouchSwipes() {
@@ -173,11 +220,19 @@ public class InputManager : MonoBehaviour {
 	}
 
 	private void DetectMouseUp() {
-		if (Input.GetMouseButtonUp(0)) HandleTouchUp();
+		if (Input.GetMouseButtonUp(0)) {
+			HandleTouchUp();
+			if (isTouchingLeft) HandleLeftTouchUp();
+			else if (isTouchingRight) HandleRightTouchUp();
+		}
 	}
 	
 	private void DetectMouseDown() {
-		if (Input.GetMouseButtonDown(0)) HandleTouchDown();
+		if (Input.GetMouseButtonDown(0)) {
+			HandleTouchDown();
+			if (IsOnLeftOfScreen(Input.mousePosition)) HandleLeftTouchDown();
+			else HandleRightTouchDown();
+		}
 	}
 	
 	private bool MouseSwipeBegan() {

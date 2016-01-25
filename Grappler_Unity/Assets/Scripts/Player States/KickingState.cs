@@ -69,6 +69,8 @@ public class KickingState : MonoBehaviour {
 		if (intersectingSprite != null) {
 			while (body.transform.position.x < intersectingSprite.transform.position.x - 1) yield return null;
 
+			ScreenShaker.instance.Shake();
+
 			Rigidbody2D rigid = intersectingSprite.GetComponent<Rigidbody2D>();
 			rigid.gravityScale = 1;
 			rigid.constraints = RigidbodyConstraints2D.None;
@@ -81,7 +83,6 @@ public class KickingState : MonoBehaviour {
 	private void HandleKickDone(AbstractGoTween tween) {
 		player.kinematicSwitcher.SetNonKinematic();
 		player.SetState(Player.PlayerStates.Falling);
-		ScreenShaker.instance.Shake();
 	}
 
 	private void PrepareKick() {

@@ -64,7 +64,7 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void HandleRightSwipe() {
-		player.SetState(Player.PlayerStates.Kicking);
+
 	}
 	
 	public override void HandleUpSwipe() {
@@ -80,10 +80,26 @@ public class GrapplingStateController : PlayerStateController {
 	}
 
 	public override void HandleTouchUp() {
-		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
+
 	}
 	
 	public override void HandleTouchDown() {
+		
+	}
+
+	public override void HandleLeftTouchDown() {
+		
+	}
+	
+	public override void HandleLeftTouchUp() {
+		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
+	}
+	
+	public override void HandleRightTouchDown() {
+		player.SetState(Player.PlayerStates.Kicking);
+	}
+	
+	public override void HandleRightTouchUp() {
 		
 	}
 }

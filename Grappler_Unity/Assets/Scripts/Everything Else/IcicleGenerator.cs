@@ -16,29 +16,33 @@ public class IcicleGenerator : MonoBehaviour {
 
 	private void HandleMountainChunkCreated(MountainChunk chunk) {
 		int num = 20;
-		float chanceOfSpawn = 0.2f;
+		float chanceOfSmallIcicleSpawn = 0.2f;
+		float chanceOfBigIcicleSpawn = 0.05f;
 		float dist = 1f / ((float)num + 1f);
 		float distVar = dist / 3f;
 		for (int i = 1; i <= num; i++) {
 			float place = dist * i + Random.Range(-distVar, distVar);
 			
-			if (Random.value < chanceOfSpawn) CreateSmallIcicleChunk(chunk, place);
+			if (Random.value < chanceOfSmallIcicleSpawn) CreateSmallIcicleChunk(chunk, place);
+			else if (Random.value < chanceOfBigIcicleSpawn) {
+				if (place > 0.3f) CreateBigIcicle(chunk, place);
+				// TODO: fix this so it's not just skipping the first part of every chunk
+			}
 		}
 	}
 
 	private void CreateBigIcicle(MountainChunk chunk, float place) {
-//		BigIcicle icicle = bigIciclePrefab.Spawn();
-//		icicle.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
-//		icicle.transform.parent = chunk.transform;
-//		Vector3 position = chunk.GetPositionAtPlace(place);;
-//		position.z += 0.1f;
-//		icicle.transform.position = position;
-//		icicles.Add(icicle);
+		BigIcicle icicle = bigIciclePrefab.Spawn();
+		icicle.transform.localScale = new Vector3(Random.Range(0.5f, 1.0f), Random.Range(0.5f, 1.0f), 1);
+		icicle.transform.parent = chunk.transform;
+		Vector3 position = chunk.GetPositionAtPlace(place);;
+		position.z += 0.1f;
+		icicle.transform.position = position;
 	}
 
 	private void CreateSmallIcicleChunk(MountainChunk chunk, float place) {
 		float chunkSize = 0.04f;
-		float placeVar = 0.01f;
+		float placeVar = 0.05f;
 		int num = Random.Range(1, 5);
 		float dist = chunkSize / (num + 1);
 		float initialSpot = place - chunkSize / 2;
