@@ -50,7 +50,10 @@ public class InputManager : MonoBehaviour {
 
 	private void Update() {
 		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
-		else if (SystemInfo.deviceType == DeviceType.Desktop) DetectMouseInput();
+		else if (SystemInfo.deviceType == DeviceType.Desktop) {
+			DetectMouseInput();
+			DetectKeyboardInput();
+		}
 	}
 
 	private float GetSwipeDeltaTime() {
@@ -216,6 +219,33 @@ public class InputManager : MonoBehaviour {
 		DetectMouseSwipes();
 		DetectMouseDown();
 		DetectMouseUp();
+	}
+
+	private void DetectKeyboardInput() {
+		DetectArrowKeysDown();
+		DetectArrowKeysUp();
+	}
+
+	private void DetectArrowKeysDown() {
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			HandleTouchDown();
+			HandleLeftTouchDown();
+		}
+		else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+			HandleTouchDown();
+			HandleRightTouchDown();
+		}
+	}
+
+	private void DetectArrowKeysUp() {
+		if (Input.GetKeyUp(KeyCode.LeftArrow)) {
+			HandleTouchUp();
+			HandleLeftTouchUp();
+		}
+		else if (Input.GetKeyUp(KeyCode.RightArrow)) {
+			HandleTouchUp();
+			HandleRightTouchUp();
+		}
 	}
 
 	private void DetectMouseSwipes() {			
