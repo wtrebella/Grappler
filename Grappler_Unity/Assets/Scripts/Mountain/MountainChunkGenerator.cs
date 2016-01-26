@@ -70,8 +70,8 @@ public class MountainChunkGenerator : MonoBehaviour {
 		MountainChunk mountainChunk = Instantiate(mountainChunkPrefab);
 		mountainChunk.transform.parent = transform;
 
-		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero);
-		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint().pointVector);
+		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, 1);
+		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint().pointVector, (UnityEngine.Random.value < 0.5 ? 1 : -1));
 
 		mountainChunks.Add(mountainChunk);
 

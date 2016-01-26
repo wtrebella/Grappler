@@ -126,7 +126,13 @@ public class MountainChunk : MonoBehaviour {
 		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
 	}
 	
-	public void Generate(Vector2 origin) {
+	public void Generate(Vector2 origin, int slopeMultiplier) {
+		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
+		slopeVal *= slopeMultiplier;
+		slopeVector = new Vector2();
+		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
+		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
+
 		List<Vector2> points = new List<Vector2>();
 		GenerateBasicShape(points, origin);
 		MacroRandomizeEdges(points);
@@ -146,15 +152,15 @@ public class MountainChunk : MonoBehaviour {
 		return macroLinePoints;
 	}
 
+	public bool SlopeIsPositive() {
+		return slopeVector.y > 0;
+	}
+
 	private void Awake () {
 		linePoints = new List<Point>();
 		macroLinePoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<MountainChunkMeshCreator>();
-		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
-		slopeVector = new Vector2();
-		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
-		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
 	}
 
 	private int GetIndexOfNearestLinePointBelowY(float y) {
@@ -204,7 +210,6 @@ public class MountainChunk : MonoBehaviour {
 			Vector2 delta = slopeVector * dist;
 			Vector2 point = prevPoint + delta;
 			points.Add(point);
-
 			prevPoint = point;
 		}
 
@@ -214,10 +219,17 @@ public class MountainChunk : MonoBehaviour {
 			macroLinePoints.Add(pointObject);
 		}
 
-		int add = 30;
-		points.Add(new Vector2(prevPoint.x, prevPoint.y + add));
-		points.Add(new Vector2(origin.x - marginSize, prevPoint.y + add));
-		points.Add(new Vector2(origin.x - marginSize, origin.y));
+		int extraHeightOnTop = 30;
+		if (SlopeIsPositive()) {
+			points.Add(new Vector2(prevPoint.x, prevPoint.y + extraHeightOnTop));
+			points.Add(new Vector2(origin.x - marginSize, prevPoint.y + extraHeightOnTop));
+			points.Add(new Vector2(origin.x - marginSize, origin.y));
+		}
+		else {
+			points.Add(new Vector2(prevPoint.x, origin.y + extraHeightOnTop));
+			points.Add(new Vector2(origin.x - marginSize, origin.y + extraHeightOnTop));
+			points.Add(new Vector2(origin.x - marginSize, origin.y));
+		}
 	}
 
 	private void MacroRandomizeEdges(List<Vector2> points) {
@@ -225,6 +237,7 @@ public class MountainChunk : MonoBehaviour {
 		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
 		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
 		float clampVal = 0.5f;
+
 		for (int i = 1; i < linePoints.Count - 1; i++) {
 			Vector2 point = points[i];
 			Vector2 tempPoint = point;
@@ -245,7 +258,12 @@ public class MountainChunk : MonoBehaviour {
 			else perpDist = UnityEngine.Random.Range(-perpDistVar, perpDistVar);
 
 			point += slopeVectorPerp * perpDist;
-			if (point.y >= lastPoint.y) point.y = lastPoint.y - clampVal;
+
+			Vector2 clampPoint;
+			if (SlopeIsPositive()) clampPoint = lastPoint;
+			else clampPoint = firstPoint;
+			if (point.y >= clampPoint.y) point.y = clampPoint.y - clampVal;
+
 			points[i] = point;
 			linePoints[i].pointVector = point;
 			macroLinePoints[i].pointVector = point;
@@ -253,6 +271,7 @@ public class MountainChunk : MonoBehaviour {
 	}
 
 	private void MicroRandomizeEdges(List<Vector2> points) {
+		Vector2 firstPoint = linePoints[0].pointVector;
 		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
 		float clampVal = 0.5f;
 
@@ -269,7 +288,12 @@ public class MountainChunk : MonoBehaviour {
 			for (int i = 1; i < numBumps; i++) {
 				Vector2 bumpPoint = pointA + segmentDirection * (i * bumpWidth);
 				bumpPoint += segmentDirectionPerp * bumpHeight;
-				if (bumpPoint.y >= lastPoint.y) bumpPoint.y = lastPoint.y - clampVal;
+
+				Vector2 clampPoint;
+				if (SlopeIsPositive()) clampPoint = lastPoint;
+				else clampPoint = firstPoint;
+				if (bumpPoint.y >= clampPoint.y) bumpPoint.y = clampPoint.y - clampVal;
+
 				linePoints.Insert(j+i, new Point(bumpPoint));
 				points.Insert(j+i, bumpPoint);
 			}

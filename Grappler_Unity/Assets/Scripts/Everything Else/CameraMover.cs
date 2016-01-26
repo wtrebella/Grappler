@@ -3,11 +3,11 @@ using System.Collections;
 using System;
 
 public class CameraMover : MonoBehaviour {
-	[SerializeField] private Vector2 offset;
+	[SerializeField] private Vector2 positiveSlopeOffset;
+	[SerializeField] private Vector2 negativeSlopeOffset;
 	[SerializeField] private Transform horizontalMovementObject;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 	[SerializeField] private float smoothDampTime = 0.13f;
-	[SerializeField] private Vector2 min;
 
 	private float initialDistance;
 	private Vector3 initialDirection;
@@ -52,9 +52,11 @@ public class CameraMover : MonoBehaviour {
 		float x = offsetObjectPosition.x;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtX(x);
 		float y = chunk.GetAverageYAtX(x);
+		Vector2 offset;
+		if (chunk.SlopeIsPositive()) offset = positiveSlopeOffset;
+		else offset = negativeSlopeOffset;
+
 		Vector3 targetPosition = new Vector3(x + offset.x, y + offset.y, transform.position.z);
-		targetPosition.x = Mathf.Max(min.x, targetPosition.x);
-		targetPosition.y = Mathf.Max(min.y, targetPosition.y);
 		return targetPosition;
 	}
 
