@@ -71,7 +71,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 		mountainChunk.transform.parent = transform;
 
 		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, 1);
-		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint().pointVector, (UnityEngine.Random.value < 0.5 ? 1 : -1));
+		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint().pointVector, 1);
 
 		mountainChunks.Add(mountainChunk);
 
