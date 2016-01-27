@@ -8,6 +8,7 @@ public class GrapplingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
 	private void Awake() {
+		BaseAwake();
 		playerState = Player.PlayerStates.Grappling;
 	}
 

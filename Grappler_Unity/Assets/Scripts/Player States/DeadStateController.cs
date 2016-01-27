@@ -7,6 +7,7 @@ public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D feetRigidbody;
 
 	private void Awake() {
+		BaseAwake();
 		playerState = Player.PlayerStates.Dead;
 	}
 

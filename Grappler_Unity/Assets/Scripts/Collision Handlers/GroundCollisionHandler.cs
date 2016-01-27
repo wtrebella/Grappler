@@ -6,7 +6,7 @@ public class GroundCollisionHandler : CollisionHandler {
 
 	public override void HandleCollision(Collision2D collision) {
 		base.HandleCollision(collision);
-		Debug.Log("ground collision");
+
 		if (player.IsOnGround()) return;
 		if (!hasGrappledSinceHittingGround) return;
 

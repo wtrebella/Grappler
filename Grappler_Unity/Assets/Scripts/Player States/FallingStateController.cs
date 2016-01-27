@@ -6,6 +6,7 @@ public class FallingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
 	private void Awake() {
+		BaseAwake();
 		playerState = Player.PlayerStates.Falling;
 	}
 

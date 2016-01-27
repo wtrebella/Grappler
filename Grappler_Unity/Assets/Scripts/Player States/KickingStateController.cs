@@ -7,7 +7,8 @@ public class KickingStateController : PlayerStateController {
 	[SerializeField] private KickingState kickingState;
 
 	private void Awake() {
-		playerState = Player.PlayerStates.Kicking;
+		BaseAwake();
+//		playerState = Player.PlayerStates.Kicking;
 	}
 
 	private void Kick() {

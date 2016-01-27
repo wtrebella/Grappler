@@ -13,11 +13,10 @@ using System;
 public class Player : StateMachine {
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
-	public Action SignalEnteredKickingState;
 	public Action SignalEnteredDeadState;
 	public Action SignalEnteredOnGroundState;
 
-	public enum PlayerStates {Falling, Grappling, Kicking, Dead, OnGround}
+	public enum PlayerStates {Falling, Grappling, Dead, OnGround}
 
 	public Trail trail;
 	public Forcer forcer;
@@ -28,7 +27,6 @@ public class Player : StateMachine {
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
 	[HideInInspector] public DeadStateController deadController;
-	[HideInInspector] public KickingStateController kickingController;
 	[HideInInspector] public GrapplingStateController grapplingController;
 	[HideInInspector] public OnGroundStateController onGroundController;
 	[HideInInspector] public FallingStateController fallingController;
@@ -39,7 +37,6 @@ public class Player : StateMachine {
 
 	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
 	public bool IsGrappling() {return CurrentStateIs(PlayerStates.Grappling);}
-	public bool IsKicking() {return CurrentStateIs(PlayerStates.Kicking);}
 	public bool IsDead() {return CurrentStateIs(PlayerStates.Dead);}
 	public bool IsOnGround() {return CurrentStateIs(PlayerStates.OnGround);}
 
@@ -60,7 +57,6 @@ public class Player : StateMachine {
 		stateControllers = GetComponents<PlayerStateController>();
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
-		kickingController = GetComponent<KickingStateController>();
 		fallingController = GetComponent<FallingStateController>();
 		grapplingController = GetComponent<GrapplingStateController>();
 		onGroundController = GetComponent<OnGroundStateController>();
@@ -164,28 +160,6 @@ public class Player : StateMachine {
 	private void Dead_EnterState() {
 		deadController.EnterState();
 		if (SignalEnteredDeadState != null) SignalEnteredDeadState();
-	}
-
-
-	// kicking
-	
-	private void Kicking_LeftSwipe() {kickingController.HandleLeftSwipe();}
-	private void Kicking_RightSwipe() {kickingController.HandleRightSwipe();}	
-	private void Kicking_UpSwipe() {kickingController.HandleUpSwipe();}	
-	private void Kicking_DownSwipe() {kickingController.HandleDownSwipe();}	
-	private void Kicking_Tap() {kickingController.HandleTap();}	
-	private void Kicking_TouchUp() {kickingController.HandleTouchUp();}	
-	private void Kicking_TouchDown() {kickingController.HandleTouchDown();}	
-	private void Kicking_ExitState() {kickingController.ExitState();}	
-	private void Kicking_UpdateState() {kickingController.UpdateState();}	
-	private void Kicking_FixedUpdateState() {kickingController.FixedUpdateState();}
-	private void Kicking_LeftTouchDown() {kickingController.HandleLeftTouchDown();}	
-	private void Kicking_LeftTouchUp() {kickingController.HandleLeftTouchUp();}	
-	private void Kicking_RightTouchDown() {kickingController.HandleRightTouchDown();}	
-	private void Kicking_RightTouchUp() {kickingController.HandleRightTouchUp();}
-	private void Kicking_EnterState() {
-		kickingController.EnterState();
-		if (SignalEnteredKickingState != null) SignalEnteredKickingState();
 	}
 
 
