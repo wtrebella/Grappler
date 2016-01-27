@@ -15,7 +15,24 @@ public class CollisionHandler : MonoBehaviour {
 		BaseAwake();
 	}
 	
-	public virtual void HandleCollision(Collision2D collision) {
+	public virtual void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
 
+	}
+
+	protected float GetCollisionAngle(Rigidbody2D rigid, Collision2D collision) {
+		Vector3 normal = collision.contacts[0].normal;
+		Vector3 vel = rigid.velocity;
+		float angle = 90 - Vector3.Angle(vel, -normal);
+		return angle;
+	}
+
+	protected float GetCollisionSpeed(Collision2D collision) {
+		return collision.relativeVelocity.magnitude;
+	}
+
+	protected void ShakeScreen(Rigidbody2D rigid, Collision2D collision) {
+		float speed = GetCollisionSpeed(collision);
+		float angle = GetCollisionAngle(rigid, collision);
+		ScreenShaker.instance.CollisionShake(speed, angle);
 	}
 }

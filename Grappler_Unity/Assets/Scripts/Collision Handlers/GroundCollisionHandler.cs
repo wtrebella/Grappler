@@ -4,14 +4,15 @@ using System.Collections;
 public class GroundCollisionHandler : CollisionHandler {
 	private bool hasGrappledSinceHittingGround = true;
 
-	public override void HandleCollision(Collision2D collision) {
-		base.HandleCollision(collision);
+	public override void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
+		base.HandleCollision(rigid, collision);
 
 		if (player.IsOnGround()) return;
 		if (!hasGrappledSinceHittingGround) return;
 
+		ShakeScreen(rigid, collision);
+
 		hasGrappledSinceHittingGround = false;
-		ScreenShaker.instance.CollisionShake(collision.relativeVelocity.magnitude);
 		player.SetState(Player.PlayerStates.OnGround);
 	}
 

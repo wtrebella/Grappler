@@ -44,10 +44,10 @@ public class Player : StateMachine {
 		currentState = state;
 	}
 
-	public void HandleCollision(Collision2D collision) {
+	public void HandleCollision(PlayerBodyPart bodyPart, Collision2D collision) {
 		foreach (CollisionHandler collisionHandler in collisionHandlers) {
 			if (WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer)) {
-				collisionHandler.HandleCollision(collision);
+				collisionHandler.HandleCollision(bodyPart.rigid, collision);
 			}
 		}
 	}

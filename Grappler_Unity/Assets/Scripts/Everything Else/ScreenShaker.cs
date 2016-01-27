@@ -37,9 +37,22 @@ public class ScreenShaker : MonoBehaviour {
 		shakeTimeLeft = shakeDuration;
 	}
 
-	public void CollisionShake(float collisionSpeed) {
-		float lerp = SpeedToPercent(collisionSpeed);
+	public void CollisionShake(float collisionSpeed, float collisionAngle) {
+		float speedPercent = SpeedToPercent(collisionSpeed);
+		float anglePercent = AngleToPercent(collisionAngle);
+		float lerp = speedPercent * anglePercent;
+		Debug.Log(speedPercent + ", " + anglePercent + ", " + lerp);
 		ShakeLerp(lerp);
+	}
+
+	private float AngleToPercent(float angle) {
+		angle = Mathf.Abs(angle);
+		angle = Mathf.Clamp(angle, 0.0f, 180.0f);
+		float distanceFrom90 = Mathf.Abs(angle - 90.0f);
+		float percent = Mathf.Clamp01(1 - (distanceFrom90 / 90.0f));
+		percent = percent / 2.0f + 0.5f; // reframe to go from 0.5f to 1.0f;
+
+		return percent;
 	}
 
 	private float SpeedToPercent(float speed) {

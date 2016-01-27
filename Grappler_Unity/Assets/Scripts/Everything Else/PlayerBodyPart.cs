@@ -13,7 +13,7 @@ public class PlayerBodyPart : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision) {
-		player.HandleCollision(collision);
+		player.HandleCollision(this, collision);
 	}
 
 	private void Awake() {

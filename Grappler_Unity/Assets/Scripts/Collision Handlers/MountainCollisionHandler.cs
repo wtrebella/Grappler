@@ -6,10 +6,9 @@ public class MountainCollisionHandler : CollisionHandler {
 		BaseAwake();
 	}
 
-	public override void HandleCollision(Collision2D collision) {
-		base.HandleCollision(collision);
-		Debug.Log("mountain collision");
+	public override void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
+		base.HandleCollision(rigid, collision);
 
-		ScreenShaker.instance.CollisionShake(collision.relativeVelocity.magnitude);
+		ShakeScreen(rigid, collision);
 	}
 }
