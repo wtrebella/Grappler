@@ -177,7 +177,9 @@ public class MountainChunk : MonoBehaviour {
 	}
 
 	private void CalculateSlope(float previousSlopeVal) {
-		slopeVal = Mathf.Clamp(previousSlopeVal + UnityEngine.Random.Range(-maxSlopeChange, maxSlopeChange), slopeRange.min, slopeRange.max);
+		float minChange = Mathf.Max(slopeRange.min - previousSlopeVal, -maxSlopeChange);
+		float maxChange = Mathf.Min(slopeRange.max - previousSlopeVal, maxSlopeChange);
+		slopeVal = Mathf.Clamp(previousSlopeVal + UnityEngine.Random.Range(minChange, maxChange), slopeRange.min, slopeRange.max);
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);

@@ -8,11 +8,9 @@ using System;
 public class GroundChunk : MonoBehaviour {
 	private static float distanceFromMountain;
 
-	[SerializeField] private float initialDistanceFromMountain = 13;
+	[SerializeField] private FloatRange distanceFromMountainRange = new FloatRange(5, 14);
 	[SerializeField] private float maxBumpHeight = 0.3f;
 	[SerializeField] private float marginSize = 60.0f;
-	[SerializeField] private float closeInRate = 1.0f;
-	[SerializeField] private float minDistanceFromMountain = 5;
 
 	private List<Point> linePoints;
 	private Dictionary<int, float> distances = new Dictionary<int, float>();
@@ -118,10 +116,16 @@ public class GroundChunk : MonoBehaviour {
 		return linePoints;
 	}
 
+	private static float num = 0;
+	private static float GetNextPerlinNoise() {
+		float perlin = Mathf.PerlinNoise(num, 0);
+		num += 0.1f;
+		return perlin;
+	}
+
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
 		Reset();
-		distanceFromMountain = Mathf.Max(minDistanceFromMountain, distanceFromMountain * closeInRate);
-
+		distanceFromMountain = GetNextPerlinNoise() * (distanceFromMountainRange.max - distanceFromMountainRange.min) + distanceFromMountainRange.min;
 		slopeVector = (mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector).normalized;
 		
 		List<Vector2> points = new List<Vector2>();
@@ -194,7 +198,7 @@ public class GroundChunk : MonoBehaviour {
 
 	private void Awake() {
 		linePoints = new List<Point>();
-		distanceFromMountain = initialDistanceFromMountain;
+		distanceFromMountain = distanceFromMountainRange.max;
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<GroundChunkMeshCreator>();
 	}
