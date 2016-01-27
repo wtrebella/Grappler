@@ -96,10 +96,10 @@ public class GrapplingStateController : PlayerStateController {
 	}
 	
 	public override void HandleRightTouchDown() {
-		player.SetState(Player.PlayerStates.Kicking);
+//		player.SetState(Player.PlayerStates.Kicking);
 	}
 	
 	public override void HandleRightTouchUp() {
-		
+		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 }

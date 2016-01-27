@@ -72,8 +72,8 @@ public class MountainChunk : MonoBehaviour {
 		int index = GetIndexOfNearestLinePointBelowY(y);
 		Point pointA = linePoints[index];
 		Point pointB = linePoints[index+1];
-		float placeAtPointA = GetPlaceAtPoint(pointA);
-		float placeAtPointB = GetPlaceAtPoint(pointB);
+		float placeAtPointA = PointToPlace(pointA);
+		float placeAtPointB = PointToPlace(pointB);
 		float segDistY = pointB.y - pointA.y;
 		float deltaY = y - pointA.y;
 		float lerp = deltaY / segDistY;
@@ -81,24 +81,24 @@ public class MountainChunk : MonoBehaviour {
 		return place;
 	}
 
-	public float GetDistanceFromPlace(float place) {
+	public float PlaceToDistance(float place) {
 		float totalDistance = GetTotalDistance();
 		float placeDistance = totalDistance * place;
 		return placeDistance;
 	}
 
-	public float GetPlaceFromDistance(float distance) {
+	public float DistanceToPlace(float distance) {
 		return distance / GetTotalDistance();
 	}
 
-	public float GetPlaceAtPoint(Point point) {
+	public float PointToPlace(Point point) {
 		int index = GetIndexOfLinePoint(point);
 		float distance = distances[index];
-		float place = GetPlaceFromDistance(distance);
+		float place = DistanceToPlace(distance);
 		return place;
 	}
 
-	public Vector2 GetPositionAtPlace(float place) {
+	public Vector2 PlaceToPosition(float place) {
 		place = Mathf.Clamp01(place);
 		float totalDistance = GetTotalDistance();
 		float placeDistance = totalDistance * place;

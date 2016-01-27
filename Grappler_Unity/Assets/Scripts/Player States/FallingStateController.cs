@@ -58,7 +58,8 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void HandleRightTouchDown() {
-		player.SetState(Player.PlayerStates.Kicking);
+//		player.SetState(Player.PlayerStates.Kicking);
+		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleRightTouchUp() {

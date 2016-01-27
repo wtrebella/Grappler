@@ -7,6 +7,7 @@ public class PerspectiveCameraAnchorAdjuster : MonoBehaviour {
 	void Awake() {
 		cam = GetComponentInParent<Camera>();
 		if (cam == null) Debug.LogError("not attached to a camera object!");
+		UpdateAnchors();
 	}
 
 	void Start () {
@@ -14,8 +15,13 @@ public class PerspectiveCameraAnchorAdjuster : MonoBehaviour {
 	}
 	
 	void Update () {
+		UpdateAnchors();
+	}
+
+	private void UpdateAnchors() {
 		Vector3 p = transform.localPosition;
 		p.z = -cam.transform.position.z;
 		transform.localPosition = p;
+		Debug.Log(p);
 	}
 }

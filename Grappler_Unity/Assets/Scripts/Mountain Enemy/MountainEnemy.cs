@@ -41,7 +41,7 @@ public class MountainEnemy : MonoBehaviour {
 	}
 
 	private Vector3 GetExactPositionFromNewLinePosition(float linePosition) {
-		Vector3 positionAlongLine = mountainChunk.GetPositionAtPlace(linePosition);
+		Vector3 positionAlongLine = mountainChunk.PlaceToPosition(linePosition);
 		positionAlongLine.z = transform.position.z;
 		return positionAlongLine;
 	}

@@ -41,7 +41,7 @@ public class IcicleGenerator : MonoBehaviour {
 		SmallIcicle icicle = smallIciclePrefab.Spawn();
 		icicle.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
 		icicle.transform.parent = chunk.transform;
-		Vector3 position = chunk.GetPositionAtPlace(place);;
+		Vector3 position = chunk.PlaceToPosition(place);;
 		position.z += 0.1f;
 		icicle.transform.position = position;
 		icicles.Add(icicle);
