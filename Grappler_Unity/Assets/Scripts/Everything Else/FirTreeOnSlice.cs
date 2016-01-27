@@ -15,7 +15,7 @@ public class FirTreeOnSlice : MonoBehaviour {
 		firTree.HandleSlice();
 		var childObjects = sliceInfo.ChildObjects;
 		foreach (GameObject child in childObjects) {
-			child.gameObject.layer = LayerMask.NameToLayer("TreeSlice");
+			child.gameObject.layer = LayerMask.NameToLayer("SlicedPiece");
 			Rigidbody2D rigid = child.GetComponent<Rigidbody2D>();
 			rigid.AddTorque(torque * rigid.mass, ForceMode2D.Impulse);
 			rigid.AddForce(new Vector2(forceStrength * rigid.mass, 0), ForceMode2D.Impulse);

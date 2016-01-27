@@ -34,6 +34,10 @@ public class MountainChunk : MonoBehaviour {
 		return linePoints.Count;
 	}
 
+	public int GetMacroPointsCount() {
+		return macroLinePoints.Count;
+	}
+
 	public Point GetLastLinePoint() {
 		return linePoints.GetLastItem();
 	}
@@ -127,13 +131,8 @@ public class MountainChunk : MonoBehaviour {
 	}
 	
 	public void Generate(Vector2 origin, int slopeMultiplier) {
-		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
-		slopeVal *= slopeMultiplier;
-		slopeVector = new Vector2();
-		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
-		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
-
 		List<Vector2> points = new List<Vector2>();
+		CalculateSlope(slopeMultiplier);
 		GenerateBasicShape(points, origin);
 		MacroRandomizeEdges(points);
 		MicroRandomizeEdges(points);
@@ -154,6 +153,14 @@ public class MountainChunk : MonoBehaviour {
 
 	public bool SlopeIsPositive() {
 		return slopeVector.y > 0;
+	}
+
+	private void CalculateSlope(int slopeMultiplier) {
+		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
+		slopeVal *= slopeMultiplier;
+		slopeVector = new Vector2();
+		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
+		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
 	}
 
 	private void Awake () {

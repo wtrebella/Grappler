@@ -45,8 +45,6 @@ public class InputManager : MonoBehaviour {
 	private float beginningSwipeTime;
 	private int leftTouchID;
 	private int rightTouchID;
-	private bool isTouchingLeft = false;
-	private bool isTouchingRight = false;
 
 	private void Update() {
 		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
@@ -85,41 +83,14 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 	
-	private void HandleLeftSwipe() {
-		if (SignalLeftSwipe != null) SignalLeftSwipe();
-	}
-	
-	private void HandleRightSwipe() {
-		if (SignalRightSwipe != null) SignalRightSwipe();
-	}
-	
-	private void HandleUpSwipe() {
-		if (SignalUpSwipe != null) SignalUpSwipe();
-	}
-	
-	private void HandleDownSwipe() {
-		if (SignalDownSwipe != null) SignalDownSwipe();
-	}
-
-	private void HandleLeftTouchDown() {
-		isTouchingLeft = true;
-		if (SignalLeftTouchDown != null) SignalLeftTouchDown();
-	}
-
-	private void HandleLeftTouchUp() {
-		isTouchingLeft = false;
-		if (SignalLeftTouchUp != null) SignalLeftTouchUp();
-	}
-
-	private void HandleRightTouchDown() {
-		isTouchingRight = true;
-		if (SignalRightTouchDown != null) SignalRightTouchDown();
-	}
-
-	private void HandleRightTouchUp() {
-		isTouchingRight = false;
-		if (SignalRightTouchUp != null) SignalRightTouchUp();
-	}
+	private void HandleLeftSwipe() 		{if (SignalLeftSwipe != null) SignalLeftSwipe();}
+	private void HandleRightSwipe() 	{if (SignalRightSwipe != null) SignalRightSwipe();}
+	private void HandleUpSwipe() 		{if (SignalUpSwipe != null) SignalUpSwipe();}	
+	private void HandleDownSwipe()		{if (SignalDownSwipe != null) SignalDownSwipe();}
+	private void HandleLeftTouchDown() 	{if (SignalLeftTouchDown != null) SignalLeftTouchDown();}
+	private void HandleLeftTouchUp() 	{if (SignalLeftTouchUp != null) SignalLeftTouchUp();}
+	private void HandleRightTouchDown() {if (SignalRightTouchDown != null) SignalRightTouchDown();}
+	private void HandleRightTouchUp() 	{if (SignalRightTouchUp != null) SignalRightTouchUp();}
 
 	private bool IsOnLeftOfScreen(Vector2 position) {
 		return position.x < Screen.width / 2f;
@@ -256,16 +227,22 @@ public class InputManager : MonoBehaviour {
 	private void DetectMouseUp() {
 		if (Input.GetMouseButtonUp(0)) {
 			HandleTouchUp();
-			if (isTouchingLeft) HandleLeftTouchUp();
-			else if (isTouchingRight) HandleRightTouchUp();
+			HandleLeftTouchUp();
+		}
+		else if (Input.GetMouseButtonUp(1)) {
+			HandleTouchUp();
+			HandleRightTouchUp();
 		}
 	}
 	
 	private void DetectMouseDown() {
 		if (Input.GetMouseButtonDown(0)) {
 			HandleTouchDown();
-			if (IsOnLeftOfScreen(Input.mousePosition)) HandleLeftTouchDown();
-			else HandleRightTouchDown();
+			HandleLeftTouchDown();
+		}
+		else if (Input.GetMouseButtonDown(1)) {
+			HandleTouchDown();
+			HandleRightTouchDown();
 		}
 	}
 	

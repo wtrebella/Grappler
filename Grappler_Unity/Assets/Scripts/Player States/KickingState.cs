@@ -13,6 +13,7 @@ public class KickingState : MonoBehaviour {
 	[SerializeField] private GoEaseType easeType = GoEaseType.CubicOut;
 
 	private GameObject intersectingSprite;
+	private float initialHorizontalVelocity;
 	private Vector3 kickStart;
 	private Vector3 kickEnd;
 
@@ -33,13 +34,7 @@ public class KickingState : MonoBehaviour {
 	}
 
 	private void MovePlayer() {
-		Vector2 endPos;
-
-		if (intersectingSprite != null) {
-			endPos = kickStart;
-			endPos.x = intersectingSprite.transform.position.x;
-		}
-		else endPos = kickEnd;
+		Vector2 endPos = kickEnd;
 
 		Go.to(body.transform, duration, new GoTweenConfig()
 		      .setEaseType(easeType)
@@ -74,7 +69,7 @@ public class KickingState : MonoBehaviour {
 			Rigidbody2D rigid = intersectingSprite.GetComponent<Rigidbody2D>();
 			rigid.gravityScale = 1;
 			rigid.constraints = RigidbodyConstraints2D.None;
-			SpriteSlicer2D.ExplodeSprite(intersectingSprite, 5, 5);
+			SpriteSlicer2D.SliceSprite(kickStart, kickEnd, intersectingSprite);
 		}
 
 		yield return null;
@@ -83,11 +78,14 @@ public class KickingState : MonoBehaviour {
 	private void HandleKickDone(AbstractGoTween tween) {
 		player.kinematicSwitcher.SetNonKinematic();
 		player.SetState(Player.PlayerStates.Falling);
+		body.GetComponent<Rigidbody2D>().velocity = new Vector3(initialHorizontalVelocity, 0, 0);
+		feet.GetComponent<Rigidbody2D>().velocity = new Vector3(initialHorizontalVelocity, 0, 0);;
 	}
 
 	private void PrepareKick() {
+		initialHorizontalVelocity = body.GetComponent<Rigidbody2D>().velocity.x;
+
 		player.kinematicSwitcher.SetKinematic();
-		
 		kickStart = body.transform.position;
 		kickEnd = body.transform.position + direction * distance;
 	}

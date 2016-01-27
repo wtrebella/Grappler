@@ -8,6 +8,7 @@ public class CameraMover : MonoBehaviour {
 	[SerializeField] private Transform horizontalMovementObject;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 	[SerializeField] private float smoothDampTime = 0.13f;
+	[SerializeField] private Vector2 min = new Vector2(-10000, -10000);
 
 	private float initialDistance;
 	private Vector3 initialDirection;
@@ -57,6 +58,10 @@ public class CameraMover : MonoBehaviour {
 		else offset = negativeSlopeOffset;
 
 		Vector3 targetPosition = new Vector3(x + offset.x, y + offset.y, transform.position.z);
+
+		targetPosition.x = Mathf.Max(min.x, targetPosition.x);
+		targetPosition.y = Mathf.Max(min.y, targetPosition.y);
+
 		return targetPosition;
 	}
 
