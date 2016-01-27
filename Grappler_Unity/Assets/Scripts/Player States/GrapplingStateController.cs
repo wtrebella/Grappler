@@ -7,6 +7,10 @@ public class GrapplingStateController : PlayerStateController {
 	[SerializeField] private GrapplingState grappling;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
+	private void Awake() {
+		playerState = Player.PlayerStates.Grappling;
+	}
+
 	public void ConnectGrapplerIfPossible() {
 		Anchorable anchorable;
 		

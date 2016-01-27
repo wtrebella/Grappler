@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Player))]
-public class GroundCollisionHandler : MonoBehaviour {
-	private Player player;
-
+public class GroundCollisionHandler : CollisionHandler {
 	private bool hasGrappledSinceHittingGround = true;
 
-	public void HandleHitGround(Collision2D collision) {
+	public override void HandleCollision(Collision2D collision) {
+		base.HandleCollision(collision);
+		Debug.Log("ground collision");
 		if (player.IsOnGround()) return;
 		if (!hasGrappledSinceHittingGround) return;
 
@@ -17,6 +16,7 @@ public class GroundCollisionHandler : MonoBehaviour {
 	}
 
 	private void Awake() {
+		BaseAwake();
 		player = GetComponent<Player>();
 		player.SignalEnteredGrapplingState += HandleEnteredGrapplingState;
 	}

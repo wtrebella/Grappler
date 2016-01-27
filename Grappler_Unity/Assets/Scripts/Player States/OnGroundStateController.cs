@@ -6,6 +6,10 @@ public class OnGroundStateController : PlayerStateController {
 	[SerializeField] private PlayerAnimator playerAnimator;
 	[SerializeField] private OnGroundState onGroundState;
 
+	private void Awake() {
+		playerState = Player.PlayerStates.OnGround;
+	}
+
 	public override void EnterState() {
 		base.EnterState();
 

@@ -6,6 +6,10 @@ public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D bodyRigidbody;
 	[SerializeField] private Rigidbody2D feetRigidbody;
 
+	private void Awake() {
+		playerState = Player.PlayerStates.Dead;
+	}
+
 	public override void EnterState() {
 		base.EnterState();
 		player.grapplingController.DisconnectGrapplerIfPossible();

@@ -6,6 +6,10 @@ using System;
 public class KickingStateController : PlayerStateController {
 	[SerializeField] private KickingState kickingState;
 
+	private void Awake() {
+		playerState = Player.PlayerStates.Kicking;
+	}
+
 	private void Kick() {
 		player.grapplingController.DisconnectGrapplerIfPossible();
 		player.playerAnimator.PlayKickingAnimations();

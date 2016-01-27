@@ -6,6 +6,8 @@ public class PlayerStateController : MonoBehaviour {
 	public float timeInState {get; private set;}
 	public float fixedTimeInState {get; private set;}
 
+	[HideInInspector] public Player.PlayerStates playerState;
+
 	protected Player player;
 
 	public void BaseAwake() {
