@@ -1,13 +1,15 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Player))]
-public class FallingStateController : PlayerStateController {
-	[SerializeField] private AnchorableFinder anchorableFinder;
+public class OnGroundStateController : PlayerStateController {
+	[SerializeField] private PlayerAnimator playerAnimator;
+	[SerializeField] private OnGroundState onGroundState;
 
 	public override void EnterState() {
 		base.EnterState();
-		player.playerAnimator.PlayFallingAnimations();
+
+		onGroundState.Stop();
 	}
 	
 	public override void ExitState() {
@@ -41,7 +43,7 @@ public class FallingStateController : PlayerStateController {
 	public override void HandleTap() {
 		base.HandleTap();
 	}
-
+	
 	public override void HandleTouchUp() {
 		base.HandleTouchUp();
 	}
@@ -49,10 +51,9 @@ public class FallingStateController : PlayerStateController {
 	public override void HandleTouchDown() {
 		base.HandleTouchDown();
 	}
-
+	
 	public override void HandleLeftTouchDown() {
 		base.HandleLeftTouchDown();
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleLeftTouchUp() {
@@ -61,7 +62,6 @@ public class FallingStateController : PlayerStateController {
 	
 	public override void HandleRightTouchDown() {
 		base.HandleRightTouchDown();
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleRightTouchUp() {

@@ -13,10 +13,12 @@ public class SmallIcicle : MonoBehaviour {
 
 	private void OnCollisionEnter2D(Collision2D collision) {
 		if (hasCollided) return;
-		hasCollided = true;
+
 		if (WhitTools.CompareLayers(collision.gameObject.layer, "Player")) {
+			hasCollided = true;
+			transform.parent = null;
 			rigid.gravityScale = 1;
-			StartCoroutine(EnableClipping(0.5f));
+			StartCoroutine(EnableClipping(0.2f));
 		}
 	}
 

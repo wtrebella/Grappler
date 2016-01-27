@@ -20,6 +20,14 @@ public class PlayerAnimator : MonoBehaviour {
 	public void PlayKickingAnimations() {
 		PlayAnimations(kickingClipName);
 	}
+	
+	public void StopAnimating() {
+		if (bodyAnimator != null) bodyAnimator.Stop();
+		if (feetAnimator != null) feetAnimator.Stop();
+
+		bodyAnimator.SetFrame(0);
+		feetAnimator.SetFrame(0);
+	}
 
 	private void PlayAnimations(string clipName) {
 		if (bodyAnimator != null) bodyAnimator.Play(clipName);

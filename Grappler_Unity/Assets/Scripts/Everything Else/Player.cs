@@ -5,35 +5,44 @@ using System;
 [RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(GrapplingStateController))]
 [RequireComponent(typeof(DeadStateController))]
+[RequireComponent(typeof(OnGroundStateController))]
 [RequireComponent(typeof(FallingStateController))]
 [RequireComponent(typeof(PlayerAnimator))]
 [RequireComponent(typeof(Trail))]
+[RequireComponent(typeof(Rigidbody2DStopper))]
 public class Player : StateMachine {
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
 	public Action SignalEnteredKickingState;
 	public Action SignalEnteredDeadState;
+	public Action SignalEnteredOnGroundState;
 
-	public enum PlayerStates {Falling, Grappling, Kicking, Dead}
+	public enum PlayerStates {Falling, Grappling, Kicking, Dead, OnGround}
 
 	public Trail trail;
 	public Forcer forcer;
 
 	[SerializeField] private PlayerBodyPart body;
+	[SerializeField] private PlayerBodyPart feet;
 
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
 	[HideInInspector] public DeadStateController deadController;
 	[HideInInspector] public KickingStateController kickingController;
 	[HideInInspector] public GrapplingStateController grapplingController;
+	[HideInInspector] public OnGroundStateController onGroundController;
 	[HideInInspector] public FallingStateController fallingController;
+	[HideInInspector] public Rigidbody2DStopper rigidbodyStopper;
 
 	public void SetState(PlayerStates state) {
 		currentState = state;
 	}
 
 	public void HandleCollision(Collision2D collision) {
-
+		bool isGround = WhitTools.CompareLayers(collision.gameObject.layer, "Ground");
+		if (isGround) {
+			if (!CurrentStateIs(PlayerStates.OnGround)) HandleHitGround();
+		}
 	}
 
 	private void Awake() {
@@ -42,7 +51,9 @@ public class Player : StateMachine {
 		kickingController = GetComponent<KickingStateController>();
 		fallingController = GetComponent<FallingStateController>();
 		grapplingController = GetComponent<GrapplingStateController>();
+		onGroundController = GetComponent<OnGroundStateController>();
 		deadController = GetComponent<DeadStateController>();
+		rigidbodyStopper = GetComponent<Rigidbody2DStopper>();
 	}
 
 	private void Start() {
@@ -53,12 +64,36 @@ public class Player : StateMachine {
 		return (PlayerStates)currentState == playerState;
 	}
 
+	private float GetTimeInCurrentState() {
+		PlayerStateController currentController = GetControllerForCurrentState();
+		return currentController.timeInState;
+	}
+
+	private PlayerStateController GetControllerForCurrentState() {
+		if (CurrentStateIs(PlayerStates.Dead)) return deadController;
+		else if (CurrentStateIs(PlayerStates.Falling)) return fallingController;
+		else if (CurrentStateIs(PlayerStates.Grappling)) return grapplingController;
+		else if (CurrentStateIs(PlayerStates.Kicking)) return kickingController;
+		else if (CurrentStateIs(PlayerStates.OnGround)) return onGroundController;
+		Debug.LogError("no state controller implemented in this method for " + (PlayerStates)currentState);
+		return null;
+	}
+
 	private void KillIfBelowScreen() {
 		if (body.IsBelowScreen()) SetState(PlayerStates.Dead);
 	}
 
-	protected override void PreUpdateState() {
+	float timeSinceLastLeftGround = 0;
+	private void HandleHitGround() {
+		if (CurrentStateIs(PlayerStates.OnGround)) return;
+		if (timeSinceLastLeftGround < 0.5f) return;
+		timeSinceLastLeftGround = 0;
+		
+		SetState(PlayerStates.OnGround);
+	}
 
+	protected override void PreUpdateState() {
+		if (!CurrentStateIs(PlayerStates.OnGround)) timeSinceLastLeftGround += Time.deltaTime;
 	}
 
 	protected override void PostUpdateState() {
@@ -90,6 +125,29 @@ public class Player : StateMachine {
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
 	}
 
+
+	// on ground
+	
+	private void OnGround_LeftSwipe() {onGroundController.HandleLeftSwipe();}
+	private void OnGround_RightSwipe() {onGroundController.HandleRightSwipe();}
+	private void OnGround_UpSwipe() {onGroundController.HandleUpSwipe();}
+	private void OnGround_DownSwipe() {onGroundController.HandleDownSwipe();}
+	private void OnGround_Tap() {onGroundController.HandleTap();}
+	private void OnGround_TouchUp() {onGroundController.HandleTouchUp();}
+	private void OnGround_TouchDown() {onGroundController.HandleTouchDown();}
+	private void OnGround_ExitState() {onGroundController.ExitState();}
+	private void OnGround_UpdateState() {onGroundController.UpdateState();}
+	private void OnGround_FixedUpdateState() {onGroundController.FixedUpdateState();}
+	private void OnGround_LeftTouchDown() {onGroundController.HandleLeftTouchDown();}
+	private void OnGround_LeftTouchUp() {onGroundController.HandleLeftTouchUp();}
+	private void OnGround_RightTouchDown() {onGroundController.HandleRightTouchDown();}
+	private void OnGround_RightTouchUp() {onGroundController.HandleRightTouchUp();}
+	private void OnGround_EnterState() {
+		onGroundController.EnterState();
+		if (SignalEnteredOnGroundState != null) SignalEnteredOnGroundState();
+	}
+
+
 	// dead
 	
 	private void Dead_LeftSwipe() {deadController.HandleLeftSwipe();}
@@ -111,6 +169,7 @@ public class Player : StateMachine {
 		if (SignalEnteredDeadState != null) SignalEnteredDeadState();
 	}
 
+
 	// kicking
 	
 	private void Kicking_LeftSwipe() {kickingController.HandleLeftSwipe();}
@@ -131,6 +190,7 @@ public class Player : StateMachine {
 		kickingController.EnterState();
 		if (SignalEnteredKickingState != null) SignalEnteredKickingState();
 	}
+
 
 	// grappling
 

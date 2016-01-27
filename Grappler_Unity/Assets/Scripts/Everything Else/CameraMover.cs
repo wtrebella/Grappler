@@ -18,6 +18,14 @@ public class CameraMover : MonoBehaviour {
 		UpdateMovementImmediate();
 	}
 
+	public float GetSmoothDampTime() {
+		return smoothDampTime;
+	}
+
+	public void SetSmoothDampTime(float time) {
+		smoothDampTime = time;
+	}
+
 	private void Awake() {
 		initialDistance = GetObjectToThisDistance();
 		initialDirection = GetObjectToThisDirection();

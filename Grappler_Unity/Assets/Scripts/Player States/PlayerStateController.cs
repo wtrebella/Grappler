@@ -3,14 +3,24 @@ using System.Collections;
 
 [RequireComponent(typeof(Player))]
 public class PlayerStateController : MonoBehaviour {
+	public float timeInState {get; private set;}
+	public float fixedTimeInState {get; private set;}
+
 	protected Player player;
 
-	private void Awake() {
+	public void BaseAwake() {
 		player = GetComponent<Player>();
+		timeInState = 0;
+		fixedTimeInState = 0;
+	}
+
+	private void Awake() {
+		BaseAwake();
 	}
 	
 	public virtual void EnterState() {
-		
+		timeInState = 0;
+		fixedTimeInState = 0;
 	}
 	
 	public virtual void ExitState() {
@@ -18,11 +28,11 @@ public class PlayerStateController : MonoBehaviour {
 	}
 	
 	public virtual void UpdateState() {
-		
+		timeInState += Time.deltaTime;
 	}
 	
 	public virtual void FixedUpdateState() {
-		
+		fixedTimeInState += Time.fixedDeltaTime;
 	}
 	
 	public virtual void HandleLeftSwipe() {

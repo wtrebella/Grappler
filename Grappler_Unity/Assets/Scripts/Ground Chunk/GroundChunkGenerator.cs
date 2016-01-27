@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class GroundChunkGenerator : MonoBehaviour {
 	[SerializeField] private GroundChunk groundChunkPrefab;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private int maxChunks = 5;
 
 	private List<GroundChunk> groundChunks;
 
@@ -26,5 +27,12 @@ public class GroundChunkGenerator : MonoBehaviour {
 		else previousGroundChunk = groundChunks.GetLastItem();
 		groundChunks.Add(groundChunk);
 		groundChunk.Generate(mountainChunk, previousGroundChunk);
+		if (groundChunks.Count > maxChunks) RecycleFirstChunk();
+	}
+
+	private void RecycleFirstChunk() {
+		GroundChunk firstChunk = groundChunks[0];
+		groundChunks.Remove(firstChunk);
+		firstChunk.Recycle();
 	}
 }

@@ -11,6 +11,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 	public int numMountainChunksCreated {get; private set;}
 	
 	[SerializeField] private MountainChunk mountainChunkPrefab;
+	[SerializeField] private int maxChunks = 5;
 
 	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
@@ -59,6 +60,12 @@ public class MountainChunkGenerator : MonoBehaviour {
 		mountainChunks = new List<MountainChunk>();
 	}
 
+	private void RecycleFirstChunk() {
+		MountainChunk firstChunk = mountainChunks[0];
+		mountainChunks.Remove(firstChunk);
+		firstChunk.Recycle();
+	}
+
 	private void Start() {
 		GenerateMountainChunks(3);
 	}
@@ -70,11 +77,14 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private void GenerateMountainChunk() {
 		numMountainChunksCreated++;
 
-		MountainChunk mountainChunk = Instantiate(mountainChunkPrefab);
+		MountainChunk mountainChunk = mountainChunkPrefab.Spawn();
 		mountainChunk.transform.parent = transform;
 
-		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, 1);
-		else mountainChunk.Generate(mountainChunks.GetLastItem().GetLastLinePoint().pointVector, 1);
+		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, null);
+		else {
+			MountainChunk lastChunk = mountainChunks.GetLastItem();
+			mountainChunk.Generate(lastChunk.GetLastLinePoint().pointVector, lastChunk);
+		}
 
 		mountainChunks.Add(mountainChunk);
 
@@ -90,6 +100,7 @@ public class MountainChunkGenerator : MonoBehaviour {
 	private void GenerateMountainChunkIfNeeded() {
 		if (mountainChunks.Count == 0) return;
 		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateMountainChunk();
+		if (mountainChunks.Count > maxChunks) RecycleFirstChunk();
 	}
 
 	private MountainChunk GetLastMountainChunk() {

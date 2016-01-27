@@ -6,15 +6,26 @@ using System;
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(GroundChunkMeshCreator))]
 public class GroundChunk : MonoBehaviour {
-	[SerializeField] private float distanceFromMountain = 13;
+	private static float distanceFromMountain;
+
+	[SerializeField] private float initialDistanceFromMountain = 13;
 	[SerializeField] private float maxBumpHeight = 0.3f;
 	[SerializeField] private float marginSize = 60.0f;
+	[SerializeField] private float closeInRate = 1.0f;
+	[SerializeField] private float minDistanceFromMountain = 5;
 
 	private List<Point> linePoints;
-	private Dictionary<int, float> distances;
+	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
 	private GroundChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
+
+	public void Reset() {
+		linePoints.Clear();
+		distances.Clear();
+		polygonCollider.points = new Vector2[0];
+		slopeVector = Vector2.zero;
+	}
 
 	public int GetRandomPointIndex() {
 		return UnityEngine.Random.Range(0, linePoints.Count);
@@ -108,17 +119,20 @@ public class GroundChunk : MonoBehaviour {
 	}
 
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
+		Reset();
+		distanceFromMountain = Mathf.Max(minDistanceFromMountain, distanceFromMountain * closeInRate);
+
 		slopeVector = (mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector).normalized;
 		
 		List<Vector2> points = new List<Vector2>();
-		Generate(points, mountainChunk, previousGroundChunk);
+		GenerateShape(points, mountainChunk, previousGroundChunk);
 		Vector2[] pointsArray = points.ToArray();
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
 		CalculateDistances();
 	}
 
-	private void Generate(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
+	private void GenerateShape(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
 		float directDistFromMountain = distanceFromMountain;
 		Vector2 mountainVector = mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
@@ -178,14 +192,14 @@ public class GroundChunk : MonoBehaviour {
 		points.Add(new Vector2(first.x, first.y - 1));
 	}
 
-	private void Awake () {
+	private void Awake() {
 		linePoints = new List<Point>();
+		distanceFromMountain = initialDistanceFromMountain;
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<GroundChunkMeshCreator>();
 	}
 
 	private void CalculateDistances() {
-		distances = new Dictionary<int, float>();
 		distances.Add(0, 0);
 		for (int i = 1; i < linePoints.Count; i++) {
 			float previousDistance = distances[i-1];

@@ -12,8 +12,8 @@ public class MountainChunk : MonoBehaviour {
 	[SerializeField] private float bumpWidthAvg = 0.01f;
 	[SerializeField] private float bumpWidthVar = 0.005f;
 	[SerializeField] private float maxBumpHeight = 0.1f;
-	[SerializeField] private float avgSlope = 0.65f;
-	[SerializeField] private float slopeVar = 0.25f;
+	[SerializeField] private FloatRange slopeRange = new FloatRange(0.08f, 0.32f);
+	[SerializeField] private float maxSlopeChange = 0.02f;
 	[SerializeField] private float pointDist = 2.5f;
 	[SerializeField] private float pointDistVar = 1.2f;
 	[SerializeField] private float perpDistVar = 2.8f;
@@ -21,10 +21,19 @@ public class MountainChunk : MonoBehaviour {
 
 	private List<Point> macroLinePoints;
 	private List<Point> linePoints;
-	private Dictionary<int, float> distances;
+	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
 	private MountainChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
+	private float slopeVal;
+
+	public void Reset() {
+		macroLinePoints.Clear();
+		linePoints.Clear();
+		distances.Clear();
+		polygonCollider.points = new Vector2[0];
+		slopeVector = Vector2.zero;
+	}
 
 	public int GetRandomPointIndex() {
 		return UnityEngine.Random.Range(0, linePoints.Count);
@@ -129,13 +138,20 @@ public class MountainChunk : MonoBehaviour {
 		Point pointB = GetLinePoint(indexB);
 		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
 	}
+
+	public float GetSlopeVal() {
+		return slopeVal;
+	}
 	
-	public void Generate(Vector2 origin, int slopeMultiplier) {
+	public void Generate(Vector2 origin, MountainChunk previousMountainChunk) {
+		Reset();
 		List<Vector2> points = new List<Vector2>();
-		CalculateSlope(slopeMultiplier);
+		float previousSlopeVal;
+		if (previousMountainChunk == null) previousSlopeVal = slopeRange.GetRandom();
+		else previousSlopeVal = previousMountainChunk.slopeVal;
+		CalculateSlope(previousSlopeVal);
 		GenerateBasicShape(points, origin);
 		MacroRandomizeEdges(points);
-		MicroRandomizeEdges(points);
 		Vector2[] pointsArray = points.ToArray();
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
@@ -155,9 +171,13 @@ public class MountainChunk : MonoBehaviour {
 		return slopeVector.y > 0;
 	}
 
-	private void CalculateSlope(int slopeMultiplier) {
-		float slopeVal = avgSlope + UnityEngine.Random.Range(-slopeVar, slopeVar);
-		slopeVal *= slopeMultiplier;
+	private void OnDisable() {
+		RecycleAllIcicles();
+		RecycleAllAnchorables();
+	}
+
+	private void CalculateSlope(float previousSlopeVal) {
+		slopeVal = Mathf.Clamp(previousSlopeVal + UnityEngine.Random.Range(-maxSlopeChange, maxSlopeChange), slopeRange.min, slopeRange.max);
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
@@ -182,7 +202,6 @@ public class MountainChunk : MonoBehaviour {
 	}
 
 	private void CalculateDistances() {
-		distances = new Dictionary<int, float>();
 		distances.Add(0, 0);
 		for (int i = 1; i < linePoints.Count; i++) {
 			float previousDistance = distances[i-1];
@@ -206,6 +225,16 @@ public class MountainChunk : MonoBehaviour {
 		}
 
 		return index;
+	}
+
+	private void RecycleAllIcicles() {
+		var icicles = GetComponentsInChildren<SmallIcicle>();
+		foreach (SmallIcicle icicle in icicles) icicle.Recycle();
+	}
+
+	private void RecycleAllAnchorables() {
+		var anchorables = GetComponentsInChildren<Anchorable>();
+		foreach (Anchorable anchorable in anchorables) anchorable.Recycle();
 	}
 
 	private void GenerateBasicShape(List<Vector2> points, Vector2 origin) {

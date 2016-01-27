@@ -5,17 +5,14 @@ using System.Collections.Generic;
 public class IcicleGenerator : MonoBehaviour {
 	[SerializeField] private SmallIcicle smallIciclePrefab;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-
-	private List<SmallIcicle> icicles;
 	
 	private void Awake() {
-		icicles = new List<SmallIcicle>();
 		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
 	}
 
 	private void HandleMountainChunkCreated(MountainChunk chunk) {
-		int num = 20;
-		float chanceOfSmallIcicleSpawn = 0.2f;
+		int num = chunk.GetMacroPointsCount();
+		float chanceOfSmallIcicleSpawn = 0.05f;
 		float dist = 1f / ((float)num + 1f);
 		float distVar = dist / 3f;
 		for (int i = 1; i <= num; i++) {
@@ -26,7 +23,7 @@ public class IcicleGenerator : MonoBehaviour {
 	}
 	
 	private void CreateSmallIcicleChunk(MountainChunk chunk, float place) {
-		float chunkSize = 0.04f;
+		float chunkSize = 0.1f;
 		float placeVar = 0.05f;
 		int num = Random.Range(1, 5);
 		float dist = chunkSize / (num + 1);
@@ -44,6 +41,5 @@ public class IcicleGenerator : MonoBehaviour {
 		Vector3 position = chunk.PlaceToPosition(place);;
 		position.z += 0.1f;
 		icicle.transform.position = position;
-		icicles.Add(icicle);
 	}
 }

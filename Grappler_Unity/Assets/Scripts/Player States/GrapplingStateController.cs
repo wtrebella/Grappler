@@ -19,8 +19,9 @@ public class GrapplingStateController : PlayerStateController {
 		if (!grappling.ReadyToConnect()) return;
 		Anchorable anchorable;
 		if (anchorableFinder.FindAnchorableInScreenOverlap(out anchorable)) {
-			ConnectGrapplerIfPossible(anchorable);
-			player.SetState(Player.PlayerStates.Grappling);
+			if (ConnectGrapplerIfPossible(anchorable)) {
+				player.SetState(Player.PlayerStates.Grappling);
+			}
 		}
 	}
 	
@@ -32,11 +33,13 @@ public class GrapplingStateController : PlayerStateController {
 		else return false;
 	}
 	
-	public void ConnectGrapplerIfPossible(Anchorable anchorable) {
+	public bool ConnectGrapplerIfPossible(Anchorable anchorable) {
 		if (grappling.ReadyToConnect()) {
 			grappling.Connect(anchorable);
 			player.SetState(Player.PlayerStates.Grappling);
+			return true;
 		}
+		return false;
 	}
 
 	public void FinishCooldown() {
@@ -44,62 +47,65 @@ public class GrapplingStateController : PlayerStateController {
 	}
 
 	public override void EnterState() {
+		base.EnterState();
 		player.playerAnimator.PlayGrapplingAnimations();
 	}
 	
 	public override void ExitState() {
-		
+		base.ExitState();
 	}
 	
 	public override void UpdateState() {
-
+		base.UpdateState();
 	}
 	
 	public override void FixedUpdateState() {
-
+		base.FixedUpdateState();
 	}
-
+	
 	public override void HandleLeftSwipe() {
-
+		base.HandleLeftSwipe();
 	}
 	
 	public override void HandleRightSwipe() {
-
+		base.HandleRightSwipe();
 	}
 	
 	public override void HandleUpSwipe() {
-
+		base.HandleUpSwipe();
 	}
 	
 	public override void HandleDownSwipe() {
-
+		base.HandleDownSwipe();
 	}
 	
 	public override void HandleTap() {
-
+		base.HandleTap();
 	}
-
+	
 	public override void HandleTouchUp() {
-
+		base.HandleTouchUp();
 	}
 	
 	public override void HandleTouchDown() {
-		
+		base.HandleTouchDown();
 	}
-
+	
 	public override void HandleLeftTouchDown() {
-		
+		base.HandleLeftTouchDown();
 	}
 	
 	public override void HandleLeftTouchUp() {
+		base.HandleLeftTouchUp();
 		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 	
 	public override void HandleRightTouchDown() {
-//		player.SetState(Player.PlayerStates.Kicking);
+		base.HandleRightTouchDown();
 	}
 	
 	public override void HandleRightTouchUp() {
+		base.HandleRightTouchUp();
 		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 }
