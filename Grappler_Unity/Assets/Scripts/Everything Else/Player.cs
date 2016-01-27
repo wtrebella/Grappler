@@ -8,6 +8,8 @@ using System;
 [RequireComponent(typeof(OnGroundStateController))]
 [RequireComponent(typeof(FallingStateController))]
 [RequireComponent(typeof(PlayerAnimator))]
+[RequireComponent(typeof(GroundCollisionHandler))]
+[RequireComponent(typeof(MountainCollisionHandler))]
 [RequireComponent(typeof(Trail))]
 [RequireComponent(typeof(Rigidbody2DStopper))]
 public class Player : StateMachine {
@@ -25,6 +27,8 @@ public class Player : StateMachine {
 	[SerializeField] private PlayerBodyPart body;
 	[SerializeField] private PlayerBodyPart feet;
 
+	[HideInInspector] public MountainCollisionHandler mountainCollisionHandler;
+	[HideInInspector] public GroundCollisionHandler groundCollisionHandler;
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
 	[HideInInspector] public DeadStateController deadController;
@@ -34,18 +38,27 @@ public class Player : StateMachine {
 	[HideInInspector] public FallingStateController fallingController;
 	[HideInInspector] public Rigidbody2DStopper rigidbodyStopper;
 
+	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
+	public bool IsGrappling() {return CurrentStateIs(PlayerStates.Grappling);}
+	public bool IsKicking() {return CurrentStateIs(PlayerStates.Kicking);}
+	public bool IsDead() {return CurrentStateIs(PlayerStates.Dead);}
+	public bool IsOnGround() {return CurrentStateIs(PlayerStates.OnGround);}
+
 	public void SetState(PlayerStates state) {
 		currentState = state;
 	}
 
 	public void HandleCollision(Collision2D collision) {
 		bool isGround = WhitTools.CompareLayers(collision.gameObject.layer, "Ground");
-		if (isGround) {
-			if (!CurrentStateIs(PlayerStates.OnGround)) HandleHitGround();
-		}
+		if (isGround) groundCollisionHandler.HandleHitGround(collision);
+
+		bool isMountain = WhitTools.CompareLayers(collision.gameObject.layer, "Mountain");
+		if (isMountain) mountainCollisionHandler.HandleHitMountain(collision);
 	}
 
 	private void Awake() {
+		mountainCollisionHandler = GetComponent<MountainCollisionHandler>();
+		groundCollisionHandler = GetComponent<GroundCollisionHandler>();
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
 		kickingController = GetComponent<KickingStateController>();
@@ -83,17 +96,8 @@ public class Player : StateMachine {
 		if (body.IsBelowScreen()) SetState(PlayerStates.Dead);
 	}
 
-	float timeSinceLastLeftGround = 0;
-	private void HandleHitGround() {
-		if (CurrentStateIs(PlayerStates.OnGround)) return;
-		if (timeSinceLastLeftGround < 0.5f) return;
-		timeSinceLastLeftGround = 0;
-		
-		SetState(PlayerStates.OnGround);
-	}
-
 	protected override void PreUpdateState() {
-		if (!CurrentStateIs(PlayerStates.OnGround)) timeSinceLastLeftGround += Time.deltaTime;
+
 	}
 
 	protected override void PostUpdateState() {

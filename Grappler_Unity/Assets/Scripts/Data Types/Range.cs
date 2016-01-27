@@ -13,7 +13,10 @@ public class Range {
 public class IntRange : Range {
 	public int min = 0;
 	public int max = 1;
-	
+
+	public int middle {get {return min + difference / 2;}}
+	public int difference {get {return max - min;}}
+
 	public IntRange() {
 		
 	}
@@ -26,12 +29,19 @@ public class IntRange : Range {
 	public int GetRandom() {
 		return UnityEngine.Random.Range(min, max);
 	}
+
+	public int Clamp(int num) {
+		return Mathf.Clamp(num, min, max);
+	}
 }
 
 [Serializable]
 public class FloatRange : Range {
 	public float min = 0;
 	public float max = 1;
+
+	public float middle {get {return min + (max - min) / 2.0f;}}
+	public float difference {get {return max - min;}}
 
 	public FloatRange() {
 
@@ -45,15 +55,25 @@ public class FloatRange : Range {
 	public float GetRandom() {
 		return UnityEngine.Random.Range(min, max);
 	}
+
+	public float Lerp(float t) {
+		return Mathf.Lerp(min, max, t);
+	}
+
+	public float Clamp(float num) {
+		return Mathf.Clamp(num, min, max);
+	}
 }
 
 [Serializable]
 public class Vector2Range : Range {
 	public Vector2 min = new Vector2(0, 0);
 	public Vector2 max = new Vector2(1, 1);
-	
+
+	public Vector2 middle {get {return min + (max - min) / 2.0f;}}
+
 	public Vector2Range() {
-		
+
 	}
 	
 	public Vector2Range(Vector2 min, Vector2 max) {
@@ -67,13 +87,19 @@ public class Vector2Range : Range {
 		Vector2 point = new Vector2(x, y);
 		return point;
 	}
+
+	public Vector2 Lerp(float t) {
+		return Vector2.Lerp(min, max, t);
+	}
 }
 
 [Serializable]
 public class Vector3Range : Range {
 	public Vector3 min = new Vector3(0, 0, 0);
 	public Vector3 max = new Vector3(1, 1, 1);
-	
+
+	public Vector3 middle {get {return min + (max - min) / 2.0f;}}
+
 	public Vector3Range() {
 		
 	}
@@ -89,5 +115,9 @@ public class Vector3Range : Range {
 		float z = UnityEngine.Random.Range(this.min.z, this.max.z);
 		Vector3 point = new Vector3(x, y, z);
 		return point;
+	}
+
+	public Vector3 Lerp(float t) {
+		return Vector3.Lerp(min, max, t);
 	}
 }

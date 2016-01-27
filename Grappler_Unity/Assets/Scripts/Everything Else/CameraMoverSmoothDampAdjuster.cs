@@ -35,9 +35,8 @@ public class CameraMoverSmoothDampAdjuster : MonoBehaviour {
 
 	private float SpeedToSmoothDamp(float speed) {
 		float percent = Mathf.Clamp01(speed / speedHighEnd);
-		float inversePercent = 1 - percent;
 		float totalSmoothDamp = smoothDampRange.max - smoothDampRange.min;
-		float smoothDampPiece = inversePercent * totalSmoothDamp;
+		float smoothDampPiece = percent * totalSmoothDamp;
 		float convertedSmoothDamp = smoothDampRange.min + smoothDampPiece;
 		return convertedSmoothDamp;
 	}

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -64,7 +64,7 @@ public class KickingState : MonoBehaviour {
 		if (intersectingSprite != null) {
 			while (body.transform.position.x < intersectingSprite.transform.position.x - 1) yield return null;
 
-			ScreenShaker.instance.Shake();
+			ScreenShaker.instance.ShakeMin();
 
 			Rigidbody2D rigid = intersectingSprite.GetComponent<Rigidbody2D>();
 			rigid.gravityScale = 1;
