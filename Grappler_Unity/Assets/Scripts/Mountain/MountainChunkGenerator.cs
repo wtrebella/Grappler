@@ -57,6 +57,9 @@ public class MountainChunkGenerator : MonoBehaviour {
 		neededDetector = GetComponent<MountainChunkNeededDetector>();
 		anchorableGenerator = GetComponent<AnchorableGenerator>();
 		mountainChunks = new List<MountainChunk>();
+	}
+
+	private void Start() {
 		GenerateMountainChunks(3);
 	}
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.Serialization;
 
 public class AreaOverlapper : MonoBehaviour {
-	[SerializeField] private Vector2 screenPercentage = new Vector2(1, 1);
+	[SerializeField] private float overlapWidth = 5;
 	[SerializeField] private LayerMask anchorableLayerMask;
 	[SerializeField] private LayerMask mountainLayerMask;
 	[SerializeField] private bool drawDebugRays = false;
@@ -15,8 +15,11 @@ public class AreaOverlapper : MonoBehaviour {
 	}
 
 	private Anchorable ScreenOverlap() {
-		Vector2 lowerLeft = GameScreen.instance.lowerLeft;
-		Vector2 upperRight = new Vector2(lowerLeft.x + GameScreen.instance.width * screenPercentage.x, lowerLeft.y + GameScreen.instance.height * screenPercentage.y);
+		float margin = 20;
+		Vector2 bodyPos = transform.position;
+		Vector2 screenLowerLeftInWorldPoints =  GameScreen.instance.lowerLeft;
+		Vector2 lowerLeft = new Vector2(bodyPos.x - margin, screenLowerLeftInWorldPoints.y - margin);
+		Vector2 upperRight = new Vector2(lowerLeft.x + overlapWidth + margin, lowerLeft.y + GameScreen.instance.height + margin * 2);
 		Collider2D[] colliders = Physics2D.OverlapAreaAll(lowerLeft, upperRight, anchorableLayerMask);
 		List<Anchorable> anchorables = new List<Anchorable>();
 		foreach (Collider2D collider in colliders) {

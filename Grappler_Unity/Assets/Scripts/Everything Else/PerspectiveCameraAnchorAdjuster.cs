@@ -22,6 +22,5 @@ public class PerspectiveCameraAnchorAdjuster : MonoBehaviour {
 		Vector3 p = transform.localPosition;
 		p.z = -cam.transform.position.z;
 		transform.localPosition = p;
-		Debug.Log(p);
 	}
 }

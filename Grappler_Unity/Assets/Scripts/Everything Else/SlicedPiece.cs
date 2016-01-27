@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirTreeOnSlice : MonoBehaviour {
-	[SerializeField] private float forceStrength = 1000;
-	[SerializeField] private float torque = 100;
+public class SlicedPiece : MonoBehaviour {
+	[SerializeField] private float forceStrength = 20;
+	[SerializeField] private float torque = 20;
 
-	private FirTree firTree;	
+	private SliceableObjectHolder sliceableObjectHolder;	
 
 	private void Awake() {
-		firTree = GetComponentInParent<FirTree>();
+		sliceableObjectHolder = GetComponentInParent<SliceableObjectHolder>();
 	}
 
 	public void OnSpriteSliced(SpriteSlicer2DSliceInfo sliceInfo) {
-		firTree.HandleSlice();
+		if (sliceableObjectHolder != null) sliceableObjectHolder.HandleSlice();
 		var childObjects = sliceInfo.ChildObjects;
 		foreach (GameObject child in childObjects) {
 			child.gameObject.layer = LayerMask.NameToLayer("SlicedPiece");
@@ -23,6 +23,6 @@ public class FirTreeOnSlice : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision) {
-		firTree.HandleCollision(collision);
+		if (sliceableObjectHolder != null) sliceableObjectHolder.HandleCollision(collision);
 	}
 }

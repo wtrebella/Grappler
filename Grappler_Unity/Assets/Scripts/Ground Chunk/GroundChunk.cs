@@ -6,7 +6,8 @@ using System;
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(GroundChunkMeshCreator))]
 public class GroundChunk : MonoBehaviour {
-	[SerializeField] private float maxBumpHeight = 0.1f;
+	[SerializeField] private float distanceFromMountain = 13;
+	[SerializeField] private float maxBumpHeight = 0.3f;
 	[SerializeField] private float marginSize = 60.0f;
 
 	private List<Point> linePoints;
@@ -118,9 +119,7 @@ public class GroundChunk : MonoBehaviour {
 	}
 
 	private void Generate(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
-		float directDistFromMountain = 13;
-		Debug.Log(GameScreen.instance.lowerLeft + ", " + GameScreen.instance.lowerRight);
-		Debug.Log(GameScreen.instance.width + ", " + GameScreen.instance.height);
+		float directDistFromMountain = distanceFromMountain;
 		Vector2 mountainVector = mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
 		int numPoints = mountainChunk.GetMacroPointsCount();
