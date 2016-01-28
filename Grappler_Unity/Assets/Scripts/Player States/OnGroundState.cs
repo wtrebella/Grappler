@@ -5,18 +5,11 @@ public class OnGroundState : MonoBehaviour {
 	[SerializeField] private Player player;
 	[SerializeField] private Rigidbody2DStopper rigidStopper;
 	[SerializeField] private PlayerAnimator playerAnimator;
-	[SerializeField] private float onGroundDuration = 1;
 
 	public void Stop() {
 		rigidStopper.Stop();
 		playerAnimator.StopAnimating();
 		player.grapplingController.DisconnectGrapplerIfPossible();
-		StartCoroutine(WaitThenSwitchToFallingState());
-	}
-
-	private IEnumerator WaitThenSwitchToFallingState() {
-		yield return new WaitForSeconds(onGroundDuration);
-		SwitchToFallingState();
 	}
 
 	private void SwitchToFallingState() {
@@ -30,10 +23,10 @@ public class OnGroundState : MonoBehaviour {
 	}
 
 	private void HandleSlowed() {
-		SwitchToFallingState();
+
 	}
 
 	private void HandleStopped() {
-
+		SwitchToFallingState();
 	}
 }

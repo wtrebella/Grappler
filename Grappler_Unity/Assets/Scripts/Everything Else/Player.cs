@@ -43,7 +43,7 @@ public class Player : StateMachine {
 	public void SetState(PlayerStates state) {
 		currentState = state;
 	}
-
+	
 	public void HandleCollision(PlayerBodyPart bodyPart, Collision2D collision) {
 		foreach (CollisionHandler collisionHandler in collisionHandlers) {
 			if (WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer)) {

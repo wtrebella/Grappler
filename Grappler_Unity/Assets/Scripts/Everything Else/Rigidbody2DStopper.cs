@@ -6,7 +6,7 @@ public class Rigidbody2DStopper : MonoBehaviour {
 	public Action SignalSlowed;
 	public Action SignalStopped;
 
-	[SerializeField] private float slowSpeed = 10.0f;
+	[SerializeField] private GroundDetector groundDetector;
 	[SerializeField] private float stopSpeed = 5.0f;
 	[SerializeField] private float stopRate = 1.0f;
 	[SerializeField] private Rigidbody2D[] rigidbodies;
@@ -26,19 +26,27 @@ public class Rigidbody2DStopper : MonoBehaviour {
 	}
 
 	private IEnumerator StopRigidbodyCoroutine(Rigidbody2D rigid) {
+		exitCoroutine = false;
 		float speed = rigid.velocity.magnitude;
-		float previousSpeed = speed;
-		while (speed > stopSpeed && !exitCoroutine) {
+
+		while (ShouldContinueRunningStopCoroutine(rigid, speed)) {
 			Vector2 currentVelocity = rigid.velocity;
 			Vector2 velocity = currentVelocity * stopRate;
+			speed = velocity.magnitude;
 			rigid.velocity = velocity;
-			if (speed < previousSpeed && speed < slowSpeed) {
-				if (SignalSlowed != null) SignalSlowed();
-			}
+
 			yield return new WaitForFixedUpdate();
 		}
 
 		if (SignalStopped != null) SignalStopped();
+	}
+
+	private bool RigidbodyHasBeenStopped(Rigidbody2D rigid, float speed) {
+		return groundDetector.IsCloseToGround() && speed < stopSpeed;
+	}
+
+	private bool ShouldContinueRunningStopCoroutine(Rigidbody2D rigid, float speed) {
+		return !RigidbodyHasBeenStopped(rigid, speed) && !exitCoroutine;
 	}
 
 	private void StopRigidbody(Rigidbody2D rigid) {
