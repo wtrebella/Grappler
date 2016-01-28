@@ -122,12 +122,13 @@ public class GroundChunk : MonoBehaviour {
 		num += 0.1f;
 		return perlin;
 	}
-
+	
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
 		Reset();
 		distanceFromMountain = GetNextPerlinNoise() * (distanceFromMountainRange.max - distanceFromMountainRange.min) + distanceFromMountainRange.min;
+
 		slopeVector = (mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector).normalized;
-		
+	
 		List<Vector2> points = new List<Vector2>();
 		GenerateShape(points, mountainChunk, previousGroundChunk);
 		Vector2[] pointsArray = points.ToArray();

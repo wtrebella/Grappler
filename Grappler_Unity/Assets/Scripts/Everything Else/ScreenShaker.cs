@@ -41,7 +41,6 @@ public class ScreenShaker : MonoBehaviour {
 		float speedPercent = SpeedToPercent(collisionSpeed);
 		float anglePercent = AngleToPercent(collisionAngle);
 		float lerp = speedPercent * anglePercent;
-		Debug.Log(speedPercent + ", " + anglePercent + ", " + lerp);
 		ShakeLerp(lerp);
 	}
 
