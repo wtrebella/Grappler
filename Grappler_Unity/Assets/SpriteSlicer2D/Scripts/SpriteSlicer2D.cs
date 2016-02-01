@@ -1,4 +1,4 @@
-﻿#define TK2D_SLICING_ENABLED
+﻿//#define TK2D_SLICING_ENABLED
 
 using UnityEngine;
 using System.Collections;

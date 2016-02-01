@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CharacterSelectManager : MonoBehaviour {
 	[SerializeField] private Transform characterHolder;
@@ -21,7 +22,7 @@ public class CharacterSelectManager : MonoBehaviour {
 	public void PlayWithCurrentCharacter() {
 		if (currentCharacter == null) Debug.LogError("no current character!");
 		StateVariablesManager.stateVariables.characterType = currentCharacter.characterType;
-		Application.LoadLevel("GameScene");
+		SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
 	}
 
 	private void DestroyCurrentCharacter() {

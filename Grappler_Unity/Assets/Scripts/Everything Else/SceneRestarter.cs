@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class SceneRestarter : MonoBehaviour {
 	public void Restart() {
-		Application.LoadLevel(Application.loadedLevelName);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
 	}
 
 	private void Update () {

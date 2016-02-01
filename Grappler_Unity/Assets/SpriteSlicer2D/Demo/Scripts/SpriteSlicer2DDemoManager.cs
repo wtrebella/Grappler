@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class SpriteSlicer2DDemoManager : MonoBehaviour 
 {
@@ -160,10 +161,7 @@ public class SpriteSlicer2DDemoManager : MonoBehaviour
 	/// </summary>
 	void OnGUI () 
 	{
-		if(GUI.Button(new Rect(20,20,120,20), "Reset Scene")) 
-		{
-			Application.LoadLevel(Application.loadedLevel);
-		}
+		if(GUI.Button(new Rect(20,20,120,20), "Reset Scene")) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         m_FadeFragments = GUI.Toggle(new Rect(20, 50, 400, 20), m_FadeFragments, "Fade out sprites once destroyed");
 

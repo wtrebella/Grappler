@@ -10,16 +10,18 @@ public class GroundSnowParticles : MonoBehaviour {
 	[SerializeField] private FloatRange particleEmissionRateRange = new FloatRange(0.0f, 150.0f);
 
 	private ParticleSystem snowParticles;
+	private ParticleSystem.EmissionModule snowEmission;
 
 	private void Awake() {
 		snowParticles = GetComponent<ParticleSystem>();
-		snowParticles.enableEmission = false;
+		snowEmission = snowParticles.emission;
+		snowEmission.enabled = false;
 		snowParticles.Play();
 	}
 
 	private void ToggleEmissionBasedOnDistanceToGround() {
-		if (groundDetector.IsCloseToGround()) snowParticles.enableEmission = true;
-		else snowParticles.enableEmission = false;
+		if (groundDetector.IsCloseToGround()) snowEmission.enabled = true;
+		else snowEmission.enabled = false;
 	}
 
 	private void SetParticleSpeedBasedOnPlayerSpeed() {
@@ -29,11 +31,11 @@ public class GroundSnowParticles : MonoBehaviour {
 		float particleEmissionRate = particleEmissionRateRange.Lerp(playerSpeedPercent);
 		snowParticles.startSpeed = particleSpeed;
 		snowParticles.startSize = particleSize;
-		snowParticles.emissionRate = particleEmissionRate;
+		snowEmission.rate = new ParticleSystem.MinMaxCurve(particleEmissionRate);
 	}
 
 	private bool IsEmitting() {
-		return snowParticles.enableEmission;
+		return snowEmission.enabled;
 	}
 
 	private void FixedUpdate() {
