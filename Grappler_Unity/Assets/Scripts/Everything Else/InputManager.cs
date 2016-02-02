@@ -3,25 +3,7 @@ using System.Collections;
 using System;
 
 public class InputManager : MonoBehaviour {
-	private static InputManager _instance;
-	public static InputManager instance {
-		get {
-			if (_instance == null) {
-				InputManager detector = GameObject.FindObjectOfType<InputManager>();
-				if (detector) _instance = detector;
-				else {
-					GameObject go = new GameObject("Input Manager");
-					_instance = go.AddComponent<InputManager>();
-					DontDestroyOnLoad(go);
-				}
-			}
-			return _instance;
-		}
-	}
-
-	public static bool IsInstantiated() {
-		return _instance != null;
-	}
+	public static InputManager instance {get; private set;}
 
 	public Action SignalTap;
 	public Action SignalRightSwipe;
@@ -46,11 +28,27 @@ public class InputManager : MonoBehaviour {
 	private int leftTouchID;
 	private int rightTouchID;
 
+	private void Awake() {
+		Init();
+	}
+
 	private void Update() {
 		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
 		else if (SystemInfo.deviceType == DeviceType.Desktop) {
 			DetectMouseInput();
 			DetectKeyboardInput();
+		}
+	}
+
+	private void Init() {
+		InputManager inputManager = GameObject.FindObjectOfType<InputManager>();
+		if (inputManager) {
+			Destroy(gameObject);
+		}
+		else {
+			GameObject go = new GameObject("Input Manager");
+			instance = go.AddComponent<InputManager>();
+			DontDestroyOnLoad(go);
 		}
 	}
 

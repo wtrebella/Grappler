@@ -3,8 +3,8 @@ using System.Collections;
 using System;
 
 public class Generatable : MonoBehaviour {
-	public Action<Generator, int> SignalSpawnComplete;
-	public Action<Generator> SignalNeedsDelete;
+	public Action<AreaGenerator, int> SignalSpawnComplete;
+	public Action<AreaGenerator> SignalNeedsDelete;
 	
 	void Start () {
 		
@@ -14,11 +14,11 @@ public class Generatable : MonoBehaviour {
 		
 	}
 	
-	public void GenerationComplete(Generator generator, int side) {
+	public void GenerationComplete(AreaGenerator generator, int side) {
 		if (SignalSpawnComplete != null) SignalSpawnComplete(generator, side);
 	}
 	
-	public void NeedsDelete(Generator spawner) {
+	public void NeedsDelete(AreaGenerator spawner) {
 		if (SignalNeedsDelete != null) SignalNeedsDelete(spawner);
 		else Destroy(this.gameObject);
 	}

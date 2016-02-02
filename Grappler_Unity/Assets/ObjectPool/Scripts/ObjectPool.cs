@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public sealed class ObjectPool : MonoBehaviour
 {
+	static bool isShuttingDown = false;
+
 	public enum StartupPoolMode { Awake, Start, CallManually };
 
 	[System.Serializable]
@@ -102,6 +104,8 @@ public sealed class ObjectPool : MonoBehaviour
 	}
 	public static GameObject Spawn(GameObject prefab, Transform parent, Vector3 position, Quaternion rotation)
 	{
+		if (isShuttingDown) return null;
+
 		List<GameObject> list;
 		Transform trans;
 		GameObject obj;
@@ -335,6 +339,10 @@ public sealed class ObjectPool : MonoBehaviour
 			_instance = obj.AddComponent<ObjectPool>();
 			return _instance;
 		}
+	}
+
+	void OnApplicationQuit() {
+		isShuttingDown = true;
 	}
 }
 

@@ -1,100 +1,107 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-[RequireComponent(typeof(BoxCollider2D))]
 public class Generator : MonoBehaviour {
-	public enum GeneratableType {
-		Horizontal,
-		Vertical,
-		HorizontalAndVertical,
-		Free,
-		NONE
-	}
-	
-	public Generatable[] generateablePrefabs;
-	public GeneratableType generatorType = GeneratableType.NONE;
-	public int maxGeneratedObjects = -1;
-	public float minGenerationTime = 0.5f;
-	public float maxGenerationTime = 2;
-	public float xMargin = 0;
-	public float yMargin = 0;
-	
-	protected Rect boundsRect;
-	protected List<Generatable> generatedObjects;
-	
-	void Start () {
-		Init();
-		
-		if (generateablePrefabs != null && generateablePrefabs.Length > 0) StartCoroutine(StartGenerationLoop());
-	}
-	
-	void Update () {
-		
-	}
-	
-	public virtual void Init() {
-		Bounds bounds = GetComponent<Collider2D>().bounds;
-		GetComponent<Collider2D>().isTrigger = true;
-		generatedObjects = new List<Generatable>();
-		
-		Vector2 origin = new Vector2(bounds.center.x - bounds.extents.x, bounds.center.y - bounds.extents.y);
-		
-		boundsRect = new Rect(origin.x, origin.y, bounds.size.x, bounds.size.y);
-	}
-	
-	public virtual IEnumerator StartGenerationLoop() {
-		while (true) {
-			yield return new WaitForSeconds(Random.Range(minGenerationTime, maxGenerationTime));
-			
-			int side = Random.Range(0, 2);
-			Vector3 pos = GetGenerationPosition(side);
-			
-			if (pos.x < boundsRect.x || pos.x > boundsRect.xMax) {
-				yield return null;
-				continue;
-			}
-			
-			if (pos.y < boundsRect.y || pos.y > boundsRect.yMax) {
-				yield return null;
-				continue;
-			}
-			
-			Generatable obj = (Generatable)Instantiate(generateablePrefabs[Random.Range(0, generateablePrefabs.Length)]);
-			obj.transform.parent = transform;
-			obj.transform.position = new Vector3(pos.x, pos.y, pos.z);
-			obj.GenerationComplete(this, side);
-			generatedObjects.Add(obj);
-			
-			if (maxGeneratedObjects > 0) {
-				if (generatedObjects.Count > maxGeneratedObjects) {
-					foreach (Generatable sp in generatedObjects) if (sp == null) Debug.Log(generatedObjects.IndexOf(sp));
-					Generatable s = generatedObjects[0];
-					generatedObjects.RemoveAt(0);
-					s.NeedsDelete(this);
-				}
-			}
-		}
-	}
-	
-	protected Vector3 GetGenerationPosition(int horizontalSide) {
-		Vector3 pos = Vector3.zero;
-		Rect worldRect = GameScreen.instance.worldRect;
-		
-		if (generatorType == GeneratableType.Horizontal || generatorType == GeneratableType.HorizontalAndVertical) {
-			if (horizontalSide == 0) pos.x = worldRect.x + xMargin;
-			else pos.x = worldRect.xMax - xMargin;
-		}
-		else pos.x = Random.Range(worldRect.x + xMargin, worldRect.xMax - xMargin);
-		
-		if (generatorType == GeneratableType.Vertical || generatorType == GeneratableType.HorizontalAndVertical) {
-			int verticalSide = Random.Range(0, 2);
-			
-			if (verticalSide == 0) pos.y = worldRect.y + yMargin;
-			else pos.y = worldRect.yMax - yMargin;
-		}
-		else pos.y = Random.Range(worldRect.y + yMargin, worldRect.yMax - yMargin);
-		
-		return pos;
-	}
+//	public Action<T> SignalMountainChunkCreated;
+
+//	public int numItemsCreated {get; private set;}
+//
+//	[SerializeField] private MountainChunk mountainChunkPrefab;
+//	[SerializeField] private int maxChunks = 5;
+//
+//	private AnchorableGenerator anchorableGenerator;
+//	private MountainChunkNeededDetector neededDetector;
+//	private List<MountainChunk> mountainChunks;
+//
+//	public MountainChunk GetMountainChunkAtPlace(float place) {
+//		int index = (int)place;
+//		if (index >= numItemsCreated) index = numItemsCreated - 1;
+//		return mountainChunks[index];
+//	}
+//
+//	public MountainChunk GetMountainChunkAtX(float x) {
+//		foreach (MountainChunk chunk in mountainChunks) {
+//			float lastX = chunk.GetLastLinePoint().pointVector.x;
+//			if (x < lastX) return chunk;
+//		}
+//
+//		return mountainChunks[mountainChunks.Count - 1];
+//	}
+//
+//	public MountainChunk GetMountainChunk(int index) {
+//		if (index < 0 || index > mountainChunks.Count) Debug.LogError("index (" + index + ") out of range!");
+//		return mountainChunks[index];
+//	}
+//
+//	public int GetMountainChunkIndexAtY(float y) {
+//		if (y < GetMountainChunk(0).origin.y) return 0;
+//
+//		for (int i = 0; i < mountainChunks.Count - 1; i++) {
+//			MountainChunk chunkA = mountainChunks[i];
+//			MountainChunk chunkB = mountainChunks[i+1];
+//			if (y >= chunkA.origin.y && y <= chunkB.origin.y) return i;
+//		}
+//		Debug.LogError("couldn't find mountain chunk that includes y: " + y);
+//		return -1;
+//	}
+//
+//	public int GetMountainChunkNumAtPlace(float lerpDist) {
+//		return (int)lerpDist;
+//	}
+//
+//	private void Awake() {
+//		numItemsCreated = 0;
+//		neededDetector = GetComponent<MountainChunkNeededDetector>();
+//		anchorableGenerator = GetComponent<AnchorableGenerator>();
+//		mountainChunks = new List<MountainChunk>();
+//	}
+//
+//	private void RecycleFirstChunk() {
+//		MountainChunk firstChunk = mountainChunks[0];
+//		mountainChunks.Remove(firstChunk);
+//		firstChunk.Recycle();
+//	}
+//
+//	private void Start() {
+//		GenerateMountainChunks(3);
+//	}
+//
+//	private void GenerateMountainChunks(int numToGenerate) {
+//		for (int i = 0; i < numToGenerate; i++) GenerateMountainChunk();
+//	}
+//
+//	private void GenerateMountainChunk() {
+//		numItemsCreated++;
+//
+//		MountainChunk mountainChunk = mountainChunkPrefab.Spawn();
+//		mountainChunk.transform.parent = transform;
+//
+//		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, null);
+//		else {
+//			MountainChunk lastChunk = mountainChunks.GetLastItem();
+//			mountainChunk.Generate(lastChunk.GetLastLinePoint().pointVector, lastChunk);
+//		}
+//
+//		mountainChunks.Add(mountainChunk);
+//
+//		anchorableGenerator.GenerateAnchorables(mountainChunk);
+//
+//		if (SignalMountainChunkCreated != null) SignalMountainChunkCreated(mountainChunk);
+//	}
+//
+//	private void FixedUpdate() {
+//		GenerateMountainChunkIfNeeded();
+//	}
+//
+//	private void GenerateMountainChunkIfNeeded() {
+//		if (mountainChunks.Count == 0) return;
+//		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateMountainChunk();
+//		if (mountainChunks.Count > maxChunks) RecycleFirstChunk();
+//	}
+//
+//	private MountainChunk GetLastMountainChunk() {
+//		return mountainChunks[mountainChunks.Count - 1];
+//	}
 }

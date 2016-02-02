@@ -163,6 +163,8 @@ public class StateMachine : MonoBehaviour {
 	protected virtual void PostFixedUpdateState() {}
 
 	private void InitiateSwipeDetection() {
+		if (InputManager.instance == null) return;
+
 		swipeDetectionInitiated = true;
 
 		InputManager.instance.SignalTap += HandleTap;
@@ -179,7 +181,7 @@ public class StateMachine : MonoBehaviour {
 	}
 
 	private void RemoveSwipeDetection() {
-		if (!InputManager.IsInstantiated()) return;
+		if (InputManager.instance == null) return;
 
 		InputManager.instance.SignalTap -= HandleTap;
 		InputManager.instance.SignalLeftSwipe -= HandleLeftSwipe;
