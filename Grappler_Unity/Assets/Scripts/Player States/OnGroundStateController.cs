@@ -13,8 +13,7 @@ public class OnGroundStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
-
-		onGroundState.Stop();
+		onGroundState.StopRigidbody();
 	}
 	
 	public override void ExitState() {
@@ -55,6 +54,8 @@ public class OnGroundStateController : PlayerStateController {
 	
 	public override void HandleTouchDown() {
 		base.HandleTouchDown();
+		onGroundState.FreeRigidbody();
+		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleLeftTouchDown() {

@@ -5,13 +5,6 @@ public class FirTree : MonoBehaviour {
 	public bool hasBeenSliced {get; private set;}
 
 	[SerializeField] private ParticleSystem sliceParticles;
-	
-	public void HandleSlice() {
-		if (hasBeenSliced) return;
-		hasBeenSliced = true;
-		PlayParticles();
-		Recycle(3);
-	}
 
 	private void Recycle(float delay) {
 		StartCoroutine(WaitThenRecycle(delay));
@@ -24,7 +17,18 @@ public class FirTree : MonoBehaviour {
 
 	public void HandleCollision(Collision2D collision) {
 		if (hasBeenSliced) return;
+
+		Slice(collision);
 		PlayParticles();
+	}
+
+	private void Slice(Collision2D collision) {
+		Vector2 contact = collision.contacts[0].point;
+		Vector2 direction = collision.relativeVelocity.normalized;
+		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
+		Vector2 startPoint = contact - direction * 10;
+		Vector2 endPoint = contact + direction * 10;
+		SpriteSlicer2D.SliceSprite(startPoint.ToVector3(), endPoint.ToVector3(), spriteObject);
 	}
 
 	private void PlayParticles() {

@@ -53,11 +53,11 @@ public class FallingStateController : PlayerStateController {
 	
 	public override void HandleTouchDown() {
 		base.HandleTouchDown();
+		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 
 	public override void HandleLeftTouchDown() {
 		base.HandleLeftTouchDown();
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleLeftTouchUp() {
@@ -66,7 +66,6 @@ public class FallingStateController : PlayerStateController {
 	
 	public override void HandleRightTouchDown() {
 		base.HandleRightTouchDown();
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
 	}
 	
 	public override void HandleRightTouchUp() {

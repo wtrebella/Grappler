@@ -13,7 +13,7 @@ public class Rigidbody2DStopper : MonoBehaviour {
 
 	private bool exitCoroutine = false;
 
-	public void Stop() {
+	public void StartStoppingProcess() {
 		StopRigidbodies();
 	}
 
@@ -51,17 +51,5 @@ public class Rigidbody2DStopper : MonoBehaviour {
 
 	private void StopRigidbody(Rigidbody2D rigid) {
 		StartCoroutine(StopRigidbodyCoroutine(rigid));
-	}
-
-	private void Awake() {
-
-	}
-
-	private void Start() {
-	
-	}
-	
-	private void Update() {
-	
 	}
 }

@@ -90,6 +90,7 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void HandleTouchUp() {
 		base.HandleTouchUp();
+		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 	
 	public override void HandleTouchDown() {
@@ -102,7 +103,6 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void HandleLeftTouchUp() {
 		base.HandleLeftTouchUp();
-		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 	
 	public override void HandleRightTouchDown() {
@@ -111,6 +111,5 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void HandleRightTouchUp() {
 		base.HandleRightTouchUp();
-		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
 	}
 }

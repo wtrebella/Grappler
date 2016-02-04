@@ -172,8 +172,8 @@ public class MountainChunk : MonoBehaviour {
 	}
 
 	private void OnDisable() {
-		RecycleAllIcicles();
-		RecycleAllAnchorables();
+//		RecycleAllIcicles();
+//		RecycleAllAnchorables();
 	}
 
 	private void CalculateSlope(float previousSlopeVal) {

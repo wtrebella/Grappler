@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(CameraMover))]
-public class CameraMoverSmoothDampAdjuster : MonoBehaviour {
+public class CameraMoverHorizontalSmoothDampAdjuster : MonoBehaviour {
 	[SerializeField] private FloatRange smoothDampRange = new FloatRange(0.05f, 0.3f);
 	[SerializeField] private Rigidbody2D speedingObject;
 	[SerializeField] private float speedHighEnd = 60.0f;
@@ -26,7 +26,7 @@ public class CameraMoverSmoothDampAdjuster : MonoBehaviour {
 	private void UpdateSmoothDamp() {
 		float speed = GetSpeed();
 		float smoothDamp = GetSmoothedSmoothDamp(speed);
-		cameraMover.SetSmoothDampTime(smoothDamp);
+		cameraMover.SetSmoothDampTimeX(smoothDamp);
 	}
 
 	private float GetSpeed() {
@@ -43,7 +43,7 @@ public class CameraMoverSmoothDampAdjuster : MonoBehaviour {
 
 	private float GetSmoothedSmoothDamp(float speed) {
 		float targetSmoothDamp = SpeedToSmoothDamp(speed);
-		float smoothedSmoothDamp = Mathf.SmoothDamp(cameraMover.GetSmoothDampTime(), targetSmoothDamp, ref smoothDampVelocity, smoothDampTime);
+		float smoothedSmoothDamp = Mathf.SmoothDamp(cameraMover.GetSmoothDampTime().x, targetSmoothDamp, ref smoothDampVelocity, smoothDampTime);
 		return smoothedSmoothDamp;
 	}
 }

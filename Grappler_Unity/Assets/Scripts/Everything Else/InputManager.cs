@@ -33,22 +33,23 @@ public class InputManager : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (SystemInfo.deviceType == DeviceType.Handheld) DetectTouchInput();
-		else if (SystemInfo.deviceType == DeviceType.Desktop) {
+		if (PlatformInfo.IsEditor() || PlatformInfo.IsStandalone()) {
 			DetectMouseInput();
 			DetectKeyboardInput();
+		}
+		else if (PlatformInfo.IsMobile()) {
+			DetectTouchInput();
 		}
 	}
 
 	private void Init() {
 		InputManager inputManager = GameObject.FindObjectOfType<InputManager>();
-		if (inputManager) {
+		if (inputManager != this) {
 			Destroy(gameObject);
 		}
 		else {
-			GameObject go = new GameObject("Input Manager");
-			instance = go.AddComponent<InputManager>();
-			DontDestroyOnLoad(go);
+			instance = this;
+			DontDestroyOnLoad(gameObject);
 		}
 	}
 

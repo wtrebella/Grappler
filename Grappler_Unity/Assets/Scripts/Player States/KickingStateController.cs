@@ -13,7 +13,6 @@ public class KickingStateController : PlayerStateController {
 
 	private void Kick() {
 		player.grapplingController.DisconnectGrapplerIfPossible();
-		player.playerAnimator.PlayKickingAnimations();
 		player.trail.Kick();
 		kickingState.Kick();
 	}

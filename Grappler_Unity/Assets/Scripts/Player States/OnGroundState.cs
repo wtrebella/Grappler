@@ -6,27 +6,13 @@ public class OnGroundState : MonoBehaviour {
 	[SerializeField] private Rigidbody2DStopper rigidStopper;
 	[SerializeField] private PlayerAnimator playerAnimator;
 
-	public void Stop() {
-		rigidStopper.Stop();
-		playerAnimator.StopAnimating();
+	public void StopRigidbody() {
+		rigidStopper.StartStoppingProcess();
+		playerAnimator.PlayOnGroundAnimations();
 		player.grapplingController.DisconnectGrapplerIfPossible();
 	}
 
-	private void SwitchToFallingState() {
+	public void FreeRigidbody() {
 		rigidStopper.Cancel();
-		player.SetState(Player.PlayerStates.Falling);
-	}
-
-	private void Awake() {
-		rigidStopper.SignalSlowed += HandleSlowed;
-		rigidStopper.SignalStopped += HandleStopped;
-	}
-
-	private void HandleSlowed() {
-
-	}
-
-	private void HandleStopped() {
-		SwitchToFallingState();
 	}
 }

@@ -1,4 +1,4 @@
-﻿//#define TK2D_SLICING_ENABLED
+﻿#define TK2D_SLICING_ENABLED
 
 using UnityEngine;
 using System.Collections;
@@ -476,8 +476,8 @@ public static class SpriteSlicer2D
 	{
 		spriteBounds = new Bounds();
 		bool boundsValid = false;
-		
-#if TK2D_SLICING_ENABLED
+
+		#if TK2D_SLICING_ENABLED
 		tk2dSprite parenttk2dSprite = sprite.GetComponent<tk2dSprite>();
 		
 		if(parenttk2dSprite)

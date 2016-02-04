@@ -1,36 +1,32 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Spine;
 
 public class PlayerAnimator : MonoBehaviour {
-	[SerializeField] private string grapplingClipName = "Grappling";
-	[SerializeField] private string fallingClipName = "Falling";
-	[SerializeField] private string kickingClipName = "Kicking";
+	private string clipName_grappling = "grappling";
+	private string clipName_falling = "falling";
+	private string clipName_onGround = "onGround";
 
 	[SerializeField] private tk2dSpriteAnimator bodyAnimator;
 	[SerializeField] private tk2dSpriteAnimator feetAnimator;
+
+	[SerializeField] private SkeletonAnimation topAnimation;
+	[SerializeField] private SkeletonAnimation bottomAnimation;
 	
 	public void PlayGrapplingAnimations() {
-		PlayAnimations(grapplingClipName);
+		PlayAnimations(clipName_grappling);
 	}
 
 	public void PlayFallingAnimations() {
-		PlayAnimations(fallingClipName);
+		PlayAnimations(clipName_falling);
 	}
 
-	public void PlayKickingAnimations() {
-		PlayAnimations(kickingClipName);
-	}
-	
-	public void StopAnimating() {
-		if (bodyAnimator != null) bodyAnimator.Stop();
-		if (feetAnimator != null) feetAnimator.Stop();
-
-		bodyAnimator.SetFrame(0);
-		feetAnimator.SetFrame(0);
+	public void PlayOnGroundAnimations() {
+		PlayAnimations(clipName_onGround);
 	}
 
 	private void PlayAnimations(string clipName) {
-		if (bodyAnimator != null) bodyAnimator.Play(clipName);
-		if (feetAnimator != null) feetAnimator.Play(clipName);
+		if (topAnimation != null) topAnimation.state.SetAnimation(0, clipName, true);
+		if (bottomAnimation != null) bottomAnimation.state.SetAnimation(0, clipName, true);
 	}
 }

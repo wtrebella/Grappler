@@ -7,23 +7,28 @@ public class CameraMover : MonoBehaviour {
 	[SerializeField] private Vector2 negativeSlopeOffset;
 	[SerializeField] private Transform horizontalMovementObject;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	[SerializeField] private float smoothDampTime = 0.13f;
+	[SerializeField] private Vector2 smoothDampTime = new Vector2(0.3f, 0.1f);
 	[SerializeField] private Vector2 min = new Vector2(-10000, -10000);
 
 	private float initialDistance;
 	private Vector3 initialDirection;
-	private Vector3 smoothDampVelocity;
+	private float smoothDampVelocityX;
+	private float smoothDampVelocityY;
 
 	public void UpdateMovementImmediateNow() {
 		UpdateMovementImmediate();
 	}
 
-	public float GetSmoothDampTime() {
+	public Vector2 GetSmoothDampTime() {
 		return smoothDampTime;
 	}
 
-	public void SetSmoothDampTime(float time) {
-		smoothDampTime = time;
+	public void SetSmoothDampTimeX(float time) {
+		smoothDampTime.x = time;
+	}
+
+	public void SetSmoothDampTimeY(float time) {
+		smoothDampTime.y = time;
 	}
 
 	private void Awake() {
@@ -74,7 +79,10 @@ public class CameraMover : MonoBehaviour {
 	}
 
 	private Vector3 GetSmoothedTargetPosition() {
-		Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, GetTargetPosition(), ref smoothDampVelocity, smoothDampTime);
+		Vector3 targetPosition = GetTargetPosition();
+		float x = Mathf.SmoothDamp(transform.position.x, targetPosition.x, ref smoothDampVelocityX, smoothDampTime.x);
+		float y = Mathf.SmoothDamp(transform.position.y, targetPosition.y, ref smoothDampVelocityY, smoothDampTime.y);
+		Vector3 smoothedPosition = new Vector3(x, y, targetPosition.z);
 		return smoothedPosition;
 	}
 }
