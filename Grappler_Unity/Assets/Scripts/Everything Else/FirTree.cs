@@ -28,7 +28,7 @@ public class FirTree : MonoBehaviour {
 		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
 		Vector2 startPoint = contact - direction * 10;
 		Vector2 endPoint = contact + direction * 10;
-		SpriteSlicer2D.SliceSprite(startPoint.ToVector3(), endPoint.ToVector3(), spriteObject);
+		SpriteSlicer2D.ExplodeSprite(spriteObject, 2, 100);//startPoint.ToVector3(), endPoint.ToVector3(), spriteObject);
 	}
 
 	private void PlayParticles() {
