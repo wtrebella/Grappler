@@ -9,6 +9,7 @@ public class ItemOnMountainGenerator : Generator {
 	}
 
 	protected override void BaseAwake() {
+		base.BaseAwake();
 		mountainChunkGenerator.SignalMountainChunkGenerated += HandleMountainChunkGenerated;
 	}
 
@@ -16,12 +17,12 @@ public class ItemOnMountainGenerator : Generator {
 		
 	}
 
-	protected void GenerateItemOnMountainChunk(MountainChunk chunk, float place) {
-		GeneratableItem item = prefab.Spawn();
+	protected GeneratableItem GenerateItemOnMountainChunk(MountainChunk chunk, float place) {
+		GeneratableItem item = GenerateItem();
 		item.transform.parent = chunk.transform;
 		Vector3 position = chunk.PlaceToPosition(place);
 		position.z += 0.1f;
 		item.transform.position = position;
-		HandleItemGenerated(item);
+		return item;
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Anchorable : MonoBehaviour {
+public class Anchorable : GeneratableItem {
 	public Point linePoint {get; private set;}
 	public int anchorableID {get; private set;}
 

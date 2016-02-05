@@ -171,9 +171,13 @@ public class MountainChunk : GeneratableItem {
 		return slopeVector.y > 0;
 	}
 
-	private void OnDisable() {
-//		RecycleAllIcicles();
-//		RecycleAllAnchorables();
+	public override void HandleSpawned(Generator generator) {
+		base.HandleSpawned(generator);
+	}
+
+	protected override void HandleRecycled() {
+		base.HandleRecycled();
+		Reset();
 	}
 
 	private void CalculateSlope(float previousSlopeVal) {
@@ -227,16 +231,6 @@ public class MountainChunk : GeneratableItem {
 		}
 
 		return index;
-	}
-
-	private void RecycleAllIcicles() {
-		var icicles = GetComponentsInChildren<SmallIcicle>();
-		foreach (SmallIcicle icicle in icicles) icicle.Recycle();
-	}
-
-	private void RecycleAllAnchorables() {
-		var anchorables = GetComponentsInChildren<Anchorable>();
-		foreach (Anchorable anchorable in anchorables) anchorable.Recycle();
 	}
 
 	private void GenerateBasicShape(List<Vector2> points, Vector2 origin) {

@@ -21,18 +21,17 @@ public class TreeGenerator : Generator {
 		for (int i = startIndex; i < endIndex; i++) {
 			if (Random.value > treeProbability) continue;
 			Point point = linePoints[i];
-			GenerateTree(point);
+			GenerateTree(chunk, point);
 		}
 	}
 
-	private void GenerateTree(Point chunkLinePoint) {
+	private void GenerateTree(GroundChunk chunk, Point chunkLinePoint) {
 		GeneratableItem item = GenerateItem();
 		Vector3 position = chunkLinePoint.pointVector.ToVector3();
 		Rigidbody2D rigid = item.GetComponentInChildren<Rigidbody2D>();
 		rigid.isKinematic = true;
+		item.transform.parent = chunk.transform;
 		item.transform.localScale = new Vector2(Random.Range(0.6f, 1.0f), Random.Range(0.6f, 1.0f));
-		float color = Random.Range(0.8f, 1.0f);
-		item.GetComponentInChildren<tk2dSprite>().color = new Color(Random.Range(0.95f, 1.0f), Random.Range(0.95f, 1.0f), Random.Range(0.95f, 1.0f));
 		item.transform.position = position;
 		rigid.isKinematic = false;
 	}

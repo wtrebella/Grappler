@@ -27,11 +27,8 @@ public class IcicleGenerator : ItemOnMountainGenerator {
 		float initialSpot = place - chunkSize / 2;
 		for (int i = 1; i <= num; i++) {
 			float iciclePlace = initialSpot + i * dist + Random.Range(-placeVar, placeVar);
-			GenerateItemOnMountainChunk(chunk, iciclePlace);
+			GeneratableItem item = GenerateItemOnMountainChunk(chunk, iciclePlace);
+			item.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
 		}
-	}
-	
-	protected override void HandleItemGenerated(GeneratableItem item) {
-		item.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
 	}
 }

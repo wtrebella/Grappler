@@ -7,7 +7,6 @@ public class GroundChunkGenerator : Generator {
 	public Action<GroundChunk> SignalGroundChunkGenerated;
 
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	[SerializeField] private int maxChunks = 5;
 
 	private void Awake() {
 		base.BaseAwake();
@@ -25,9 +24,5 @@ public class GroundChunkGenerator : Generator {
 		else previousGroundChunk = items[items.Count - 2].To<GroundChunk>();
 		groundChunk.Generate(mountainChunk, previousGroundChunk);
 		if (SignalGroundChunkGenerated != null) SignalGroundChunkGenerated(groundChunk);
-	}
-
-	protected override void HandleItemGenerated(GeneratableItem item) {
-		if (items.Count > maxChunks) RecycleFirstItem();
 	}
 }

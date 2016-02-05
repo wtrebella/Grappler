@@ -8,8 +8,6 @@ using System.Collections.Generic;
 public class MountainChunkGenerator : Generator {
 	public Action<MountainChunk> SignalMountainChunkGenerated;
 
-	[SerializeField] private int maxChunks = 5;
-
 	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
 
@@ -57,7 +55,7 @@ public class MountainChunkGenerator : Generator {
 	}
 
 	private void Start() {
-		GenerateItems(3);
+		GenerateMountainChunks(3);
 	}
 
 	private void FixedUpdate() {
@@ -66,24 +64,27 @@ public class MountainChunkGenerator : Generator {
 
 	private void GenerateMountainChunkIfNeeded() {
 		if (items.Count == 0) return;
-		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateItem();
-		if (items.Count > maxChunks) RecycleFirstItem();
+		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateMountainChunk(); 
 	}
 
 	private MountainChunk GetLastMountainChunk() {
 		return ItemToMountainChunk(items[items.Count - 1]);
 	}
 
-	protected override void HandleItemGenerated(GeneratableItem item) {
-		MountainChunk mountainChunk = ItemToMountainChunk(item);
+	protected void GenerateMountainChunks(int num) {
+		for (int i = 0; i < num; i++) GenerateMountainChunk();
+	}
+
+	protected void GenerateMountainChunk() {
+		MountainChunk mountainChunk = (MountainChunk)GenerateItem();
 		MountainChunk previousMountainChunk;
 		Vector2 origin;
-		if (items.Count == 0) {
+		if (items.Count <= 1) {
 			previousMountainChunk = null;
 			origin = Vector2.zero;
 		}
 		else {
-			previousMountainChunk = ItemToMountainChunk(items.GetLastItem());
+			previousMountainChunk = ItemToMountainChunk(items[items.Count - 2]);
 			origin = previousMountainChunk.GetLastLinePoint().pointVector;
 		}
 

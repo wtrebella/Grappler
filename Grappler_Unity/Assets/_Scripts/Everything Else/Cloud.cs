@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cloud : MonoBehaviour {
+public class Cloud : GeneratableItem {
 	[SerializeField] private tk2dSprite sprite;
 	[SerializeField] private FloatRange alphaRange;
 	[SerializeField] private Vector2Range scaleRange;
