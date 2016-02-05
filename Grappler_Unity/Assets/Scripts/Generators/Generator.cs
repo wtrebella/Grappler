@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System;
 
 public class Generator : MonoBehaviour {
-	public Action<GeneratableItem> SignalItemGenerated;
 	public int numItemsCreated {get; private set;}
 
 	[SerializeField] protected GeneratableItem prefab;
@@ -15,7 +14,7 @@ public class Generator : MonoBehaviour {
 		BaseAwake();
 	}
 
-	protected void BaseAwake() {
+	protected virtual void BaseAwake() {
 		numItemsCreated = 0;
 		items = new List<GeneratableItem>();
 	}
@@ -29,16 +28,23 @@ public class Generator : MonoBehaviour {
 
 		GeneratableItem item = prefab.Spawn();
 		item.transform.parent = transform;
+	
+		HandleItemGenerated(item);
+		items.Add(item);
 		item.GenerationComplete(this);
-
-		if (SignalItemGenerated != null) SignalItemGenerated(item);
-
-		HandleGeneratedItem(item);
 
 		return item;
 	}
 
-	protected virtual void HandleGeneratedItem(GeneratableItem item) {
+	protected void RecycleFirstItem() {
+		if (items.Count == 0) return;
+
+		GeneratableItem firstItem = items[0];
+		items.Remove(firstItem);
+		firstItem.Recycle();
+	}
+
+	protected virtual void HandleItemGenerated(GeneratableItem item) {
 
 	}
 }

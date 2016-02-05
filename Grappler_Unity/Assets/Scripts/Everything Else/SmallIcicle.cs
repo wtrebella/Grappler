@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class SmallIcicle : MonoBehaviour {
+public class SmallIcicle : GeneratableItem {
 	[SerializeField] private Rigidbody2D rigid;
 
 	private bool hasCollided = false;
@@ -18,11 +18,11 @@ public class SmallIcicle : MonoBehaviour {
 			hasCollided = true;
 			transform.parent = null;
 			rigid.gravityScale = 1;
-			StartCoroutine(EnableClipping(0.2f));
+			StartCoroutine(DisableClipping(0.2f));
 		}
 	}
 
-	private IEnumerator EnableClipping(float delay) {
+	private IEnumerator DisableClipping(float delay) {
 		yield return new WaitForSeconds(delay);
 		gameObject.layer = LayerMask.NameToLayer("SlicedPiece");
 	}

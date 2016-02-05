@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(GrapplerManualMover))]
 public class GrapplerInitialPlacer : MonoBehaviour {
 	[SerializeField] private Vector2 mountainChunkFirstPointOffset = new Vector2(0, -2);
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private MountainChunkGeneratorOld mountainChunkGenerator;
 
 	private GrapplerManualMover manualMover;
 

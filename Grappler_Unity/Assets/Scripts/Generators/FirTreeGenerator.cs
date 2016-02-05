@@ -5,7 +5,7 @@ public class FirTreeGenerator : MonoBehaviour {
 	[SerializeField] private float minDistToMountain = 3;
 	[SerializeField] private float maxDistToMountain = 10;
 	[SerializeField] private Breakable firTreePrefab;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private MountainChunkGeneratorOld mountainChunkGenerator;
 
 	private void Awake() {
 		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;

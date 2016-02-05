@@ -5,44 +5,41 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(MountainChunkNeededDetector))]
 [RequireComponent(typeof(AnchorableGenerator))]
-public class MountainChunkGenerator : MonoBehaviour {
-	public Action<MountainChunk> SignalMountainChunkCreated;
+public class MountainChunkGenerator : Generator {
+	public Action<MountainChunk> SignalMountainChunkGenerated;
 
-	public int numMountainChunksCreated {get; private set;}
-	
-	[SerializeField] private MountainChunk mountainChunkPrefab;
 	[SerializeField] private int maxChunks = 5;
 
 	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
-	private List<MountainChunk> mountainChunks;
 
 	public MountainChunk GetMountainChunkAtPlace(float place) {
 		int index = (int)place;
-		if (index >= numMountainChunksCreated) index = numMountainChunksCreated - 1;
-		return mountainChunks[index];
+		if (index >= numItemsCreated) index = numItemsCreated - 1;
+		return ItemToMountainChunk(items[index]);
 	}
 
 	public MountainChunk GetMountainChunkAtX(float x) {
-		foreach (MountainChunk chunk in mountainChunks) {
+		foreach (GeneratableItem item in items) {
+			MountainChunk chunk = ItemToMountainChunk(item);
 			float lastX = chunk.GetLastLinePoint().pointVector.x;
 			if (x < lastX) return chunk;
 		}
 
-		return mountainChunks[mountainChunks.Count - 1];
+		return ItemToMountainChunk(items[items.Count - 1]);
 	}
 
 	public MountainChunk GetMountainChunk(int index) {
-		if (index < 0 || index > mountainChunks.Count) Debug.LogError("index (" + index + ") out of range!");
-		return mountainChunks[index];
+		if (index < 0 || index > items.Count) Debug.LogError("index (" + index + ") out of range!");
+		return ItemToMountainChunk(items[index]);
 	}
 	
 	public int GetMountainChunkIndexAtY(float y) {
 		if (y < GetMountainChunk(0).origin.y) return 0;
 
-		for (int i = 0; i < mountainChunks.Count - 1; i++) {
-			MountainChunk chunkA = mountainChunks[i];
-			MountainChunk chunkB = mountainChunks[i+1];
+		for (int i = 0; i < items.Count - 1; i++) {
+			MountainChunk chunkA = ItemToMountainChunk(items[i]);
+			MountainChunk chunkB = ItemToMountainChunk(items[i+1]);
 			if (y >= chunkA.origin.y && y <= chunkB.origin.y) return i;
 		}
 		Debug.LogError("couldn't find mountain chunk that includes y: " + y);
@@ -54,43 +51,13 @@ public class MountainChunkGenerator : MonoBehaviour {
 	}
 
 	private void Awake() {
-		numMountainChunksCreated = 0;
+		base.BaseAwake();
 		neededDetector = GetComponent<MountainChunkNeededDetector>();
 		anchorableGenerator = GetComponent<AnchorableGenerator>();
-		mountainChunks = new List<MountainChunk>();
-	}
-
-	private void RecycleFirstChunk() {
-		MountainChunk firstChunk = mountainChunks[0];
-		mountainChunks.Remove(firstChunk);
-		firstChunk.Recycle();
 	}
 
 	private void Start() {
-		GenerateMountainChunks(3);
-	}
-
-	private void GenerateMountainChunks(int numToGenerate) {
-		for (int i = 0; i < numToGenerate; i++) GenerateMountainChunk();
-	}
-
-	private void GenerateMountainChunk() {
-		numMountainChunksCreated++;
-
-		MountainChunk mountainChunk = mountainChunkPrefab.Spawn();
-		mountainChunk.transform.parent = transform;
-
-		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, null);
-		else {
-			MountainChunk lastChunk = mountainChunks.GetLastItem();
-			mountainChunk.Generate(lastChunk.GetLastLinePoint().pointVector, lastChunk);
-		}
-
-		mountainChunks.Add(mountainChunk);
-
-		anchorableGenerator.GenerateAnchorables(mountainChunk);
-
-		if (SignalMountainChunkCreated != null) SignalMountainChunkCreated(mountainChunk);
+		GenerateItems(3);
 	}
 
 	private void FixedUpdate() {
@@ -98,12 +65,35 @@ public class MountainChunkGenerator : MonoBehaviour {
 	}
 
 	private void GenerateMountainChunkIfNeeded() {
-		if (mountainChunks.Count == 0) return;
-		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateMountainChunk();
-		if (mountainChunks.Count > maxChunks) RecycleFirstChunk();
+		if (items.Count == 0) return;
+		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateItem();
+		if (items.Count > maxChunks) RecycleFirstItem();
 	}
 
 	private MountainChunk GetLastMountainChunk() {
-		return mountainChunks[mountainChunks.Count - 1];
+		return ItemToMountainChunk(items[items.Count - 1]);
+	}
+
+	protected override void HandleItemGenerated(GeneratableItem item) {
+		MountainChunk mountainChunk = ItemToMountainChunk(item);
+		MountainChunk previousMountainChunk;
+		Vector2 origin;
+		if (items.Count == 0) {
+			previousMountainChunk = null;
+			origin = Vector2.zero;
+		}
+		else {
+			previousMountainChunk = ItemToMountainChunk(items.GetLastItem());
+			origin = previousMountainChunk.GetLastLinePoint().pointVector;
+		}
+
+		mountainChunk.Generate(origin, previousMountainChunk);
+		anchorableGenerator.GenerateAnchorables(mountainChunk);
+
+		if (SignalMountainChunkGenerated != null) SignalMountainChunkGenerated(mountainChunk);
+	}
+
+	protected MountainChunk ItemToMountainChunk(GeneratableItem item) {
+		return item as MountainChunk;
 	}
 }

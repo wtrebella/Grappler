@@ -2,15 +2,12 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class IcicleGenerator : MonoBehaviour {
-	[SerializeField] private SmallIcicle smallIciclePrefab;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
-	
+public class IcicleGenerator : ItemOnMountainGenerator {
 	private void Awake() {
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
+		base.BaseAwake();
 	}
 
-	private void HandleMountainChunkCreated(MountainChunk chunk) {
+	protected override void HandleMountainChunkGenerated(MountainChunk chunk) {
 		int num = chunk.GetMacroPointsCount();
 		float chanceOfSmallIcicleSpawn = 0.05f;
 		float dist = 1f / ((float)num + 1f);
@@ -30,16 +27,11 @@ public class IcicleGenerator : MonoBehaviour {
 		float initialSpot = place - chunkSize / 2;
 		for (int i = 1; i <= num; i++) {
 			float iciclePlace = initialSpot + i * dist + Random.Range(-placeVar, placeVar);
-			CreateSmallIcicle(chunk, iciclePlace);
+			GenerateItemOnMountainChunk(chunk, iciclePlace);
 		}
 	}
 	
-	private void CreateSmallIcicle(MountainChunk chunk, float place) {
-		SmallIcicle icicle = smallIciclePrefab.Spawn();
-		icicle.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
-		icicle.transform.parent = chunk.transform;
-		Vector3 position = chunk.PlaceToPosition(place);;
-		position.z += 0.1f;
-		icicle.transform.position = position;
+	protected override void HandleItemGenerated(GeneratableItem item) {
+		item.transform.localScale = new Vector3(Random.Range(0.4f, 1f), Random.Range(0.4f, 1f), 1);
 	}
 }

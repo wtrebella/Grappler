@@ -5,7 +5,7 @@ using System;
 
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(MountainChunkMeshCreator))]
-public class MountainChunk : MonoBehaviour {
+public class MountainChunk : GeneratableItem {
 	public Vector2 origin {get; private set;}
 
 	[SerializeField] private int numPoints = 30;

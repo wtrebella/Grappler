@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class SpikesGenerator : MonoBehaviour {
 	[SerializeField] private SpikeBall spikeBallPrefab;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private MountainChunkGeneratorOld mountainChunkGenerator;
 
 	private List<SpikeBall> spikeBalls;
 	

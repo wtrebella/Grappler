@@ -12,7 +12,7 @@ public class GroundChunkGenerator : MonoBehaviour {
 
 	private void Awake() {
 		groundChunks = new List<GroundChunk>();
-		mountainChunkGenerator.SignalMountainChunkCreated += HandleMountainChunkCreated;
+		mountainChunkGenerator.SignalMountainChunkGenerated += HandleMountainChunkCreated;
 	}
 
 	private void HandleMountainChunkCreated(MountainChunk mountainChunk) {

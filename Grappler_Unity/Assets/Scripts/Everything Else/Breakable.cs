@@ -23,11 +23,11 @@ public class Breakable : MonoBehaviour {
 	}
 
 	private void Slice(Collision2D collision) {
-		Vector2 contact = collision.contacts[0].point;
-		Vector2 direction = collision.relativeVelocity.normalized;
+//		Vector2 contact = collision.contacts[0].point;
+//		Vector2 direction = collision.relativeVelocity.normalized;
 		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
-		Vector2 startPoint = contact - direction * 10;
-		Vector2 endPoint = contact + direction * 10;
+//		Vector2 startPoint = contact - direction * 10;
+//		Vector2 endPoint = contact + direction * 10;
 		SpriteSlicer2D.ExplodeSprite(spriteObject, 2, 100);
 //		GetComponentInChildren<MeshRenderer>().enabled = false;
 //		GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
