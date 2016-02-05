@@ -6,8 +6,8 @@ public class MountainCollisionHandler : CollisionHandler {
 		BaseAwake();
 	}
 
-	public override void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
-		base.HandleCollision(rigid, collision);
+	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
+		base.HandleCollisionEnter(rigid, collision);
 
 		ShakeScreen(rigid, collision);
 	}

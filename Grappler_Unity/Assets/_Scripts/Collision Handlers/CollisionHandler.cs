@@ -15,11 +15,27 @@ public class CollisionHandler : MonoBehaviour {
 		BaseAwake();
 	}
 	
-	public virtual void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
+	public virtual void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
 
 	}
 
-	public virtual void HandleTrigger(Rigidbody2D rigid, Collider2D collider) {
+	public virtual void HandleCollisionStay(Rigidbody2D rigid, Collision2D collision) {
+
+	}
+
+	public virtual void HandleCollisionExit(Rigidbody2D rigid, Collision2D collision) {
+
+	}
+		
+	public virtual void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
+
+	}
+
+	public virtual void HandleTriggerStay(Rigidbody2D rigid, Collider2D collider) {
+
+	}
+
+	public virtual void HandleTriggerExit(Rigidbody2D rigid, Collider2D collider) {
 
 	}
 

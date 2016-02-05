@@ -13,11 +13,27 @@ public class PlayerBodyPart : MonoBehaviour {
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision) {
-		player.HandleCollision(this, collision);
+		player.HandleCollisionEnter(this, collision);
+	}
+
+	private void OnCollisionStay2D(Collision2D collision) {
+		player.HandleCollisionStay(this, collision);
+	}
+
+	private void OnCollisionExit2D(Collision2D collision) {
+		player.HandleCollisionExit(this, collision);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider) {
-		player.HandleTrigger(this, collider);
+		player.HandleTriggerEnter(this, collider);
+	}
+
+	private void OnTriggerStay2D(Collider2D collider) {
+		player.HandleTriggerEnter(this, collider);
+	}
+
+	private void OnTriggerExit2D(Collider2D collider) {
+		player.HandleTriggerEnter(this, collider);
 	}
 
 	private void Awake() {

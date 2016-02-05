@@ -3,7 +3,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.SceneManagement;
 
 // This is deliberately an ExecuteInEditMode object as opposed to InitializeOnLoad static
 // to get it to unload stuff when scripts are reloaded, and reload at the correct point.
@@ -87,8 +86,20 @@ public class tk2dEditorSpriteDataUnloader : MonoBehaviour {
 
 	public string oldScene = "";
 	void EditorUpdate() {
-		if (oldScene != EditorSceneManager.GetActiveScene().name) {
-			oldScene = EditorSceneManager.GetActiveScene().name;
+		bool needDestroy = false;
+#if (UNITY_3_5 || UNITY_4_0 || UNITY_4_1 || UNITY_4_2 || UNITY_4_3 || UNITY_4_4 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
+		if (oldScene != UnityEditor.EditorApplication.currentScene) {
+			oldScene = UnityEditor.EditorApplication.currentScene;
+			needDestroy = true;
+		}
+#else
+		if (oldScene != UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path) {
+			oldScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path;
+			needDestroy = true;
+		}
+#endif
+
+		if (needDestroy) {
 			DestroyDisconnectedResources();
 		}
 	}

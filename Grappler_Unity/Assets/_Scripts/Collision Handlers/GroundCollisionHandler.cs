@@ -4,8 +4,8 @@ using System.Collections;
 public class GroundCollisionHandler : CollisionHandler {
 	private bool hasGrappledSinceHittingGround = true;
 
-	public override void HandleCollision(Rigidbody2D rigid, Collision2D collision) {
-		base.HandleCollision(rigid, collision);
+	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
+		base.HandleCollisionEnter(rigid, collision);
 
 		if (player.IsOnGround()) return;
 		if (!hasGrappledSinceHittingGround) return;

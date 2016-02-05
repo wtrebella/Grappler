@@ -46,19 +46,50 @@ public class Player : StateMachine {
 		currentState = state;
 	}
 	
-	public void HandleCollision(PlayerBodyPart bodyPart, Collision2D collision) {
+	public void HandleCollisionEnter(PlayerBodyPart bodyPart, Collision2D collision) {
 		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			if (WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer)) {
-				collisionHandler.HandleCollision(bodyPart.rigid, collision);
-			}
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionEnter(bodyPart.rigid, collision);
 		}
 	}
 
-	public void HandleTrigger(PlayerBodyPart bodyPart, Collider2D collider) {
+	public void HandleCollisionStay(PlayerBodyPart bodyPart, Collision2D collision) {
 		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			if (WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer)) {
-				collisionHandler.HandleTrigger(bodyPart.rigid, collider);
-			}
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionStay(bodyPart.rigid, collision);
+		}
+	}
+
+	public void HandleCollisionExit(PlayerBodyPart bodyPart, Collision2D collision) {
+		foreach (CollisionHandler collisionHandler in collisionHandlers) {
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionExit(bodyPart.rigid, collision);
+		}
+	}
+
+	public void HandleTriggerEnter(PlayerBodyPart bodyPart, Collider2D collider) {
+		foreach (CollisionHandler collisionHandler in collisionHandlers) {
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerEnter(bodyPart.rigid, collider);
+		}
+	}
+
+	public void HandleTriggerStay(PlayerBodyPart bodyPart, Collider2D collider) {
+		foreach (CollisionHandler collisionHandler in collisionHandlers) {
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerStay(bodyPart.rigid, collider);
+		}
+	}
+	public void HandleTriggerExit(PlayerBodyPart bodyPart, Collider2D collider) {
+		foreach (CollisionHandler collisionHandler in collisionHandlers) {
+			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
+			bool noLayer = collisionHandler.layer.value == 0;
+			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerExit(bodyPart.rigid, collider);
 		}
 	}
 
