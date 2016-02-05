@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirTree : MonoBehaviour {
+public class Breakable : MonoBehaviour {
 	public bool hasBeenSliced {get; private set;}
 
 	[SerializeField] private ParticleSystem sliceParticles;
@@ -28,7 +28,9 @@ public class FirTree : MonoBehaviour {
 		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
 		Vector2 startPoint = contact - direction * 10;
 		Vector2 endPoint = contact + direction * 10;
-		SpriteSlicer2D.ExplodeSprite(spriteObject, 2, 100);//startPoint.ToVector3(), endPoint.ToVector3(), spriteObject);
+		SpriteSlicer2D.ExplodeSprite(spriteObject, 2, 100);
+//		GetComponentInChildren<MeshRenderer>().enabled = false;
+//		GetComponentInChildren<PolygonCollider2D>().isTrigger = true;
 	}
 
 	private void PlayParticles() {

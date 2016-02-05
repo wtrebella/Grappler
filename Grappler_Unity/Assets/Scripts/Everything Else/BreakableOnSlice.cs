@@ -1,13 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirTreeOnSlice : MonoBehaviour {
+public class BreakableOnSlice : MonoBehaviour {
 	[SerializeField] private float forceStrength = 20;
 	[SerializeField] private float torque = 20;
-
-	private void Awake() {
-
-	}
 	
 	public void OnSpriteSliced(SpriteSlicer2DSliceInfo sliceInfo) {
 		var childObjects = sliceInfo.ChildObjects;

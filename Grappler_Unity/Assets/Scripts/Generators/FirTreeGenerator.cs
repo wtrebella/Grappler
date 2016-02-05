@@ -4,7 +4,7 @@ using System.Collections;
 public class FirTreeGenerator : MonoBehaviour {
 	[SerializeField] private float minDistToMountain = 3;
 	[SerializeField] private float maxDistToMountain = 10;
-	[SerializeField] private FirTree firTreePrefab;
+	[SerializeField] private Breakable firTreePrefab;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 
 	private void Awake() {
@@ -25,7 +25,7 @@ public class FirTreeGenerator : MonoBehaviour {
 		Vector3 linePoint = chunkLinePoint.pointVector.ToVector3();
 		Vector3 distanceVector = new Vector3(0, 0, distance);
 		Vector3 position = linePoint - distanceVector;
-		FirTree firTree = firTreePrefab.Spawn();
+		Breakable firTree = firTreePrefab.Spawn();
 		Rigidbody2D rigid = firTree.GetComponentInChildren<Rigidbody2D>();
 		rigid.isKinematic = true;
 		firTree.transform.parent = transform;
