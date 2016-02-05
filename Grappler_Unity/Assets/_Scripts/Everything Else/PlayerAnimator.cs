@@ -19,6 +19,7 @@ public class PlayerAnimator : MonoBehaviour {
 
 	public void PlayFallingAnimations() {
 		PlayAnimations(clipName_falling);
+		bottomAnimation.state.SetAnimation(0, clipName_grappling, true);
 	}
 
 	public void PlayOnGroundAnimations() {

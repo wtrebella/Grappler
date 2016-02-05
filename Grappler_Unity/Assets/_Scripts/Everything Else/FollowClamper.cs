@@ -29,7 +29,7 @@ public class FollowClamper : MonoBehaviour {
 		else if (axisType == FollowAxisType.Y) {
 			if (clampObjectPosition.y > follow.minY) follow.minY = clampObjectPosition.y;
 		}
-		else if (axisType == FollowAxisType.XandY) {
+		else if (axisType == FollowAxisType.XY) {
 			if (clampObjectPosition.x > follow.minX) follow.minX = clampObjectPosition.x;
 			if (clampObjectPosition.y > follow.minY) follow.minY = clampObjectPosition.y;
 		}

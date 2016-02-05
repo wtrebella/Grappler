@@ -15,7 +15,7 @@ public enum FollowMovementType {
 public enum FollowAxisType {
 	X,
 	Y,
-	XandY
+	XY
 }
 
 public class Follow : MonoBehaviour {

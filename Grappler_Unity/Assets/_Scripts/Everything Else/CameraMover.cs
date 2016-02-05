@@ -3,13 +3,13 @@ using System.Collections;
 using System;
 
 public class CameraMover : MonoBehaviour {
-	[SerializeField] private Vector2 positiveSlopeOffset;
-	[SerializeField] private Vector2 negativeSlopeOffset;
 	[SerializeField] private Transform horizontalMovementObject;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private Vector2 offset;
 	[SerializeField] private Vector2 smoothDampTime = new Vector2(0.3f, 0.1f);
-	[SerializeField] private Vector2 min = new Vector2(-10000, -10000);
+	[SerializeField] private float maxDistanceToObject = 9;
 
+	private float sqrMaxDistanceToObject;
 	private float initialDistance;
 	private Vector3 initialDirection;
 	private float smoothDampVelocityX;
@@ -34,6 +34,7 @@ public class CameraMover : MonoBehaviour {
 	private void Awake() {
 		initialDistance = GetObjectToThisDistance();
 		initialDirection = GetObjectToThisDirection();
+		sqrMaxDistanceToObject = Mathf.Pow(maxDistanceToObject, 2);
 	}
 
 	private void FixedUpdate() {
@@ -66,14 +67,14 @@ public class CameraMover : MonoBehaviour {
 		float x = offsetObjectPosition.x;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtX(x);
 		float y = chunk.GetAverageYAtX(x);
-		Vector2 offset;
-		if (chunk.SlopeIsPositive()) offset = positiveSlopeOffset;
-		else offset = negativeSlopeOffset;
-
 		Vector3 targetPosition = new Vector3(x + offset.x, y + offset.y, transform.position.z);
-
-		targetPosition.x = Mathf.Max(min.x, targetPosition.x);
-		targetPosition.y = Mathf.Max(min.y, targetPosition.y);
+		Vector2 vectorToObject = targetPosition.ToVector2() - objectPosition.ToVector2();
+		Vector2 directionToObject = vectorToObject.normalized;
+		float sqrDistanceToObject = vectorToObject.sqrMagnitude;
+		if (sqrDistanceToObject > sqrMaxDistanceToObject) {
+			Vector2 targetPosition2D = objectPosition.ToVector2() + directionToObject * maxDistanceToObject;
+			targetPosition = targetPosition2D.ToVector3(transform.position.z);
+		}
 
 		return targetPosition;
 	}
