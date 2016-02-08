@@ -2,10 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+[RequireComponent(typeof(SpringJointAttributeCooldownLerper))]
 [RequireComponent(typeof(GrapplerRopeEndPoints))]
 public class GrapplerRope : StateMachine {
-	public SpringJointAttributes connectedAttributes;
-
 	public Action Signal_Retracted_EnterState;
 	public Action Signal_Connected_EnterState;
 
@@ -15,6 +14,7 @@ public class GrapplerRope : StateMachine {
 	[SerializeField] private SpringJoint2D springJoint;
 
 	private enum GrappleRopeStates {Retracted, Connected}
+	private SpringJointAttributeCooldownLerper springJointAttributeCooldownLerper;
 	private Anchorable connectedAnchorable;
 	private GrapplerRopeEndPoints ropeEndPoints;
 	private Rigidbody2D misfireBody;
@@ -46,7 +46,7 @@ public class GrapplerRope : StateMachine {
 	public void Connect(Anchorable anchorable) {
 		WhitTools.Assert(!HasConnectedAnchorable(), "already connected to something else! release before connecting.");
 
-		springJoint.ApplyAttributes(connectedAttributes);
+		SetSpringJointAttributes();
 		springJoint.connectedBody = anchorable.rigid;
 		springJoint.connectedAnchor = anchorable.GetAnchorPoint();
 		springJoint.enabled = true;
@@ -69,8 +69,15 @@ public class GrapplerRope : StateMachine {
 		misfireBody.mass = 0.1f;
 		misfireBody.isKinematic = true;
 		ropeEndPoints = GetComponent<GrapplerRopeEndPoints>();
+		springJointAttributeCooldownLerper = GetComponent<SpringJointAttributeCooldownLerper>();
 		springJoint.enabled = false;
 		currentState = GrappleRopeStates.Retracted;
+	}
+
+	private void SetSpringJointAttributes() {
+		springJoint.distance = springJointAttributeCooldownLerper.GetDistance();
+		springJoint.frequency = springJointAttributeCooldownLerper.GetFrequency();
+		springJoint.dampingRatio = springJointAttributeCooldownLerper.GetDampingRatio();
 	}
 
 	private void Retracted_UpdateState() {
