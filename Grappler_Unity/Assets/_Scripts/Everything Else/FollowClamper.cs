@@ -4,8 +4,8 @@ using System.Collections;
 [RequireComponent(typeof(Follow))]
 public class FollowClamper : MonoBehaviour {
 	[SerializeField] private Transform objectToClampTo;
-	[SerializeField] private FollowUpdateType updateType;
-	[SerializeField] private FollowAxisType axisType;
+	[SerializeField] private WhitUpdateType updateType;
+	[SerializeField] private WhitAxisType axisType;
 
 	private Follow follow;
 
@@ -14,22 +14,22 @@ public class FollowClamper : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (updateType == FollowUpdateType.Update) UpdateClamp();
+		if (updateType == WhitUpdateType.Update) UpdateClamp();
 	}
 
 	private void FixedUpdate() {
-		if (updateType == FollowUpdateType.FixedUpdate) UpdateClamp();
+		if (updateType == WhitUpdateType.FixedUpdate) UpdateClamp();
 	}
 
 	private void UpdateClamp() {
 		Vector3 clampObjectPosition = objectToClampTo.position;
-		if (axisType == FollowAxisType.X) {
+		if (axisType == WhitAxisType.X) {
 			if (clampObjectPosition.x > follow.minX) follow.minX = clampObjectPosition.x;
 		}
-		else if (axisType == FollowAxisType.Y) {
+		else if (axisType == WhitAxisType.Y) {
 			if (clampObjectPosition.y > follow.minY) follow.minY = clampObjectPosition.y;
 		}
-		else if (axisType == FollowAxisType.XY) {
+		else if (axisType == WhitAxisType.XY) {
 			if (clampObjectPosition.x > follow.minX) follow.minX = clampObjectPosition.x;
 			if (clampObjectPosition.y > follow.minY) follow.minY = clampObjectPosition.y;
 		}

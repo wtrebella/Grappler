@@ -1,34 +1,41 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum FollowOffsetAxes {
-	XY,
-	X,
-	Y
-}
-
-public enum FollowOffsetUpdateType {
-	Update,
-	FixedUpdate
-}
-
 public class FollowOffsetChanger : MonoBehaviour {
 	[SerializeField] private Follow follow;
-	[SerializeField] private FollowOffsetAxes axes = FollowOffsetAxes.XY;
-	[SerializeField] private FollowOffsetUpdateType updateType = FollowOffsetUpdateType.Update;
+	[SerializeField] private WhitAxisType axes = WhitAxisType.XY;
+	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private float offsetChangeRate = 1.0f;
 
+	private bool isOn = false;
+
+	public void TurnOn() {
+		isOn = true;
+	}
+
+	public void TurnOff() {
+		isOn = false;
+	}
+
+	public bool IsOn() {
+		return isOn;
+	}
+
+	public bool IsOff() {
+		return !isOn;
+	}
+
 	private void Update() {
-		IncreaseOffset();
+		if (isOn) IncreaseOffset();
 	}
 
 	private void FixedUpdate() {
-		IncreaseOffset();
+		if (isOn) IncreaseOffset();
 	}
 
 	private void IncreaseOffset() {
-		if (updateType == FollowOffsetUpdateType.Update) IncreaseOffset(Time.deltaTime);
-		else if (updateType == FollowOffsetUpdateType.FixedUpdate) IncreaseOffset(Time.fixedDeltaTime);
+		if (updateType == WhitUpdateType.Update) IncreaseOffset(Time.deltaTime);
+		else if (updateType == WhitUpdateType.FixedUpdate) IncreaseOffset(Time.fixedDeltaTime);
 	}
 
 	private void IncreaseOffset(float deltaTime) {
@@ -38,8 +45,8 @@ public class FollowOffsetChanger : MonoBehaviour {
 	}
 
 	private void SetOffset(Vector2 offset) {
-		if (axes == FollowOffsetAxes.XY) follow.SetOffset(offset);
-		else if (axes == FollowOffsetAxes.X) follow.SetOffsetX(offset.x);
-		else if (axes == FollowOffsetAxes.Y) follow.SetOffsetY(offset.y);
+		if (axes == WhitAxisType.XY) follow.SetOffset(offset);
+		else if (axes == WhitAxisType.X) follow.SetOffsetX(offset.x);
+		else if (axes == WhitAxisType.Y) follow.SetOffsetY(offset.y);
 	}
 }

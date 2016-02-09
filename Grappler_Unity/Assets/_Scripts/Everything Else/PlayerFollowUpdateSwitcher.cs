@@ -30,10 +30,10 @@ public class PlayerFollowUpdateSwitcher : MonoBehaviour {
 	}
 
 	private void SetFollowUpdate() {
-		follow.updateType = FollowUpdateType.Update;
+		follow.updateType = WhitUpdateType.Update;
 	}
 
 	private void SetFollowFixedUpdate() {
-		follow.updateType = FollowUpdateType.FixedUpdate;
+		follow.updateType = WhitUpdateType.FixedUpdate;
 	}
 }

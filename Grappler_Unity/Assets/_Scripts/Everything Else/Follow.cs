@@ -2,30 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public enum FollowUpdateType {
-	Update,
-	FixedUpdate
-}
-
-public enum FollowMovementType {
-	Smoothdamp,
-	Immediate
-}
-
-public enum FollowAxisType {
-	X,
-	Y,
-	XY
-}
-
 public class Follow : MonoBehaviour {
-	public FollowUpdateType updateType;
+	public WhitUpdateType updateType;
 
 	[HideInInspector, NonSerialized] public float minX = Mathf.NegativeInfinity;
 	[HideInInspector, NonSerialized] public float minY = Mathf.NegativeInfinity;
 
-	[SerializeField] private FollowMovementType movementType;
-	[SerializeField] private FollowAxisType axisType;
+	[SerializeField] private WhitMovementType movementType;
+	[SerializeField] private WhitAxisType axisType;
 	[SerializeField] private Transform objectToFollow;
 	[SerializeField] private float smoothDampTime = 0.13f;
 	[SerializeField] private Vector2 objectOffset;
@@ -38,7 +22,7 @@ public class Follow : MonoBehaviour {
 		UpdateMovementImmediate();
 	}
 
-	public void SetAxisType(FollowAxisType axisType) {
+	public void SetAxisType(WhitAxisType axisType) {
 		this.axisType = axisType;
 	}
 
@@ -72,16 +56,16 @@ public class Follow : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (updateType == FollowUpdateType.Update) UpdateMovement();
+		if (updateType == WhitUpdateType.Update) UpdateMovement();
 	}
 
 	private void FixedUpdate() {
-		if (updateType == FollowUpdateType.FixedUpdate) UpdateMovement();
+		if (updateType == WhitUpdateType.FixedUpdate) UpdateMovement();
 	}
 
 	private void UpdateMovement() {
-		if (movementType == FollowMovementType.Smoothdamp) UpdateMovementSmoothDamp();
-		else if (movementType == FollowMovementType.Immediate) UpdateMovementImmediate();
+		if (movementType == WhitMovementType.Smoothdamp) UpdateMovementSmoothDamp();
+		else if (movementType == WhitMovementType.Immediate) UpdateMovementImmediate();
 	}
 
 	private void UpdateMovementSmoothDamp() {
@@ -105,8 +89,8 @@ public class Follow : MonoBehaviour {
 		Vector3 offsetObjectPosition = new Vector3(objectPosition.x + objectOffset.x, objectPosition.y + objectOffset.y, objectPosition.z);
 		Vector3 targetPosition = offsetObjectPosition + initialDirection * initialDistance;
 
-		if (axisType == FollowAxisType.X) targetPosition.y = transform.position.y;
-		else if (axisType == FollowAxisType.Y) targetPosition.x = transform.position.x;
+		if (axisType == WhitAxisType.X) targetPosition.y = transform.position.y;
+		else if (axisType == WhitAxisType.Y) targetPosition.x = transform.position.x;
 
 		targetPosition.x = Mathf.Max(minX, targetPosition.x);
 		targetPosition.y = Mathf.Max(minY, targetPosition.y);
