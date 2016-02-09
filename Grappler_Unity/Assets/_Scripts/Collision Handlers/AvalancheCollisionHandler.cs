@@ -2,10 +2,16 @@
 using System.Collections;
 
 public class AvalancheCollisionHandler : CollisionHandler {
+	private bool hasCollided = false;
+
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
 		base.HandleTriggerEnter(rigid, collider);
-		ScreenShaker.instance.ShakeMax();
-		Time.timeScale = 0.25f;
+
+		if (hasCollided) return;
+	
+		hasCollided = true;
+		Time.timeScale = 0.6f;
+		ScreenShaker.instance.ShakeMiddle();
 		player.SetState(Player.PlayerStates.Dead);
 	}
 
