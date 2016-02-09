@@ -24,11 +24,11 @@ public class Follow : MonoBehaviour {
 	[HideInInspector, NonSerialized] public float minX = Mathf.NegativeInfinity;
 	[HideInInspector, NonSerialized] public float minY = Mathf.NegativeInfinity;
 
-	[SerializeField] private Transform objectToFollow;
-	[SerializeField] private Vector2 objectOffset;
 	[SerializeField] private FollowMovementType movementType;
 	[SerializeField] private FollowAxisType axisType;
+	[SerializeField] private Transform objectToFollow;
 	[SerializeField] private float smoothDampTime = 0.13f;
+	[SerializeField] private Vector2 objectOffset;
 
 	private float initialDistance;
 	private Vector3 initialDirection;
@@ -40,6 +40,30 @@ public class Follow : MonoBehaviour {
 
 	public void SetAxisType(FollowAxisType axisType) {
 		this.axisType = axisType;
+	}
+
+	public Vector2 GetOffset() {
+		return objectOffset;
+	}
+
+	public void SetOffset(Vector2 offset) {
+		objectOffset = offset;
+	}
+
+	public float GetOffsetX() {
+		return objectOffset.x;
+	}
+
+	public float GetOffsetY() {
+		return objectOffset.y;
+	}
+
+	public void SetOffsetX(float x) {
+		objectOffset.x = x;
+	}
+
+	public void SetOffsetY(float y) {
+		objectOffset.y = y;
 	}
 
 	private void Awake() {
