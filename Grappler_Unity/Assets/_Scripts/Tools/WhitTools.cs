@@ -17,12 +17,22 @@ public static class WhitTools {
 		return direction;
 	}
 
-	public static bool CompareLayers(int intLayer, string nameLayer) {
-		return intLayer == LayerMask.NameToLayer(nameLayer);
+	public static bool IsInLayer(GameObject obj, LayerMask layerMask) {
+		int objLayerMask = (1 << obj.layer);
+		bool isInLayer = (layerMask.value & objLayerMask) > 0;
+		return isInLayer;
 	}
 
-	public static bool CompareLayers(int layerValue, int layer) {
-		return layerValue == 1 << layer;
+	public static bool IsInLayer(GameObject obj, string layerName) {
+		int objLayerMask = (1 << obj.layer);
+		bool isInLayer = (LayerMask.NameToLayer(layerName) & objLayerMask) > 0;
+
+		return isInLayer;
+	}
+
+	public static bool CompareLayerMasks(LayerMask mask1, LayerMask mask2) {
+		bool masksAreTheSame = (mask1.value & mask2.value) > 0;
+		return masksAreTheSame;
 	}
 
 	public static float DirectionToAngle(Vector2 direction) {

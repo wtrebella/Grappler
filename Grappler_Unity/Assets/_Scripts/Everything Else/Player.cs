@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(GrapplingStateController))]
@@ -12,6 +13,11 @@ using System;
 [RequireComponent(typeof(Rigidbody2DStopper))]
 [RequireComponent(typeof(Rigidbody2DVelocityReducer))]
 public class Player : StateMachine {
+	public UnityEvent OnEnteredFallingState;
+	public UnityEvent OnEnteredGrapplingState;
+	public UnityEvent OnEnteredDeadState;
+	public UnityEvent OnEnteredOnGroundState;
+
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
 	public Action SignalEnteredDeadState;
@@ -47,49 +53,50 @@ public class Player : StateMachine {
 	}
 	
 	public void HandleCollisionEnter(PlayerBodyPart bodyPart, Collision2D collision) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionEnter(bodyPart.rigid, collision);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collision.gameObject)) {
+				handler.HandleCollisionEnter(bodyPart.rigid, collision);
+			}
 		}
 	}
 
 	public void HandleCollisionStay(PlayerBodyPart bodyPart, Collision2D collision) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionStay(bodyPart.rigid, collision);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collision.gameObject)) {
+				handler.HandleCollisionStay(bodyPart.rigid, collision);
+			}
 		}
 	}
 
 	public void HandleCollisionExit(PlayerBodyPart bodyPart, Collision2D collision) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collision.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleCollisionExit(bodyPart.rigid, collision);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collision.gameObject)) {
+				handler.HandleCollisionExit(bodyPart.rigid, collision);
+			}
 		}
 	}
 
 	public void HandleTriggerEnter(PlayerBodyPart bodyPart, Collider2D collider) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerEnter(bodyPart.rigid, collider);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collider.gameObject)) {
+				handler.HandleTriggerEnter(bodyPart.rigid, collider);
+			}
 		}
 	}
 
 	public void HandleTriggerStay(PlayerBodyPart bodyPart, Collider2D collider) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerStay(bodyPart.rigid, collider);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collider.gameObject)) {
+				handler.HandleTriggerStay(bodyPart.rigid, collider);
+			}
 		}
 	}
+
 	public void HandleTriggerExit(PlayerBodyPart bodyPart, Collider2D collider) {
-		foreach (CollisionHandler collisionHandler in collisionHandlers) {
-			bool layersAreTheSame = WhitTools.CompareLayers(collisionHandler.layer.value, collider.gameObject.layer);
-			bool noLayer = collisionHandler.layer.value == 0;
-			if (layersAreTheSame || noLayer) collisionHandler.HandleTriggerExit(bodyPart.rigid, collider);
+		foreach (CollisionHandler handler in collisionHandlers) {
+			if (handler.HasNoLayer() || handler.ObjectIsInLayer(collider.gameObject)) {
+				handler.HandleTriggerExit(bodyPart.rigid, collider);
+			}
 		}
 	}
 
@@ -158,6 +165,7 @@ public class Player : StateMachine {
 	private void Falling_EnterState() {
 		fallingController.EnterState();
 		if (SignalEnteredFallingState != null) SignalEnteredFallingState();
+		if (OnEnteredFallingState != null) OnEnteredFallingState.Invoke();
 	}
 
 
@@ -180,6 +188,7 @@ public class Player : StateMachine {
 	private void OnGround_EnterState() {
 		onGroundController.EnterState();
 		if (SignalEnteredOnGroundState != null) SignalEnteredOnGroundState();
+		if (OnEnteredOnGroundState != null) OnEnteredOnGroundState.Invoke();
 	}
 
 
@@ -202,6 +211,7 @@ public class Player : StateMachine {
 	private void Dead_EnterState() {
 		deadController.EnterState();
 		if (SignalEnteredDeadState != null) SignalEnteredDeadState();
+		if (OnEnteredDeadState != null) OnEnteredDeadState.Invoke();
 	}
 
 
@@ -224,5 +234,6 @@ public class Player : StateMachine {
 	private void Grappling_EnterState() {
 		grapplingController.EnterState();
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
+		if (OnEnteredGrapplingState != null) OnEnteredGrapplingState.Invoke();
 	}
 }

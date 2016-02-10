@@ -10,7 +10,7 @@ public class SmallIcicle : GeneratableItem {
 	private void OnCollisionEnter2D(Collision2D collision) {
 		if (hasCollided) return;
 
-		if (WhitTools.CompareLayers(collision.gameObject.layer, "Player")) HandleCollision();
+		if (WhitTools.IsInLayer(collision.gameObject, "Player")) HandleCollision();
 	}
 
 	private void HandleCollision() {

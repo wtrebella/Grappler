@@ -34,8 +34,8 @@ public class FollowOffsetChanger : MonoBehaviour {
 	}
 
 	private void IncreaseOffset() {
-		if (updateType == WhitUpdateType.Update) IncreaseOffset(Time.deltaTime);
-		else if (updateType == WhitUpdateType.FixedUpdate) IncreaseOffset(Time.fixedDeltaTime);
+		if (updateType == WhitUpdateType.Update) IncreaseOffset(Time.deltaTime * Time.timeScale);
+		else if (updateType == WhitUpdateType.FixedUpdate) IncreaseOffset(Time.fixedDeltaTime * Time.timeScale);
 	}
 
 	private void IncreaseOffset(float deltaTime) {

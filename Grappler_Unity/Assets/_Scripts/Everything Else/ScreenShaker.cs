@@ -5,6 +5,7 @@ public class ScreenShaker : MonoBehaviour {
 	public static ScreenShaker instance;
 
 	[SerializeField] private Camera cam;
+	[SerializeField] private float timeBetweenShakes = 0.05f;
 	[SerializeField] private FloatRange shakeAmountRange = new FloatRange(0.5f, 2.0f);
 	[SerializeField] private FloatRange shakeDurationRange = new FloatRange(0.3f, 1.0f);
 	[SerializeField] private FloatRange speedRange = new FloatRange(10.0f, 50.0f);
@@ -13,6 +14,7 @@ public class ScreenShaker : MonoBehaviour {
 	private float currentInitialShakeDuration;
 	private float reductionRate;
 	private float shakeTimeLeft = 0.0f;
+	private float timeOfLastShake = 0;
 	
 	public void ShakeMin() {
 		Shake(shakeAmountRange.min, shakeDurationRange.min);
@@ -31,7 +33,7 @@ public class ScreenShaker : MonoBehaviour {
 		Shake(shakeAmountRange.Lerp(lerp), shakeDurationRange.Lerp(lerp));
 	}
 
-	private void Shake(float shakeAmount, float shakeDuration) {
+	public void Shake(float shakeAmount, float shakeDuration) {
 		currentInitialShakeDuration = shakeDuration;
 		currentInitialShakeAmount = shakeAmount;
 		shakeTimeLeft = shakeDuration;
@@ -80,12 +82,24 @@ public class ScreenShaker : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (shakeTimeLeft > 0) {
-			float timeLeftPercent = shakeTimeLeft / currentInitialShakeDuration;
-			float shakeAmount = currentInitialShakeAmount * timeLeftPercent;
-			cam.transform.localPosition = Random.insideUnitSphere * shakeAmount * shakeTimeLeft;
-			shakeTimeLeft -= Time.deltaTime;
-		}
-		else shakeTimeLeft = 0.0f;
+		if (ShouldShake()) Shake();
+
+		if (shakeTimeLeft > 0) shakeTimeLeft -= Time.unscaledDeltaTime;
+		else shakeTimeLeft = 0;
+	}
+
+	private bool ShouldShake() {
+		return shakeTimeLeft > 0 && GetTimeSinceLastShake() > timeBetweenShakes;
+	}
+
+	private float GetTimeSinceLastShake() {
+		return Time.unscaledTime - timeOfLastShake;
+	}
+
+	private void Shake() {
+		float timeLeftPercent = shakeTimeLeft / currentInitialShakeDuration;
+		float shakeAmount = currentInitialShakeAmount * timeLeftPercent;
+		timeOfLastShake = Time.time;
+		cam.transform.localPosition = Random.insideUnitSphere * shakeAmount * shakeTimeLeft;
 	}
 }

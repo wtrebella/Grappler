@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class CollisionCooldownResetter : CollisionHandler {
-	[SerializeField] private LayerMask[] layerMasksThatCauseCooldownReset;
 	[SerializeField] private Cooldown cooldown;
 
 	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
@@ -26,9 +25,7 @@ public class CollisionCooldownResetter : CollisionHandler {
 	}
 
 	private bool ColliderShouldResetCooldown(Collider2D collider) {
-		foreach (LayerMask layerMask in layerMasksThatCauseCooldownReset) {
-			if (WhitTools.CompareLayers(layerMask.value, collider.gameObject.layer)) return true;
-		}
-		return false;
+		if (WhitTools.IsInLayer(collider.gameObject, layerMask)) return true;
+		else return false;
 	}
 }

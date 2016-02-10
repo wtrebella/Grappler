@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 
 public class CameraMover : MonoBehaviour {
+	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private Transform horizontalMovementObject;
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 	[SerializeField] private Vector2 offset;
@@ -14,6 +15,10 @@ public class CameraMover : MonoBehaviour {
 	private Vector3 initialDirection;
 	private float smoothDampVelocityX;
 	private float smoothDampVelocityY;
+
+	public void SetUpdateType(WhitUpdateType newUpdateType) {
+		updateType = newUpdateType;
+	}
 
 	public void UpdateMovementImmediateNow() {
 		UpdateMovementImmediate();
@@ -37,7 +42,15 @@ public class CameraMover : MonoBehaviour {
 		sqrMaxDistanceToObject = Mathf.Pow(maxDistanceToObject, 2);
 	}
 
+	private void Update() {
+		if (updateType != WhitUpdateType.Update) return;
+
+		UpdateMovement();
+	}
+
 	private void FixedUpdate() {
+		if (updateType != WhitUpdateType.FixedUpdate) return;
+
 		UpdateMovement();
 	}
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AvalancheCollisionHandler : CollisionHandler {
+public class RockSlideCollisionHandler : CollisionHandler {
 	private bool hasCollided = false;
 
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
@@ -10,8 +10,9 @@ public class AvalancheCollisionHandler : CollisionHandler {
 		if (hasCollided) return;
 	
 		hasCollided = true;
-		Time.timeScale = 0.6f;
-		ScreenShaker.instance.ShakeMiddle();
+		Time.timeScale = 0.1f;
+		Time.fixedDeltaTime *= Time.timeScale;
+		ScreenShaker.instance.ShakeMax();
 		player.SetState(Player.PlayerStates.Dead);
 	}
 

@@ -1,14 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Player))]
 public class CollisionHandler : MonoBehaviour {
-	public LayerMask layer;
+	[FormerlySerializedAs("layer")]	
+	public LayerMask layerMask;
 
 	protected Player player;
 
 	protected void BaseAwake() {
 		player = GetComponent<Player>();
+	}
+
+	public bool ObjectIsInLayer(GameObject obj) {
+		return WhitTools.IsInLayer(obj, layerMask);
+	}
+
+	public bool HasNoLayer() {
+		return layerMask.value == 0;
 	}
 
 	private void Awake() {

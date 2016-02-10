@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class BreakableCollisionHandler : MonoBehaviour {
+	[SerializeField] private LayerMask layerMask;
+
 	private Breakable breakable;
 
 	private void Awake() {
@@ -14,7 +16,7 @@ public class BreakableCollisionHandler : MonoBehaviour {
 			return;
 		}
 
-		if (WhitTools.CompareLayers(collision.gameObject.layer, "Player")) breakable.HandleCollision(collision);
+		if (WhitTools.IsInLayer(collision.gameObject, layerMask)) breakable.HandleCollision(collision);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider) {
@@ -23,6 +25,6 @@ public class BreakableCollisionHandler : MonoBehaviour {
 			return;
 		}
 
-		if (WhitTools.CompareLayers(collider.gameObject.layer, "Player")) breakable.HandleTrigger(collider);
+		if (WhitTools.IsInLayer(collider.gameObject, layerMask)) breakable.HandleTrigger(collider);
 	}
 }
