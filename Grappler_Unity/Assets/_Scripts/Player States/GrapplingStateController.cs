@@ -24,9 +24,7 @@ public class GrapplingStateController : PlayerStateController {
 		if (!grappling.ReadyToConnect()) return;
 		Anchorable anchorable;
 		if (anchorableFinder.FindAnchorableInScreenOverlap(out anchorable)) {
-			if (ConnectGrapplerIfPossible(anchorable)) {
-				player.SetState(Player.PlayerStates.Grappling);
-			}
+			ConnectGrapplerIfPossible(anchorable);
 		}
 	}
 	

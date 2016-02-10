@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Rigidbody2DAccelerationClamper : MonoBehaviour {
+	[SerializeField] private WhitAxisType axis;
 	[SerializeField] private Cooldown cooldown;
 	[SerializeField] private Rigidbody2D[] rigidbodies;
 	[SerializeField] private float maxAcceleration = 2;
@@ -19,8 +20,8 @@ public class Rigidbody2DAccelerationClamper : MonoBehaviour {
 	}
 
 	private void FixedUpdate () {
-//		ClampRigidbodies();
-//		UpdateRigidbodyPreviousSpeeds();
+		ClampRigidbodies();
+		UpdateRigidbodyPreviousSpeeds();
 	}
 
 	private void ClampRigidbodies() {
@@ -30,6 +31,9 @@ public class Rigidbody2DAccelerationClamper : MonoBehaviour {
 		foreach (Rigidbody2D rigid in rigidbodies) {
 			Vector2 newVelocity = rigid.velocity;
 			Vector2 previousVelocity = GetPreviousVelocity(rigid);
+			float newSpeed = newVelocity.magnitude;
+			float previousSpeed = previousVelocity.magnitude;
+			if (newSpeed < previousSpeed) continue;
 			Vector2 velocityChange = newVelocity - previousVelocity;
 			Vector2 velocityChangeDirection = velocityChange.normalized;
 			float currentSpeedChange = velocityChange.magnitude;
@@ -37,6 +41,8 @@ public class Rigidbody2DAccelerationClamper : MonoBehaviour {
 			if (currentSpeedChange < maxAcceleration) newSpeedChange = currentSpeedChange;
 			else newSpeedChange = Mathf.Lerp(currentSpeedChange, maxAcceleration, percent);
 			newVelocity = previousVelocity + velocityChangeDirection * newSpeedChange;
+			if (axis == WhitAxisType.X) newVelocity.y = rigid.velocity.y;
+			else if (axis == WhitAxisType.Y) newVelocity.x = rigid.velocity.x;
 			rigid.velocity = newVelocity;
 		}
 	}

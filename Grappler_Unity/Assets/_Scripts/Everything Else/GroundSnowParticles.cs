@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(ParticleSystem))]
 public class GroundSnowParticles : MonoBehaviour {
 	[SerializeField] private GroundDetector groundDetector;
-	[SerializeField] private SpeedPercentConverter speedPercentConverter;
+	[SerializeField] private SpeedPercent speedPercentConverter;
 	[SerializeField] private FloatRange particleSpeedRange = new FloatRange(0.1f, 24.0f);
 	[SerializeField] private FloatRange particleSizeRange = new FloatRange(0.03f, 1.0f);
 	[SerializeField] private FloatRange particleEmissionRateRange = new FloatRange(0.0f, 150.0f);

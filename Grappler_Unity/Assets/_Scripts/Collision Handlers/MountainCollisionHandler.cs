@@ -10,5 +10,6 @@ public class MountainCollisionHandler : CollisionHandler {
 		base.HandleCollisionEnter(rigid, collision);
 
 		ShakeScreen(rigid, collision);
+		player.rigidbodyVelocityReducer.Reduce();
 	}
 }

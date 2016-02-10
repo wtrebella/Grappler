@@ -13,7 +13,7 @@ public class SpeedText : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		float speed = rigid.velocity.magnitude;
-		text.text = speed.ToString("0.0");
+		int speed = (int)rigid.velocity.magnitude;
+		text.text = "Speed: " + speed.ToString();
 	}
 }

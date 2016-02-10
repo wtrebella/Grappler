@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class AvalancheDistanceText : MonoBehaviour {
+public class RockSlideDistanceText : MonoBehaviour {
 	private Text label;
 
 	private void Awake() {
@@ -12,6 +12,6 @@ public class AvalancheDistanceText : MonoBehaviour {
 
 	public void HandleDistanceChanged(float distance) {
 		distance = Mathf.Max(0, distance);
-		label.text = (distance / 10).ToString("0.0");
+		label.text = "Rock Slide Distance: " + (distance / 20.0f).ToString("0.0");
 	}
 }

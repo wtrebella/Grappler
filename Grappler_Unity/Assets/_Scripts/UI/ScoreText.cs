@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class ScoreText : MonoBehaviour {
 	[SerializeField] private Transform objectToMeasure;
@@ -8,6 +9,12 @@ public class ScoreText : MonoBehaviour {
 	private Text label;
 	private float dist;
 	private float startOffset;
+	private int score = 0;
+	private bool isDead = false;
+
+	public void OnDead() {
+		isDead = true;
+	}
 
 	private void Awake() {
 		label = GetComponent<Text>();
@@ -16,6 +23,7 @@ public class ScoreText : MonoBehaviour {
 
 	private void Update() {
 		dist = objectToMeasure.position.x + startOffset;
-		label.text = ((int)(dist / 10)).ToString();
+		if (!isDead) score = Mathf.Max(score, (int)((dist / 20.0f)));
+		label.text = "Score: " + score.ToString("N0");
 	}
 }

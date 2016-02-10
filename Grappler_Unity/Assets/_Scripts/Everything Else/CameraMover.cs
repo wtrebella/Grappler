@@ -10,9 +10,6 @@ public class CameraMover : MonoBehaviour {
 	[SerializeField] private Vector2 smoothDampTime = new Vector2(0.3f, 0.1f);
 	[SerializeField] private float maxDistanceToObject = 9;
 
-	private float sqrMaxDistanceToObject;
-	private float initialDistance;
-	private Vector3 initialDirection;
 	private float smoothDampVelocityX;
 	private float smoothDampVelocityY;
 
@@ -34,12 +31,6 @@ public class CameraMover : MonoBehaviour {
 
 	public void SetSmoothDampTimeY(float time) {
 		smoothDampTime.y = time;
-	}
-
-	private void Awake() {
-		initialDistance = GetObjectToThisDistance();
-		initialDirection = GetObjectToThisDirection();
-		sqrMaxDistanceToObject = Mathf.Pow(maxDistanceToObject, 2);
 	}
 
 	private void Update() {
@@ -76,18 +67,13 @@ public class CameraMover : MonoBehaviour {
 
 	private Vector3 GetTargetPosition() {
 		Vector3 objectPosition = horizontalMovementObject.position;
-		Vector3 offsetObjectPosition = objectPosition + initialDirection * initialDistance;
-		float x = offsetObjectPosition.x;
+		float x = objectPosition.x + offset.x;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtX(x);
-		float y = chunk.GetAverageYAtX(x);
-		Vector3 targetPosition = new Vector3(x + offset.x, y + offset.y, transform.position.z);
-		Vector2 vectorToObject = targetPosition.ToVector2() - objectPosition.ToVector2();
-		Vector2 directionToObject = vectorToObject.normalized;
-		float sqrDistanceToObject = vectorToObject.sqrMagnitude;
-		if (sqrDistanceToObject > sqrMaxDistanceToObject) {
-			Vector2 targetPosition2D = objectPosition.ToVector2() + directionToObject * maxDistanceToObject;
-			targetPosition = targetPosition2D.ToVector3(transform.position.z);
-		}
+		float y = chunk.GetAverageYAtX(x) + offset.y;
+		Vector3 targetPosition = new Vector3(x, y, transform.position.z);
+		float yDistToObject = targetPosition.y - objectPosition.y;
+		if (yDistToObject > maxDistanceToObject) targetPosition.y = objectPosition.y + maxDistanceToObject;
+		else if (yDistToObject < -maxDistanceToObject) targetPosition.y = objectPosition.y - maxDistanceToObject;
 
 		return targetPosition;
 	}
