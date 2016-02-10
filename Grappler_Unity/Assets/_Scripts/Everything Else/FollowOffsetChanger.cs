@@ -1,46 +1,91 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum OffsetChangerState {
+	NotMoving,
+	MovingForward,
+	MovingBackwards
+}
+
 public class FollowOffsetChanger : MonoBehaviour {
 	[SerializeField] private Follow follow;
 	[SerializeField] private WhitAxisType axes = WhitAxisType.XY;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private float offsetChangeRate = 1.0f;
 
-	private bool isOn = false;
+	private OffsetChangerState state = OffsetChangerState.NotMoving;
 
-	public void TurnOn() {
-		isOn = true;
+	public void SetToMovingForward() {
+		state = OffsetChangerState.MovingForward;
 	}
 
-	public void TurnOff() {
-		isOn = false;
+	public void SetToMovingBackwards() {
+		state = OffsetChangerState.MovingBackwards;
 	}
 
-	public bool IsOn() {
-		return isOn;
+	public void SetToNotMoving() {
+		state = OffsetChangerState.NotMoving;
 	}
 
-	public bool IsOff() {
-		return !isOn;
+	public bool IsMovingForward() {
+		return state == OffsetChangerState.MovingForward;
+	}
+
+	public bool IsMovingBackwards() {
+		return state == OffsetChangerState.MovingBackwards;
+	}
+
+	public bool IsNotMoving() {
+		return state == OffsetChangerState.NotMoving;
 	}
 
 	private void Update() {
-		if (isOn) IncreaseOffset();
+		if (updateType != WhitUpdateType.Update) return;
+
+		UpdateOffset();
 	}
 
 	private void FixedUpdate() {
-		if (isOn) IncreaseOffset();
+		if (updateType != WhitUpdateType.FixedUpdate) return;
+
+		FixedUpdateOffset();
 	}
 
-	private void IncreaseOffset() {
-		if (updateType == WhitUpdateType.Update) IncreaseOffset(Time.deltaTime * Time.timeScale);
-		else if (updateType == WhitUpdateType.FixedUpdate) IncreaseOffset(Time.fixedDeltaTime * Time.timeScale);
+	private void UpdateOffset() {
+		if (state == OffsetChangerState.MovingForward) IncreaseOffsetUpdate();
+		else if (state == OffsetChangerState.MovingBackwards) DecreaseOffsetUpdate();
+	}
+
+	private void FixedUpdateOffset() {
+		if (state == OffsetChangerState.MovingForward) IncreaseOffsetFixedUpdate();
+		else if (state == OffsetChangerState.MovingBackwards) DecreaseOffsetFixedUpdate();
+	}
+
+	private void IncreaseOffsetUpdate() {
+		IncreaseOffset(Time.deltaTime * Time.timeScale);
+	}
+
+	private void IncreaseOffsetFixedUpdate() {
+		IncreaseOffset(Time.fixedDeltaTime * Time.timeScale);
+	}
+
+	private void DecreaseOffsetUpdate() {
+		DecreaseOffset(Time.deltaTime * Time.timeScale);
+	}
+
+	private void DecreaseOffsetFixedUpdate() {
+		DecreaseOffset(Time.fixedDeltaTime * Time.timeScale);
 	}
 
 	private void IncreaseOffset(float deltaTime) {
 		Vector2 currentOffset = follow.GetOffset();
 		Vector2 newOffset = new Vector2(currentOffset.x + offsetChangeRate * deltaTime, currentOffset.y + offsetChangeRate * deltaTime);
+		SetOffset(newOffset);
+	}
+
+	private void DecreaseOffset(float deltaTime) {
+		Vector2 currentOffset = follow.GetOffset();
+		Vector2 newOffset = new Vector2(currentOffset.x - offsetChangeRate * deltaTime, currentOffset.y - offsetChangeRate * deltaTime);
 		SetOffset(newOffset);
 	}
 

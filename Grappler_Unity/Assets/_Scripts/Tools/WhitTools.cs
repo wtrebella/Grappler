@@ -24,8 +24,7 @@ public static class WhitTools {
 	}
 
 	public static bool IsInLayer(GameObject obj, string layerName) {
-		int objLayerMask = (1 << obj.layer);
-		bool isInLayer = (LayerMask.NameToLayer(layerName) & objLayerMask) > 0;
+		bool isInLayer = LayerMask.NameToLayer(layerName) == obj.layer;
 
 		return isInLayer;
 	}
