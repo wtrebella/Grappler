@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// TODO: make it so the rock slide *can* go behind offset 0, but the change rate increases drastically
+
 public class RockSlide : MonoBehaviour {
 	[SerializeField] private Follow follow;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
