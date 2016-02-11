@@ -12,6 +12,6 @@ public class RockSlideDistanceText : MonoBehaviour {
 
 	public void HandleDistanceChanged(float distance) {
 		distance = Mathf.Max(0, distance);
-		label.text = "Rock Slide Distance: " + (distance / 20.0f).ToString("0.0");
+		label.text = "ROCK SLIDE DISTANCE: " + (distance / 20.0f).ToString("0.0");
 	}
 }

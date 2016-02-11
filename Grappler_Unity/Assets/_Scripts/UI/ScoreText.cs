@@ -24,6 +24,6 @@ public class ScoreText : MonoBehaviour {
 	private void Update() {
 		dist = objectToMeasure.position.x + startOffset;
 		if (!isDead) score = Mathf.Max(score, (int)((dist / 20.0f)));
-		label.text = "Score: " + score.ToString("N0");
+		label.text = score.ToString("N0");
 	}
 }
