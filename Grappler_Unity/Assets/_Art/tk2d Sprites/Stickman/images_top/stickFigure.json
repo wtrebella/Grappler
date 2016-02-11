@@ -1,0 +1,1 @@
+{"skeleton":{"images":""},"bones":[{"name":"root"}],"slots":[	{"name":"Rounded Rectangle 1","bone":"root","attachment":"Rounded Rectangle 1"}],"skins":{	"default":{		"Rounded Rectangle 1":{"Rounded Rectangle 1":{"x":128.5,"y":302.5,"width":65,"height":129}}	}},"animations":{"animation":{}}}
