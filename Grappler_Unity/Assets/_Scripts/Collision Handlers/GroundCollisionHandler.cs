@@ -14,6 +14,8 @@ public class GroundCollisionHandler : CollisionHandler {
 	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
 		base.HandleCollisionEnter(rigid, collision);
 
+		timeLastOnGround = Time.fixedTime;
+
 		if (player.IsOnGround()) return;
 		if (!hasGrappledSinceHittingGround) return;
 		if (!HasBeenLongEnough()) return;
@@ -22,7 +24,6 @@ public class GroundCollisionHandler : CollisionHandler {
 
 		hasGrappledSinceHittingGround = false;
 		player.SetState(Player.PlayerStates.OnGround);
-		timeLastOnGround = Time.fixedTime;
 	}
 
 	private void Awake() {
