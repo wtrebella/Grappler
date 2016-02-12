@@ -7,7 +7,7 @@ public class OnGroundStateController : PlayerStateController {
 	[SerializeField] private OnGroundState onGroundState;
 
 	private void Awake() {
-		BaseAwake();
+		base.BaseAwake();
 		playerState = Player.PlayerStates.OnGround;
 	}
 

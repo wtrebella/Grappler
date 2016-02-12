@@ -12,6 +12,7 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Trail))]
 [RequireComponent(typeof(Rigidbody2DStopper))]
 [RequireComponent(typeof(Rigidbody2DVelocityReducer))]
+[RequireComponent(typeof(TemporaryTriggerSetter))]
 public class Player : StateMachine {
 	public UnityEvent OnEnteredFallingState;
 	public UnityEvent OnEnteredGrapplingState;
@@ -39,6 +40,7 @@ public class Player : StateMachine {
 	[HideInInspector] public FallingStateController fallingController;
 	[HideInInspector] public Rigidbody2DStopper rigidbodyStopper;
 	[HideInInspector] public Rigidbody2DVelocityReducer rigidbodyVelocityReducer;
+	[HideInInspector] public TemporaryTriggerSetter triggerSetter;
 
 	private CollisionHandler[] collisionHandlers;	
 	private PlayerStateController[] stateControllers;
@@ -111,6 +113,7 @@ public class Player : StateMachine {
 		deadController = GetComponent<DeadStateController>();
 		rigidbodyStopper = GetComponent<Rigidbody2DStopper>();
 		rigidbodyVelocityReducer = GetComponent<Rigidbody2DVelocityReducer>();
+		triggerSetter = GetComponent<TemporaryTriggerSetter>();
 	}
 
 	private void Start() {

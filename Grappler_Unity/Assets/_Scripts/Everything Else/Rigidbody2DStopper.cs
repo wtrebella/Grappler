@@ -9,31 +9,26 @@ public class Rigidbody2DStopper : MonoBehaviour {
 	[SerializeField] private GroundDetector groundDetector;
 	[SerializeField] private float stopSpeed = 5.0f;
 	[SerializeField] private float stopRate = 1.0f;
-	[SerializeField] private Rigidbody2D[] rigidbodies;
-
-	private bool exitCoroutine = false;
+	[SerializeField] private Rigidbody2D rigid;
 
 	public void StartStoppingProcess() {
-		StopRigidbodies();
+		StopRigidbody();
 	}
 
 	public void Cancel() {
-		exitCoroutine = true;
+		StopStoppingCoroutine();
 	}
 
-	private void StopRigidbodies() {
-		foreach (Rigidbody2D rigid in rigidbodies) StopRigidbody(rigid);
-	}
-
-	private IEnumerator StopRigidbodyCoroutine(Rigidbody2D rigid) {
-		exitCoroutine = false;
+	private IEnumerator StopRigidbodyCoroutine() {
 		float speed = rigid.velocity.magnitude;
 
-		while (ShouldContinueRunningStopCoroutine(rigid, speed)) {
-			Vector2 currentVelocity = rigid.velocity;
-			Vector2 velocity = currentVelocity * stopRate;
-			speed = velocity.magnitude;
-			rigid.velocity = velocity;
+		while (ShouldContinueRunningStopCoroutine(speed)) {
+			if (groundDetector.IsCloseToGround()) {
+				Vector2 currentVelocity = rigid.velocity;
+				Vector2 velocity = currentVelocity * stopRate;
+				speed = velocity.magnitude;
+				rigid.velocity = velocity;
+			}
 
 			yield return new WaitForFixedUpdate();
 		}
@@ -41,15 +36,19 @@ public class Rigidbody2DStopper : MonoBehaviour {
 		if (SignalStopped != null) SignalStopped();
 	}
 
-	private bool RigidbodyHasBeenStopped(Rigidbody2D rigid, float speed) {
+	private bool RigidbodyHasBeenStopped(float speed) {
 		return groundDetector.IsCloseToGround() && speed < stopSpeed;
 	}
 
-	private bool ShouldContinueRunningStopCoroutine(Rigidbody2D rigid, float speed) {
-		return !RigidbodyHasBeenStopped(rigid, speed) && !exitCoroutine;
+	private bool ShouldContinueRunningStopCoroutine(float speed) {
+		return !RigidbodyHasBeenStopped(speed);
 	}
 
-	private void StopRigidbody(Rigidbody2D rigid) {
-		StartCoroutine(StopRigidbodyCoroutine(rigid));
+	private void StopRigidbody() {
+		StartCoroutine("StopRigidbodyCoroutine");
+	}
+
+	private void StopStoppingCoroutine() {
+		StopCoroutine("StopRigidbodyCoroutine");
 	}
 }
