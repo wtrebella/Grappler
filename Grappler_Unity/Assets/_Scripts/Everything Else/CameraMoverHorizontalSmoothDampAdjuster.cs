@@ -9,7 +9,6 @@ public class CameraMoverHorizontalSmoothDampAdjuster : MonoBehaviour {
 	[SerializeField] private float smoothDampTime = 0.3f;
 
 	private float smoothDampVelocity;
-
 	private CameraMover cameraMover;
 
 	private void Awake() {
@@ -33,17 +32,21 @@ public class CameraMoverHorizontalSmoothDampAdjuster : MonoBehaviour {
 		return speedingObject.velocity.magnitude;
 	}
 
+	private float GetSmoothedSmoothDamp(float speed) {
+		float targetSmoothDamp = GetTargetSmoothDamp(speed);
+		float smoothedSmoothDamp = Mathf.SmoothDamp(cameraMover.GetSmoothDampTime().x, targetSmoothDamp, ref smoothDampVelocity, smoothDampTime);
+		return smoothedSmoothDamp;
+	}
+
+	private float GetTargetSmoothDamp(float speed) {
+		return SpeedToSmoothDamp(speed);
+	}
+
 	private float SpeedToSmoothDamp(float speed) {
 		float percent = 1 - Mathf.Clamp01(speed / speedHighEnd);
 		float totalSmoothDamp = smoothDampRange.max - smoothDampRange.min;
 		float smoothDampPiece = percent * totalSmoothDamp;
 		float convertedSmoothDamp = smoothDampRange.min + smoothDampPiece;
 		return convertedSmoothDamp;
-	}
-
-	private float GetSmoothedSmoothDamp(float speed) {
-		float targetSmoothDamp = SpeedToSmoothDamp(speed);
-		float smoothedSmoothDamp = Mathf.SmoothDamp(cameraMover.GetSmoothDampTime().x, targetSmoothDamp, ref smoothDampVelocity, smoothDampTime);
-		return smoothedSmoothDamp;
 	}
 }

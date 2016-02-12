@@ -12,7 +12,9 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Trail))]
 [RequireComponent(typeof(Rigidbody2DStopper))]
 [RequireComponent(typeof(Rigidbody2DVelocityReducer))]
+[RequireComponent(typeof(Rigidbody2DForcer))]
 [RequireComponent(typeof(TemporaryTriggerSetter))]
+[RequireComponent(typeof(TimeScaler))]
 public class Player : StateMachine {
 	public UnityEvent OnEnteredFallingState;
 	public UnityEvent OnEnteredGrapplingState;
@@ -27,7 +29,6 @@ public class Player : StateMachine {
 	public enum PlayerStates {Falling, Grappling, Dead, OnGround}
 
 	public Trail trail;
-	public Forcer forcer;
 
 	[SerializeField] private PlayerBodyPart body;
 	[SerializeField] private PlayerBodyPart feet;
@@ -41,9 +42,31 @@ public class Player : StateMachine {
 	[HideInInspector] public Rigidbody2DStopper rigidbodyStopper;
 	[HideInInspector] public Rigidbody2DVelocityReducer rigidbodyVelocityReducer;
 	[HideInInspector] public TemporaryTriggerSetter triggerSetter;
+	[HideInInspector] public Rigidbody2DForcer rigidbodyForcer;
+	[HideInInspector] public TimeScaler timeScaleChanger;
 
 	private CollisionHandler[] collisionHandlers;	
 	private PlayerStateController[] stateControllers;
+
+	private void Awake() {
+		collisionHandlers = GetComponents<CollisionHandler>();
+		stateControllers = GetComponents<PlayerStateController>();
+		playerAnimator = GetComponent<PlayerAnimator>();
+		kinematicSwitcher = GetComponent<KinematicSwitcher>();
+		fallingController = GetComponent<FallingStateController>();
+		grapplingController = GetComponent<GrapplingStateController>();
+		onGroundController = GetComponent<OnGroundStateController>();
+		deadController = GetComponent<DeadStateController>();
+		rigidbodyStopper = GetComponent<Rigidbody2DStopper>();
+		rigidbodyVelocityReducer = GetComponent<Rigidbody2DVelocityReducer>();
+		triggerSetter = GetComponent<TemporaryTriggerSetter>();
+		rigidbodyForcer = GetComponent<Rigidbody2DForcer>();
+		timeScaleChanger = GetComponent<TimeScaler>();
+	}
+
+	private void Start() {
+		SetState(PlayerStates.Falling);
+	}
 
 	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
 	public bool IsGrappling() {return CurrentStateIs(PlayerStates.Grappling);}
@@ -100,24 +123,6 @@ public class Player : StateMachine {
 				handler.HandleTriggerExit(bodyPart.rigid, collider);
 			}
 		}
-	}
-
-	private void Awake() {
-		collisionHandlers = GetComponents<CollisionHandler>();
-		stateControllers = GetComponents<PlayerStateController>();
-		playerAnimator = GetComponent<PlayerAnimator>();
-		kinematicSwitcher = GetComponent<KinematicSwitcher>();
-		fallingController = GetComponent<FallingStateController>();
-		grapplingController = GetComponent<GrapplingStateController>();
-		onGroundController = GetComponent<OnGroundStateController>();
-		deadController = GetComponent<DeadStateController>();
-		rigidbodyStopper = GetComponent<Rigidbody2DStopper>();
-		rigidbodyVelocityReducer = GetComponent<Rigidbody2DVelocityReducer>();
-		triggerSetter = GetComponent<TemporaryTriggerSetter>();
-	}
-
-	private void Start() {
-		SetState(PlayerStates.Falling);
 	}
 
 	private bool CurrentStateIs(PlayerStates playerState) {

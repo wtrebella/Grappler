@@ -7,20 +7,14 @@ public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D feetRigidbody;
 
 	private void Awake() {
-		BaseAwake();
+		base.BaseAwake();
 		playerState = Player.PlayerStates.Dead;
 	}
 
 	public override void EnterState() {
 		base.EnterState();
 		player.grapplingController.DisconnectGrapplerIfPossible();
-		StartCoroutine(WaitThenFreezeX());
-	}
-
-	private IEnumerator WaitThenFreezeX() {
-		yield return new WaitForSeconds(3);
-		bodyRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
-		feetRigidbody.constraints = RigidbodyConstraints2D.FreezePositionX;
+		player.timeScaleChanger.ScaleToSlow();
 	}
 	
 	public override void ExitState() {
