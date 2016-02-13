@@ -31,7 +31,7 @@ public class TreeGenerator : Generator {
 		Rigidbody2D rigid = item.GetComponentInChildren<Rigidbody2D>();
 		rigid.isKinematic = true;
 		item.transform.parent = chunk.transform;
-		item.transform.localScale = new Vector2(Random.Range(0.6f, 1.0f), Random.Range(0.6f, 1.0f));
+		item.transform.localScale = new Vector2(Random.Range(0.7f, 1.0f), Random.Range(0.7f, 1.0f));
 		item.transform.position = position;
 		rigid.isKinematic = false;
 	}

@@ -8,6 +8,7 @@ public class AirTimeTimer : MonoBehaviour {
 	public UnityEventWithFloat OnAirTimeIncreased;
 	public UnityEventWithFloat OnResetTimerDueToCollision;
 	public UnityEventWithFloat OnResetTimerDueToGrapple;
+	public UnityEventWithFloat OnAirTimeCompletedOverThreshold;
 
 	[SerializeField] private LayerMask layerMask;
 	[SerializeField] private float speedThreshold = 10;
@@ -53,6 +54,9 @@ public class AirTimeTimer : MonoBehaviour {
 
 	private void ResetTimerDueToGrapple() {
 		if (OnResetTimerDueToGrapple != null) OnResetTimerDueToGrapple.Invoke(timer.value);
+		if (currentSpeed > speedThreshold) {
+			if (OnAirTimeCompletedOverThreshold != null) OnAirTimeCompletedOverThreshold.Invoke(timer.value);
+		}
 		ResetTimer();
 	}
 

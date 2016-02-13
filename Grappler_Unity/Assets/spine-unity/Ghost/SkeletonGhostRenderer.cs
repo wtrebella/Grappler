@@ -57,8 +57,8 @@ public class SkeletonGhostRenderer : MonoBehaviour {
 				c = colors[i];
 				if (c.a > 0)
 					breakout = false;
-
-				colors[i] = Color32.Lerp(c, black, Time.deltaTime * fadeSpeed);
+				c.a -= 1;
+				colors[i] = c;//Color32.Lerp(c, black, 0.5f);//Time.deltaTime * fadeSpeed);
 			}
 
 			meshFilter.sharedMesh.colors32 = colors;

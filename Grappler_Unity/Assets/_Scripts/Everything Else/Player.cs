@@ -4,6 +4,7 @@ using System;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(KinematicSwitcher))]
+[RequireComponent(typeof(SkeletonGhostController))]
 [RequireComponent(typeof(GrapplingStateController))]
 [RequireComponent(typeof(DeadStateController))]
 [RequireComponent(typeof(OnGroundStateController))]
@@ -44,6 +45,7 @@ public class Player : StateMachine {
 	[HideInInspector] public TemporaryTriggerSetter triggerSetter;
 	[HideInInspector] public Rigidbody2DForcer rigidbodyForcer;
 	[HideInInspector] public TimeScaler timeScaleChanger;
+	[HideInInspector] public SkeletonGhostController ghostController;
 
 	private CollisionHandler[] collisionHandlers;	
 	private PlayerStateController[] stateControllers;
@@ -62,6 +64,7 @@ public class Player : StateMachine {
 		triggerSetter = GetComponent<TemporaryTriggerSetter>();
 		rigidbodyForcer = GetComponent<Rigidbody2DForcer>();
 		timeScaleChanger = GetComponent<TimeScaler>();
+		ghostController = GetComponent<SkeletonGhostController>();
 	}
 
 	private void Start() {
