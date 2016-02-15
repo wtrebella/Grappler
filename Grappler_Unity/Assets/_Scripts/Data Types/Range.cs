@@ -52,6 +52,12 @@ public class FloatRange : Range {
 		this.max = max;
 	}
 
+	public float GetPercent(float value) {
+		float range = max - min;
+		float adjustedValue = value - min;
+		return Mathf.Clamp01(adjustedValue / range);
+	}
+
 	public float GetRandom() {
 		return UnityEngine.Random.Range(min, max);
 	}

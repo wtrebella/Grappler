@@ -4,12 +4,17 @@ using System.Collections;
 public class TrailBurster : MonoBehaviour {
 	[SerializeField] private TrailRenderer trail;
 
-	public void OnPushBack() {
-		Pulse();
-	}
+	private float duration1;
+	private float duration2;
+	private float currentStreak;
+	private FloatRange streakRange = new FloatRange(0.0f, 4.0f);
+	private FloatRange widthRange = new FloatRange(0.5f, 2.0f);
 
-	public void Pulse() {
+	public void Pulse(float streak) {
 		StopPulsing();
+		currentStreak = streak;
+		duration1 = 0.1f * streak;
+		duration2 = 0.25f * streak;
 		StartCoroutine("PulseCoroutine");
 	}
 
@@ -20,11 +25,13 @@ public class TrailBurster : MonoBehaviour {
 	}
 
 	private IEnumerator PulseCoroutine() {
-		float duration1 = 0.2f;
-		float duration2 = 0.5f;
+		float streakPercent = streakRange.GetPercent(currentStreak);
+		float alpha = streakPercent;
+		Color color = new Color(1.0f, 1.0f, 0.1f, alpha);
 
-		Go.to(trail.material, duration1, new GoTweenConfig().colorProp("color", new Color(1.0f, 1.0f, 0.1f, 1.0f)).setEaseType(GoEaseType.SineInOut));
-		Go.to(trail, duration1, new GoTweenConfig().floatProp("startWidth", 2.0f).setEaseType(GoEaseType.SineInOut));
+
+		Go.to(trail.material, duration1, new GoTweenConfig().colorProp("color", color).setEaseType(GoEaseType.SineInOut));
+		Go.to(trail, duration1, new GoTweenConfig().floatProp("startWidth", widthRange.Lerp(streakPercent)).setEaseType(GoEaseType.SineInOut));
 
 		yield return new WaitForSeconds(duration1);
 		yield return new WaitForEndOfFrame();

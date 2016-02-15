@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Events;
 
 public class RockSlide : MonoBehaviour {
-	public UnityEvent OnPushBack;
+	public UnityEventWithFloat OnPushBack;
 
 	[SerializeField] private Transform startPoint;
 	[SerializeField] private Follow follow;
@@ -63,7 +63,7 @@ public class RockSlide : MonoBehaviour {
 		Vector2 currentOffset = follow.GetOffset();
 		currentOffset.x += pushBackAmount * streak;
 		SetOffset(currentOffset.x);
-		if (OnPushBack != null) OnPushBack.Invoke();
+		if (OnPushBack != null) OnPushBack.Invoke(streak);
 	}
 	
 	private void UpdateOffsetUpdate() {
