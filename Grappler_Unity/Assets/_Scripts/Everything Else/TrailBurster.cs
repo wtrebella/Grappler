@@ -15,7 +15,8 @@ public class TrailBurster : MonoBehaviour {
 		currentStreak = streak;
 		duration1 = 0.1f * streak;
 		duration2 = 0.25f * streak;
-		StartCoroutine("PulseCoroutine");
+
+		if (duration1 > 0 && duration2 > 0) StartCoroutine("PulseCoroutine");
 	}
 
 	private void StopPulsing() {

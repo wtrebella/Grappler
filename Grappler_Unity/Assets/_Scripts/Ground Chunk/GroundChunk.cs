@@ -6,6 +6,8 @@ using System;
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(GroundChunkMeshCreator))]
 public class GroundChunk : GeneratableItem {
+	[HideInInspector, NonSerialized] public MountainChunk mountainChunk;
+
 	private static float distanceFromMountain;
 
 	[SerializeField] private FloatRange distanceFromMountainRange = new FloatRange(5, 14);

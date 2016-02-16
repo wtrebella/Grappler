@@ -5,7 +5,7 @@ public class ItemOnMountainGenerator : Generator {
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
 
 	private void Awake() {
-		BaseAwake();
+		base.BaseAwake();
 	}
 
 	protected override void BaseAwake() {

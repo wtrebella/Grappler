@@ -19,6 +19,7 @@ public class GroundChunkGenerator : Generator {
 
 	private void GenerateGroundChunk(MountainChunk mountainChunk) {
 		GroundChunk groundChunk = (GroundChunk)GenerateItem();
+		groundChunk.mountainChunk = mountainChunk;
 		GroundChunk previousGroundChunk;
 		if (items.Count == 1) previousGroundChunk = null;
 		else previousGroundChunk = items[items.Count - 2].To<GroundChunk>();
