@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class GroundChunkGenerator : Generator {
 	public Action<GroundChunk> SignalGroundChunkGenerated;
 
+	[SerializeField] private float minimumDistance = 4.0f;
 	[SerializeField] private float rangeReductionMultiplier = 0.01f;
 	[SerializeField] private FloatRange distanceFromMountainRange = new FloatRange(16, 20);
 	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
@@ -36,7 +37,7 @@ public class GroundChunkGenerator : Generator {
 		float distanceFromMountain = GetNextPerlinNoise() * (distanceFromMountainRange.max - distanceFromMountainRange.min) + distanceFromMountainRange.min;
 		groundChunk.Generate(mountainChunk, previousGroundChunk, distanceFromMountain);
 
-		distanceFromMountainRange.min = Mathf.Max(0, distanceFromMountainRange.min - rangeReductionMultiplier);
+		distanceFromMountainRange.min = Mathf.Max(minimumDistance, distanceFromMountainRange.min - rangeReductionMultiplier);
 
 		if (SignalGroundChunkGenerated != null) SignalGroundChunkGenerated(groundChunk);
 	}
