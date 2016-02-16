@@ -1,23 +1,19 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Player))]
 public class GrapplingStateController : PlayerStateController {
+	public UnityEventWithFloat OnVoluntaryRelease;
+
+	[SerializeField] private AirTimeTimer airTimeTimer;
 	[SerializeField] private GrapplingState grappling;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
 	private void Awake() {
 		BaseAwake();
 		playerState = Player.PlayerStates.Grappling;
-	}
-
-	public void ConnectGrapplerIfPossible() {
-		Anchorable anchorable;
-		
-		if (anchorableFinder.FindAnchorableInCircle(out anchorable)) {
-			ConnectGrapplerIfPossible(anchorable);
-		}
 	}
 
 	public void ConnectGrapplerToHighestAnchorable() {
@@ -88,7 +84,10 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void HandleTouchUp() {
 		base.HandleTouchUp();
-		if (DisconnectGrapplerIfPossible()) player.SetState(Player.PlayerStates.Falling);
+		if (DisconnectGrapplerIfPossible()) {
+			if (OnVoluntaryRelease != null) OnVoluntaryRelease.Invoke(airTimeTimer.lastStreak);
+			player.SetState(Player.PlayerStates.Falling);
+		}
 	}
 	
 	public override void HandleTouchDown() {

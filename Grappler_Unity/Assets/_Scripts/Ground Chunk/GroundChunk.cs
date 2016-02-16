@@ -8,9 +8,6 @@ using System;
 public class GroundChunk : GeneratableItem {
 	[HideInInspector, NonSerialized] public MountainChunk mountainChunk;
 
-	private static float distanceFromMountain;
-
-	[SerializeField] private FloatRange distanceFromMountainRange = new FloatRange(5, 14);
 	[SerializeField] private float maxBumpHeight = 0.3f;
 	[SerializeField] private float marginSize = 60.0f;
 
@@ -118,29 +115,21 @@ public class GroundChunk : GeneratableItem {
 	public List<Point> GetListOfLinePoints() {
 		return linePoints;
 	}
-
-	private static float num = 0;
-	private static float GetNextPerlinNoise() {
-		float perlin = Mathf.PerlinNoise(num, 0);
-		num += 0.1f;
-		return perlin;
-	}
 	
-	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
+	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		Reset();
-		distanceFromMountain = GetNextPerlinNoise() * (distanceFromMountainRange.max - distanceFromMountainRange.min) + distanceFromMountainRange.min;
 
 		slopeVector = (mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector).normalized;
 	
 		List<Vector2> points = new List<Vector2>();
-		GenerateShape(points, mountainChunk, previousGroundChunk);
+		GenerateShape(points, mountainChunk, previousGroundChunk, distanceFromMountain);
 		Vector2[] pointsArray = points.ToArray();
 		polygonCollider.points = pointsArray;
 		meshCreator.InitMesh(pointsArray);
 		CalculateDistances();
 	}
 
-	private void GenerateShape(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk) {
+	private void GenerateShape(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		float directDistFromMountain = distanceFromMountain;
 		Vector2 mountainVector = mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
@@ -202,7 +191,6 @@ public class GroundChunk : GeneratableItem {
 
 	private void Awake() {
 		linePoints = new List<Point>();
-		distanceFromMountain = distanceFromMountainRange.max;
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<GroundChunkMeshCreator>();
 	}

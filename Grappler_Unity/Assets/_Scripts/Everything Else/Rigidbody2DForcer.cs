@@ -20,6 +20,13 @@ public class Rigidbody2DForcer : MonoBehaviour {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.AddTorque(torque);
 	}
 
+	public Vector2 GetAverageDirection() {
+		Vector2 direction = Vector2.zero;
+		foreach (Rigidbody2D rigid in rigidbodies) direction += rigid.velocity;
+		direction.Normalize();
+		return direction;
+	}
+
 	private void Awake() {
 		
 	}
