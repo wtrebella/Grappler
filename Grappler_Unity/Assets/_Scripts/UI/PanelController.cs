@@ -18,47 +18,63 @@ public class PanelController : MonoBehaviour {
 	private void OnEnable() {
 		panels = new RectTransform[] {gameplayPanel, mainMenuPanel, settingsPanel};
 
-		SetPanel(defaultPanel);
+		if (currentPanel == null) SetPanelImmediate(defaultPanel);
 	}
 		
-	private void SetPanel(RectTransform panel) {
+	private void SetPanelAnimated(RectTransform panel) {
 		if (currentPanel == panel) return;
 
 		currentPanel = panel;
-		EnableCurrentPanel();
-		DisableNonCurrentPanels();
+		EnableCurrentPanelAnimated();
+		DisableNonCurrentPanelsAnimated();
 	}
 
-	private void DisableNonCurrentPanels() {
+	private void SetPanelImmediate(RectTransform panel) {
+		if (currentPanel == panel) return;
+
+		currentPanel = panel;
+		EnableCurrentPanelImmediate();
+		DisableNonCurrentPanelsImmediate();
+	}
+
+	private void DisableNonCurrentPanelsAnimated() {
 		foreach (RectTransform p in panels) {
-			if (p != currentPanel) DisablePanel(p);
+			if (p != currentPanel) DisablePanelAnimated(p);
 		}
 	}
 
-	private void EnableCurrentPanel() {
-		EnablePanel(currentPanel);
+	private void DisableNonCurrentPanelsImmediate() {
+		foreach (RectTransform p in panels) {
+			if (p != currentPanel) DisablePanelImmediate(p);
+		}
 	}
 
-	private void DisablePanel(RectTransform panel) {
-		if (Application.isPlaying) {
-			Go.to(panel.transform, 0.3f, new GoTweenConfig()
-				.localPosition(offScreenPosition)
-				.setEaseType(GoEaseType.SineInOut));
-		}
-		else {
-			((RectTransform)panel.transform).localPosition = offScreenPosition;
-		}
+	private void EnableCurrentPanelAnimated() {
+		EnablePanelAnimated(currentPanel);
+	}
+
+	private void EnableCurrentPanelImmediate() {
+		EnablePanelImmediate(currentPanel);
 	}
 		
-	private void EnablePanel(RectTransform panel) {
-		if (Application.isPlaying) {
-			Go.to(panel.transform, 0.3f, new GoTweenConfig()
-				.localPosition(Vector3.zero)
-				.setEaseType(GoEaseType.SineInOut));
-		}
-		else {
-			panel.transform.localPosition = Vector3.zero;
-		}
+	private void DisablePanelAnimated(RectTransform panel) {
+		Go.to(panel.transform, 0.3f, new GoTweenConfig()
+			.localPosition(offScreenPosition)
+			.setEaseType(GoEaseType.SineInOut));
+	}
+
+	private void DisablePanelImmediate(RectTransform panel) {
+		((RectTransform)panel.transform).localPosition = offScreenPosition;
+	}
+
+	private void EnablePanelAnimated(RectTransform panel) {
+		Go.to(panel.transform, 0.3f, new GoTweenConfig()
+			.localPosition(Vector3.zero)
+			.setEaseType(GoEaseType.SineInOut));
+	}
+
+	private void EnablePanelImmediate(RectTransform panel) {
+		((RectTransform)panel.transform).localPosition = Vector3.zero;
 	}
 
 	public RectTransform GetCurrentPanel() {
@@ -66,14 +82,17 @@ public class PanelController : MonoBehaviour {
 	}
 
 	public void SetGameplayPanel() {
-		SetPanel(gameplayPanel);
+		if (Application.isPlaying) SetPanelAnimated(gameplayPanel);
+		else SetPanelImmediate(gameplayPanel);
 	}
 
 	public void SetMainMenuPanel() {
-		SetPanel(mainMenuPanel);
+		if (Application.isPlaying) SetPanelAnimated(mainMenuPanel);
+		else SetPanelImmediate(mainMenuPanel);
 	}
 
 	public void SetSettingsPanel() {
-		SetPanel(settingsPanel);
+		if (Application.isPlaying) SetPanelAnimated(settingsPanel);
+		else SetPanelImmediate(settingsPanel);
 	}
 }
