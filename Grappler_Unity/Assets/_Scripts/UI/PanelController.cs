@@ -15,10 +15,46 @@ public class PanelController : MonoBehaviour {
 	private RectTransform currentPanel;
 	private RectTransform[] panels;
 
+	public RectTransform GetCurrentPanel() {
+		return currentPanel;
+	}
+
+	public void SetGameplayPanel() {
+		if (!Application.isPlaying) {
+			SetPanelImmediate(gameplayPanel);
+			return;
+		}
+
+		if (PanelIsSet()) SetPanelAnimated(gameplayPanel);
+		else SetPanelImmediate(gameplayPanel);
+	}
+
+	public void SetMainMenuPanel() {
+		if (!Application.isPlaying) {
+			SetPanelImmediate(mainMenuPanel);
+			return;
+		}
+
+		if (PanelIsSet()) SetPanelAnimated(mainMenuPanel);
+		else SetPanelImmediate(mainMenuPanel);
+	}
+
+	public void SetSettingsPanel() {
+		if (!Application.isPlaying) {
+			SetPanelImmediate(settingsPanel);
+			return;
+		}
+
+		if (PanelIsSet()) SetPanelAnimated(settingsPanel);
+		else SetPanelImmediate(settingsPanel);
+	}
+
+	private bool PanelIsSet() {
+		return currentPanel != null;
+	}
+
 	private void OnEnable() {
 		panels = new RectTransform[] {gameplayPanel, mainMenuPanel, settingsPanel};
-
-		if (currentPanel == null) SetPanelImmediate(defaultPanel);
 	}
 		
 	private void SetPanelAnimated(RectTransform panel) {
@@ -75,24 +111,5 @@ public class PanelController : MonoBehaviour {
 
 	private void EnablePanelImmediate(RectTransform panel) {
 		((RectTransform)panel.transform).localPosition = Vector3.zero;
-	}
-
-	public RectTransform GetCurrentPanel() {
-		return currentPanel;
-	}
-
-	public void SetGameplayPanel() {
-		if (Application.isPlaying) SetPanelAnimated(gameplayPanel);
-		else SetPanelImmediate(gameplayPanel);
-	}
-
-	public void SetMainMenuPanel() {
-		if (Application.isPlaying) SetPanelAnimated(mainMenuPanel);
-		else SetPanelImmediate(mainMenuPanel);
-	}
-
-	public void SetSettingsPanel() {
-		if (Application.isPlaying) SetPanelAnimated(settingsPanel);
-		else SetPanelImmediate(settingsPanel);
 	}
 }
