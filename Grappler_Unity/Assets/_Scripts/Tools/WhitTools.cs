@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public static class WhitTools {
 	public const float PixelsToUnits = 1.0f/32.0f;
 	public const float UnitsToPixels = 32.0f;
 	public const float GameUnitsToUnityUnits = 50.0f;
 	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
+
+	public static void Invoke(UnityEvent unityEvent) {
+		if (unityEvent != null) unityEvent.Invoke();
+	}
 
 	public static void Assert(bool condition, string errorString = "") {
 		if (!condition) Debug.LogError(errorString);

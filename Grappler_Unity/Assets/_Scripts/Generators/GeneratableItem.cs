@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class GeneratableItem : MonoBehaviour {
-	private Generator parentGenerator;
+	protected Generator parentGenerator;
 
 	public virtual void HandleSpawned(Generator generator) {
 		parentGenerator = generator;
