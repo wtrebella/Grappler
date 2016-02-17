@@ -81,6 +81,10 @@ public class InputManager : MonoBehaviour {
 			else HandleDownSwipe();
 		}
 	}
+
+	private bool IsOnLeftOfScreen(Vector2 position) {
+		return position.x < Screen.width / 2f;
+	}
 	
 	private void HandleLeftSwipe() 		{if (SignalLeftSwipe != null) SignalLeftSwipe();}
 	private void HandleRightSwipe() 	{if (SignalRightSwipe != null) SignalRightSwipe();}
@@ -91,9 +95,6 @@ public class InputManager : MonoBehaviour {
 	private void HandleRightTouchDown() {if (SignalRightTouchDown != null) SignalRightTouchDown();}
 	private void HandleRightTouchUp() 	{if (SignalRightTouchUp != null) SignalRightTouchUp();}
 
-	private bool IsOnLeftOfScreen(Vector2 position) {
-		return position.x < Screen.width / 2f;
-	}
 
 
 
