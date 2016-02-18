@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(KinematicSwitcher))]
 [RequireComponent(typeof(SkeletonGhostController))]
+[RequireComponent(typeof(PausedStateController))]
 [RequireComponent(typeof(GrapplingStateController))]
 [RequireComponent(typeof(DeadStateController))]
 [RequireComponent(typeof(OnGroundStateController))]
@@ -21,19 +22,22 @@ public class Player : StateMachine {
 	public UnityEvent OnEnteredGrapplingState;
 	public UnityEvent OnEnteredDeadState;
 	public UnityEvent OnEnteredOnGroundState;
+	public UnityEvent OnEnteredPausedState;
 
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
 	public Action SignalEnteredDeadState;
 	public Action SignalEnteredOnGroundState;
+	public Action SignalEnteredPausedState;
 
-	public enum PlayerStates {Falling, Grappling, Dead, OnGround}
+	public enum PlayerStates {Paused, Falling, Grappling, Dead, OnGround}
 
 	public Trail trail;
 
 	[SerializeField] private PlayerBodyPart body;
 	[SerializeField] private PlayerBodyPart feet;
 
+	[HideInInspector] public PausedStateController pausedController;
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
 	[HideInInspector] public DeadStateController deadController;
@@ -65,19 +69,37 @@ public class Player : StateMachine {
 		rigidbodyForcer = GetComponent<Rigidbody2DForcer>();
 		timeScaleChanger = GetComponent<TimeScaler>();
 		ghostController = GetComponent<SkeletonGhostController>();
-	}
-
-	private void Start() {
-		SetState(PlayerStates.Falling);
+		pausedController = GetComponent<PausedStateController>();
 	}
 
 	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
 	public bool IsGrappling() {return CurrentStateIs(PlayerStates.Grappling);}
 	public bool IsDead() {return CurrentStateIs(PlayerStates.Dead);}
 	public bool IsOnGround() {return CurrentStateIs(PlayerStates.OnGround);}
+	public bool IsPaused() {return CurrentStateIs(PlayerStates.Paused);}
 
 	public void SetState(PlayerStates state) {
 		currentState = state;
+	}
+
+	public void SetStateFalling() {
+		SetState(PlayerStates.Falling);
+	}
+
+	public void SetStateGrappling() {
+		SetState(PlayerStates.Grappling);
+	}
+
+	public void SetStateDead() {
+		SetState(PlayerStates.Dead);
+	}
+
+	public void SetStateOnGround() {
+		SetState(PlayerStates.OnGround);
+	}
+
+	public void SetStatePaused() {
+		SetState(PlayerStates.Paused);
 	}
 	
 	public void HandleCollisionEnter(PlayerBodyPart bodyPart, Collision2D collision) {
@@ -246,5 +268,28 @@ public class Player : StateMachine {
 		grapplingController.EnterState();
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
 		if (OnEnteredGrapplingState != null) OnEnteredGrapplingState.Invoke();
+	}
+
+
+	// paused
+
+	private void Paused_LeftSwipe() {pausedController.HandleLeftSwipe();}	
+	private void Paused_RightSwipe() {pausedController.HandleRightSwipe();}	
+	private void Paused_UpSwipe() {pausedController.HandleUpSwipe();}
+	private void Paused_DownSwipe() {pausedController.HandleDownSwipe();}	
+	private void Paused_Tap() {pausedController.HandleTap();}
+	private void Paused_TouchUp() {pausedController.HandleTouchUp();}	
+	private void Paused_TouchDown() {pausedController.HandleTouchDown();}	
+	private void Paused_ExitState() {pausedController.ExitState();}	
+	private void Paused_UpdateState() {pausedController.UpdateState();}	
+	private void Paused_FixedUpdateState() {pausedController.FixedUpdateState();}
+	private void Paused_LeftTouchDown() {pausedController.HandleLeftTouchDown();}	
+	private void Paused_LeftTouchUp() {pausedController.HandleLeftTouchUp();}	
+	private void Paused_RightTouchDown() {pausedController.HandleRightTouchDown();}	
+	private void Paused_RightTouchUp() {pausedController.HandleRightTouchUp();}
+	private void Paused_EnterState() {
+		pausedController.EnterState();
+		if (SignalEnteredPausedState != null) SignalEnteredPausedState();
+		if (OnEnteredPausedState != null) OnEnteredPausedState.Invoke();
 	}
 }
