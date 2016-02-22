@@ -1,10 +1,10 @@
 {
 "skeleton": {
-	"hash": "jA1HpDOhRfQV+uEE3KrLPliOnzs",
-	"spine": "3.0.09",
+	"hash": "WjBg/bx7rmBf39IwiQfPFT+1AJ0",
+	"spine": "3.0.12",
 	"width": 294.42,
 	"height": 324.18,
-	"images": "../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/images_top/"
+	"images": "./../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/images_top/"
 },
 "bones": [
 	{ "name": "root" },
@@ -12,7 +12,6 @@
 	{ "name": "neck", "parent": "bone", "length": 16.8, "x": 103.05, "y": 0.37, "rotation": -0.69 },
 	{ "name": "head", "parent": "neck", "length": 45.79, "x": 18.26, "y": -0.76, "rotation": -2.73 },
 	{ "name": "hat", "parent": "head", "length": 55.02, "x": 133.22, "y": -1.54, "rotation": -0.81 },
-	{ "name": "bone2", "parent": "hat", "x": -1130.45, "y": 462.08 },
 	{ "name": "lowerArmFront", "parent": "bone", "length": 82.32, "x": 97.56, "y": 14.88, "rotation": 131.12 },
 	{ "name": "lowerArmBack2", "parent": "bone", "length": 80, "x": 95.67, "y": -8.39, "rotation": -77.61 },
 	{ "name": "upperArmBack", "parent": "lowerArmBack2", "length": 77.53, "x": 79.38, "y": 1.08, "rotation": 29.57 },
@@ -30,8 +29,8 @@
 "skins": {
 	"default": {
 		"hat": {
-			"hats/sombrero": { "x": 94.99, "y": 15.95, "scaleX": 2.639, "scaleY": 2.639, "rotation": -78.36, "width": 120, "height": 86 },
-			"hats/topHat": { "x": 76.98, "y": 24.28, "scaleX": 2.465, "scaleY": 2.465, "rotation": -78.36, "width": 120, "height": 91 }
+			"hats/clothing_sombrero": { "x": 94.99, "y": 15.95, "scaleX": 2.639, "scaleY": 2.639, "rotation": -78.36, "width": 120, "height": 86 },
+			"hats/clothing_topHat": { "x": 76.98, "y": 24.28, "scaleX": 2.465, "scaleY": 2.465, "rotation": -78.36, "width": 120, "height": 91 }
 		},
 		"head": {
 			"head": { "x": 96.14, "y": -0.08, "rotation": -79.15, "width": 170, "height": 170 }
