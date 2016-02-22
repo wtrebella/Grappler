@@ -14,6 +14,7 @@ public class RockSlide : MonoBehaviour {
 	[SerializeField] private float slowZoneMultiplier = 0.1f;
 	[SerializeField] private float pushBackAmount = -10;
 	[SerializeField] private float streakThreshold = 0.3f;
+	[SerializeField] private GroundDetector groundDetector;
 
 	private float invertedSpeedPercent = 1;
 	private float currentOffsetChangeRate = 0;
@@ -28,6 +29,11 @@ public class RockSlide : MonoBehaviour {
 
 	public void OnAirTimeStreakEndedByCollision(float streak) {
 
+	}
+
+	public void OnGrapple() {
+		float pushBackPercent = 1 - groundDetector.GetDistanceFromGroundPercent();
+		PushBack(pushBackPercent);
 	}
 
 	public void OnAirTimeStreakEndedByGrapple(float streak) {
@@ -59,11 +65,12 @@ public class RockSlide : MonoBehaviour {
 		UpdateOffsetFixedUpdate();
 	}
 
-	private void PushBack(float streak) {
+	private void PushBack(float amount) {
+		float pushBack = pushBackAmount * amount;
 		Vector2 currentOffset = follow.GetOffset();
-		currentOffset.x += pushBackAmount * streak;
+		currentOffset.x += pushBack;
 		SetOffset(currentOffset.x);
-		if (OnPushBack != null) OnPushBack.Invoke(streak);
+		if (OnPushBack != null) OnPushBack.Invoke(amount);
 	}
 	
 	private void UpdateOffsetUpdate() {
