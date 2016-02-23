@@ -2,6 +2,8 @@
 using System.Collections;
 using UnityEngine.Events;
 
+// TODO: get rid of hasStarted and extract it out into game manager
+
 public class RockSlide : MonoBehaviour {
 	public UnityEventWithFloat OnPushBack;
 
@@ -15,6 +17,8 @@ public class RockSlide : MonoBehaviour {
 	[SerializeField] private float pushBackAmount = -10;
 	[SerializeField] private float streakThreshold = 0.3f;
 	[SerializeField] private GroundDetector groundDetector;
+
+	private bool hasStarted = false;
 
 	private float invertedSpeedPercent = 1;
 	private float currentOffsetChangeRate = 0;
@@ -54,14 +58,16 @@ public class RockSlide : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (updateType != WhitUpdateType.Update) return;
+		if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) hasStarted = true;
 
+		if (updateType != WhitUpdateType.Update) return;
+		if (!hasStarted) return;
 		UpdateOffsetUpdate();
 	}
 
 	private void FixedUpdate() {
 		if (updateType != WhitUpdateType.FixedUpdate) return;
-
+		if (!hasStarted) return;
 		UpdateOffsetFixedUpdate();
 	}
 

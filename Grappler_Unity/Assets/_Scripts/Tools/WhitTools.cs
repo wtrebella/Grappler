@@ -9,6 +9,10 @@ public static class WhitTools {
 	public const float GameUnitsToUnityUnits = 50.0f;
 	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
 
+	public static bool SpriteDefinitionIsNull(tk2dSpriteDefinition sprite) {
+		return sprite == null || sprite.name == "" || sprite.name == "Null";
+	}
+
 	public static void Invoke(UnityEvent unityEvent) {
 		if (unityEvent != null) unityEvent.Invoke();
 	}

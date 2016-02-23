@@ -6,14 +6,19 @@ using System.Linq;
 
 public class Clothing : MonoBehaviour {
 	[SerializeField] private tk2dSpriteCollectionData spriteCollection;
-
 	[SerializeField] private SkeletonAnimation stickmanTop;
 	[SerializeField] private SkeletonAnimation stickmanBottom;
 
 	private ClothingItem[] hats;
+	private ClothingItem[] shoesFront;
+	private ClothingItem[] shoesBack;
 	private Dictionary<ClothingItemType, ClothingItem> equippedClothingItems;
-	private string hatsSlot = "hat";
+	private string hatSlot = "hat";
 	private string hatsPath = "hats/";
+	private string shoeBackSlot = "shoeBack";
+	private string shoesBackPath = "shoes/shoesBack/";
+	private string shoeFrontSlot = "shoeFront";
+	private string shoesFrontPath = "shoes/shoesFront/";
 
 	private void Awake() {
 		equippedClothingItems = new Dictionary<ClothingItemType, ClothingItem>();
@@ -22,10 +27,20 @@ public class Clothing : MonoBehaviour {
 
 	private void LoadClothingItems() {
 		hats = Resources.LoadAll("Clothing Items/Hats", typeof(ClothingItem)).Cast<ClothingItem>().ToArray();
+		shoesFront = Resources.LoadAll("Clothing Items/Shoes Front", typeof(ClothingItem)).Cast<ClothingItem>().ToArray();
+		shoesBack = Resources.LoadAll("Clothing Items/Shoes Back", typeof(ClothingItem)).Cast<ClothingItem>().ToArray();
 	}
 
 	public ClothingItem[] GetHats() {
 		return hats;
+	}
+
+	public ClothingItem[] GetShoesFront() {
+		return shoesFront;
+	}
+
+	public ClothingItem[] GetShoesBack() {
+		return shoesBack;
 	}
 
 	public void Equip(ClothingItem clothingItem) {
@@ -63,32 +78,51 @@ public class Clothing : MonoBehaviour {
 	}
 
 	private SkeletonAnimation GetSkeleton(ClothingItemType type) {
-		if (type == ClothingItemType.Hat) return GetSkeleton(ClothingSkeletonType.Top);
-		else return null;
+		SkeletonAnimation skeleton = null;
+		if (type == ClothingItemType.Hat) skeleton = GetSkeleton(ClothingSkeletonType.Top);
+		else if (type == ClothingItemType.ShoeBack || type == ClothingItemType.ShoeFront) skeleton = GetSkeleton(ClothingSkeletonType.Bottom); 
+		else {
+			Debug.LogError("invalid clothing item type: " + type.ToString());
+			return null;
+		}
+		return skeleton;
 	}
 
 	private SkeletonAnimation GetSkeleton(ClothingSkeletonType type) {
 		SkeletonAnimation skeleton = null;
 		if (type == ClothingSkeletonType.Top) skeleton = stickmanTop;
 		else if (type == ClothingSkeletonType.Bottom) skeleton = stickmanBottom;
-		else {
-			Debug.LogError("invalid skeleton type: " + type.ToString());
-			return null;
-		}
+		else Debug.LogError("invalid skeleton type: " + type.ToString());
 		return skeleton;
 	}
 
 	private string GetPath(ClothingItem clothingItem) {
-		if (clothingItem.type == ClothingItemType.Hat) return hatsPath + clothingItem.GetSprite().name;
-		else return "";
+		string path;
+
+		if (clothingItem.type == ClothingItemType.Hat) {
+			path = hatsPath + clothingItem.spriteName;
+		}
+		else if (clothingItem.type == ClothingItemType.ShoeBack) {
+			path = shoesBackPath + clothingItem.spriteName;
+		}
+		else if (clothingItem.type == ClothingItemType.ShoeFront) {
+			path = shoesFrontPath + clothingItem.spriteName;
+		}
+		else {
+			Debug.LogError("invalid clothing item type: " + clothingItem.type.ToString());
+			path = "";
+		}
+
+		return path;
 	}
 
 	private string GetSlot(ClothingItemType type) {
-		if (type == ClothingItemType.Hat) return hatsSlot;
-		else return "";
-	}
-	
-	private void Update() {
-		
+		if (type == ClothingItemType.Hat) return hatSlot;
+		else if (type == ClothingItemType.ShoeBack) return shoeBackSlot;
+		else if (type == ClothingItemType.ShoeFront) return shoeFrontSlot;
+		else {
+			Debug.LogError("invalid clothing item type: " + type.ToString());
+			return "";
+		}
 	}
 }

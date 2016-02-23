@@ -1,10 +1,10 @@
 {
 "skeleton": {
-	"hash": "1ulSDdyHB6YVVFu6x1b3OWGIEIM",
+	"hash": "eAEugmLa7Rj0pOfcyxJnJgiBP7E",
 	"spine": "3.0.12",
 	"width": 294.42,
 	"height": 324.18,
-	"images": "./../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/images_top/"
+	"images": "./../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/imagesTop/"
 },
 "bones": [
 	{ "name": "root" },
@@ -12,18 +12,18 @@
 	{ "name": "neck", "parent": "bone", "length": 16.8, "x": 103.05, "y": 0.37, "rotation": -0.69 },
 	{ "name": "head", "parent": "neck", "length": 45.79, "x": 18.26, "y": -0.76, "rotation": -2.73 },
 	{ "name": "hat", "parent": "head", "length": 55.02, "x": 133.22, "y": -1.54, "rotation": -0.81 },
-	{ "name": "lowerArmFront", "parent": "bone", "length": 82.32, "x": 97.56, "y": 14.88, "rotation": 131.12 },
-	{ "name": "lowerArmBack2", "parent": "bone", "length": 80, "x": 95.67, "y": -8.39, "rotation": -77.61 },
-	{ "name": "upperArmBack", "parent": "lowerArmBack2", "length": 77.53, "x": 79.38, "y": 1.08, "rotation": 29.57 },
-	{ "name": "upperArmFront", "parent": "lowerArmFront", "length": 70.71, "x": 76.69, "y": -0.3, "rotation": 37.84 }
+	{ "name": "upperArmBack", "parent": "bone", "length": 80, "x": 95.67, "y": -8.39, "rotation": -77.61 },
+	{ "name": "lowerArmBack", "parent": "upperArmBack", "length": 77.53, "x": 79.38, "y": 1.08, "rotation": 29.57 },
+	{ "name": "upperArmFront", "parent": "bone", "length": 82.32, "x": 97.56, "y": 14.88, "rotation": 131.12 },
+	{ "name": "lowerArmFront", "parent": "upperArmFront", "length": 70.71, "x": 76.69, "y": -0.3, "rotation": 37.84 }
 ],
 "slots": [
 	{ "name": "head", "bone": "head", "attachment": "head" },
 	{ "name": "torso", "bone": "bone", "attachment": "torso" },
-	{ "name": "upperArmBack", "bone": "upperArmBack", "attachment": "upperArmBack" },
-	{ "name": "lowerArmBack", "bone": "lowerArmBack2", "attachment": "lowerArmBack" },
-	{ "name": "upperArmFront", "bone": "upperArmFront", "attachment": "upperArmFront" },
-	{ "name": "lowerArmFront", "bone": "lowerArmFront", "attachment": "lowerArmFront" },
+	{ "name": "lowerArmBack", "bone": "lowerArmBack", "attachment": "upperArmBack" },
+	{ "name": "upperArmBack", "bone": "upperArmBack", "attachment": "lowerArmBack" },
+	{ "name": "lowerArmFront", "bone": "lowerArmFront", "attachment": "upperArmFront" },
+	{ "name": "upperArmFront", "bone": "upperArmFront", "attachment": "lowerArmFront" },
 	{ "name": "hat", "bone": "hat" }
 ],
 "skins": {
@@ -37,26 +37,26 @@
 			"head": { "x": 96.14, "y": -0.08, "rotation": -79.15, "width": 170, "height": 170 }
 		},
 		"lowerArmBack": {
-			"lowerArmBack": { "x": 38.72, "y": 0.26, "rotation": -4.94, "width": 104, "height": 35 }
+			"upperArmBack": { "x": 32.29, "y": -0.02, "rotation": -47.56, "width": 72, "height": 77 }
 		},
 		"lowerArmFront": {
-			"lowerArmFront": { "x": 38.84, "y": 0.18, "rotation": 136.67, "width": 83, "height": 80 }
+			"upperArmFront": { "x": 32.22, "y": 1.02, "rotation": 42.53, "width": 77, "height": 73 }
 		},
 		"torso": {
 			"torso": { "x": 47.69, "y": 0.08, "rotation": -82.56, "width": 65, "height": 129 }
 		},
 		"upperArmBack": {
-			"upperArmBack": { "x": 32.29, "y": -0.02, "rotation": -47.56, "width": 72, "height": 77 }
+			"lowerArmBack": { "x": 38.72, "y": 0.26, "rotation": -4.94, "width": 104, "height": 35 }
 		},
 		"upperArmFront": {
-			"upperArmFront": { "x": 32.22, "y": 1.02, "rotation": 42.53, "width": 77, "height": 73 }
+			"lowerArmFront": { "x": 38.84, "y": 0.18, "rotation": 136.67, "width": 83, "height": 80 }
 		}
 	}
 },
 "animations": {
 	"falling": {
 		"bones": {
-			"upperArmFront": {
+			"lowerArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": -86.96 },
 					{ "time": 0.1666, "angle": -36.77 },
@@ -65,7 +65,7 @@
 					{ "time": 0.6666, "angle": -86.96 }
 				]
 			},
-			"lowerArmFront": {
+			"upperArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": -15.42 },
 					{ "time": 0.1666, "angle": -15.84 },
@@ -74,7 +74,7 @@
 					{ "time": 0.6666, "angle": -15.42 }
 				]
 			},
-			"lowerArmBack2": {
+			"upperArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": -22.63 },
 					{ "time": 0.1666, "angle": -11.05 },
@@ -83,7 +83,7 @@
 					{ "time": 0.6666, "angle": -22.63 }
 				]
 			},
-			"upperArmBack": {
+			"lowerArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": -78.89 },
 					{ "time": 0.1666, "angle": -20.6 },
@@ -138,7 +138,7 @@
 					{ "time": 1.3666, "angle": 0 }
 				]
 			},
-			"lowerArmFront": {
+			"upperArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": -111.1 },
 					{ "time": 0.1666, "angle": -110.75 },
@@ -151,7 +151,7 @@
 					{ "time": 1.3666, "angle": -111.1 }
 				]
 			},
-			"upperArmFront": {
+			"lowerArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": -72.16 },
 					{ "time": 0.1666, "angle": -76.94 },
@@ -164,7 +164,7 @@
 					{ "time": 1.3666, "angle": -72.16 }
 				]
 			},
-			"lowerArmBack2": {
+			"upperArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": 46.09 },
 					{ "time": 0.1666, "angle": 48.3 },
@@ -177,7 +177,7 @@
 					{ "time": 1.3666, "angle": 46.09 }
 				]
 			},
-			"upperArmBack": {
+			"lowerArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": 58.22 },
 					{ "time": 0.1666, "angle": 53.35 },
@@ -212,7 +212,7 @@
 	},
 	"onGround": {
 		"bones": {
-			"lowerArmFront": {
+			"upperArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": -272.41 },
 					{ "time": 0.1666, "angle": -271.27 },
@@ -222,7 +222,7 @@
 					{ "time": 0.8333, "angle": -272.41 }
 				]
 			},
-			"upperArmFront": {
+			"lowerArmFront": {
 				"rotate": [
 					{ "time": 0, "angle": 86.17 },
 					{ "time": 0.1666, "angle": 68.59 },
@@ -232,7 +232,7 @@
 					{ "time": 0.8333, "angle": 86.17 }
 				]
 			},
-			"lowerArmBack2": {
+			"upperArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": -83.93 },
 					{ "time": 0.1666, "angle": -76.37 },
@@ -242,7 +242,7 @@
 					{ "time": 0.8333, "angle": -83.93 }
 				]
 			},
-			"upperArmBack": {
+			"lowerArmBack": {
 				"rotate": [
 					{ "time": 0, "angle": 114.05 },
 					{ "time": 0.1666, "angle": 103.7 },

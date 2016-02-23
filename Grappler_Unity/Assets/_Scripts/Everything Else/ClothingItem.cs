@@ -2,8 +2,11 @@
 using System.Collections;
 
 public enum ClothingItemType {
+	None = 0,
 	Hat,
-	None
+	ShoeBack,
+	ShoeFront,
+	MAX
 }
 
 public enum ClothingSkeletonType {
@@ -12,31 +15,28 @@ public enum ClothingSkeletonType {
 	None
 }
 
+[System.Serializable]
 public class ClothingItem : ScriptableObject {
 	public tk2dSpriteCollectionData spriteCollectionData;
 	public ClothingItemType type = ClothingItemType.None;
 	public ClothingSkeletonType skeleton = ClothingSkeletonType.None;
+	[HideInInspector] public string spriteName;
 
-	[SerializeField, HideInInspector] private tk2dSpriteDefinition sprite;
-
-	public tk2dSpriteDefinition GetSprite() {
-		return sprite;
-	}
-
-	public void SetSprite(tk2dSpriteDefinition sprite) {
+	public void SetSprite(string spriteName) {
 		if (spriteCollectionData == null) {
 			Debug.LogError("sprite collection data is null!");
 			return;
 		}
-		if (spriteCollectionData.GetSpriteDefinition(sprite.name) == null) {
-			Debug.LogError("sprite collection data doesn't contain definition for sprite: " + sprite.name);
+
+		this.spriteName = spriteName;
+
+		if (!HasValidSpriteName()) {
+			Debug.LogError("sprite collection data doesn't contain definition for sprite: " + spriteName);
 			return;
 		}
-
-		this.sprite = sprite;
 	}
 
-	public void RemoveSprite() {
-		this.sprite = null;
+	public bool HasValidSpriteName() {
+		return !string.IsNullOrEmpty(spriteName) && spriteCollectionData.GetSpriteDefinition(spriteName) != null;
 	}
 }

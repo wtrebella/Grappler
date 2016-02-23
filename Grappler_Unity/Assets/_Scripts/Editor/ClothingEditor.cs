@@ -4,34 +4,31 @@ using UnityEditor;
 
 [CustomEditor(typeof(Clothing))]
 public class ClothingEditor : Editor {
-	private void OnEnable() {
-
-	}
-
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 		if (!Application.isPlaying) return;
 
 		Clothing clothing = target as Clothing;
-		ClothingItemType type = ClothingItemType.Hat;
-		ClothingItem[] items = GetItems(type);
-		if (items.Length == 0) return;
-			
-		EditorGUILayout.Space();
-		EditorGUILayout.Space();
-		EditorGUILayout.Space();
+		for (int i = 1; i < (int)ClothingItemType.MAX; i++) {
+			ClothingItemType type = (ClothingItemType)i;
+			ClothingItem[] items = GetItems(type);
+			if (items.Length == 0) continue;
+				
+			EditorGUILayout.Space();
+			EditorGUILayout.Space();
+			EditorGUILayout.Space();
 
-		EditorGUILayout.LabelField(type.ToString());
-		if (clothing.ItemTypeIsEquipped(type)) {
-			ClothingItem equippedItem = clothing.GetEquippedItem(type);
-			EditorGUILayout.LabelField("Equipped: " + equippedItem.GetSprite().name);
-			if (GUILayout.Button("Unequip " + type.ToString())) clothing.Unequip(type);
-		}
-		else {
-			foreach (ClothingItem item in items) {
-				tk2dSpriteDefinition sprite = item.GetSprite();
-				if (sprite == null) continue;
-				if (GUILayout.Button(sprite.name)) clothing.Equip(item);
+			EditorGUILayout.LabelField(type.ToString());
+			if (clothing.ItemTypeIsEquipped(type)) {
+				ClothingItem equippedItem = clothing.GetEquippedItem(type);
+				EditorGUILayout.LabelField("Equipped: " + equippedItem.spriteName);
+				if (GUILayout.Button("Unequip " + type.ToString())) clothing.Unequip(type);
+			}
+			else {
+				foreach (ClothingItem item in items) {
+					if (!item.HasValidSpriteName()) continue;
+					if (GUILayout.Button(item.spriteName)) clothing.Equip(item);
+				}
 			}
 		}
 	}
@@ -40,6 +37,8 @@ public class ClothingEditor : Editor {
 		Clothing clothing = target as Clothing;
 
 		if (type == ClothingItemType.Hat) return clothing.GetHats();
+		else if (type == ClothingItemType.ShoeBack) return clothing.GetShoesBack();
+		else if (type == ClothingItemType.ShoeFront) return clothing.GetShoesFront();
 
 		return null;
 	}
