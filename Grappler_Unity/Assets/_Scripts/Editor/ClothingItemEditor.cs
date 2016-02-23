@@ -26,14 +26,18 @@ public class ClothingItemEditor : Editor {
 				foreach (tk2dSpriteDefinition sprite in clothingSprites) {
 					if (GUILayout.Button(sprite.name)) {
 						clothingItem.SetSprite(sprite);
-						return;
+						break;
 					}
 				}
 			}
 			else {
 				EditorGUILayout.LabelField("Sprite Name: " + clothingItem.GetSprite().name);
-				if (GUILayout.Button("Remove Sprite")) clothingItem.RemoveSprite();
+				if (GUILayout.Button("Remove Sprite")) {
+					clothingItem.RemoveSprite();
+				}
 			}
 		}
+
+		if (GUI.changed) EditorUtility.SetDirty(target);
 	}
 }

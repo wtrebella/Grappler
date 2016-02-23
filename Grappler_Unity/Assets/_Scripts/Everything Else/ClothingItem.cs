@@ -17,7 +17,7 @@ public class ClothingItem : ScriptableObject {
 	public ClothingItemType type = ClothingItemType.None;
 	public ClothingSkeletonType skeleton = ClothingSkeletonType.None;
 
-	private tk2dSpriteDefinition sprite;
+	[SerializeField, HideInInspector] private tk2dSpriteDefinition sprite;
 
 	public tk2dSpriteDefinition GetSprite() {
 		return sprite;
