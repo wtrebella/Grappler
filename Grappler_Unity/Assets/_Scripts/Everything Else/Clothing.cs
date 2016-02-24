@@ -3,8 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Spine;
 using System.Linq;
+using UnityEngine.Events;
 
 public class Clothing : MonoBehaviour {
+	public UnityEvent OnHatEquipped;
+	public UnityEvent OnShoeBackEquipped;
+	public UnityEvent OnShoeFrontEquipped;
+
+	public UnityEvent OnHatUnequipped;
+	public UnityEvent OnShoeBackUnequipped;
+	public UnityEvent OnShoeFrontUnequipped;
+
 	[SerializeField] private tk2dSpriteCollectionData spriteCollection;
 	[SerializeField] private SkeletonAnimation stickmanTop;
 	[SerializeField] private SkeletonAnimation stickmanBottom;
@@ -76,6 +85,10 @@ public class Clothing : MonoBehaviour {
 		SkeletonAnimation skeleton = GetSkeleton(type);
 		if (equippedClothingItems.ContainsKey(type)) equippedClothingItems.Remove(type);
 		skeleton.skeleton.SetAttachment(slot, null);
+
+		if (type == ClothingItemType.Hat) WhitTools.Invoke(OnHatUnequipped);
+		else if (type == ClothingItemType.ShoeBack) WhitTools.Invoke(OnShoeBackUnequipped);
+		else if (type == ClothingItemType.ShoeFront) WhitTools.Invoke(OnShoeFrontUnequipped);
 	}
 
 	private void SetAttachment(ClothingItem clothingItem) {
@@ -85,6 +98,10 @@ public class Clothing : MonoBehaviour {
 
 		equippedClothingItems.Add(clothingItem.type, clothingItem);
 		skeleton.skeleton.SetAttachment(slot, path);
+
+		if (clothingItem.type == ClothingItemType.Hat) WhitTools.Invoke(OnHatEquipped);
+		else if (clothingItem.type == ClothingItemType.ShoeBack) WhitTools.Invoke(OnShoeBackEquipped);
+		else if (clothingItem.type == ClothingItemType.ShoeFront) WhitTools.Invoke(OnShoeFrontEquipped);
 	}
 
 	private SkeletonAnimation GetSkeleton(ClothingItemType type) {
