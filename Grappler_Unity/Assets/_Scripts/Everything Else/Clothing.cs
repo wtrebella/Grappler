@@ -25,6 +25,12 @@ public class Clothing : MonoBehaviour {
 		LoadClothingItems();
 	}
 
+	private void Start() {
+		SetAttachment(hats[Random.Range(0, hats.Length)]);
+		SetAttachment(shoesFront[Random.Range(0, shoesFront.Length)]);
+		SetAttachment(shoesBack[Random.Range(0, shoesBack.Length)]);
+	}
+
 	private void LoadClothingItems() {
 		hats = Resources.LoadAll("Clothing Items/Hats", typeof(ClothingItem)).Cast<ClothingItem>().ToArray();
 		shoesFront = Resources.LoadAll("Clothing Items/Shoes Front", typeof(ClothingItem)).Cast<ClothingItem>().ToArray();
