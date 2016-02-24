@@ -26,6 +26,10 @@ public class Clothing : MonoBehaviour {
 	}
 
 	private void Start() {
+
+	}
+
+	private void SetRandomItems() {
 		SetAttachment(hats[Random.Range(0, hats.Length)]);
 		SetAttachment(shoesFront[Random.Range(0, shoesFront.Length)]);
 		SetAttachment(shoesBack[Random.Range(0, shoesBack.Length)]);
