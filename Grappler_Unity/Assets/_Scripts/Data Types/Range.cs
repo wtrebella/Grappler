@@ -15,7 +15,7 @@ public class IntRange : Range {
 	public int max = 1;
 
 	public int middle {get {return min + difference / 2;}}
-	public int difference {get {return max - min;}}
+	public int difference {get {return Mathf.Abs(max - min);}}
 
 	public IntRange() {
 		

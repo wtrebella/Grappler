@@ -62,6 +62,53 @@ public class Clothing : MonoBehaviour {
 		return shoesBack;
 	}
 
+	public ClothingItem[] GetItems(ClothingItemType type) {
+		if (type == ClothingItemType.Hat) return GetHats();
+		else if (type == ClothingItemType.ShoeBack) return GetShoesBack();
+		else if (type == ClothingItemType.ShoeFront) return GetShoesFront();
+		else {
+			Debug.LogError("invalid type: " + type.ToString());
+			return null;
+		}
+	}
+
+	public void EquipNextHat() {
+		EquipNext(ClothingItemType.Hat);
+	}
+
+	public void EquipNextShoeBack() {
+		EquipNext(ClothingItemType.ShoeBack);
+	}
+
+	public void EquipNextShoeFront() {
+		EquipNext(ClothingItemType.ShoeFront);
+	}
+
+	public void EquipNext(ClothingItemType type) {
+		ClothingItem equippedItem = null;
+		if (equippedClothingItems.ContainsKey(type)) equippedItem = equippedClothingItems[type];
+		int currentItemIndex = -1;
+		ClothingItem[] items = GetItems(type);
+
+		if (equippedItem != null) {
+			for (int i = 0; i < items.Length; i++) {
+				ClothingItem arrayItem = items[i];
+				if (equippedItem == arrayItem) {
+					currentItemIndex = i;
+				}
+			}
+		}
+
+		Unequip(type);
+
+		IntRange wrapRange = new IntRange(-1, items.Length);
+		int newItemIndex = WhitTools.IncrementWithWrap(currentItemIndex, wrapRange);
+		if (newItemIndex >= 0 && newItemIndex < items.Length) {
+			ClothingItem nextItem = items[newItemIndex];
+			Equip(nextItem);
+		}
+	}
+
 	public void Equip(ClothingItem clothingItem) {
 		SetAttachment(clothingItem);
 	}

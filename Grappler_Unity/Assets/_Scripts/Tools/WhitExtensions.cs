@@ -5,6 +5,14 @@ using System;
 using UnityEngine.Events;
 
 public static class WhitExtensions {
+	public static void IncrementWithWrap(this int value, IntRange wrapRange) {
+		value = WhitTools.IncrementWithWrap(value, wrapRange);
+	}
+
+	public static void DecrementWithWrap(this int value, IntRange wrapRange) {
+		value = WhitTools.DecrementWithWrap(value, wrapRange);
+	}
+
 	public static Vector2 GetConnectedAnchorInWorldPosition(this SpringJoint2D springJoint) {
 		return springJoint.connectedBody.transform.TransformPoint(springJoint.connectedAnchor);
 	}

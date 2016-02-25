@@ -21,6 +21,18 @@ public static class WhitTools {
 		if (!condition) Debug.LogError(errorString);
 	}
 
+	public static int IncrementWithWrap(int value, IntRange wrapRange) {
+		value++;
+		if (value >= wrapRange.max) value -= wrapRange.difference;
+		return value;
+	}
+
+	public static int DecrementWithWrap(int value, IntRange wrapRange) {
+		value--;
+		if (value <= wrapRange.min) value += wrapRange.difference;
+		return value;
+	}
+
 	public static Vector2 AngleToDirection(float angle) {
 		Vector2 direction = (Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right).ToVector2();
 		return direction;

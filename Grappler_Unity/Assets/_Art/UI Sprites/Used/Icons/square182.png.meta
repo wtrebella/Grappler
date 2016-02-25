@@ -1,9 +1,18 @@
 fileFormatVersion: 2
 guid: 67e0de560350348f7a2b2d72b42cdf97
-timeCreated: 1455521935
+timeCreated: 1456301224
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: square182
+    21300002: square182_1
+    21300004: square182_2
+    21300006: square182_3
+    21300008: square182_4
+    21300010: square182_5
+    21300012: square182_6
+    21300014: square182_7
+    21300016: square182_0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,18 +47,35 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 50
+  spritePixelsToUnits: 60
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: square182_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 14, z: 14, w: 14}
+      outline:
+      - - {x: -20, y: 20}
+        - {x: -20, y: -20}
+        - {x: 17, y: -20}
+        - {x: 20, y: -17}
+        - {x: 20, y: 16}
+        - {x: 16, y: 20}
     outline: []
   spritePackingTag: UI
   userData: 
