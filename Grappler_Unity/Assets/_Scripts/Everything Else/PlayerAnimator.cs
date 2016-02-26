@@ -7,9 +7,6 @@ public class PlayerAnimator : MonoBehaviour {
 	private string clipName_falling = "falling";
 	private string clipName_onGround = "onGround";
 
-	[SerializeField] private tk2dSpriteAnimator bodyAnimator;
-	[SerializeField] private tk2dSpriteAnimator feetAnimator;
-
 	[SerializeField] private SkeletonAnimation topAnimation;
 	[SerializeField] private SkeletonAnimation bottomAnimation;
 	

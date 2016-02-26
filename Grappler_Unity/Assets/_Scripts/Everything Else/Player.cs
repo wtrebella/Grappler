@@ -72,6 +72,10 @@ public class Player : StateMachine {
 		pausedController = GetComponent<PausedStateController>();
 	}
 
+	private void Start() {
+		SetState(PlayerStates.Falling);
+	}
+
 	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
 	public bool IsGrappling() {return CurrentStateIs(PlayerStates.Grappling);}
 	public bool IsDead() {return CurrentStateIs(PlayerStates.Dead);}

@@ -11,7 +11,7 @@ public class GameStateManager : MonoBehaviour
 	Stack<GameStateBase> _activeGameStates = new Stack<GameStateBase>();
 
 	[SerializeField]
-	GameStateType _initGameState = GameStateType.CharacterSelect;
+	GameStateType _initGameState = GameStateType.CharacterCustomization;
 
 	Transform _gameModeParent = null;
 
