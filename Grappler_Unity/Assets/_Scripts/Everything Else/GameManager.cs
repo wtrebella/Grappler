@@ -2,12 +2,13 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class GameManager : GameStateBase {
-	public void RestartGame() {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+public class GameManager : Singleton<GameManager> {
+	private void Awake() {
+		DontDestroyOnLoad(gameObject);
 	}
 
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.R)) RestartGame();
+	public static void LoadSetupSceneThenGameScene() {
+		SceneManager.LoadScene("RootScene", LoadSceneMode.Single);
+		SceneManager.LoadScene("GameScene", LoadSceneMode.Additive);
 	}
 }
