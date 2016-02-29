@@ -2,12 +2,13 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-// right now, the game manager just loads the gamescene and the game automatically starts.
-// i need to have an abstract game state manager that controls what gamestates will be loaded somehow.
-
-public class GameplayState : GameStateBase {
+public class GameStateGameplay : GameStateBase {
 	public void RestartGame() {
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+	}
+
+	private void Awake() {
+		_gameStateType = GameStateType.Gameplay;
 	}
 
 	private void Update() {
@@ -15,10 +16,13 @@ public class GameplayState : GameStateBase {
 	}
 
 	public override void OnEnterState() {
-		
+		StartCoroutine(OnEnterState_Routine());
 	}
 
-	public override IEnumerator OnEnterState_Routine() {yield break;}
+	public override IEnumerator OnEnterState_Routine() {
+		yield return StartCoroutine(SetupPayload());
+		yield break;
+	}
 
 	public override void OnUpdateState() {
 		

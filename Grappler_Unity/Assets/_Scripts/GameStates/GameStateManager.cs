@@ -2,72 +2,80 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-public class GameStateManager : MonoBehaviour
+public class GameStateManager : Singleton<GameStateManager>
 {
-	// Map of game state types to a corresponding game type object
-	Dictionary<GameStateType, GameStateBase> _stateTypeToStateMap = new Dictionary<GameStateType, GameStateBase>();
+	public PayloadBase GetPayloadFromStateType(GameStateType gameStateType) {return _stateTypeToPayloadMap[gameStateType];}
+	public GameStateBase CurrentState {get {return _activeGameStates.Peek();}}
 
-	Stack<GameStateBase> _activeGameStates = new Stack<GameStateBase>();
+	[SerializeField] GameStateType _initGameState = GameStateType.CharacterCustomization;
 
-	[SerializeField]
-	GameStateType _initGameState = GameStateType.CharacterCustomization;
+	private Dictionary<GameStateType, GameStateBase> _stateTypeToStateMap = new Dictionary<GameStateType, GameStateBase>();
+	private Dictionary<GameStateType, PayloadBase> _stateTypeToPayloadMap = new Dictionary<GameStateType, PayloadBase>();
+	private Stack<GameStateBase> _activeGameStates = new Stack<GameStateBase>();
+	private Transform _gameModeParent = null;
 
-	Transform _gameModeParent = null;
+	public static void LoadSetupSceneThenGameScene() {
+		SceneManager.LoadScene(GameScenes.Root.ToString(), LoadSceneMode.Single);
+	}
 
-	public GameStateBase CurrentState
-	{ get { return _activeGameStates.Peek(); } }
+	private void Awake() {
+		_gameModeParent = new GameObject("Game States").transform;
+		_gameModeParent.SetParent(transform);
 
-	public void Reinitialize(GameStateType gameStateType)
-	{
+		InitializeGameStateTypes();
+		InitializePayloads();
+
+		DontDestroyOnLoad(gameObject);
+
+		PushGameState(_initGameState);
+	}
+		
+	private void Update() {
+		if(_activeGameStates.Count > 0) _activeGameStates.Peek().OnUpdateState();
+	}
+
+	public void Reinitialize(GameStateType gameStateType) {
 		_stateTypeToStateMap.Clear();
 
 		InitializeGameStateTypes();
 		PushGameState(gameStateType);
 	}
 
-	void Update()
-	{
-		if(_activeGameStates.Count > 0)
-			_activeGameStates.Peek().OnUpdateState();
+	private void InitializeGameStateTypes() {
+		_stateTypeToStateMap.Add(GameStateType.CharacterCustomization, SpawnGameState<GameStateCharacterCustomization>());
+		_stateTypeToStateMap.Add(GameStateType.Gameplay, SpawnGameState<GameStateGameplay>());
 	}
 
-	void InitializeGameStateTypes()
-	{
-//		// Menus
-//        _stateTypeToStateMap.Add(GameStateType.MainMenu, SpawnGameModeGO<GameStateMainMenu>());
-//		_stateTypeToStateMap.Add(GameStateType.CharacterSelect, SpawnGameModeGO<GameStateCharacterSelect>());
-//		_stateTypeToStateMap.Add(GameStateType.GameOver, SpawnGameModeGO<GameStateGameOver>());
-//
-//		// Game modes
-//		_stateTypeToStateMap.Add(GameStateType.Soccer, SpawnGameModeGO<GameStateSoccer>());
-//		_stateTypeToStateMap.Add(GameStateType.CaptureTheFlagTwoTeam, SpawnGameModeGO<GameStateCaptureTheFlagTwoTeam>());
-//		_stateTypeToStateMap.Add(GameStateType.CaptureTheFlagMultiTeam, SpawnGameModeGO<GameStateCaptureTheFlagMultiTeam>());
-//		_stateTypeToStateMap.Add(GameStateType.HotPotato, SpawnGameModeGO<GameStateHotPotato>());
-//		_stateTypeToStateMap.Add(GameStateType.Coinz, SpawnGameModeGO<GameStateCoinz>());
-//		_stateTypeToStateMap.Add(GameStateType.Sumo, SpawnGameModeGO<GameStateSumo>());
-//		_stateTypeToStateMap.Add(GameStateType.Volleyball, SpawnGameModeGO<GameStateVolleyball>());
+	private void InitializePayloads() {
+		foreach(KeyValuePair<GameStateType, GameStateBase> stateTypeToStatePair in _stateTypeToStateMap) {
+			string stateName = stateTypeToStatePair.Key.ToString();
+			string payloadPath = "Payloads/" + stateName + "_Payload";
+			
+			PayloadBase payload = Resources.Load<PayloadBase>(payloadPath);
+			if(!_stateTypeToPayloadMap.ContainsKey(stateTypeToStatePair.Key)) {
+				_stateTypeToPayloadMap.Add(stateTypeToStatePair.Key, payload);
+			}
+		}
 	}
 
-	T SpawnGameModeGO<T>() where T : GameStateBase
-	{
+	private T SpawnGameState<T>() where T : GameStateBase {
 		T tObj = new GameObject(typeof(T).ToString(), typeof(T)).GetComponent<T>();
 		tObj.transform.SetParent(_gameModeParent);
 
 		return tObj;
 	}
 
-	public void PushGameState(GameStateType gameStateType)
-	{
+	public void PushGameState(GameStateType gameStateType) {
 		if(_activeGameStates.Count > 0)
 			_activeGameStates.Peek().OnPauseState();
 
 		_activeGameStates.Push(_stateTypeToStateMap[gameStateType]);
-			_stateTypeToStateMap[gameStateType].OnEnterState();
+		_stateTypeToStateMap[gameStateType].OnEnterState();
 	}
 
-	public void PopGameState()
-	{
+	public void PopGameState() {
 		if(_activeGameStates.Count > 0)
 			_activeGameStates.Pop().OnExitState();
 
@@ -75,14 +83,12 @@ public class GameStateManager : MonoBehaviour
 			_activeGameStates.Peek().OnUnpauseState();
 	}
 
-	public void ClearGameStates()
-	{
+	public void ClearGameStates() {
 		while(_activeGameStates.Count > 0)
 			_activeGameStates.Pop().OnExitState();
 	}
 
-	public bool IsInState(GameStateType type)
-	{
+	public bool IsInState(GameStateType type) {
 		return _activeGameStates.Peek() == _stateTypeToStateMap[type];
 	}
 }

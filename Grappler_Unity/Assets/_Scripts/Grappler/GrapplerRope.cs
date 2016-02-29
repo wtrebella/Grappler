@@ -17,7 +17,6 @@ public class GrapplerRope : StateMachine {
 	private SpringJointAttributeCooldownLerper springJointAttributeCooldownLerper;
 	private Anchorable connectedAnchorable;
 	private GrapplerRopeEndPoints ropeEndPoints;
-	private Rigidbody2D misfireBody;
 
 	public bool IsRetracted() {
 		return (GrappleRopeStates)currentState == GrappleRopeStates.Retracted;
@@ -65,9 +64,6 @@ public class GrapplerRope : StateMachine {
 	}
 	
 	private void Awake() {
-		misfireBody = new GameObject("Misfire Body").AddComponent<Rigidbody2D>();
-		misfireBody.mass = 0.1f;
-		misfireBody.isKinematic = true;
 		ropeEndPoints = GetComponent<GrapplerRopeEndPoints>();
 		springJointAttributeCooldownLerper = GetComponent<SpringJointAttributeCooldownLerper>();
 		springJoint.enabled = false;

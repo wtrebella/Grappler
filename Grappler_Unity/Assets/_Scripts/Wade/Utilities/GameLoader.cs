@@ -9,17 +9,17 @@ public class GameLoader : AutoSingleton<GameLoader>
 	static bool gameLoaded = false;
 
 	void Awake() {
-		if (GameManager.DoesExist() && !gameLoaded) {
+		if (GameStateManager.DoesExist() && !gameLoaded) {
 			gameLoaded = true;
-			DestroyImmediate(GameManager.instance.gameObject);
-			GameManager.LoadSetupSceneThenGameScene();
+			DestroyImmediate(GameStateManager.instance.gameObject);
+			GameStateManager.LoadSetupSceneThenGameScene();
 		}
 	}
 
 	void Start() {
-		if (!GameManager.DoesExist()) {
+		if (!GameStateManager.DoesExist()) {
 			gameLoaded = true;
-			GameManager.LoadSetupSceneThenGameScene();
+			GameStateManager.LoadSetupSceneThenGameScene();
 		}
 	}
 }
