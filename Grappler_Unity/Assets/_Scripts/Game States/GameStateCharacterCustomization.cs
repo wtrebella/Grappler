@@ -7,27 +7,27 @@ public class GameStateCharacterCustomization : GameStateBase {
 	}
 
 	public override void OnEnterState() {
-		StartCoroutine(OnEnterState_Routine());
+		base.OnEnterState();
 	}
 
 	public override IEnumerator OnEnterState_Routine() {
-		yield return StartCoroutine(SetupPayload());
+		yield return StartCoroutine(base.OnEnterState_Routine());
 		yield break;
 	}
 
 	public override void OnUpdateState() {
-
+		base.OnUpdateState();
 	}
 
 	public override void OnExitState() {
-
+		base.OnExitState();
 	}
 
 	public override void OnPauseState() {
-
+		base.OnPauseState();
 	}
 
 	public override void OnUnpauseState() {
-
+		base.OnUnpauseState();
 	}
 }

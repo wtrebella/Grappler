@@ -11,14 +11,23 @@ public abstract class GameStateBase : WadeBehaviour
 	}
 
 	// Called when a state is first added to the game state stack
-	public virtual void OnEnterState() {}
-	public virtual IEnumerator OnEnterState_Routine() { yield break; }
+	public virtual void OnEnterState() {
+		StartCoroutine(OnEnterState_Routine());
+	}
+
+	public virtual IEnumerator OnEnterState_Routine() { 
+		yield return StartCoroutine(SetupPayload());
+		yield break;
+	}
 
 	// Called when a state is on top of the stack every update loop
 	public virtual void OnUpdateState() {}
 
 	// Called when a state is removed from the game state stack
-	public virtual void OnExitState() {}
+	public virtual void OnExitState() {
+		_payload.Cleanup();
+		Destroy(_payload.gameObject);
+	}
 
 	// Called when a state a state is placed on top of the state stack above this state
 	public virtual void OnPauseState() {}
@@ -28,6 +37,7 @@ public abstract class GameStateBase : WadeBehaviour
 
 	protected virtual IEnumerator SetupPayload() {
 		_payload = SpawnPayload();
+		_payload.Spawn();
 		yield break;
 	}
 

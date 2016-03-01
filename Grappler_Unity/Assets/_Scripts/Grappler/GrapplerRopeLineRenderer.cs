@@ -39,4 +39,8 @@ public class GrapplerRopeLineRenderer : MonoBehaviour {
 		line.layer = LayerMask.NameToLayer("Default");
 		line.color = new Color32(54, 54, 54, 255);
 	}
+
+	private void OnDestroy() {
+		if (line != null && line.rectTransform != null) Destroy(line.rectTransform.gameObject);
+	}
 }

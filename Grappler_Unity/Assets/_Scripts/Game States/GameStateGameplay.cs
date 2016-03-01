@@ -4,39 +4,37 @@ using UnityEngine.SceneManagement;
 
 public class GameStateGameplay : GameStateBase {
 	public void RestartGame() {
-		SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+		GameStateManager.instance.PopGameState();
+		GameStateManager.instance.PushGameState(GameStateType.Gameplay);
 	}
 
 	private void Awake() {
 		_gameStateType = GameStateType.Gameplay;
 	}
 
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.R)) RestartGame();
-	}
-
 	public override void OnEnterState() {
-		StartCoroutine(OnEnterState_Routine());
+		base.OnEnterState();
 	}
 
 	public override IEnumerator OnEnterState_Routine() {
-		yield return StartCoroutine(SetupPayload());
+		yield return StartCoroutine(base.OnEnterState_Routine());
 		yield break;
 	}
 
 	public override void OnUpdateState() {
-		
+		base.OnUpdateState();
+		if (Input.GetKeyDown(KeyCode.R)) RestartGame();
 	}
 
 	public override void OnExitState() {
-		
+		base.OnExitState();
 	}
 
 	public override void OnPauseState() {
-		
+		base.OnPauseState();
 	}
 
 	public override void OnUnpauseState() {
-		
+		base.OnUnpauseState();	
 	}
 }
