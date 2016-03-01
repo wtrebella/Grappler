@@ -10,8 +10,10 @@ public class UIManager : Singleton<UIManager> {
 	private Dictionary<System.Type, List<PanelBase>> panelDictionary = new Dictionary<System.Type, List<PanelBase>>();
 
 	private void Awake() {
-		DontDestroyElseKill(this);
+		BaseAwake();
+	}
 
+	protected void BaseAwake() {
 		var childPanels = GetComponentsInChildren<PanelBase>(true);
 		foreach (PanelBase panel in childPanels) {
 			if(panelDictionary.ContainsKey(panel.GetType())) panelDictionary[panel.GetType()].Add(panel);

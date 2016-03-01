@@ -2,15 +2,12 @@
 using System.Collections;
 
 public class GameplayManager : Singleton<GameplayManager> {
-	private void Awake() {
-
-	}
-
-	private void Start() {
-	
-	}
-	
 	private void Update() {
-	
+		if (Input.GetKeyDown(KeyCode.R)) RestartGame();
+	}
+
+	public void RestartGame() {
+		GameStateManager.instance.PopGameState();
+		GameStateManager.instance.PushGameState(GameStateType.Gameplay);
 	}
 }
