@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class GameStateManager : Singleton<GameStateManager>
-{
+public class GameStateManager : Singleton<GameStateManager> {
 	public PayloadBase GetPayloadFromStateType(GameStateType gameStateType) {return _stateTypeToPayloadMap[gameStateType];}
 	public GameStateBase CurrentState {get {return _activeGameStates.Peek();}}
 

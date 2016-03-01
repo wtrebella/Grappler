@@ -13,7 +13,7 @@ public class UIManager : Singleton<UIManager> {
 		DontDestroyElseKill(this);
 
 		var childPanels = GetComponentsInChildren<PanelBase>(true);
-		foreach(PanelBase panel in childPanels) {
+		foreach (PanelBase panel in childPanels) {
 			if(panelDictionary.ContainsKey(panel.GetType())) panelDictionary[panel.GetType()].Add(panel);
 			else {
 				List<PanelBase> newPanelList = new List<PanelBase>();
