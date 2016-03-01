@@ -22,7 +22,7 @@ public class GameStateManager : Singleton<GameStateManager>
 
 	private void Awake() {
 		_gameModeParent = new GameObject("Game States").transform;
-		_gameModeParent.SetParent(transform);
+		_gameModeParent.parent = transform;
 
 		InitializeGameStateTypes();
 		InitializePayloads();
@@ -62,7 +62,7 @@ public class GameStateManager : Singleton<GameStateManager>
 
 	private T SpawnGameState<T>() where T : GameStateBase {
 		T tObj = new GameObject(typeof(T).ToString(), typeof(T)).GetComponent<T>();
-		tObj.transform.SetParent(_gameModeParent);
+		tObj.transform.parent = _gameModeParent;
 
 		return tObj;
 	}

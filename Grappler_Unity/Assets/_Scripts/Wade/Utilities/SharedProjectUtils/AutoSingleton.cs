@@ -8,17 +8,13 @@ public class AutoSingleton< T > : MonoBehaviour where T : MonoBehaviour
 {
 	private static T _instance = null;
 
-	public static T instance
-	{
-		get
-		{
-			if ( _instance == null )
-			{
+	public static T instance {
+		get {
+			if (_instance == null) {
 				_instance = GameObject.FindObjectOfType< T >();
 
-				if ( _instance == null )
-				{
-					var obj = new GameObject( typeof( T ).ToString() );
+				if (_instance == null) {
+					var obj = new GameObject(typeof( T ).ToString());
 					_instance = obj.AddComponent< T >();
 				}
 			}
@@ -27,19 +23,10 @@ public class AutoSingleton< T > : MonoBehaviour where T : MonoBehaviour
 		}
 	}
 
-	public static bool DoesExist()
-	{
-		if ( _instance == null )
-			_instance = GameObject.FindObjectOfType< T >();
-
+	public static bool DoesExist() {
+		if (_instance == null) _instance = GameObject.FindObjectOfType< T >();
 		return _instance != null;
 	}
 
-	protected bool isInstance
-	{
-		get
-		{
-			return instance == this;
-		}
-	}
+	protected bool isInstance {get	{return instance == this;}}
 }
