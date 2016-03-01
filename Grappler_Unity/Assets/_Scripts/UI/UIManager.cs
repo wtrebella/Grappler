@@ -20,7 +20,6 @@ public class UIManager : Singleton<UIManager> {
 			else {
 				List<PanelBase> newPanelList = new List<PanelBase>();
 				newPanelList.Add(panel);
-
 				panelDictionary.Add(panel.GetType(), newPanelList);
 			}
 
@@ -28,11 +27,11 @@ public class UIManager : Singleton<UIManager> {
 		}
 	}
 
-	public static T GetPanelOfType<T>() where T : PanelBase {
-		return (T)instance.panelDictionary[typeof(T)].FirstOrDefault();
+	public T GetPanelOfType<T>() where T : PanelBase {
+		return (T)panelDictionary[typeof(T)].FirstOrDefault();
 	}
 
-	public static List<T> GetPanelsOfType<T>() where T : PanelBase {
-		return instance.panelDictionary[typeof(T)].Cast<T>().ToList();
+	public List<T> GetPanelsOfType<T>() where T : PanelBase {
+		return panelDictionary[typeof(T)].Cast<T>().ToList();
 	}
 }

@@ -2,8 +2,7 @@
 using System.Collections;
 
 public class UIManagerGameplay : UIManager {
-	private void Awake() {
-		BaseAwake();
+	private void Start() {
 		GetPanelOfType<PanelGameplay>().gameObject.SetActive(true);
 	}
 }

@@ -20,7 +20,6 @@ public class Clothing : MonoBehaviour {
 
 	private ClothingItemSet[] hats;
 	private ClothingItemSet[] shoes;
-	private Dictionary<ClothingItemSetType, ClothingItemSet> equippedSets;
 
 	private string itemSetPathRoot = "clothingItems/";
 	private string itemSetPathHats = "hats/hatsItemSets/";
@@ -35,7 +34,6 @@ public class Clothing : MonoBehaviour {
 	private string shoeFrontSlot = "shoeFront";
 
 	private void Awake() {
-		equippedSets = new Dictionary<ClothingItemSetType, ClothingItemSet>();
 		LoadClothingItemSets();
 	}
 
@@ -111,13 +109,13 @@ public class Clothing : MonoBehaviour {
 	}
 
 	public bool ItemSetIsEquipped(ClothingItemSetType type) {
-		return equippedSets.ContainsKey(type);
+		return EquippedClothing.instance.equippedSets.ContainsKey(type);
 	}
 
 	public ClothingItemSet GetEquippedItemSet(ClothingItemSetType type) {
-		if (!equippedSets.ContainsKey(type)) return null;
+		if (!EquippedClothing.instance.equippedSets.ContainsKey(type)) return null;
 
-		return equippedSets[type];
+		return EquippedClothing.instance.equippedSets[type];
 	}
 
 	private void SetClothingItemSet(ClothingItemSet clothingItemSet) {
@@ -125,13 +123,13 @@ public class Clothing : MonoBehaviour {
 			if (!item.HasValidSpriteName()) Debug.LogError("item doesn't have a valid sprite! fix this or expect errors.");
 			SetAttachment(item);
 		}
-		equippedSets.Add(clothingItemSet.type, clothingItemSet);
+		EquippedClothing.instance.equippedSets.Add(clothingItemSet.type, clothingItemSet);
 	}
 
 	private void RemoveClothingItemSet(ClothingItemSetType type) {
 		ClothingItemSet itemSet = GetEquippedItemSet(type);
 		foreach (ClothingItem item in itemSet.items) RemoveAttachment(item.type);
-		if (equippedSets.ContainsKey(type)) equippedSets.Remove(type);
+		if (EquippedClothing.instance.equippedSets.ContainsKey(type)) EquippedClothing.instance.equippedSets.Remove(type);
 	}
 
 	private void SetAttachment(ClothingItem clothingItem) {
