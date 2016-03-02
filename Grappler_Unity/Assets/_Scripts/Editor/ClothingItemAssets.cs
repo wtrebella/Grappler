@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEditor;
 
-public class ClothingItemAsset {
+public class ClothingItemAssets {
 
 	[MenuItem("Assets/Create/ClothingItemAsset")]
 	public static void CreateItemAsset() {
@@ -10,7 +10,12 @@ public class ClothingItemAsset {
 	}
 
 	[MenuItem("Assets/Create/ClothingItemSetAsset")]
-	public static void CreateItemCollectionAsset() {
+	public static void CreateItemSetAsset() {
 		ScriptableObjectUtility.CreateAsset<ClothingItemSet>();
+	}
+
+	[MenuItem("Assets/Create/EquippedClothingAsset")]
+	public static void CreateEquippedClothingAsset() {
+		ScriptableObjectUtility.CreateAsset<EquippedClothing>();
 	}
 }

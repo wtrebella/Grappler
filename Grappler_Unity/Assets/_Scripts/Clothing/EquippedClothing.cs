@@ -1,37 +1,60 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class EquippedClothing : ScriptableObjectSingleton<EquippedClothing> {
-	[SerializeField] private Dictionary<ClothingItemSetType, ClothingItemSet> _equippedSets;
+public class EquippedClothing : ScriptableObject {
+	[SerializeField] private List<ClothingItemSet> _equippedSets;
 
-	public Dictionary<ClothingItemSetType, ClothingItemSet> equippedSets {
+	private static EquippedClothing _instance = null;
+	public static EquippedClothing instance {
 		get {
-			if (_equippedSets == null) _equippedSets = new Dictionary<ClothingItemSetType, ClothingItemSet>();
+			if (_instance == null) {
+				_instance = Resources.Load<EquippedClothing>("EquippedClothing");
 
+				if (_instance == null) {
+					string errorString = "No singleton object for " + typeof(EquippedClothing).ToString() + " exists in the resources folder!";
+					throw new UnityException(errorString);
+				}
+			}
+
+			return _instance;
+		}
+	}
+
+	public List<ClothingItemSet> equippedSets {
+		get {
+			if (_equippedSets == null) _equippedSets = new List<ClothingItemSet>();
 			return _equippedSets;
 		}
 	}
 
-	public List<ClothingItemSetType> GetEquippedTypes() {
-		return new List<ClothingItemSetType>(equippedSets.Keys);
-	}
-
-	public List<ClothingItemSet> GetEquippedItemSets() {
-		return new List<ClothingItemSet>(equippedSets.Values);
-	}
-
 	public ClothingItemSet GetEquippedItemSet(ClothingItemSetType itemSetType) {
-		if (!equippedSets.ContainsKey(itemSetType)) {
-			Debug.LogError("item set type " + itemSetType.ToString() + " doesn't exist in dictionary");
-			return null;
-		}
+		int indexOfEquippedType = IndexOfEquippedType(itemSetType);
+		if (indexOfEquippedType < 0) return null;
 
-		return equippedSets[itemSetType];
+		return equippedSets[indexOfEquippedType];
 	}
 
-	private void OnEnable() {
-		Debug.Log(equippedSets.Count);
+	public bool ItemSetTypeIsEquipped(ClothingItemSetType itemSetType) {
+		foreach (ClothingItemSet itemSet in equippedSets) {
+			if (itemSet.type == itemSetType) return true;
+		}
+		return false;
+	}
+
+	public void RemoveEquippedItemSet(ClothingItemSetType itemSetType) {
+		int index = IndexOfEquippedType(itemSetType);
+		if (index < 0 || index >= equippedSets.Count) return;
+		equippedSets.RemoveAt(index);
+	}
+
+	private int IndexOfEquippedType(ClothingItemSetType itemSetType) {
+		for (int i = 0; i < equippedSets.Count; i++) {
+			ClothingItemSet itemSet = equippedSets[i];
+			if (itemSet.type == itemSetType) return i;
+		}
+		return -1;
 	}
 }

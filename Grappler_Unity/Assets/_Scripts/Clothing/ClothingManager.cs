@@ -109,32 +109,32 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	public bool ItemSetIsEquipped(ClothingItemSetType type) {
-		return EquippedClothing.instance.equippedSets.ContainsKey(type);
+		return EquippedClothing.instance.ItemSetTypeIsEquipped(type);
 	}
 
 	public ClothingItemSet GetEquippedItemSet(ClothingItemSetType type) {
-		if (!EquippedClothing.instance.equippedSets.ContainsKey(type)) return null;
+		if (!EquippedClothing.instance.ItemSetTypeIsEquipped(type)) return null;
 
-		return EquippedClothing.instance.equippedSets[type];
+		return EquippedClothing.instance.GetEquippedItemSet(type);
 	}
 
 	private void EquipSavedItemSets() {
-		var equippedItemSets = EquippedClothing.instance.GetEquippedItemSets();
+		var equippedItemSets = EquippedClothing.instance.equippedSets;
 		foreach (ClothingItemSet itemSet in equippedItemSets) EquipItemSet(itemSet);
 	}
 
-	private void SetClothingItemSet(ClothingItemSet clothingItemSet) {
-		foreach (ClothingItem item in clothingItemSet.items) {
+	private void SetClothingItemSet(ClothingItemSet itemSet) {
+		foreach (ClothingItem item in itemSet.items) {
 			if (!item.HasValidSpriteName()) Debug.LogError("item doesn't have a valid sprite! fix this or expect errors.");
 			SetAttachment(item);
 		}
-		EquippedClothing.instance.equippedSets.Add(clothingItemSet.type, clothingItemSet);
+		if (!EquippedClothing.instance.ItemSetTypeIsEquipped(itemSet.type)) EquippedClothing.instance.equippedSets.Add(itemSet);
 	}
 
 	private void RemoveClothingItemSet(ClothingItemSetType type) {
 		ClothingItemSet itemSet = GetEquippedItemSet(type);
 		foreach (ClothingItem item in itemSet.items) RemoveAttachment(item.type);
-		if (EquippedClothing.instance.equippedSets.ContainsKey(type)) EquippedClothing.instance.equippedSets.Remove(type);
+		EquippedClothing.instance.RemoveEquippedItemSet(type);
 	}
 
 	private void SetAttachment(ClothingItem clothingItem) {

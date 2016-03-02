@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor;
 
 [CustomEditor(typeof(ClothingManager))]
-public class ClothingEditor : Editor {
+public class ClothingManagerEditor : Editor {
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 		if (!Application.isPlaying) return;
