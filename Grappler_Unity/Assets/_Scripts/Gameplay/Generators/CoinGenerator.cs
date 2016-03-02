@@ -15,5 +15,6 @@ public class CoinGenerator : ItemBetweenMountainAndGroundGenerator {
 
 	public void OnChildCoinCollected() {
 		WhitTools.Invoke(OnCoinCollected);
+		GameStats.OnCoinCollected();
 	}
 }

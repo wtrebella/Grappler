@@ -1,42 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.Events;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[System.Serializable]
 public class GameStats : ScriptableObjectSingleton<GameStats> {
-	public UnityEvent testEvent;
-
-	public int coinCount = 0;
-
-	public void OnCoinCollected() {
-		coinCount++;
-		WhitTools.Invoke(testEvent);
+	#if UNITY_EDITOR
+	[MenuItem("Assets/Create/GameStatsAsset", false, 103)]
+	public static void CreateGameStatsAsset() {
+		ScriptableObjectUtility.CreateAsset<GameStats>("GameStats");
 	}
+	#endif
 
-	public void OnBackflip() {
+	public static int coinCount {get {return instance._coinCount;}}
 
-	}
+	[SerializeField, HideInInspector] private int _coinCount = 0;
 
-	public void OnFrontFlip() {
-
-	}
-
-	public void OnHitGround() {
-
-	}
-
-	public void OnHitMountain() {
-
-	}
-
-	public void OnHitIcicle() {
-
-	}
-
-	public void OnHitTree() {
-
-	}
-
-	public void OnHitRockSlide() {
-
+	public static void OnCoinCollected() {
+		instance._coinCount++;
 	}
 }

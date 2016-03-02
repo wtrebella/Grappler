@@ -10,5 +10,6 @@ public class Initializations : MonoBehaviour {
 		Go.duplicatePropertyRule = GoDuplicatePropertyRuleType.RemoveRunningProperty;
 		Go.logLevel = GoLogLevel.Error;
 		ChangeQuality.SetQuality("HD");
+		Debug.Log(GameStats.coinCount);
 	}
 }
