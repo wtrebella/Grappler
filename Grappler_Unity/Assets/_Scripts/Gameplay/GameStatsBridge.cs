@@ -25,42 +25,42 @@ public class GameStatsBridge : MonoBehaviour {
 	}
 
 	public void OnCoinCollected() {
-		GameStats.OnCoinCollected();
+//		GameStats.OnCoinCollected();
 		WhitTools.Invoke(SignalCoinCollected);
 	}
 
 	public void OnBackflip() {
-		GameStats.OnBackflip();
+//		GameStats.OnBackflip();
 		WhitTools.Invoke(SignalBackflip);
 	}
 
 	public void OnFrontFlip() {
-		GameStats.OnFrontFlip();
+//		GameStats.OnFrontFlip();
 		WhitTools.Invoke(SignalFrontFlip);
 	}
 
 	public void OnHitGround() {
-		GameStats.OnHitGround();
+//		GameStats.OnHitGround();
 		WhitTools.Invoke(SignalHitGround);
 	}
 
 	public void OnHitMountain() {
-		GameStats.OnHitMountain();
+//		GameStats.OnHitMountain();
 		WhitTools.Invoke(SignalHitMountain);
 	}
 
 	public void OnHitIcicle() {
-		GameStats.OnHitIcicle();
+//		GameStats.OnHitIcicle();
 		WhitTools.Invoke(SignalHitIcicle);
 	}
 
 	public void OnHitTree() {
-		GameStats.OnHitTree();
+//		GameStats.OnHitTree();
 		WhitTools.Invoke(SignalHitTree);
 	}
 
 	public void OnHitRockSlide() {
-		GameStats.OnHitRockSlide();
+//		GameStats.OnHitRockSlide();
 		WhitTools.Invoke(SignalHitRockSlide);
 	}
 }

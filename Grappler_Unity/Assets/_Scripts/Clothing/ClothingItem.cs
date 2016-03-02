@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public enum ClothingItemType {
 	None = 0,
 	Hat,
@@ -17,6 +21,13 @@ public enum ClothingSkeletonType {
 
 [System.Serializable]
 public class ClothingItem : ScriptableObject {
+	#if UNITY_EDITOR
+	[MenuItem("Assets/Create/ClothingItemAsset", false, 101)]
+	public static void CreateItemAsset() {
+		ScriptableObjectUtility.CreateAsset<ClothingItem>();
+	}
+	#endif
+
 	public tk2dSpriteCollectionData spriteCollectionData;
 	public ClothingItemType type = ClothingItemType.None;
 	public ClothingSkeletonType skeleton = ClothingSkeletonType.None;

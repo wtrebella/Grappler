@@ -3,25 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 [System.Serializable]
-public class EquippedClothing : ScriptableObject {
-	[SerializeField] private List<ClothingItemSet> _equippedSets;
-
-	private static EquippedClothing _instance = null;
-	public static EquippedClothing instance {
-		get {
-			if (_instance == null) {
-				_instance = Resources.Load<EquippedClothing>("EquippedClothing");
-
-				if (_instance == null) {
-					string errorString = "No singleton object for " + typeof(EquippedClothing).ToString() + " exists in the resources folder!";
-					throw new UnityException(errorString);
-				}
-			}
-
-			return _instance;
-		}
+public class EquippedClothing : ScriptableObjectSingleton<EquippedClothing> {
+	#if UNITY_EDITOR
+	[MenuItem("Assets/Create/EquippedClothingAsset", false, 100)]
+	public static void CreateEquippedClothingAsset() {
+		ScriptableObjectUtility.CreateAsset<EquippedClothing>("EquippedClothing");
 	}
+	#endif
+
+	[SerializeField] private List<ClothingItemSet> _equippedSets;
 
 	public List<ClothingItemSet> equippedSets {
 		get {

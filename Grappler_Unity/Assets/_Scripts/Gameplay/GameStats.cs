@@ -2,38 +2,41 @@
 using System.Collections;
 using UnityEngine.Events;
 
-public static class GameStats {
-	public static int coinCount = 0;
+public class GameStats : ScriptableObjectSingleton<GameStats> {
+	public UnityEvent testEvent;
 
-	public static void OnCoinCollected() {
+	public int coinCount = 0;
+
+	public void OnCoinCollected() {
 		coinCount++;
+		WhitTools.Invoke(testEvent);
 	}
 
-	public static void OnBackflip() {
-
-	}
-
-	public static void OnFrontFlip() {
+	public void OnBackflip() {
 
 	}
 
-	public static void OnHitGround() {
+	public void OnFrontFlip() {
 
 	}
 
-	public static void OnHitMountain() {
+	public void OnHitGround() {
 
 	}
 
-	public static void OnHitIcicle() {
+	public void OnHitMountain() {
 
 	}
 
-	public static void OnHitTree() {
+	public void OnHitIcicle() {
 
 	}
 
-	public static void OnHitRockSlide() {
+	public void OnHitTree() {
+
+	}
+
+	public void OnHitRockSlide() {
 
 	}
 }

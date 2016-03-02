@@ -7,27 +7,39 @@ public class CharacterCustomizationPlayer : MonoBehaviour {
 	[SerializeField] private ParticleSystem shoeFrontParticles;
 
 	public void OnHatEquipped() {
-		PlayParticles(hatParticles);
+		PlayHatParticles();
 	}
 
 	public void OnShoeBackEquipped() {
-		PlayParticles(shoeBackParticles);
+		PlayShoeBackParticles();
 	}
 
 	public void OnShoeFrontEquipped() {
-		PlayParticles(shoeFrontParticles);
+		PlayShoeFrontParticles();
 	}
 
 	public void OnHatUnequipped() {
-
+		PlayHatParticles();
 	}
 
 	public void OnShoeBackUnequipped() {
-
+		PlayShoeBackParticles();
 	}
 
 	public void OnShoeFrontUnequipped() {
+		PlayShoeFrontParticles();
+	}
 
+	private void PlayHatParticles() {
+		PlayParticles(hatParticles);
+	}
+
+	private void PlayShoeBackParticles() {
+		PlayParticles(shoeBackParticles);
+	}
+
+	private void PlayShoeFrontParticles() {
+		PlayParticles(shoeFrontParticles);
 	}
 
 	private void PlayParticles(ParticleSystem particles) {
