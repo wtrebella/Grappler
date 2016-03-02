@@ -10,12 +10,28 @@ public class EquippedClothing : ScriptableObjectSingleton<EquippedClothing> {
 		get {
 			if (_equippedSets == null) _equippedSets = new Dictionary<ClothingItemSetType, ClothingItemSet>();
 
-			foreach (ClothingItemSetType key in _equippedSets.Keys) Debug.Log(key);
-			Debug.Log("========");
-
-			// the equipped clothes are being serialized here. but i'm not sure how well it's working yet.
-
 			return _equippedSets;
 		}
+	}
+
+	public List<ClothingItemSetType> GetEquippedTypes() {
+		return new List<ClothingItemSetType>(equippedSets.Keys);
+	}
+
+	public List<ClothingItemSet> GetEquippedItemSets() {
+		return new List<ClothingItemSet>(equippedSets.Values);
+	}
+
+	public ClothingItemSet GetEquippedItemSet(ClothingItemSetType itemSetType) {
+		if (!equippedSets.ContainsKey(itemSetType)) {
+			Debug.LogError("item set type " + itemSetType.ToString() + " doesn't exist in dictionary");
+			return null;
+		}
+
+		return equippedSets[itemSetType];
+	}
+
+	private void OnEnable() {
+		Debug.Log(equippedSets.Count);
 	}
 }

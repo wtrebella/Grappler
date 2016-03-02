@@ -5,7 +5,7 @@ using Spine;
 using System.Linq;
 using UnityEngine.Events;
 
-public class Clothing : MonoBehaviour {
+public class ClothingManager : MonoBehaviour {
 	public UnityEvent OnHatEquipped;
 	public UnityEvent OnShoeBackEquipped;
 	public UnityEvent OnShoeFrontEquipped;
@@ -38,7 +38,7 @@ public class Clothing : MonoBehaviour {
 	}
 
 	private void Start() {
-
+		EquipSavedItemSets();
 	}
 
 	private void SetRandomClothingItemSets() {
@@ -116,6 +116,11 @@ public class Clothing : MonoBehaviour {
 		if (!EquippedClothing.instance.equippedSets.ContainsKey(type)) return null;
 
 		return EquippedClothing.instance.equippedSets[type];
+	}
+
+	private void EquipSavedItemSets() {
+		var equippedItemSets = EquippedClothing.instance.GetEquippedItemSets();
+		foreach (ClothingItemSet itemSet in equippedItemSets) EquipItemSet(itemSet);
 	}
 
 	private void SetClothingItemSet(ClothingItemSet clothingItemSet) {

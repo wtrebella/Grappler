@@ -2,13 +2,13 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(Clothing))]
+[CustomEditor(typeof(ClothingManager))]
 public class ClothingEditor : Editor {
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 		if (!Application.isPlaying) return;
 
-		Clothing clothing = target as Clothing;
+		ClothingManager clothing = target as ClothingManager;
 		for (int i = 1; i < (int)ClothingItemType.MAX; i++) {
 			ClothingItemSetType type = (ClothingItemSetType)i;
 			ClothingItemSet[] itemSets = clothing.GetClothingItemSets(type);
