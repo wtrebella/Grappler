@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "hw/GcPg4W1TS5xom7c04EsjUbBk",
-	"spine": "3.0.12",
+	"hash": "PY14e1HWaQ6cpXItK9ad2ikTB7A",
+	"spine": "3.1.01",
 	"width": 202.96,
 	"height": 212.36,
 	"images": "./../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/imagesBottom/"
@@ -36,10 +36,12 @@
 			"upperLegFront": { "x": 51.73, "y": -0.47, "rotation": 125.8, "width": 89, "height": 113 }
 		},
 		"shoeBack": {
-			"shoes/shoesBack/clothing_shoeBack": { "x": 33.33, "y": 9.12, "scaleX": 0.192, "scaleY": 0.192, "rotation": 39.97, "width": 600, "height": 351 }
+			"shoes/shoesBack/clothing_shoeBack": { "x": 33.33, "y": 9.12, "scaleX": 0.192, "scaleY": 0.192, "rotation": 39.97, "width": 600, "height": 351 },
+			"shoes/shoesBack/clothing_stilettoBack": { "x": 50.12, "y": -10.88, "scaleX": 1.405, "scaleY": 1.405, "rotation": 40.95, "width": 132, "height": 150 }
 		},
 		"shoeFront": {
-			"shoes/shoesFront/clothing_shoeFront": { "x": 38.34, "y": 4.04, "scaleX": 0.195, "scaleY": 0.195, "rotation": 34.46, "width": 600, "height": 351 }
+			"shoes/shoesFront/clothing_shoeFront": { "x": 38.34, "y": 4.04, "scaleX": 0.195, "scaleY": 0.195, "rotation": 34.46, "width": 600, "height": 351 },
+			"shoes/shoesFront/clothing_stilettoFront": { "x": 20.82, "y": -36.08, "scaleX": 1.228, "scaleY": 1.228, "rotation": 0.41, "width": 132, "height": 150 }
 		},
 		"upperLegBack": {
 			"lowerLegBack": { "x": 41.05, "y": 0.08, "rotation": 48.26, "width": 83, "height": 91 }

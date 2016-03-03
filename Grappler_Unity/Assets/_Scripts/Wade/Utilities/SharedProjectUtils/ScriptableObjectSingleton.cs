@@ -8,8 +8,8 @@ public class ScriptableObjectSingleton<T> : ScriptableObject where T : Scriptabl
 	public static T instance {
 		get {
 			if(!_instance) {
-				_instance = Resources.Load(typeof(T).ToString()) as T;
 				
+				_instance = Resources.Load(typeof(T).ToString()) as T;
 #if UNITY_EDITOR
 				if(!_instance) _instance = ScriptableObjectUtility.CreateAsset<T>();
 #endif
@@ -18,6 +18,4 @@ public class ScriptableObjectSingleton<T> : ScriptableObject where T : Scriptabl
 			return _instance;
 		}
 	}
-
-
 }

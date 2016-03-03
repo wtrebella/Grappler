@@ -1,7 +1,7 @@
 {
 "skeleton": {
-	"hash": "ZvadwTgRwAqxYAPKEdcPYmdLh5k",
-	"spine": "3.0.12",
+	"hash": "GB+hHPgJNuG90rSSlpfY9Sw9Q4w",
+	"spine": "3.1.01",
 	"width": 294.42,
 	"height": 324.18,
 	"images": "./../../Grappler_Unity/Assets/_Art/tk2d Sprites/Stickman/imagesTop/"
@@ -30,6 +30,7 @@
 	"default": {
 		"hat": {
 			"hats/clothing_baseballCap": { "x": 32.44, "y": -4.59, "scaleX": 0.61, "scaleY": 0.61, "rotation": -52.5, "width": 455, "height": 287 },
+			"hats/clothing_girlHat": { "x": 25.68, "y": 19.13, "scaleX": 0.423, "scaleY": 0.423, "rotation": -78.37, "width": 600, "height": 430 },
 			"hats/clothing_sombrero": { "x": 94.99, "y": 15.95, "scaleX": 2.639, "scaleY": 2.639, "rotation": -78.36, "width": 120, "height": 86 },
 			"hats/clothing_topHat": { "x": 76.98, "y": 24.28, "scaleX": 2.465, "scaleY": 2.465, "rotation": -78.36, "width": 120, "height": 91 }
 		},
