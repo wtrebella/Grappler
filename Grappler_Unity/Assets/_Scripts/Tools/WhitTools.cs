@@ -17,6 +17,18 @@ public static class WhitTools {
 		if (unityEvent != null) unityEvent.Invoke();
 	}
 
+	public static void Invoke(UnityEventWithFloat unityEvent, float f) {
+		if (unityEvent != null) unityEvent.Invoke(f);
+	}
+
+	public static void Invoke(UnityEventWithInt unityEvent, int i) {
+		if (unityEvent != null) unityEvent.Invoke(i);
+	}
+
+	public static void Invoke<T>(UnityEventWithList<T> unityEvent, List<T> list) {
+		if (unityEvent != null) unityEvent.Invoke(list);
+	}
+
 	public static void Assert(bool condition, string errorString = "") {
 		if (!condition) Debug.LogError(errorString);
 	}

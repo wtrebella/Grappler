@@ -41,8 +41,8 @@ public class ClothingItemSet : ScriptableObject {
 	}
 
 	public void ClearLockedData() {
-		string key = GetSaveKey();
-		PlayerPrefs.DeleteKey(key);
+		string key = GetIsLockedKey();
+		WhitPrefs.RemoveObjectForKey(key);
 		Debug.Log("key \"" + key + "\" was deleted!");
 	}
 
@@ -51,16 +51,14 @@ public class ClothingItemSet : ScriptableObject {
 	}
 
 	private void OnDisable() {
-		// only unlock, don't ever set back to locked, unless we delete player prefs
-		bool isLockedSave = GetIsLockedSave();
-		if (!isLocked && isLockedSave) PlayerPrefsHelper.SetBool(GetSaveKey(), isLocked);
+		WhitPrefs.SetBool(GetIsLockedKey(), PrefsBoolPriority.False, isLocked);
 	}
 
 	private bool GetIsLockedSave() {
-		return PlayerPrefsHelper.GetBool(GetSaveKey(), isLockedByDefault);
+		return WhitPrefs.GetBool(GetIsLockedKey(), PrefsBoolPriority.False, isLocked, isLockedByDefault);
 	}
 		
-	private string GetSaveKey() {
+	private string GetIsLockedKey() {
 		return itemName + "_isLocked";
 	}
 }
