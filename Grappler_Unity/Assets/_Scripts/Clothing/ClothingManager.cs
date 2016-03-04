@@ -58,7 +58,6 @@ public class ClothingManager : MonoBehaviour {
 
 	public void EquipNext(ClothingItemSetType type) {
 		ClothingItemSet equippedItemSet = GetEquippedItemSet(type);
-		UnequipItemSet(type);
 
 		int currentItemIndex = 0;
 		List<ClothingItemSet> sets = ClothingDataManager.GetClothingItemSets(type);
@@ -79,6 +78,7 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	public void EquipItemSet(ClothingItemSet clothingItemSet) {
+		UnequipItemSet(clothingItemSet.type);
 		SetClothingItemSet(clothingItemSet);
 	}
 
@@ -97,7 +97,8 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	private void EquipSavedItemSets() {
-		foreach (ClothingItemSet itemSet in ClothingDataManager.equippedSets) EquipItemSet(itemSet);
+		var equippedSets = ClothingDataManager.equippedSets.ToArray();
+		foreach (ClothingItemSet itemSet in equippedSets) EquipItemSet(itemSet);
 	}
 
 	private void SetClothingItemSet(ClothingItemSet itemSet) {
