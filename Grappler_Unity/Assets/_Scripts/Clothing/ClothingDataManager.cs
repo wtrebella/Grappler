@@ -22,7 +22,7 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadEquippedHat() {
-		string equippedHatName = PlayerPrefs.GetString(ClothingItemSetType.Hat.ToString(), "");
+		string equippedHatName = WhitPrefs.GetString(ClothingItemSetType.Hat.ToString(), "");
 		ClothingItemSet equippedHat = GetHatItemSet(equippedHatName);
 		if (equippedHat != null && !_equippedSets.Contains(equippedHat)) _equippedSets.Add(equippedHat);
 	}
@@ -55,7 +55,7 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadEquippedShoes() {
-		string equippedShoesName = PlayerPrefs.GetString(ClothingItemSetType.Shoes.ToString(), "");
+		string equippedShoesName = WhitPrefs.GetString(ClothingItemSetType.Shoes.ToString(), "");
 		ClothingItemSet equippedShoes = GetShoesItemSet(equippedShoesName);
 		if (equippedShoes != null && !_equippedSets.Contains(equippedShoes)) _equippedSets.Add(equippedShoes);
 	}
@@ -135,6 +135,6 @@ public static class ClothingDataManager {
 	}
 
 	private static void SaveEquippedItemSets() {
-		foreach (ClothingItemSet itemSet in equippedSets) PlayerPrefs.SetString(itemSet.type.ToString(), itemSet.itemName);
+		foreach (ClothingItemSet itemSet in equippedSets) WhitPrefs.SetString(itemSet.type.ToString(), itemSet.itemName);
 	}
 }
