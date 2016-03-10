@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.IO;
 using System.Collections.Generic;
 
@@ -8,6 +10,7 @@ public class ConfigFileBridge : Singleton<ConfigFileBridge> {
 	[SerializeField] private string configLink_iPhone = "https://s3.amazonaws.com/grappler/iPhone/grapplerConfig_iPhone.txt";
 	[SerializeField] private string configLink_Android = "https://s3.amazonaws.com/grappler/android/grapplerConfig_Android.txt";
 
+	#if UNITY_EDITOR
 	[MenuItem("Utilities/Create File")]
 	public static void CreateFile() {
 		string json = SerializeFile(CreateConfigFile());
@@ -22,6 +25,7 @@ public class ConfigFileBridge : Singleton<ConfigFileBridge> {
 		sr.Write(json);
 		sr.Close();
 	}
+	#endif
 
 	private void Awake() {
 		StartCoroutine(DownloadRoutine());
