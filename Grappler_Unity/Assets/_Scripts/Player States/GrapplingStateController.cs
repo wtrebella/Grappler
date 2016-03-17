@@ -47,6 +47,7 @@ public class GrapplingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
+		player.kinematicSwitcher.SetNonKinematic();
 		player.playerAnimator.PlayGrapplingAnimations();
 	}
 	

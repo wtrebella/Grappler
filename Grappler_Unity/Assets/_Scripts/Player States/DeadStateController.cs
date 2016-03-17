@@ -55,6 +55,7 @@ public class DeadStateController : PlayerStateController {
 	
 	public override void HandleTouchDown() {
 		base.HandleTouchDown();
+		GameplayManager.instance.RestartGame();
 	}
 	
 	public override void HandleLeftTouchDown() {

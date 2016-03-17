@@ -6,6 +6,7 @@ public class PlayerAnimator : MonoBehaviour {
 	private string clipName_grappling = "grappling";
 	private string clipName_falling = "falling";
 	private string clipName_onGround = "onGround";
+	private string clipName_idle = "idle";
 
 	[SerializeField] private SkeletonAnimation topAnimation;
 	[SerializeField] private SkeletonAnimation bottomAnimation;
@@ -16,7 +17,11 @@ public class PlayerAnimator : MonoBehaviour {
 
 	public void PlayFallingAnimations() {
 		PlayAnimations(clipName_falling);
-		bottomAnimation.state.SetAnimation(0, clipName_grappling, true);
+//		bottomAnimation.state.SetAnimation(0, clipName_grappling, true);
+	}
+
+	public void PlayIdleAnimations() {
+		PlayAnimations(clipName_idle);
 	}
 
 	public void PlayOnGroundAnimations() {

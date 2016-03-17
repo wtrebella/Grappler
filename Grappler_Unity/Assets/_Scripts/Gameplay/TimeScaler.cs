@@ -22,6 +22,10 @@ public class TimeScaler : MonoBehaviour {
 	private float totalFixedDeltaTimeChange;
 	private float fixedDeltaTimeChangeRate;
 
+	private void Awake() {
+		Time.timeScale = 1;
+	}
+
 	public void ScaleToSlow() {
 		if (Time.timeScale <= timeScaleMin) return;
 		if (scaleType == ScaleType.ScaleDown) return;
@@ -52,10 +56,6 @@ public class TimeScaler : MonoBehaviour {
 
 	public void StopScalingTime() {
 		scaleType = ScaleType.None;
-	}
-
-	private void Awake() {
-
 	}
 
 	private void Start() {

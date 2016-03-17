@@ -9,6 +9,6 @@ public class Initializations : MonoBehaviour {
 		Go.defaultEaseType = GoEaseType.SineInOut;
 		Go.duplicatePropertyRule = GoDuplicatePropertyRuleType.RemoveRunningProperty;
 		Go.logLevel = GoLogLevel.Error;
-		ChangeQuality.SetQuality("HD");
+//		ChangeQuality.SetQuality("HD");
 	}
 }

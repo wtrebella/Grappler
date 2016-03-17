@@ -23,14 +23,16 @@ public class Player : StateMachine {
 	public UnityEvent OnEnteredDeadState;
 	public UnityEvent OnEnteredOnGroundState;
 	public UnityEvent OnEnteredPausedState;
+	public UnityEvent OnEnteredIdleState;
 
 	public Action SignalEnteredFallingState;
 	public Action SignalEnteredGrapplingState;
 	public Action SignalEnteredDeadState;
 	public Action SignalEnteredOnGroundState;
 	public Action SignalEnteredPausedState;
+	public Action SignalEnteredIdleState;
 
-	public enum PlayerStates {Paused, Falling, Grappling, Dead, OnGround}
+	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround}
 
 	public Trail trail;
 
@@ -40,6 +42,7 @@ public class Player : StateMachine {
 	[HideInInspector] public PausedStateController pausedController;
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;
+	[HideInInspector] public IdleStateController idleController;
 	[HideInInspector] public DeadStateController deadController;
 	[HideInInspector] public GrapplingStateController grapplingController;
 	[HideInInspector] public OnGroundStateController onGroundController;
@@ -56,6 +59,7 @@ public class Player : StateMachine {
 
 	private void Awake() {
 		collisionHandlers = GetComponents<CollisionHandler>();
+		idleController = GetComponent<IdleStateController>();
 		stateControllers = GetComponents<PlayerStateController>();
 		playerAnimator = GetComponent<PlayerAnimator>();
 		kinematicSwitcher = GetComponent<KinematicSwitcher>();
@@ -73,7 +77,7 @@ public class Player : StateMachine {
 	}
 
 	private void Start() {
-		SetState(PlayerStates.Falling);
+		SetState(PlayerStates.Idle);
 	}
 
 	public bool IsFalling() {return CurrentStateIs(PlayerStates.Falling);}
@@ -81,6 +85,7 @@ public class Player : StateMachine {
 	public bool IsDead() {return CurrentStateIs(PlayerStates.Dead);}
 	public bool IsOnGround() {return CurrentStateIs(PlayerStates.OnGround);}
 	public bool IsPaused() {return CurrentStateIs(PlayerStates.Paused);}
+	public bool IsIdle() {return CurrentStateIs(PlayerStates.Idle);}
 
 	public void SetState(PlayerStates state) {
 		currentState = state;
@@ -92,6 +97,10 @@ public class Player : StateMachine {
 
 	public void SetStateGrappling() {
 		SetState(PlayerStates.Grappling);
+	}
+
+	public void SetStateIdle() {
+		SetState(PlayerStates.Idle);
 	}
 
 	public void SetStateDead() {
@@ -272,6 +281,29 @@ public class Player : StateMachine {
 		grapplingController.EnterState();
 		if (SignalEnteredGrapplingState != null) SignalEnteredGrapplingState();
 		if (OnEnteredGrapplingState != null) OnEnteredGrapplingState.Invoke();
+	}
+
+
+	// idle
+
+	private void Idle_LeftSwipe() {idleController.HandleLeftSwipe();}	
+	private void Idle_RightSwipe() {idleController.HandleRightSwipe();}	
+	private void Idle_UpSwipe() {idleController.HandleUpSwipe();}
+	private void Idle_DownSwipe() {idleController.HandleDownSwipe();}	
+	private void Idle_Tap() {idleController.HandleTap();}
+	private void Idle_TouchUp() {idleController.HandleTouchUp();}	
+	private void Idle_TouchDown() {idleController.HandleTouchDown();}	
+	private void Idle_ExitState() {idleController.ExitState();}	
+	private void Idle_UpdateState() {idleController.UpdateState();}	
+	private void Idle_FixedUpdateState() {idleController.FixedUpdateState();}
+	private void Idle_LeftTouchDown() {idleController.HandleLeftTouchDown();}	
+	private void Idle_LeftTouchUp() {idleController.HandleLeftTouchUp();}	
+	private void Idle_RightTouchDown() {idleController.HandleRightTouchDown();}	
+	private void Idle_RightTouchUp() {idleController.HandleRightTouchUp();}
+	private void Idle_EnterState() {
+		idleController.EnterState();
+		if (SignalEnteredIdleState != null) SignalEnteredIdleState();
+		if (OnEnteredIdleState != null) OnEnteredIdleState.Invoke();
 	}
 
 
