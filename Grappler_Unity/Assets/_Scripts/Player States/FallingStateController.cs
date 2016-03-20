@@ -1,13 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Player))]
 public class FallingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;
 
 	private void Awake() {
 		BaseAwake();
-		playerState = Player.PlayerStates.Falling;
+		state = Player.PlayerStates.Falling;
 	}
 
 	public override void EnterState() {
@@ -24,51 +23,51 @@ public class FallingStateController : PlayerStateController {
 	}
 	
 	public override void FixedUpdateState() {
-		base.FixedUpdateState();
+		base.UpdateState();
 	}
 	
-	public override void HandleLeftSwipe() {
-		base.HandleLeftSwipe();
+	public override void LeftSwipe() {
+		base.LeftSwipe();
 	}
 	
-	public override void HandleRightSwipe() {
-		base.HandleRightSwipe();
+	public override void RightSwipe() {
+		base.RightSwipe();
 	}
 	
-	public override void HandleUpSwipe() {
-		base.HandleUpSwipe();
+	public override void UpSwipe() {
+		base.UpSwipe();
 	}
 	
-	public override void HandleDownSwipe() {
-		base.HandleDownSwipe();
+	public override void DownSwipe() {
+		base.DownSwipe();
 	}
 	
-	public override void HandleTap() {
-		base.HandleTap();
+	public override void Tap() {
+		base.Tap();
 	}
 
-	public override void HandleTouchUp() {
-		base.HandleTouchUp();
+	public override void TouchUp() {
+		base.TouchUp();
 	}
 	
-	public override void HandleTouchDown() {
-		base.HandleTouchDown();
-		player.grapplingController.ConnectGrapplerToHighestAnchorable();
+	public override void TouchDown() {
+		base.TouchDown();
+		player.grapplingStateController.ConnectGrapplerToHighestAnchorable();
 	}
 
-	public override void HandleLeftTouchDown() {
-		base.HandleLeftTouchDown();
+	public override void LeftTouchDown() {
+		base.LeftTouchDown();
 	}
 	
-	public override void HandleLeftTouchUp() {
-		base.HandleLeftTouchUp();
+	public override void LeftTouchUp() {
+		base.LeftTouchUp();
 	}
 	
-	public override void HandleRightTouchDown() {
-		base.HandleRightTouchDown();
+	public override void RightTouchDown() {
+		base.RightTouchDown();
 	}
 	
-	public override void HandleRightTouchUp() {
-		base.HandleRightTouchUp();
+	public override void RightTouchUp() {
+		base.RightTouchUp();
 	}
 }

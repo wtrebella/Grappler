@@ -9,7 +9,7 @@ public class OnGroundState : MonoBehaviour {
 	public void StopRigidbody() {
 		rigidStopper.StartStoppingProcess();
 		playerAnimator.PlayOnGroundAnimations();
-		player.grapplingController.DisconnectGrapplerIfPossible();
+		player.grapplingStateController.DisconnectGrapplerIfPossible();
 	}
 
 	public void FreeRigidbody() {

@@ -20,17 +20,17 @@ public class GroundCollisionHandler : CollisionHandler {
 
 	private void Awake() {
 		base.BaseAwake();
-		player.SignalEnteredGrapplingState += HandleEnteredGrapplingState;
+		// TODO player.SignalEnteredGrapplingState += HandleEnteredGrapplingState;
 	}
 
 	private void ReturnTimeToNormalIfDead() {
-		if (player.IsDead()) player.timeScaleChanger.ScaleToNormal();
+		if (player.isDead) player.timeScaleChanger.ScaleToNormal();
 	}
 
 	private bool ShouldCarryOutOnGroundEvents() {
 		return 
-			!player.IsOnGround() && 
-			!player.IsDead() &&
+			!player.isOnGround && 
+			!player.isDead &&
 			hasGrappledSinceHittingGround && 
 			ExitGroundTimeHasElapsed();
 	}
