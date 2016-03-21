@@ -71,17 +71,6 @@ public class WhitStateMachine : MonoBehaviour {
 	private void HandleTouchUp() {state.TouchUp();}
 	private void HandleTouchDown() {state.TouchDown();}
 
-	private void InitStateControllers() {
-		WhitStateController[] stateControllers = GetComponentsInChildren<WhitStateController>();
-		stateControllersDictionary = new Dictionary<Enum, WhitStateController>();
-
-		foreach (WhitStateController controller in stateControllers) {
-			stateControllersDictionary.Add(controller.state, controller);
-		}
-
-		stateControllersInitiated = true;
-	}
-
 	private void Update() {
 		PreUpdateState();
 		state.UpdateState();
@@ -135,7 +124,7 @@ public class WhitStateMachine : MonoBehaviour {
 		}
 
 		if (!currentStateDelegates.TryGetValue(methodName, out currentStateDelegate)) {
-			var method = GetType().GetMethod(methodName,
+			var method = target.GetType().GetMethod(methodName,
 				System.Reflection.BindingFlags.Instance |
 				System.Reflection.BindingFlags.Public |
 				System.Reflection.BindingFlags.NonPublic |
@@ -154,6 +143,17 @@ public class WhitStateMachine : MonoBehaviour {
 
 	protected virtual void PreFixedUpdateState() {}
 	protected virtual void PostFixedUpdateState() {}
+
+	private void InitStateControllers() {
+		WhitStateController[] stateControllers = GetComponentsInChildren<WhitStateController>();
+		stateControllersDictionary = new Dictionary<Enum, WhitStateController>();
+
+		foreach (WhitStateController controller in stateControllers) {
+			stateControllersDictionary.Add(controller.state, controller);
+		}
+
+		stateControllersInitiated = true;
+	}
 
 	private void InitiateSwipeDetection() {
 		if (InputManager.instance == null) return;
@@ -175,6 +175,8 @@ public class WhitStateMachine : MonoBehaviour {
 
 	private void RemoveSwipeDetection() {
 		if (InputManager.instance == null) return;
+
+		swipeDetectionInitiated = false;
 
 		InputManager.instance.SignalTap -= HandleTap;
 		InputManager.instance.SignalLeftSwipe -= HandleLeftSwipe;

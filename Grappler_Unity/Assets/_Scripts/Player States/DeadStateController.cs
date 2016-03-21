@@ -5,6 +5,12 @@ using System.Collections;
 public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D bodyRigidbody;
 	[SerializeField] private Rigidbody2D feetRigidbody;
+	[SerializeField] private Physics2DMaterialSwitcher materialSwitcher;
+	[SerializeField] private CameraMoverHorizontalSmoothDampAdjuster cameraSmoothDampAdjuster;
+	[SerializeField] private CameraMover cameraMover;
+	[SerializeField] private RockSlide rockSlide;
+	[SerializeField] private SkeletonGhostController ghostController;
+
 
 	private void Awake() {
 		base.BaseAwake();
@@ -15,62 +21,15 @@ public class DeadStateController : PlayerStateController {
 		base.EnterState();
 		player.grapplingStateController.DisconnectGrapplerIfPossible();
 		player.timeScaleChanger.ScaleToSlow();
+		materialSwitcher.EnableMaterial2();
+		cameraSmoothDampAdjuster.enabled = false;
+		cameraMover.SetSmoothDampTimeX(0.1f);
+		ghostController.EnableGhosts();
 	}
-	
-	public override void ExitState() {
-		base.ExitState();
-	}
-	
-	public override void UpdateState() {
-		base.UpdateState();
-	}
-	
-	public override void FixedUpdateState() {
-		base.UpdateState();
-	}
-	
-	public override void LeftSwipe() {
-		base.LeftSwipe();
-	}
-	
-	public override void RightSwipe() {
-		base.RightSwipe();
-	}
-	
-	public override void UpSwipe() {
-		base.UpSwipe();
-	}
-	
-	public override void DownSwipe() {
-		base.DownSwipe();
-	}
-	
-	public override void Tap() {
-		base.Tap();
-	}
-	
-	public override void TouchUp() {
-		base.TouchUp();
-	}
+
 	
 	public override void TouchDown() {
 		base.TouchDown();
 		GameplayManager.instance.RestartGame();
-	}
-	
-	public override void LeftTouchDown() {
-		base.LeftTouchDown();
-	}
-	
-	public override void LeftTouchUp() {
-		base.LeftTouchUp();
-	}
-	
-	public override void RightTouchDown() {
-		base.RightTouchDown();
-	}
-	
-	public override void RightTouchUp() {
-		base.RightTouchUp();
 	}
 }
