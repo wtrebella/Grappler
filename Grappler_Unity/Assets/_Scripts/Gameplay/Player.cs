@@ -10,8 +10,8 @@ public class Player : WhitStateMachine {
 	public GrapplingManager grapplingManager;
 	public PlayerAnimator playerAnimator;
 	public SkeletonGhostController ghostController;
-	public PlayerCollisionHandler collisionHandler;
 	public GroundDetector groundDetector;
+	public PlayerCollisionHandler collisionHandler;
 
 	[HideInInspector] public PlayerBodyPart body;
 	[HideInInspector] public PlayerBodyPart feet;

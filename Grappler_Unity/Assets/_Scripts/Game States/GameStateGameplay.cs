@@ -9,6 +9,7 @@ public class GameStateGameplay : GameStateBase {
 
 	public override void OnEnterState() {
 		base.OnEnterState();
+		TimeScaler.instance.ScaleToNormal();
 	}
 
 	public override IEnumerator OnEnterState_Routine() {

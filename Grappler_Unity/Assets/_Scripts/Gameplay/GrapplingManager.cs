@@ -2,15 +2,6 @@
 using System.Collections;
 
 public class GrapplingManager : MonoBehaviour {
-	public float GetCooldownCompletionPercentage() {
-		if (ReadyToConnect()) return 1;
-		else {
-			float percentage = Mathf.Clamp01(1 - (cooldownTimer / cooldown));
-			return percentage;
-		}
-	}
-
-	[SerializeField] private float cooldown = 0.5f;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private AirTimeTimer airTimeTimer;
 	[SerializeField] private AnchorableFinder anchorableFinder;
@@ -25,12 +16,7 @@ public class GrapplingManager : MonoBehaviour {
 		}
 	}
 
-	private bool isInCooldown = false;
-	private float cooldownTimer;
-
-	private void Awake() {
-		cooldownTimer = cooldown;
-	}
+	private bool hasConnected = false;
 
 	public bool Connect() {
 		return ConnectGrapplerToHighestAnchorable();
@@ -59,13 +45,18 @@ public class GrapplingManager : MonoBehaviour {
 	private bool ConnectGrapplerIfPossible(Anchorable anchorable) {
 		if (!ReadyToConnect()) return false;
 
+		if (!hasConnected) {
+			grapplerRope.ResetAccelerationCooldown();
+			hasConnected = true;
+		}
+
 		Connect(anchorable);
+
 		return true;
 	}
 
 	private void ReleaseGrapple() {
 		grapplerRope.Release();
-		StartCoroutine("Cooldown");
 	}
 
 	private void Connect(Anchorable anchorable) {
@@ -73,28 +64,10 @@ public class GrapplingManager : MonoBehaviour {
 	}
 
 	private bool ReadyToConnect() {
-		return !isInCooldown && grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
+		return grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
 	}
 
 	private bool ReadyToDisconnect() {
 		return grapplerRope.IsConnected();
-	}
-
-
-	private void FinishCooldown() {
-		StopCoroutine("Cooldown");
-		isInCooldown = false;
-		cooldownTimer = cooldown;
-	}
-
-	private IEnumerator Cooldown() {
-		isInCooldown = true;
-		cooldownTimer = cooldown;
-		while (cooldownTimer > 0) {
-			cooldownTimer -= Time.deltaTime;
-			yield return null;
-		}
-		cooldownTimer = cooldown;
-		isInCooldown = false;
 	}
 }

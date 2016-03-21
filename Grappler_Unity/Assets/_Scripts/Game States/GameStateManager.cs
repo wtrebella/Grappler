@@ -27,7 +27,9 @@ public class GameStateManager : Singleton<GameStateManager> {
 		InitializePayloads();
 
 		DontDestroyOnLoad(gameObject);
+	}
 
+	private void Start() {
 		PushGameState(_initGameState);
 	}
 		
