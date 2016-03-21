@@ -8,8 +8,8 @@ public class Player : WhitStateMachine {
 
 	public Trail trail;
 
-	[SerializeField] private PlayerBodyPart body;
-	[SerializeField] private PlayerBodyPart feet;
+	[HideInInspector] public PlayerBodyPart body;
+	[HideInInspector] public PlayerBodyPart feet;
 
 	[HideInInspector] public PlayerAnimator playerAnimator;
 	[HideInInspector] public KinematicSwitcher kinematicSwitcher;

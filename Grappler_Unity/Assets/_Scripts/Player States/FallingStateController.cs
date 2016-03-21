@@ -11,6 +11,7 @@ public class FallingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
+		player.kinematicSwitcher.SetNonKinematic();
 		player.playerAnimator.PlayFallingAnimations();
 	}
 

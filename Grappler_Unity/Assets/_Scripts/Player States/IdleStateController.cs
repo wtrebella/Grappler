@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class IdleStateController : PlayerStateController {
-	[SerializeField] private IdleState idleState;
-
 	private void Awake() {
 		BaseAwake();
 		state = Player.PlayerStates.Idle;
@@ -11,13 +9,19 @@ public class IdleStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
+
 		player.kinematicSwitcher.SetKinematic();
 		player.playerAnimator.PlayIdleAnimations();
-		idleState.ResetRotation();
+		ResetRotation();
 	}
 	
 	public override void TouchDown() {
 		base.TouchDown();
 		player.grapplingStateController.ConnectGrapplerToHighestAnchorable();
+	}
+
+	public void ResetRotation() {
+		player.body.transform.localRotation = Quaternion.identity;
+		player.feet.transform.localRotation = Quaternion.identity;
 	}
 }
