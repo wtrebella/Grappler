@@ -2,10 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Rigidbody2DAccelerationClamper : MonoBehaviour {
+public class Rigidbody2DAccelerationClamper : Rigidbody2DAffecter {
 	[SerializeField] private WhitAxisType axis;
 	[SerializeField] private Cooldown cooldown;
-	[SerializeField] private Rigidbody2D[] rigidbodies;
 	[SerializeField] private float maxAcceleration = 2;
 
 	private Dictionary<Rigidbody2D, Vector2> rigidbodyPreviousVelocities;

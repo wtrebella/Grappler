@@ -2,9 +2,18 @@
 using System.Collections;
 
 public class RockSlideCollisionHandler : CollisionHandler {
-	[SerializeField] private FloatRange hitVelocityRangeX = new FloatRange(300, 500);
-	[SerializeField] private FloatRange hitVelocityRangeY = new FloatRange(200, 400);
-	[SerializeField] private FloatRange torqueRange = new FloatRange(50, 150);
+	private Player _player;
+	protected Player player {
+		get {
+			if (_player == null) _player = GetComponentInParent<Player>();
+			if (_player == null) Debug.LogError("must be child of Player");
+			return _player;
+		}
+	}
+
+	[SerializeField] private FloatRange hitVelocityRangeX = new FloatRange(100, 200);
+	[SerializeField] private FloatRange hitVelocityRangeY = new FloatRange(50, 75);
+	[SerializeField] private FloatRange torqueRange = new FloatRange(-100, 100);
 
 	private bool hasCollided = false;
 
@@ -16,8 +25,8 @@ public class RockSlideCollisionHandler : CollisionHandler {
 		hasCollided = true;
 
 		ScreenShaker.instance.ShakeMax();
-		player.rigidbodyForcer.AddVelocity(new Vector2(hitVelocityRangeX.GetRandom(), hitVelocityRangeY.GetRandom()));
-		player.rigidbodyForcer.AddTorque(torqueRange.GetRandom());
+		player.rigidbodyAffecterGroup.AddVelocity(new Vector2(hitVelocityRangeX.GetRandom(), hitVelocityRangeY.GetRandom()));
+		player.rigidbodyAffecterGroup.AddTorque(torqueRange.GetRandom());
 		player.SetState(Player.PlayerStates.Dead);
 	}
 

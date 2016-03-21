@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerBodyPart : MonoBehaviour {
 	public Rigidbody2D rigid {get; private set;}
 
-	[SerializeField] private Player player;
+	private Player player;
 	
 	public bool IsBelowScreen() {
 		float margin = -5;
@@ -12,32 +12,41 @@ public class PlayerBodyPart : MonoBehaviour {
 		return transform.position.y < minY;
 	}
 
+	public void SetKinematic() {
+		rigid.isKinematic = true;
+	}
+
+	public void SetNonKinematic() {
+		rigid.isKinematic = false;
+	}
+
 	private void OnCollisionEnter2D(Collision2D collision) {
-		player.HandleCollisionEnter(this, collision);
+		player.collisionHandler.HandleCollisionEnter(this, collision);
 	}
 
 	private void OnCollisionStay2D(Collision2D collision) {
-		player.HandleCollisionStay(this, collision);
+		player.collisionHandler.HandleCollisionStay(this, collision);
 	}
 
 	private void OnCollisionExit2D(Collision2D collision) {
-		player.HandleCollisionExit(this, collision);
+		player.collisionHandler.HandleCollisionExit(this, collision);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collider) {
-		player.HandleTriggerEnter(this, collider);
+		player.collisionHandler.HandleTriggerEnter(this, collider);
 	}
 
 	private void OnTriggerStay2D(Collider2D collider) {
-		player.HandleTriggerEnter(this, collider);
+		player.collisionHandler.HandleTriggerEnter(this, collider);
 	}
 
 	private void OnTriggerExit2D(Collider2D collider) {
-		player.HandleTriggerEnter(this, collider);
+		player.collisionHandler.HandleTriggerEnter(this, collider);
 	}
 
 	private void Awake() {
 		rigid = GetComponent<Rigidbody2D>();
+		player = GetComponentInParent<Player>();
 	}
 
 	private void Start() {

@@ -11,12 +11,12 @@ public class FallingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
-		player.kinematicSwitcher.SetNonKinematic();
+		player.rigidbodyAffecterGroup.SetNonKinematic();
 		player.playerAnimator.PlayFallingAnimations();
 	}
 
 	public override void TouchDown() {
 		base.TouchDown();
-		player.grapplingStateController.ConnectGrapplerToHighestAnchorable();
+		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 }

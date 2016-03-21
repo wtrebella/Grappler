@@ -8,13 +8,13 @@ public class SkeletonGhostController : MonoBehaviour {
 	private bool ghostsEnabled = false;
 	private bool runningGhostCoroutine = false;
 
-	public void EnableGhosts() {
+	public void EnableGhosting() {
 		if (ghostsEnabled) return;
 		ghostsEnabled = true;
 		foreach (SkeletonGhost ghost in ghosts) ghost.ghostingEnabled = true;
 	}
 
-	public void DisableGhosts() {
+	public void DisableGhosting() {
 		if (!ghostsEnabled) return;
 		ghostsEnabled = false;
 		StopGhostCoroutine();
@@ -28,9 +28,9 @@ public class SkeletonGhostController : MonoBehaviour {
 	private IEnumerator EnableGhostsCoroutine() {
 		if (runningGhostCoroutine) yield break;
 		runningGhostCoroutine = true;
-		EnableGhosts();
+		EnableGhosting();
 		yield return new WaitForSeconds(ghostDuration);
-		DisableGhosts();
+		DisableGhosting();
 	}
 
 	private void StopGhostCoroutine() {

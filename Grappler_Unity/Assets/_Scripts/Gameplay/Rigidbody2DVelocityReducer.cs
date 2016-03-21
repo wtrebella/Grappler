@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rigidbody2DVelocityReducer : MonoBehaviour {
+public class Rigidbody2DVelocityReducer : Rigidbody2DAffecter {
 	[SerializeField] private WhitAxisType axis;
-	[SerializeField] private Rigidbody2D[] rigidbodies;
 	[SerializeField, Range(0, 1)] private float reductionMultiplier = 0.9f;
 
 	public void Reduce() {

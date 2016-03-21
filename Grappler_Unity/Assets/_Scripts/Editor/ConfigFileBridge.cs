@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class ConfigFileBridge : Singleton<ConfigFileBridge> {
 	[SerializeField] private string configLink_iPhone = "https://s3.amazonaws.com/grappler/iPhone/grapplerConfig_iPhone.txt";
-	[SerializeField] private string configLink_Android = "https://s3.amazonaws.com/grappler/android/grapplerConfig_Android.txt";
+//	[SerializeField] private string configLink_Android = "https://s3.amazonaws.com/grappler/android/grapplerConfig_Android.txt";
 
 	#if UNITY_EDITOR
 	[MenuItem("Utilities/Create File")]

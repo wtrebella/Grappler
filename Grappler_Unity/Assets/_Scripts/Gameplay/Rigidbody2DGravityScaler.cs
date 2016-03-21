@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class Rigidbody2DGravityScaler : MonoBehaviour {
+public class Rigidbody2DGravityScaler : Rigidbody2DAffecter {
 	[SerializeField] private Rigidbody2D rigid;
 
 	private float initialGravityScale;

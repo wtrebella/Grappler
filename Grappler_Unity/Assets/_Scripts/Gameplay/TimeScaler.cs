@@ -2,16 +2,18 @@
 using System.Collections;
 
 public class TimeScaler : MonoBehaviour {
+	public static TimeScaler instance;
+
 	private enum ScaleType {
 		None,
 		ScaleUp,
 		ScaleDown
 	}
 
-	[SerializeField] private float timeScaleMin = 0.1f;
+	[SerializeField] private float timeScaleMin = 0.3f;
 	[SerializeField] private float timeScaleNormal = 1.0f;
 	[SerializeField] private float timeScaleUpDuration = 0.05f;
-	[SerializeField] private float timeScaleDownDuration = 0.5f;
+	[SerializeField] private float timeScaleDownDuration = 0.25f;
 
 	private ScaleType scaleType = ScaleType.None;
 	private float scaleDuration;
@@ -23,7 +25,16 @@ public class TimeScaler : MonoBehaviour {
 	private float fixedDeltaTimeChangeRate;
 
 	private void Awake() {
-		Time.timeScale = 1;
+		if (instance == null) {
+			instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else {
+			Destroy(gameObject);
+			return;
+		}
+
+		Time.timeScale = timeScaleNormal;
 	}
 
 	public void ScaleToSlow() {

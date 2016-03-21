@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody2D))]
-public class Rigidbody2DPusher : MonoBehaviour {
+public class Rigidbody2DPusher : Rigidbody2DAffecter {
 	[SerializeField] private float force;
 	[SerializeField] private Vector2 direction;
 

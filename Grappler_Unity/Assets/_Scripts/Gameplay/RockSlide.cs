@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class RockSlide : MonoBehaviour {
 	public UnityEventWithFloat OnPushBack;
 
+	[SerializeField] private Player player;
 	[SerializeField] private Transform startPoint;
 	[SerializeField] private Follow follow;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
@@ -16,7 +17,6 @@ public class RockSlide : MonoBehaviour {
 	[SerializeField] private float slowZoneMultiplier = 0.1f;
 	[SerializeField] private float pushBackAmount = -10;
 	[SerializeField] private float streakThreshold = 0.3f;
-	[SerializeField] private GroundDetector groundDetector;
 
 	private bool hasStarted = false;
 
@@ -36,7 +36,7 @@ public class RockSlide : MonoBehaviour {
 	}
 
 	public void OnGrapple() {
-		float pushBackPercent = 1 - groundDetector.GetDistanceFromGroundPercent();
+		float pushBackPercent = 1 - player.groundDetector.GetDistanceFromGroundPercent();
 		PushBack(pushBackPercent);
 	}
 

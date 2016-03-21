@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Rigidbody2DForcer : MonoBehaviour {
-	[SerializeField] private Rigidbody2D[] rigidbodies;
-
+public class Rigidbody2DForcer : Rigidbody2DAffecter {
 	public void AddForce(Vector2 force, ForceMode2D forceMode) {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.AddForce(force, forceMode);
 	}
@@ -25,17 +23,5 @@ public class Rigidbody2DForcer : MonoBehaviour {
 		foreach (Rigidbody2D rigid in rigidbodies) direction += rigid.velocity;
 		direction.Normalize();
 		return direction;
-	}
-
-	private void Awake() {
-		
-	}
-
-	private void Start() {
-	
-	}
-	
-	private void Update() {
-	
 	}
 }

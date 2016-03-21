@@ -1,8 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TriggerSwitcher : MonoBehaviour {
-	[SerializeField] private Collider2D[] colliders;
+	private List<Collider2D> colliders;
+
+	private void Awake() {
+		colliders = new List<Collider2D>();
+	}
+
+	public void AddCollider(Collider2D coll) {
+		colliders.Add(coll);
+	}
 
 	public void SetAsTrigger(float delay = 0) {
 		StartCoroutine(SetAsTriggerCoroutine(delay));

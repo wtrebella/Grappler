@@ -10,14 +10,14 @@ public class IdleStateController : PlayerStateController {
 	public override void EnterState() {
 		base.EnterState();
 
-		player.kinematicSwitcher.SetKinematic();
+		player.rigidbodyAffecterGroup.SetKinematic();
 		player.playerAnimator.PlayIdleAnimations();
 		ResetRotation();
 	}
 	
 	public override void TouchDown() {
 		base.TouchDown();
-		player.grapplingStateController.ConnectGrapplerToHighestAnchorable();
+		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 
 	public void ResetRotation() {

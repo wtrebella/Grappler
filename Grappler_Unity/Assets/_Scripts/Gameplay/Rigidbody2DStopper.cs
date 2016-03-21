@@ -2,14 +2,21 @@
 using System.Collections;
 using System;
 
-public class Rigidbody2DStopper : MonoBehaviour {
+public class Rigidbody2DStopper : Rigidbody2DAffecter {
+	private Player _player;
+	protected Player player {
+		get {
+			if (_player == null) _player = GetComponentInParent<Player>();
+			if (_player == null) Debug.LogError("must be child of Player");
+			return _player;
+		}
+	}
+
 	public Action SignalSlowed;
 	public Action SignalStopped;
 
-	[SerializeField] private GroundDetector groundDetector;
-	[SerializeField] private float stopSpeed = 5.0f;
-	[SerializeField] private float stopRate = 1.0f;
-	[SerializeField] private Rigidbody2D rigid;
+	[SerializeField] private float stopThreshold = 5.0f;
+	[SerializeField] private float stopRate = 0.7f;
 
 	public void StartStoppingProcess() {
 		StopRigidbody();
@@ -20,10 +27,12 @@ public class Rigidbody2DStopper : MonoBehaviour {
 	}
 
 	private IEnumerator StopRigidbodyCoroutine() {
+		Rigidbody2D rigid = rigidbodies[0];
+
 		float speed = rigid.velocity.magnitude;
 
 		while (ShouldContinueRunningStopCoroutine(speed)) {
-			if (groundDetector.IsCloseToGround()) {
+			if (player.groundDetector.IsCloseToGround()) {
 				Vector2 currentVelocity = rigid.velocity;
 				Vector2 velocity = currentVelocity * stopRate;
 				speed = velocity.magnitude;
@@ -37,7 +46,7 @@ public class Rigidbody2DStopper : MonoBehaviour {
 	}
 
 	private bool RigidbodyHasBeenStopped(float speed) {
-		return groundDetector.IsCloseToGround() && speed < stopSpeed;
+		return player.groundDetector.IsCloseToGround() && speed < stopThreshold;
 	}
 
 	private bool ShouldContinueRunningStopCoroutine(float speed) {
