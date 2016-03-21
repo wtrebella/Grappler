@@ -4,8 +4,6 @@ using System;
 using UnityEngine.Events;
 
 public class GrapplingStateController : PlayerStateController {
-	public UnityEventWithFloat OnVoluntaryRelease;
-
 	[SerializeField] private Rigidbody2DVelocityReducer velocityReducer;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private AirTimeTimer airTimeTimer;
@@ -58,7 +56,6 @@ public class GrapplingStateController : PlayerStateController {
 	public override void TouchUp() {
 		base.TouchUp();
 		if (DisconnectGrapplerIfPossible()) {
-			if (OnVoluntaryRelease != null) OnVoluntaryRelease.Invoke(airTimeTimer.lastStreak);
 			player.SetState(Player.PlayerStates.Falling);
 		}
 	}

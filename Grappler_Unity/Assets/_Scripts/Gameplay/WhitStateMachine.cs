@@ -38,6 +38,8 @@ public class WhitStateMachine : MonoBehaviour {
 	}
 
 	public WhitStateController GetStateController(Enum state) {
+		if (!hasInitiatedStateControllers) InitStateControllers();
+
 		WhitStateController controller;
 
 		if (!stateControllersDictionary.TryGetValue(state, out controller)) {
@@ -57,7 +59,7 @@ public class WhitStateMachine : MonoBehaviour {
 	private Dictionary<Enum, WhitStateController> stateControllersDictionary;
 	private Dictionary<Enum, Dictionary<string, Delegate>> allStateDelegates = new Dictionary<Enum, Dictionary<string, Delegate>>();
 	private bool swipeDetectionInitiated = false;
-	private bool stateControllersInitiated = false;
+	private bool hasInitiatedStateControllers = false;
 
 	private void HandleLeftSwipe() {state.LeftSwipe();}
 	private void HandleRightSwipe() {state.RightSwipe();}
@@ -89,7 +91,6 @@ public class WhitStateMachine : MonoBehaviour {
 	}
 
 	private void ConfigureCurrentState() {
-		if (!stateControllersInitiated) InitStateControllers();
 		if (!swipeDetectionInitiated) InitiateSwipeDetection();
 
 		if (state.ExitState != null) state.ExitState();
@@ -152,7 +153,7 @@ public class WhitStateMachine : MonoBehaviour {
 			stateControllersDictionary.Add(controller.state, controller);
 		}
 
-		stateControllersInitiated = true;
+		hasInitiatedStateControllers = true;
 	}
 
 	private void InitiateSwipeDetection() {

@@ -2,7 +2,6 @@
 using System.Collections;
 using System;
 
-[RequireComponent(typeof(Player))]
 public class PlayerStateController : WhitStateController {
 	protected Player player;
 
@@ -12,6 +11,6 @@ public class PlayerStateController : WhitStateController {
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
-		player = GetComponent<Player>();
+		player = GetComponentInParent<Player>();
 	}
 }

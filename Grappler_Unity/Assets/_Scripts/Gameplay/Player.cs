@@ -3,15 +3,6 @@ using System.Collections;
 using System;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(KinematicSwitcher))]
-[RequireComponent(typeof(SkeletonGhostController))]
-[RequireComponent(typeof(PlayerAnimator))]
-[RequireComponent(typeof(Trail))]
-[RequireComponent(typeof(Rigidbody2DStopper))]
-[RequireComponent(typeof(Rigidbody2DVelocityReducer))]
-[RequireComponent(typeof(Rigidbody2DForcer))]
-[RequireComponent(typeof(TemporaryTriggerSetter))]
-[RequireComponent(typeof(TimeScaler))]
 public class Player : WhitStateMachine {
 	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround}
 

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Player))]
 public class DeadStateController : PlayerStateController {
 	[SerializeField] private Rigidbody2D bodyRigidbody;
 	[SerializeField] private Rigidbody2D feetRigidbody;
