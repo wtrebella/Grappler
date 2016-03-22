@@ -5,7 +5,7 @@ using System.Linq;
 
 public static class ClothingDataManager {
 	// =========== HATS ============
-	private static string itemSetPathHats = "hats/hatsItemSets/";
+	private static string packagePathHats = "Hats/";
 
 	private static List<ClothingItemSet> _hats;
 	public static List<ClothingItemSet> hats {
@@ -16,7 +16,7 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadAllHats() {
-		var hatsArray = Resources.LoadAll(itemSetPathRoot + itemSetPathHats, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
+		var hatsArray = Resources.LoadAll(packagePathRoot + packagePathHats, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
 		_hats = new List<ClothingItemSet>();
 		foreach (ClothingItemSet hat in hatsArray) _hats.Add(hat);
 	}
@@ -38,7 +38,7 @@ public static class ClothingDataManager {
 
 
 	// =========== SHOES ============
-	private static string itemSetPathShoes = "shoes/shoesItemSets/";
+	private static string packagePathShoes = "Shoes/";
 
 	private static List<ClothingItemSet> _shoes;
 	public static List<ClothingItemSet> shoes {
@@ -49,7 +49,7 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadAllShoes() {
-		var shoesArray = Resources.LoadAll(itemSetPathRoot + itemSetPathShoes, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
+		var shoesArray = Resources.LoadAll(packagePathRoot + packagePathShoes, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
 		_shoes = new List<ClothingItemSet>();
 		foreach (ClothingItemSet shoe in shoesArray) _shoes.Add(shoe);
 	}
@@ -71,7 +71,7 @@ public static class ClothingDataManager {
 
 
 	// =========== EVERYTHING ELSE ============
-	private static string itemSetPathRoot = "clothingItems/";
+	private static string packagePathRoot = "CollectableItems/CollectableItemPackages/Clothing/";
 
 	private static List<ClothingItemSet> _equippedSets = new List<ClothingItemSet>();
 	public static List<ClothingItemSet> equippedSets {

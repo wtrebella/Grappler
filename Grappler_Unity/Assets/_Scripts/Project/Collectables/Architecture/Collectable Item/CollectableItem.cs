@@ -1,28 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
-public enum ClothingSkeletonType {
-	Top,
-	Bottom,
-	None
-}
-
 [System.Serializable]
-public class ClothingItem : ScriptableObject {
-	#if UNITY_EDITOR
-	[MenuItem("Assets/Create/ClothingItemAsset", false, 101)]
-	public static void CreateItemAsset() {
-		ScriptableObjectUtility.CreateAsset<ClothingItem>();
-	}
-	#endif
-
+public class CollectableItem : ScriptableObject {
 	public tk2dSpriteCollectionData spriteCollectionData;
-	public ClothingItemType type = ClothingItemType.None;
-	public ClothingSkeletonType skeleton = ClothingSkeletonType.None;
+	public CollectablePackageType type = CollectablePackageType.None;
 	[HideInInspector] public string spriteName;
 
 	public void SetSprite(string spriteName) {
