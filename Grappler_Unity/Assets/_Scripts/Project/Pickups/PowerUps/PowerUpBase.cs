@@ -3,13 +3,11 @@ using System.Collections;
 
 public class PowerUpBase : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+	private void Start () {
 	
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	private void Update () {
 	
 	}
 }
