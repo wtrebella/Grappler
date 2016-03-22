@@ -20,7 +20,6 @@ public class GrapplingStateController : PlayerStateController {
 		rockSlide.OnGrapple();
 
 		player.rigidbodyAffecterGroup.ReduceVelocity();
-		player.rigidbodyAffecterGroup.AddForce(new Vector2(horizontalGrappleBoost, 0), ForceMode2D.Impulse);
 		player.rigidbodyAffecterGroup.SetNonKinematic();
 		player.playerAnimator.PlayGrapplingAnimations();
 	}
@@ -30,5 +29,9 @@ public class GrapplingStateController : PlayerStateController {
 		if (player.grapplingManager.Disconnect()) player.SetState(Player.PlayerStates.Falling);
 	}
 
+	public override void FixedUpdateState() {
+		base.FixedUpdateState();
 
+		player.rigidbodyAffecterGroup.AddForce(new Vector2(horizontalGrappleBoost, -100), ForceMode2D.Force);
+	}
 }

@@ -36,8 +36,8 @@ public class RockSlide : MonoBehaviour {
 	}
 
 	public void OnGrapple() {
-		float pushBackPercent = 1 - player.groundDetector.GetDistanceFromGroundPercent();
-		PushBack(pushBackPercent);
+//		float pushBackPercent = 1 - player.groundDetector.GetDistanceFromGroundPercent();
+//		PushBack(pushBackPercent);
 	}
 
 	public void OnAirTimeStreakEndedByGrapple(float streak) {
