@@ -33,11 +33,11 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	public void EquipFirstHatIfNoneEquipped() {
-		if (!ItemSetIsEquipped(ClothingItemSetType.Hat)) EquipFirstHat();
+		if (!ItemSetIsEquipped(ClothingPackageType.Hat)) EquipFirstHat();
 	}
 
 	public void EquipFirstShoesIfNoneEquipped() {
-		if (!ItemSetIsEquipped(ClothingItemSetType.Shoes)) EquipFirstShoes();
+		if (!ItemSetIsEquipped(ClothingPackageType.Shoes)) EquipFirstShoes();
 	}
 
 	public void EquipFirstHat() {
@@ -49,22 +49,22 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	public void EquipNextHat() {
-		EquipNext(ClothingItemSetType.Hat);
+		EquipNext(ClothingPackageType.Hat);
 	}
 
 	public void EquipNextShoes() {
-		EquipNext(ClothingItemSetType.Shoes);
+		EquipNext(ClothingPackageType.Shoes);
 	}
 
-	public void EquipNext(ClothingItemSetType type) {
-		ClothingItemSet equippedItemSet = GetEquippedItemSet(type);
+	public void EquipNext(ClothingPackageType type) {
+		ClothingPackage equippedItemSet = GetEquippedItemSet(type);
 
 		int currentItemIndex = 0;
-		List<ClothingItemSet> sets = ClothingDataManager.GetClothingItemSets(type);
+		List<ClothingPackage> sets = ClothingDataManager.GetClothingItemSets(type);
 
 		if (equippedItemSet != null) {
 			for (int i = 0; i < sets.Count; i++) {
-				ClothingItemSet arrayItemSet = sets[i];
+				ClothingPackage arrayItemSet = sets[i];
 				if (equippedItemSet == arrayItemSet) {
 					currentItemIndex = i;
 				}
@@ -73,24 +73,24 @@ public class ClothingManager : MonoBehaviour {
 
 		IntRange wrapRange = new IntRange(0, sets.Count);
 		int newItemIndex = WhitTools.IncrementWithWrap(currentItemIndex, wrapRange);
-		ClothingItemSet nextItem = sets[newItemIndex];
+		ClothingPackage nextItem = sets[newItemIndex];
 		EquipItemSet(nextItem);
 	}
 
-	public void EquipItemSet(ClothingItemSet clothingItemSet) {
+	public void EquipItemSet(ClothingPackage clothingItemSet) {
 		UnequipItemSet(clothingItemSet.type);
 		SetClothingItemSet(clothingItemSet);
 	}
 
-	public void UnequipItemSet(ClothingItemSetType type) {
+	public void UnequipItemSet(ClothingPackageType type) {
 		if (ItemSetIsEquipped(type)) RemoveClothingItemSet(type);
 	}
 
-	public bool ItemSetIsEquipped(ClothingItemSetType type) {
+	public bool ItemSetIsEquipped(ClothingPackageType type) {
 		return ClothingDataManager.ItemSetTypeIsEquipped(type);
 	}
 
-	public ClothingItemSet GetEquippedItemSet(ClothingItemSetType type) {
+	public ClothingPackage GetEquippedItemSet(ClothingPackageType type) {
 		if (!ClothingDataManager.ItemSetTypeIsEquipped(type)) return null;
 
 		return ClothingDataManager.GetEquippedItemSet(type);
@@ -98,20 +98,24 @@ public class ClothingManager : MonoBehaviour {
 
 	private void EquipSavedItemSets() {
 		var equippedSets = ClothingDataManager.equippedSets.ToArray();
-		foreach (ClothingItemSet itemSet in equippedSets) EquipItemSet(itemSet);
+		foreach (ClothingPackage itemSet in equippedSets) EquipItemSet(itemSet);
 	}
 
-	private void SetClothingItemSet(ClothingItemSet itemSet) {
-		foreach (ClothingItem item in itemSet.items) {
-			if (!item.HasValidSpriteName()) Debug.LogError("item doesn't have a valid sprite! fix this or expect errors.");
-			SetAttachment(item);
+	private void SetClothingItemSet(ClothingPackage itemSet) {
+		foreach (CollectableItem item in itemSet.items) {
+			ClothingItem clothingItem = (ClothingItem)item;
+			if (!clothingItem.HasValidSpriteName()) Debug.LogError("item doesn't have a valid sprite! fix this or expect errors.");
+			SetAttachment(clothingItem);
 		}
 		if (!ClothingDataManager.ItemSetTypeIsEquipped(itemSet.type)) ClothingDataManager.equippedSets.Add(itemSet);
 	}
 
-	private void RemoveClothingItemSet(ClothingItemSetType type) {
-		ClothingItemSet itemSet = GetEquippedItemSet(type);
-		foreach (ClothingItem item in itemSet.items) RemoveAttachment(item.type);
+	private void RemoveClothingItemSet(ClothingPackageType type) {
+		ClothingPackage itemSet = GetEquippedItemSet(type);
+		foreach (CollectableItem item in itemSet.items) {
+			ClothingItem clothingItem = (ClothingItem)item;
+			RemoveAttachment(clothingItem.type);
+		}
 		ClothingDataManager.RemoveEquippedItemSet(type);
 	}
 

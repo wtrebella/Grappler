@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
+using System.Linq;
 
 public static class WhitExtensions {
 	public static void IncrementWithWrap(this int value, IntRange wrapRange) {
@@ -113,6 +114,10 @@ public static class WhitExtensions {
 			}
 		}
 		return closestItem;
+	}
+
+	public static List<T> ToList<T>(this Array array) {
+		return array.OfType<T>().ToList();
 	}
 
 	public static void RemoveItemsWithXValsUnder(this List<Transform> list, float x) {

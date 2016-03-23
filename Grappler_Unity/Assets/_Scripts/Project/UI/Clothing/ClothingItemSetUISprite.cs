@@ -4,8 +4,8 @@ using System.Collections;
 public class ClothingItemSetUISprite : MonoBehaviour {
 	[SerializeField] private tk2dSprite sprite;
 
-	public void SetClothingItemSet(ClothingItemSet itemSet) {
-		ClothingItem firstItem = itemSet.GetFirstClothingItem();
+	public void SetClothingItemSet(ClothingPackage itemSet) {
+		ClothingItem firstItem = (ClothingItem)itemSet.GetFirstItem();
 		if (firstItem == null || !firstItem.HasValidSpriteName()) return;
 		float spriteScale = firstItem.GetSpriteScale();
 		string spriteName = firstItem.spriteName;

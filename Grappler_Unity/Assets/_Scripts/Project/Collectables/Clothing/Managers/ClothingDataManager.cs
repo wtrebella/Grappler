@@ -7,8 +7,8 @@ public static class ClothingDataManager {
 	// =========== HATS ============
 	private static string packagePathHats = "Hats/";
 
-	private static List<ClothingItemSet> _hats;
-	public static List<ClothingItemSet> hats {
+	private static List<ClothingPackage> _hats;
+	public static List<ClothingPackage> hats {
 		get {
 			if (_hats == null) LoadAllHats();
 			return _hats;
@@ -16,20 +16,20 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadAllHats() {
-		var hatsArray = Resources.LoadAll(packagePathRoot + packagePathHats, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
-		_hats = new List<ClothingItemSet>();
-		foreach (ClothingItemSet hat in hatsArray) _hats.Add(hat);
+		var hatsArray = Resources.LoadAll(packagePathRoot + packagePathHats, typeof(ClothingPackage)).Cast<ClothingPackage>().ToArray();
+		_hats = new List<ClothingPackage>();
+		foreach (ClothingPackage hat in hatsArray) _hats.Add(hat);
 	}
 
 	private static void LoadEquippedHat() {
-		string equippedHatName = WhitPrefs.GetString(ClothingItemSetType.Hat.ToString(), "");
-		ClothingItemSet equippedHat = GetHatItemSet(equippedHatName);
+		string equippedHatName = WhitPrefs.GetString(ClothingPackageType.Hat.ToString(), "");
+		ClothingPackage equippedHat = GetHatItemSet(equippedHatName);
 		if (equippedHat != null && !_equippedSets.Contains(equippedHat)) _equippedSets.Add(equippedHat);
 	}
 
-	private static ClothingItemSet GetHatItemSet(string hatName) {
-		foreach (ClothingItemSet itemSet in hats) {
-			if (itemSet.itemName == hatName) return itemSet;
+	private static ClothingPackage GetHatItemSet(string hatName) {
+		foreach (ClothingPackage itemSet in hats) {
+			if (itemSet.packageName == hatName) return itemSet;
 		}
 		Debug.Log("no hat found with name: " + hatName);
 		return null;
@@ -40,8 +40,8 @@ public static class ClothingDataManager {
 	// =========== SHOES ============
 	private static string packagePathShoes = "Shoes/";
 
-	private static List<ClothingItemSet> _shoes;
-	public static List<ClothingItemSet> shoes {
+	private static List<ClothingPackage> _shoes;
+	public static List<ClothingPackage> shoes {
 		get {
 			if (_shoes == null) LoadAllShoes();
 			return _shoes;
@@ -49,20 +49,20 @@ public static class ClothingDataManager {
 	}
 
 	private static void LoadAllShoes() {
-		var shoesArray = Resources.LoadAll(packagePathRoot + packagePathShoes, typeof(ClothingItemSet)).Cast<ClothingItemSet>().ToArray();
-		_shoes = new List<ClothingItemSet>();
-		foreach (ClothingItemSet shoe in shoesArray) _shoes.Add(shoe);
+		var shoesArray = Resources.LoadAll(packagePathRoot + packagePathShoes, typeof(ClothingPackage)).Cast<ClothingPackage>().ToArray();
+		_shoes = new List<ClothingPackage>();
+		foreach (ClothingPackage shoe in shoesArray) _shoes.Add(shoe);
 	}
 
 	private static void LoadEquippedShoes() {
-		string equippedShoesName = WhitPrefs.GetString(ClothingItemSetType.Shoes.ToString(), "");
-		ClothingItemSet equippedShoes = GetShoesItemSet(equippedShoesName);
+		string equippedShoesName = WhitPrefs.GetString(ClothingPackageType.Shoes.ToString(), "");
+		ClothingPackage equippedShoes = GetShoesItemSet(equippedShoesName);
 		if (equippedShoes != null && !_equippedSets.Contains(equippedShoes)) _equippedSets.Add(equippedShoes);
 	}
 
-	private static ClothingItemSet GetShoesItemSet(string shoesName) {
-		foreach (ClothingItemSet itemSet in shoes) {
-			if (itemSet.itemName == shoesName) return itemSet;
+	private static ClothingPackage GetShoesItemSet(string shoesName) {
+		foreach (ClothingPackage itemSet in shoes) {
+			if (itemSet.packageName == shoesName) return itemSet;
 		}
 		Debug.Log("no shoes found with name: " + shoesName);
 		return null;
@@ -73,8 +73,8 @@ public static class ClothingDataManager {
 	// =========== EVERYTHING ELSE ============
 	private static string packagePathRoot = "CollectableItems/CollectableItemPackages/Clothing/";
 
-	private static List<ClothingItemSet> _equippedSets = new List<ClothingItemSet>();
-	public static List<ClothingItemSet> equippedSets {
+	private static List<ClothingPackage> _equippedSets = new List<ClothingPackage>();
+	public static List<ClothingPackage> equippedSets {
 		get {
 			if (_equippedSets == null) LoadEquippedItemSets();
 			return _equippedSets;
@@ -89,45 +89,45 @@ public static class ClothingDataManager {
 		SaveEquippedItemSets();
 	}
 
-	public static bool ItemSetTypeIsEquipped(ClothingItemSetType itemSetType) {
-		foreach (ClothingItemSet itemSet in equippedSets) {
+	public static bool ItemSetTypeIsEquipped(ClothingPackageType itemSetType) {
+		foreach (ClothingPackage itemSet in equippedSets) {
 			if (itemSet.type == itemSetType) return true;
 		}
 		return false;
 	}
 
-	public static ClothingItemSet GetEquippedItemSet(ClothingItemSetType itemSetType) {
+	public static ClothingPackage GetEquippedItemSet(ClothingPackageType itemSetType) {
 		int indexOfEquippedType = IndexOfEquippedType(itemSetType);
 		if (indexOfEquippedType < 0) return null;
 
 		return equippedSets[indexOfEquippedType];
 	}
 
-	public static List<ClothingItemSet> GetClothingItemSets(ClothingItemSetType type) {
-		if (type == ClothingItemSetType.Hat) return hats;
-		else if (type == ClothingItemSetType.Shoes) return shoes;
+	public static List<ClothingPackage> GetClothingItemSets(ClothingPackageType type) {
+		if (type == ClothingPackageType.Hat) return hats;
+		else if (type == ClothingPackageType.Shoes) return shoes;
 		else {
 			Debug.LogError("invalid clothing item set type: " + type.ToString());
 			return null;
 		}
 	}
 
-	public static void RemoveEquippedItemSet(ClothingItemSetType itemSetType) {
+	public static void RemoveEquippedItemSet(ClothingPackageType itemSetType) {
 		int index = IndexOfEquippedType(itemSetType);
 		if (index < 0 || index >= equippedSets.Count) return;
 		equippedSets.RemoveAt(index);
 	}
 
-	private static int IndexOfEquippedType(ClothingItemSetType itemSetType) {
+	private static int IndexOfEquippedType(ClothingPackageType itemSetType) {
 		for (int i = 0; i < equippedSets.Count; i++) {
-			ClothingItemSet itemSet = equippedSets[i];
+			ClothingPackage itemSet = equippedSets[i];
 			if (itemSet.type == itemSetType) return i;
 		}
 		return -1;
 	}
 
 	private static void LoadEquippedItemSets() {
-		if (_equippedSets == null) _equippedSets = new List<ClothingItemSet>();
+		if (_equippedSets == null) _equippedSets = new List<ClothingPackage>();
 		_equippedSets.Clear();
 
 		LoadEquippedHat();
@@ -135,6 +135,6 @@ public static class ClothingDataManager {
 	}
 
 	private static void SaveEquippedItemSets() {
-		foreach (ClothingItemSet itemSet in equippedSets) WhitPrefs.SetString(itemSet.type.ToString(), itemSet.itemName);
+		foreach (ClothingPackage itemSet in equippedSets) WhitPrefs.SetString(itemSet.type.ToString(), itemSet.packageName);
 	}
 }

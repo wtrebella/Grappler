@@ -9,11 +9,15 @@ public class CollectablePackage : ScriptableObject {
 	public CollectableItem[] items;
 	public CollectablePackageType type = CollectablePackageType.None;
 
-	public string itemName {
+	private string _packageName;
+	public string packageName {
 		get {
-			string[] nameParts = name.Split('_');
-			string justName = nameParts[nameParts.Length - 1];
-			return justName;
+			if (string.IsNullOrEmpty(_packageName)) {
+				string[] nameParts = name.Split('_');
+				string justName = nameParts[nameParts.Length - 1];
+				_packageName = justName;
+			}
+			return _packageName;
 		}
 	}
 
@@ -41,6 +45,6 @@ public class CollectablePackage : ScriptableObject {
 	}
 		
 	private string GetIsLockedKey() {
-		return itemName + "_isLocked";
+		return packageName + "_isLocked";
 	}
 }

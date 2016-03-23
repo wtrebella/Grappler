@@ -7,13 +7,13 @@ public class ClothingItemSetButton : MonoBehaviour {
 	[SerializeField] private ClothingItemSetUISprite sprite;
 
 	private ClothingManager clothingManager;
-	private ClothingItemSet itemSet;
+	private ClothingPackage itemSet;
 
 	private void Awake() {
 		clothingManager = GameObject.FindObjectOfType<ClothingManager>();
 	}
 
-	public void SetClothingItemSet(ClothingItemSet itemSet) {
+	public void SetClothingItemSet(ClothingPackage itemSet) {
 		this.itemSet = itemSet;
 		sprite.SetClothingItemSet(itemSet);
 		if (clothingManager != null) button.onClick.AddListener(() => HandleClick());

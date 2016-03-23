@@ -2,12 +2,12 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(ClothingItemSet))]
+[CustomEditor(typeof(ClothingPackage))]
 public class ClothingItemSetEditor : Editor {
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 
-		ClothingItemSet itemSet = target as ClothingItemSet;
+		ClothingPackage itemSet = target as ClothingPackage;
 
 		if (GUILayout.Button("Clear Locked Data")) itemSet.ClearLockedData();
 	}
