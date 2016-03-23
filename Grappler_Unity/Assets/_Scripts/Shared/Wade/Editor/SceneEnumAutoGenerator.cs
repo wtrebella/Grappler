@@ -20,7 +20,7 @@ public class SceneEnumAutoGenerator : UnityEditor.AssetModificationProcessor
 	static void GenerateSceneEnum()
 	{
 		// Change this path for your project
-		string path = Application.dataPath + "/_Scripts/Gameplay/GameScenes.cs";
+		string path = Application.dataPath + "/_Scripts/Shared/Scene Management/Enums/GameScenes.cs";
 		var streamWriter = new StreamWriter(path, false);
 
 		string text =
