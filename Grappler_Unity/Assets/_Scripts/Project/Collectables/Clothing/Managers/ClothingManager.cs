@@ -41,42 +41,13 @@ public class ClothingManager : MonoBehaviour {
 	}
 
 	public void EquipFirstHat() {
-		EquipItemSet(ClothingDataManager.hats[0]);
+		EquipItemSet(ClothingPackageDataManager.hats[0]);
 	}
 
 	public void EquipFirstShoes() {
-		EquipItemSet(ClothingDataManager.shoes[0]);
+		EquipItemSet(ClothingPackageDataManager.shoes[0]);
 	}
-
-	public void EquipNextHat() {
-		EquipNext(ClothingPackageType.Hat);
-	}
-
-	public void EquipNextShoes() {
-		EquipNext(ClothingPackageType.Shoes);
-	}
-
-	public void EquipNext(ClothingPackageType type) {
-		ClothingPackage equippedItemSet = GetEquippedItemSet(type);
-
-		int currentItemIndex = 0;
-		List<ClothingPackage> sets = ClothingDataManager.GetClothingItemSets(type);
-
-		if (equippedItemSet != null) {
-			for (int i = 0; i < sets.Count; i++) {
-				ClothingPackage arrayItemSet = sets[i];
-				if (equippedItemSet == arrayItemSet) {
-					currentItemIndex = i;
-				}
-			}
-		}
-
-		IntRange wrapRange = new IntRange(0, sets.Count);
-		int newItemIndex = WhitTools.IncrementWithWrap(currentItemIndex, wrapRange);
-		ClothingPackage nextItem = sets[newItemIndex];
-		EquipItemSet(nextItem);
-	}
-
+		
 	public void EquipItemSet(ClothingPackage clothingItemSet) {
 		UnequipItemSet(clothingItemSet.type);
 		SetClothingItemSet(clothingItemSet);
@@ -86,19 +57,15 @@ public class ClothingManager : MonoBehaviour {
 		if (ItemSetIsEquipped(type)) RemoveClothingItemSet(type);
 	}
 
-	public bool ItemSetIsEquipped(ClothingPackageType type) {
-		return ClothingDataManager.ItemSetTypeIsEquipped(type);
-	}
+	public ClothingPackage GetEquippedPackage(ClothingPackageType type) {
+		if (!ClothingPackageDataManager.ItemSetTypeIsEquipped(type)) return null;
 
-	public ClothingPackage GetEquippedItemSet(ClothingPackageType type) {
-		if (!ClothingDataManager.ItemSetTypeIsEquipped(type)) return null;
-
-		return ClothingDataManager.GetEquippedItemSet(type);
+		return ClothingPackageDataManager.GetEquippedItemSet(type);
 	}
 
 	private void EquipSavedItemSets() {
-		var equippedSets = ClothingDataManager.equippedSets.ToArray();
-		foreach (ClothingPackage itemSet in equippedSets) EquipItemSet(itemSet);
+		var equippedPackages = CollectablePackageDataManager.GetEquippedPackages<ClothingPackage>();
+		foreach (ClothingPackage package in equippedPackages) EquipItemSet(package);
 	}
 
 	private void SetClothingItemSet(ClothingPackage itemSet) {
@@ -107,16 +74,16 @@ public class ClothingManager : MonoBehaviour {
 			if (!clothingItem.HasValidSpriteName()) Debug.LogError("item doesn't have a valid sprite! fix this or expect errors.");
 			SetAttachment(clothingItem);
 		}
-		if (!ClothingDataManager.ItemSetTypeIsEquipped(itemSet.type)) ClothingDataManager.equippedSets.Add(itemSet);
+		if (!ClothingPackageDataManager.ItemSetTypeIsEquipped(itemSet.type)) ClothingPackageDataManager.equippedSets.Add(itemSet);
 	}
 
 	private void RemoveClothingItemSet(ClothingPackageType type) {
-		ClothingPackage itemSet = GetEquippedItemSet(type);
+		ClothingPackage itemSet = GetEquippedPackage(type);
 		foreach (CollectableItem item in itemSet.items) {
 			ClothingItem clothingItem = (ClothingItem)item;
 			RemoveAttachment(clothingItem.type);
 		}
-		ClothingDataManager.RemoveEquippedItemSet(type);
+		ClothingPackageDataManager.RemoveEquippedItemSet(type);
 	}
 
 	private void SetAttachment(ClothingItem clothingItem) {
@@ -184,13 +151,5 @@ public class ClothingManager : MonoBehaviour {
 			Debug.LogError("invalid clothing item type: " + type.ToString());
 			return "";
 		}
-	}
-
-	private void OnEnable() {
-		ClothingDataManager.OnEnable();
-	}
-
-	private void OnDisable() {
-		ClothingDataManager.OnDisable();
 	}
 }

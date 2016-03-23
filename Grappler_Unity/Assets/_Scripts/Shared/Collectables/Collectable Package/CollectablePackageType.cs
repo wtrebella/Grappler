@@ -1,5 +1,6 @@
 ﻿public enum CollectablePackageType {
 	None,
-	PowerUp,
-	Clothing
+	Hat,
+	Shoes,
+	PowerUp
 }
