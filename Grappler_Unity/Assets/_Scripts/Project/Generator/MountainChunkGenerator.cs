@@ -12,12 +12,14 @@ public class MountainChunkGenerator : Generator {
 	private MountainChunkNeededDetector neededDetector;
 
 	public MountainChunk GetMountainChunkAtPlace(float place) {
+		if (items.Count == 0) return null;
 		int index = (int)place;
 		if (index >= numItemsCreated) index = numItemsCreated - 1;
 		return ItemToMountainChunk(items[index]);
 	}
 
 	public MountainChunk GetMountainChunkAtX(float x) {
+		if (items.Count == 0) return null;
 		foreach (GeneratableItem item in items) {
 			MountainChunk chunk = ItemToMountainChunk(item);
 			float lastX = chunk.GetLastLinePoint().pointVector.x;
@@ -28,11 +30,13 @@ public class MountainChunkGenerator : Generator {
 	}
 
 	public MountainChunk GetMountainChunk(int index) {
+		if (items.Count == 0) return null;
 		if (index < 0 || index > items.Count) Debug.LogError("index (" + index + ") out of range!");
 		return ItemToMountainChunk(items[index]);
 	}
 	
 	public int GetMountainChunkIndexAtY(float y) {
+		if (items.Count == 0) return 0;
 		if (y < GetMountainChunk(0).origin.y) return 0;
 
 		for (int i = 0; i < items.Count - 1; i++) {
@@ -63,11 +67,11 @@ public class MountainChunkGenerator : Generator {
 	}
 
 	private void GenerateMountainChunkIfNeeded() {
-		if (items.Count == 0) return;
 		if (neededDetector.NeedsNewMountainChunk(GetLastMountainChunk())) GenerateMountainChunk(); 
 	}
 
 	private MountainChunk GetLastMountainChunk() {
+		if (items.Count == 0) return null;
 		return ItemToMountainChunk(items[items.Count - 1]);
 	}
 

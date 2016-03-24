@@ -69,13 +69,15 @@ public class CameraMover : MonoBehaviour {
 		Vector3 objectPosition = horizontalMovementObject.position;
 		float x = objectPosition.x + offset.x;
 		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtX(x);
-		float y = chunk.GetAverageYAtX(x) + offset.y;
-		Vector3 targetPosition = new Vector3(x, y, transform.position.z);
-		float yDistToObject = targetPosition.y - objectPosition.y;
-		if (yDistToObject > maxDistanceToObject) targetPosition.y = objectPosition.y + maxDistanceToObject;
-		else if (yDistToObject < -maxDistanceToObject) targetPosition.y = objectPosition.y - maxDistanceToObject;
-
-		return targetPosition;
+		if (chunk) {
+			float y = chunk.GetAverageYAtX(x) + offset.y;
+			Vector3 targetPosition = new Vector3(x, y, transform.position.z);
+			float yDistToObject = targetPosition.y - objectPosition.y;
+			if (yDistToObject > maxDistanceToObject) targetPosition.y = objectPosition.y + maxDistanceToObject;
+			else if (yDistToObject < -maxDistanceToObject) targetPosition.y = objectPosition.y - maxDistanceToObject;
+			return targetPosition;
+		}
+		else return new Vector3(0, 0, transform.position.z);
 	}
 
 	private Vector3 GetSmoothedTargetPosition() {

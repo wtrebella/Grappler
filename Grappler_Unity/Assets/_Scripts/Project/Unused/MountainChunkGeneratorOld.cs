@@ -18,12 +18,16 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 	private List<MountainChunk> mountainChunks;
 
 	public MountainChunk GetMountainChunkAtPlace(float place) {
+		if (!MountainChunksExist()) return null;
+
 		int index = (int)place;
 		if (index >= numMountainChunksCreated) index = numMountainChunksCreated - 1;
 		return mountainChunks[index];
 	}
 
 	public MountainChunk GetMountainChunkAtX(float x) {
+		if (!MountainChunksExist()) return null;
+
 		foreach (MountainChunk chunk in mountainChunks) {
 			float lastX = chunk.GetLastLinePoint().pointVector.x;
 			if (x < lastX) return chunk;
@@ -33,11 +37,13 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 	}
 
 	public MountainChunk GetMountainChunk(int index) {
-		if (index < 0 || index > mountainChunks.Count) Debug.LogError("index (" + index + ") out of range!");
+		if (!MountainChunksExist()) return null;
+		if (IndexIsInBounds(index)) Debug.LogError("index (" + index + ") out of range!");
 		return mountainChunks[index];
 	}
 	
 	public int GetMountainChunkIndexAtY(float y) {
+		if (!MountainChunksExist()) return 0;
 		if (y < GetMountainChunk(0).origin.y) return 0;
 
 		for (int i = 0; i < mountainChunks.Count - 1; i++) {
@@ -48,7 +54,7 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 		Debug.LogError("couldn't find mountain chunk that includes y: " + y);
 		return -1;
 	}
-
+		
 	public int GetMountainChunkNumAtPlace(float lerpDist) {
 		return (int)lerpDist;
 	}
@@ -68,6 +74,15 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 
 	private void Start() {
 		GenerateMountainChunks(3);
+	}
+
+	private bool MountainChunksExist() {
+		return mountainChunks != null && mountainChunks.Count > 0;
+	}
+
+	private bool IndexIsInBounds(int index) {
+		if (MountainChunksExist()) return index < 0 || index > mountainChunks.Count;
+		else return false;
 	}
 
 	private void GenerateMountainChunks(int numToGenerate) {
@@ -104,6 +119,7 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 	}
 
 	private MountainChunk GetLastMountainChunk() {
+		if (!MountainChunksExist()) return null;
 		return mountainChunks[mountainChunks.Count - 1];
 	}
 }

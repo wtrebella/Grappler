@@ -38,7 +38,10 @@ public class TimeScaler : MonoBehaviour {
 	}
 
 	public void ScaleToSlow() {
-		if (Time.timeScale <= timeScaleMin) return;
+		if (Time.timeScale <= timeScaleMin) {
+			Time.timeScale = timeScaleMin;
+			return;
+		}
 		if (scaleType == ScaleType.ScaleDown) return;
 
 		StopScalingTime();
@@ -47,7 +50,10 @@ public class TimeScaler : MonoBehaviour {
 	}
 
 	public void ScaleToNormal() {
-		if (Time.timeScale >= timeScaleNormal) return;
+		if (Time.timeScale >= timeScaleNormal) {
+			Time.timeScale = timeScaleNormal;
+			return;
+		}
 		if (scaleType == ScaleType.ScaleUp) return;
 
 		StopScalingTime();
@@ -56,7 +62,8 @@ public class TimeScaler : MonoBehaviour {
 	}
 
 	public void ScaleTime(float scale, float duration) {
-		scaleDuration = duration;
+		Debug.Log("doifh");
+		scaleDuration = Mathf.Clamp(duration, 0.3f, duration);
 		timeScaleGoal = scale;
 		totalTimeScaleChange = timeScaleGoal - Time.timeScale;
 		timeScaleChangeRate = totalTimeScaleChange / scaleDuration;

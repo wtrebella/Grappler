@@ -6,7 +6,7 @@ using UnityEngine.Events;
 public class GrapplingStateController : PlayerStateController {
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private AirTimeTimer airTimeTimer;
-	[SerializeField] private float horizontalGrappleBoost = 25;
+	[SerializeField] private Vector2 grappleBoost = new Vector2(25, -100);
 
 	private void Awake() {
 		base.BaseAwake();
@@ -26,12 +26,24 @@ public class GrapplingStateController : PlayerStateController {
 	
 	public override void TouchUp() {
 		base.TouchUp();
-		if (player.grapplingManager.Disconnect()) player.SetState(Player.PlayerStates.Falling);
+		if (DisconnectPlayer()) SetToFallingState();
 	}
 
 	public override void FixedUpdateState() {
 		base.FixedUpdateState();
+		ApplyGrappleBoost();
+	}
 
-		player.rigidbodyAffecterGroup.AddForce(new Vector2(horizontalGrappleBoost, -100), ForceMode2D.Force);
+	private bool DisconnectPlayer() {
+		return player.grapplingManager.Disconnect();
+	}
+
+	private void SetToFallingState() {
+		player.SetState(Player.PlayerStates.Falling);
+	}
+
+	private void ApplyGrappleBoost() {
+		player.rigidbodyAffecterGroup.AddForce(grappleBoost, ForceMode2D.Force);
+
 	}
 }
