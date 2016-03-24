@@ -2,8 +2,8 @@
 using System.Collections;
 
 [System.Serializable]
-public class CollectionItemData : ScriptableObject {
-	private string ownedKey {get {return "collectionItem_" + name + "_owned";}}
+public class CollectionItem : ScriptableObject {
+	private static string ownedKey {get {return "collectionItem_" + name + "_owned";}}
 	private bool _owned = false;
 	public bool owned {
 		get {
@@ -15,5 +15,5 @@ public class CollectionItemData : ScriptableObject {
 		}
 	}
 
-	public CollectionItemSpriteData[] spriteData;
+	public CollectionItemSprite[] spriteData;
 }

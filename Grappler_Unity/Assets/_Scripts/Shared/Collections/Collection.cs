@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Collection : MonoBehaviour {
-	public List<CollectionItemData> items {get; private set;}
+	public List<CollectionItem> items {get; private set;}
 
 	public CollectionType collectionType = CollectionType.None;
 
@@ -15,20 +15,29 @@ public class Collection : MonoBehaviour {
 	}
 
 	private void LoadCollectionItemData() {
-		items = Resources.LoadAll(path, typeof(CollectionItemData)).Cast<CollectionItemData>().ToArray().ToList();
+		items = Resources.LoadAll(path, typeof(CollectionItem)).Cast<CollectionItem>().ToArray().ToList();
 	}
 
-	public List<CollectionItemData> GetOwnedItems() {
-		var ownedItems = new List<CollectionItemData>();
-		foreach (CollectionItemData item in items) {
+	public CollectionItem GetItem(string itemName) {
+		foreach (CollectionItem item in items) {
+			if (item.name == itemName) return item;
+		}
+
+		Debug.Log("no item with the name: " + itemName + " in collection: " + collectionType.ToString());
+		return null;
+	}
+
+	public List<CollectionItem> GetOwnedItems() {
+		var ownedItems = new List<CollectionItem>();
+		foreach (CollectionItem item in items) {
 			if (item.owned) ownedItems.Add(item);
 		}
 		return ownedItems;
 	}
 
-	public List<CollectionItemData> GetUnownedItems() {
-		var unownedItems = new List<CollectionItemData>();
-		foreach (CollectionItemData item in items) {
+	public List<CollectionItem> GetUnownedItems() {
+		var unownedItems = new List<CollectionItem>();
+		foreach (CollectionItem item in items) {
 			if (!item.owned) unownedItems.Add(item);
 		}
 		return unownedItems;

@@ -11,11 +11,11 @@ public class MenuItems : Editor {
 
 	[MenuItem("Assets/Create/CollectionItemSpriteDataAsset", false, 102)]
 	public static void CreateCollectionItemSpriteDataAsset() {
-		ScriptableObjectUtility.CreateAsset<CollectionItemSpriteData>();
+		ScriptableObjectUtility.CreateAsset<CollectionItemSprite>();
 	}
 
 	[MenuItem("Assets/Create/CollectionItem", false, 102)]
 	public static void CreateCollectionItemAsset() {
-		ScriptableObjectUtility.CreateAsset<CollectionItemData>();
+		ScriptableObjectUtility.CreateAsset<CollectionItem>();
 	}
 }

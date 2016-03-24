@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 
-[CustomEditor(typeof(CollectionItemSpriteData))]
+[CustomEditor(typeof(CollectionItemSprite))]
 public class CollectionItemSpriteDataEditor : Editor {
-	private CollectionItemSpriteData spriteData;
+	private CollectionItemSprite spriteData;
 
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector();
 
-		spriteData = target as CollectionItemSpriteData;
+		spriteData = target as CollectionItemSprite;
 
 		if (spriteData.HasSpriteCollection()) ShowSpriteCollectionInfo();
 		else ShowSpriteCollectionMissingWarning();

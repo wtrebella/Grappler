@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class CollectionItemSpriteData : ScriptableObject {
+public class CollectionItemSprite : ScriptableObject {
 	[SerializeField] private tk2dSpriteCollectionData spriteCollectionData;
 
 	private string _spriteName;
