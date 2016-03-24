@@ -23,8 +23,9 @@ public class Player : WhitStateMachine {
 	public bool isPaused {get {return CurrentStateIs(PlayerStates.Paused);}}
 	public bool isIdle {get {return CurrentStateIs(PlayerStates.Idle);}}
 
-	private void Start() {
+	private IEnumerator Start() {
 		SetState(PlayerStates.Idle);
+		yield return StartCoroutine(ClothingManager.instance.WaitForInit());
 		ClothingManager.instance.WearSavedOrFirstItems();
 	}
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClothingManager : AutoSingleton<ClothingManager> {
+public class ClothingManager : Singleton<ClothingManager> {
 	public const string hatSpineSlotName = "hat";
 	public const string backShoeSpineSlotName = "shoeBack";
 	public const string frontShoeSpineSlotName = "shoeFront";
@@ -19,6 +19,8 @@ public class ClothingManager : AutoSingleton<ClothingManager> {
 	private Collection hatCollection;
 	private Collection shoesCollection;
 
+	private bool initializationComplete = false;
+
 	//	public UnityEvent OnHatEquipped;
 	//	public UnityEvent OnShoeBackEquipped;
 	//	public UnityEvent OnShoeFrontEquipped;
@@ -27,10 +29,18 @@ public class ClothingManager : AutoSingleton<ClothingManager> {
 	//	public UnityEvent OnShoeBackUnequipped;
 	//	public UnityEvent OnShoeFrontUnequipped;
 
-	private void Awake() {
+	private void Start() {
 		InitializeCollections();
 		InitializeEquipmentSlots();
 		InitializeSpineSlots();
+	}
+
+	public IEnumerator WaitForInit() {
+		while (!initializationComplete) {yield return null;}
+	}
+
+	private void InitializationComplete() {
+		initializationComplete = true;
 	}
 
 	private void InitializeEquipmentSlots() {

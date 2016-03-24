@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EquipmentManager : AutoSingleton<EquipmentManager> {
+public class EquipmentManager : Singleton<EquipmentManager> {
 	[SerializeField] private EquipmentSlot hatSlot;
 	[SerializeField] private EquipmentSlot shoesSlot;
 	[SerializeField] private EquipmentSlot powerUpSlot1;

@@ -11,7 +11,7 @@ public class Collection : MonoBehaviour {
 	[SerializeField] private string path = "Collections/";
 
 	private void Awake() {
-		LoadItemsIfNeeded();
+		LoadItems();
 	}
 
 	public CollectionItem GetFirstItem() {
@@ -23,8 +23,6 @@ public class Collection : MonoBehaviour {
 	}
 
 	public CollectionItem GetItem(string itemName) {
-		LoadItemsIfNeeded();
-
 		foreach (CollectionItem item in items) {
 			if (item.name == itemName) return item;
 		}
@@ -55,8 +53,6 @@ public class Collection : MonoBehaviour {
 	}
 
 	public List<CollectionItem> GetOwnedItems() {
-		LoadItemsIfNeeded();
-
 		var ownedItems = new List<CollectionItem>();
 		foreach (CollectionItem item in items) {
 			if (item.owned) ownedItems.Add(item);
@@ -65,19 +61,13 @@ public class Collection : MonoBehaviour {
 	}
 
 	public List<CollectionItem> GetUnownedItems() {
-		LoadItemsIfNeeded();
-
 		var unownedItems = new List<CollectionItem>();
 		foreach (CollectionItem item in items) {
 			if (!item.owned) unownedItems.Add(item);
 		}
 		return unownedItems;
 	}
-
-	private void LoadItemsIfNeeded() {
-		if (!HasItems()) LoadItems();
-	}
-
+		
 	private void LoadItems() {
 		items = Resources.LoadAll(path, typeof(CollectionItem)).Cast<CollectionItem>().ToArray().ToList();
 	}

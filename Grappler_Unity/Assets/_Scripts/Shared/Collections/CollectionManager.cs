@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CollectionManager : AutoSingleton<CollectionManager> {
+public class CollectionManager : Singleton<CollectionManager> {
 	private Collection[] collections;
 
 	public CollectionItem GetItem(CollectionType collectionType, string itemName) {
@@ -11,12 +11,10 @@ public class CollectionManager : AutoSingleton<CollectionManager> {
 	}
 
 	private void Awake() {
-		LoadCollectionsIfNeeded();
+		LoadCollections();
 	}
 
 	public Collection GetCollection(CollectionType collectionType) {
-		LoadCollectionsIfNeeded();
-
 		foreach (Collection collection in collections) {
 			if (collectionType == collection.collectionType) return collection;
 		}
@@ -26,11 +24,7 @@ public class CollectionManager : AutoSingleton<CollectionManager> {
 		return null;
 	}
 
-	private void LoadCollectionsIfNeeded() {
-		if (!HasCollections()) LoadCollections();
-	}
-
-	private bool HasCollections() {
+	private bool HasLoaded() {
 		return collections != null && collections.Length > 0;
 	}
 
