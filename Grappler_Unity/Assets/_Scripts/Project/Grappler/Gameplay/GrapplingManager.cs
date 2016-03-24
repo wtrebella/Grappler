@@ -6,6 +6,7 @@ public class GrapplingManager : MonoBehaviour {
 	[SerializeField] private AirTimeTimer airTimeTimer;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private GrapplerRope grapplerRope;
+	[SerializeField] private Vector2 grappleBoost = new Vector2(25, -100);
 
 	private Player _player;
 	protected Player player {
@@ -69,5 +70,13 @@ public class GrapplingManager : MonoBehaviour {
 
 	private bool ReadyToDisconnect() {
 		return grapplerRope.IsConnected();
+	}
+
+	private void FixedUpdate() {
+		ApplyGrappleBoost();
+	}
+
+	private void ApplyGrappleBoost() {
+		player.rigidbodyAffecterGroup.AddForce(grappleBoost, ForceMode2D.Force);
 	}
 }
