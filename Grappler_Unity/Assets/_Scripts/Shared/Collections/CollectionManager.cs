@@ -32,7 +32,8 @@ public class CollectionManager : MonoBehaviour {
 		collections = new Collection[collectionPrefabs.Length];
 		for (int i = 0 ; i < collectionPrefabs.Length; i++) {
 			Collection collectionPrefab = collectionPrefabs[i];
-			Collection collection = Instantiate(collectionPrefab).transform.SetParent(this.transform);
+			Collection collection = Instantiate(collectionPrefab);
+			collection.transform.SetParent(this.transform);
 			collections[i] = collection;
 		}
 	}

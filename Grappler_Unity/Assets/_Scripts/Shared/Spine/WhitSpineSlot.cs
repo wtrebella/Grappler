@@ -1,0 +1,27 @@
+﻿using UnityEngine;
+using System.Collections;
+using Spine;
+
+[System.Serializable]
+public class WhitSpineSlot : MonoBehaviour {
+	public string slotName;
+
+	private WhitSpineSkeleton parentSkeleton;
+
+	private void Awake() {
+		parentSkeleton = GetComponentInParent<WhitSpineSkeleton>();
+		if (parentSkeleton == null) Debug.LogError("must be child of WhitSpineSkeleton component");
+	}
+
+	public void SetAttachment(string spritePath) {
+		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, spritePath);
+	}
+
+	public void SetAttachment(CollectionItemSprite itemSprite) {
+		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, itemSprite.spriteName);
+	}
+
+	public void RemoveAttachment() {
+		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, null);
+	}
+}

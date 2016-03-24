@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class EquipmentSlot : MonoBehaviour {
-	private static string equippedKey {get {return "collectionItem_" + name + "_equipped";}}
+	private string equippedKey {get {return "collectionItem_" + name + "_equipped";}}
 
 	public CollectionType collectionType = CollectionType.None;
 

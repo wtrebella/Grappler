@@ -3,7 +3,7 @@ using System.Collections;
 
 [System.Serializable]
 public class CollectionItem : ScriptableObject {
-	private static string ownedKey {get {return "collectionItem_" + name + "_owned";}}
+	private string ownedKey {get {return "collectionItem_" + name + "_owned";}}
 	private bool _owned = false;
 	public bool owned {
 		get {
