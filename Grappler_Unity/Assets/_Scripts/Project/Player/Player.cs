@@ -25,6 +25,7 @@ public class Player : WhitStateMachine {
 
 	private void Start() {
 		SetState(PlayerStates.Idle);
+		ClothingManager.instance.WearSavedOrFirstItems();
 	}
 
 	public void SetState(PlayerStates state) {

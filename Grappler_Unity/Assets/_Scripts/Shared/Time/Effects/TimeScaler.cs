@@ -62,7 +62,6 @@ public class TimeScaler : MonoBehaviour {
 	}
 
 	public void ScaleTime(float scale, float duration) {
-		Debug.Log("doifh");
 		scaleDuration = Mathf.Clamp(duration, 0.3f, duration);
 		timeScaleGoal = scale;
 		totalTimeScaleChange = timeScaleGoal - Time.timeScale;

@@ -15,5 +15,34 @@ public class CollectionItem : ScriptableObject {
 		}
 	}
 
-	public CollectionItemSprite[] spriteData;
+	public CollectionItemSprite[] sprites;
+
+	public CollectionItemSprite GetFirstSprite() {
+		return GetSprite(0);
+	}
+
+	public CollectionItemSprite GetSecondSprite() {
+		return GetSprite(1);
+	}
+
+	public CollectionItemSprite GetSprite(int spriteIndex) {
+		if (!HasSprites()) {
+			Debug.LogError("no sprites to get!");
+			return null;
+		}
+		if (GetSpritesCount() <= spriteIndex) {
+			Debug.LogError("trying to get sprite at index " + spriteIndex + " but there are only " + GetSpritesCount() + " available!");
+			return null;
+		}
+		return sprites[spriteIndex];
+	}
+
+	public bool HasSprites() {
+		return sprites != null && sprites.Length > 0;
+	}
+
+	public int GetSpritesCount() {
+		if (!HasSprites()) return 0;
+		return sprites.Length;
+	}
 }

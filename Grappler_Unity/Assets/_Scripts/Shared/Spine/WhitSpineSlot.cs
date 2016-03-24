@@ -13,15 +13,15 @@ public class WhitSpineSlot : MonoBehaviour {
 		if (parentSkeleton == null) Debug.LogError("must be child of WhitSpineSkeleton component");
 	}
 
-	public void SetAttachment(string spritePath) {
+	public void SetSprite(string spritePath) {
 		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, spritePath);
 	}
 
-	public void SetAttachment(CollectionItemSprite itemSprite) {
-		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, itemSprite.spriteName);
+	public void SetSprite(CollectionItemSprite itemSprite) {
+		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, itemSprite.spritePath);
 	}
 
-	public void RemoveAttachment() {
+	public void RemoveSprite() {
 		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, null);
 	}
 }

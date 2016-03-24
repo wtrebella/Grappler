@@ -12,7 +12,7 @@ public class EquipmentSlot : MonoBehaviour {
 		Load();
 	}
 
-	public bool IsFull() {
+	public bool IsEquipped() {
 		return this.equippedItem != null;
 	}
 
@@ -32,11 +32,12 @@ public class EquipmentSlot : MonoBehaviour {
 
 	private void Load() {
 		string itemName = WhitPrefs.GetString(equippedKey);
-		this.equippedItem = CollectionManager.instance.GetItem(collectionType, itemName);
+		if (string.IsNullOrEmpty(itemName)) return;
+		else EquipItem(CollectionManager.instance.GetItem(collectionType, itemName));
 	}
 
 	private void Save() {
-		string itemName = IsFull() ? this.equippedItem.name : "";
+		string itemName = IsEquipped() ? this.equippedItem.name : "";
 		WhitPrefs.SetString(equippedKey, itemName);
 	}
 }

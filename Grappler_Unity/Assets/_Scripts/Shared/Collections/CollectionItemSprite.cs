@@ -3,6 +3,14 @@ using System.Collections;
 
 [System.Serializable]
 public class CollectionItemSprite : ScriptableObject {
+	public string spritePathRoot = "";
+	public string spritePath {
+		get {
+			if (HasValidSpriteName()) return spritePathRoot + spriteName;
+			else return "";
+		}
+	}
+
 	[SerializeField] private tk2dSpriteCollectionData spriteCollectionData;
 
 	private string _spriteName;
@@ -25,7 +33,7 @@ public class CollectionItemSprite : ScriptableObject {
 	public void RemoveSprite() {
 		_spriteName = null;
 	}
-
+		
 	public Bounds GetSpriteBounds() {
 		Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
 		tk2dSpriteDefinition spriteDefinition = GetSpriteDefinition();
