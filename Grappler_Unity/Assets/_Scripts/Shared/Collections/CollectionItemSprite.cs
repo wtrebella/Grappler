@@ -13,7 +13,7 @@ public class CollectionItemSprite : ScriptableObject {
 
 	[SerializeField] private tk2dSpriteCollectionData spriteCollectionData;
 
-	private string _spriteName;
+	[SerializeField, HideInInspector] private string _spriteName;
 	public string spriteName {get {return _spriteName;}}
 
 	public void SetSprite(string spriteName) {
@@ -21,7 +21,6 @@ public class CollectionItemSprite : ScriptableObject {
 			Debug.LogError("sprite collection data is null!");
 			return;
 		}
-
 		_spriteName = spriteName;
 
 		if (!HasValidSpriteName()) {

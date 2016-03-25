@@ -11,6 +11,7 @@ public class CollectionManager : Singleton<CollectionManager> {
 	}
 
 	private void Awake() {
+		MakePersistent();
 		LoadCollections();
 	}
 

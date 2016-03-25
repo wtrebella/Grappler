@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 
 [CustomEditor(typeof(CollectionItemSprite))]
-public class CollectionItemSpriteDataEditor : Editor {
+public class CollectionItemSpriteEditor : Editor {
 	private CollectionItemSprite spriteData;
 
 	public override void OnInspectorGUI() {

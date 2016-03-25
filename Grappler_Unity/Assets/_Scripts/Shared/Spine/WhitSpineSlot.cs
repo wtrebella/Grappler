@@ -18,6 +18,8 @@ public class WhitSpineSlot : MonoBehaviour {
 	}
 
 	public void SetSprite(CollectionItemSprite itemSprite) {
+		if (!itemSprite.HasValidSpriteName()) return;
+
 		parentSkeleton.spineSkeleton.skeleton.SetAttachment(slotName, itemSprite.spritePath);
 	}
 

@@ -33,6 +33,7 @@ public class ClothingManager : Singleton<ClothingManager> {
 		InitializeCollections();
 		InitializeEquipmentSlots();
 		InitializeSpineSlots();
+		InitializationComplete();
 	}
 
 	public IEnumerator WaitForInit() {
@@ -44,11 +45,13 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	private void InitializeEquipmentSlots() {
+		if (!EquipmentManager.DoesExist()) return;
 		hatEquipmentSlot = EquipmentManager.instance.GetHatSlot();
 		shoesEquipmentSlot = EquipmentManager.instance.GetShoesSlot();
 	}
 
 	private void InitializeCollections() {
+		if (!CollectionManager.DoesExist()) return;
 		hatCollection = CollectionManager.instance.GetCollection(CollectionType.Hats);
 		shoesCollection = CollectionManager.instance.GetCollection(CollectionType.Shoes);
 	}
@@ -61,6 +64,7 @@ public class ClothingManager : Singleton<ClothingManager> {
 
 	public void WearSavedOrFirstItems() {
 		WearSavedItems();
+
 		if (!HatIsEquipped()) WearFirstHat();
 		if (!ShoesAreEquipped()) WearFirstShoes();
 	}
@@ -78,27 +82,27 @@ public class ClothingManager : Singleton<ClothingManager> {
 		WearShoes(shoesCollection.GetFirstItem());
 	}
 
-	private void WearHat(CollectionItem item) {
+	public void WearHat(CollectionItem item) {
 		if (item == null) hatSpineSlot.RemoveSprite();
 		else hatSpineSlot.SetSprite(item.GetFirstSprite());
 	}
 
-	private void WearShoes(CollectionItem item) {
+	public void WearShoes(CollectionItem item) {
 		if (item == null) {
 			backShoeSpineSlot.RemoveSprite();
 			frontShoeSpineSlot.RemoveSprite();
 		}
 		else {
 			backShoeSpineSlot.SetSprite(item.GetFirstSprite());
-			frontShoeSpineSlot.SetSprite(item.GetFirstSprite());
+			frontShoeSpineSlot.SetSprite(item.GetSecondSprite());
 		}
 	}
 
-	private bool HatIsEquipped() {
+	public bool HatIsEquipped() {
 		return hatEquipmentSlot.IsEquipped();
 	}
 
-	private bool ShoesAreEquipped() {
+	public bool ShoesAreEquipped() {
 		return shoesEquipmentSlot.IsEquipped();
 	}
 }

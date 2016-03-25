@@ -26,7 +26,12 @@ public class Player : WhitStateMachine {
 	private IEnumerator Start() {
 		SetState(PlayerStates.Idle);
 		yield return StartCoroutine(ClothingManager.instance.WaitForInit());
+		yield return new WaitForSeconds(2);
 		ClothingManager.instance.WearSavedOrFirstItems();
+		var hat = CollectionManager.instance.GetItem(CollectionType.Hats, "Sombrero");
+		EquipmentManager.instance.GetHatSlot().EquipItem(hat);
+		ClothingManager.instance.WearHat(hat);
+		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Stilettos"));
 	}
 
 	public void SetState(PlayerStates state) {

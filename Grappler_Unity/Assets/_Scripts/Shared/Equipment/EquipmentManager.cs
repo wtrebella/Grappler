@@ -11,4 +11,21 @@ public class EquipmentManager : Singleton<EquipmentManager> {
 	public EquipmentSlot GetShoesSlot() {return shoesSlot;}
 	public EquipmentSlot GetPowerUp1Slot() {return powerUpSlot1;}
 	public EquipmentSlot GetPowerUp2Slot() {return powerUpSlot2;}
+
+	public bool deleteSavesOnDestroy = false;
+
+	private void Awake() {
+		MakePersistent();
+	}
+
+	private void OnDestroy() {
+		if (deleteSavesOnDestroy) DeleteSaves();
+	}
+
+	private void DeleteSaves() {
+		GetHatSlot().RemoveItem();
+		GetShoesSlot().RemoveItem();
+		GetPowerUp1Slot().RemoveItem();
+		GetPowerUp2Slot().RemoveItem();
+	}
 }
