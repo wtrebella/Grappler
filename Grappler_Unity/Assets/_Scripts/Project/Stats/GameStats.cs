@@ -14,11 +14,20 @@ public class GameStats : ScriptableObjectSingleton<GameStats> {
 	}
 	#endif
 
-	public static int coinCount {get {return instance._coinCount;}}
-
-	[SerializeField, HideInInspector] private int _coinCount = 0;
+	private string coinCountKey = "GameStats_CoinCount";
+	private int _coinCount = 0;
+	public int coinCount {
+		get {
+			_coinCount = WhitPrefs.GetInt(coinCountKey, 0);
+			return _coinCount;
+		}
+		set {
+			_coinCount = value;
+			WhitPrefs.SetInt(coinCountKey, _coinCount);
+		}
+	}
 
 	public static void OnCoinCollected() {
-		instance._coinCount++;
+		instance.coinCount++;
 	}
 }

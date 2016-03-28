@@ -6,6 +6,10 @@ public class Rigidbody2DForcer : Rigidbody2DAffecter {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.AddForce(force, forceMode);
 	}
 
+	public void AddImpulseForce(Vector2 force) {
+		foreach (Rigidbody2D rigid in rigidbodies) rigid.AddForce(force, ForceMode2D.Impulse);
+	}
+
 	public void SetVelocity(Vector2 velocity) {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.velocity = velocity;
 	}

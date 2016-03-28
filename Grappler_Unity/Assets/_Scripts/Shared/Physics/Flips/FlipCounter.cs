@@ -19,7 +19,11 @@ public class FlipCounter : MonoBehaviour {
 		backFlipCount = 0;
 	}
 
-	private void Update() {
+	private void FixedUpdate() {
+		UpdateRotation();
+	}
+
+	private void UpdateRotation() {
 		float actualRotation = rigid.transform.eulerAngles.z;
 		float curRotation = actualRotation;
 		float diff = curRotation - prevRotation;
@@ -55,7 +59,7 @@ public class FlipCounter : MonoBehaviour {
 	}
 
 
-	void HandleBackFlip() {
+	private void HandleBackFlip() {
 		backFlipCount++;
 		if (SignalBackflip != null) SignalBackflip();
 	}
