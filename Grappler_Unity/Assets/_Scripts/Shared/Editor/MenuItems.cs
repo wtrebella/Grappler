@@ -9,12 +9,12 @@ public class MenuItems : Editor {
 		Debug.Log("PlayerPrefs cleared!");
 	}
 
-	[MenuItem("Assets/Create/CollectionItemSpriteDataAsset", false, 102)]
+	[MenuItem("Assets/Create/CollectionItemSprite Asset", false, 102)]
 	public static void CreateCollectionItemSpriteDataAsset() {
 		ScriptableObjectUtility.CreateAsset<CollectionItemSprite>();
 	}
 
-	[MenuItem("Assets/Create/CollectionItem", false, 102)]
+	[MenuItem("Assets/Create/CollectionItem Asset", false, 102)]
 	public static void CreateCollectionItemAsset() {
 		ScriptableObjectUtility.CreateAsset<CollectionItem>();
 	}

@@ -133,7 +133,7 @@ public class GroundChunk : GeneratableItem {
 		float directDistFromMountain = distanceFromMountain;
 		Vector2 mountainVector = mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
-		int numPoints = mountainChunk.GetMacroPointsCount();
+		int numPoints = mountainChunk.GetMacroLinePoints().Count;
 		float totalDistance = mountainVector.magnitude;
 		float distPerPoint = totalDistance / (numPoints - 1);
 		float angleFromMountain = Vector2.Angle(Vector2.down, slopePerp * directDistFromMountain);

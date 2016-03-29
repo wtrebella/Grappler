@@ -7,7 +7,7 @@ public class AnchorableGenerator : Generator {
 	private static int currentAnchorableID = 0;
 
 	public void GenerateAnchorables(MountainChunk mountainChunk) {
-		var points = mountainChunk.GetListOfMacroLinePoints();
+		var points = mountainChunk.GetMacroLinePoints();
 		foreach (Point point in points) CreateAnchorableAtPoint(mountainChunk, point);
 	}
 
