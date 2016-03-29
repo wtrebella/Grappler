@@ -38,8 +38,24 @@ public static class WhitExtensions {
 		WhitTools.SortWithTwoPeasantsPolygonAlgorithm(points);
 	}
 
-	public static List<Transform> Copy(this List<Transform> list) {
-		List<Transform> newList = new List<Transform>();
+	public static bool AssertIndexIsInBounds<T>(this List<T> list, int index) {
+		if (list.Count == 0) {
+			Debug.LogError("no items in list!");
+			return false;
+		}
+		else if (index < 0) {
+			Debug.LogError("index " + index + " is below zero!");
+			return false;
+		}
+		else if (index >= list.Count) {
+			Debug.LogError("index " + index + " is too high!");
+			return false;
+		}
+		else return true;
+	}
+
+	public static List<T> Copy<T>(this List<T> list) {
+		List<T> newList = new List<T>();
 		for (int i = 0; i < list.Count; i++) newList.Add(list[i]);
 		return newList;
 	}

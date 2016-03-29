@@ -7,70 +7,59 @@ using System;
 [RequireComponent(typeof(MountainChunkMeshCreator))]
 public class MountainChunk : GeneratableItem {
 	public Vector2 origin {get; private set;}
+	public MountainChunk previousMountainChunk {get; private set;}
+	public List<Point> edgePoints {get; private set;}
 
 	[SerializeField] private int numPoints = 10;
-	[SerializeField] private float bumpHeight = 0.05f;
 	[SerializeField] private float slopeChange = 0.15f;
-	[SerializeField] private float perpDist = 0.75f;
+	[SerializeField] private float maxPerpDist = 0.75f;
 	[SerializeField] private float marginSize = 0.01f;
-	[SerializeField] private FloatRange bumpWidthRange = new FloatRange(0.15f, 0.25f);
 	[SerializeField] private FloatRange slopeRange = new FloatRange(0.0f, 0.35f);
 	[SerializeField] private FloatRange pointDistRange = new FloatRange(1.5f, 2.5f);
 
-	private List<Point> macroLinePoints;
-	private List<Point> linePoints;
 	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
 	private MountainChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
 	private float slopeVal;
 
-	public void Generate(Vector2 origin, MountainChunk previousMountainChunk) {
-		Reset();
-		List<Vector2> points = new List<Vector2>();
-		float previousSlopeVal;
-		if (previousMountainChunk == null) previousSlopeVal = slopeRange.GetRandom();
-		else previousSlopeVal = previousMountainChunk.slopeVal;
-		CalculateSlope(previousSlopeVal);
-		GenerateBasicShape(points, origin);
-		MacroRandomizeEdges(points);
-		Vector2[] pointsArray = points.ToArray();
-		polygonCollider.points = pointsArray;
-		meshCreator.InitMesh(pointsArray);
-		CalculateDistances();
+
+
+	// ============= PUBLICS ==============
+	public void Initialize(Vector2 origin, MountainChunk previousMountainChunk) {
 		this.origin = origin;
+		this.previousMountainChunk = previousMountainChunk;
+
+		Generate();
 	}
 
-	public List<Point> GetMacroLinePoints() {
-		return macroLinePoints;
+	public Point GetFirstEdgePoint() {
+		return edgePoints[0];
 	}
 
-	public Point GetFirstLinePoint() {
-		return linePoints[0];
-	}
-
-	public Point GetLastLinePoint() {
-		return linePoints.GetLastItem();
+	public Point GetLastEdgePoint() {
+		return edgePoints.GetLastItem();
 	}
 
 	public Vector2 PlaceToPosition(float place) {
 		place = Mathf.Clamp01(place);
-		float totalDistance = GetTotalDistance();
-		float placeDistance = totalDistance * place;
-		int firstPointIndex = GetFirstPointIndexAtDistance(placeDistance);
-		int secondPointIndex = firstPointIndex+1;
-		if (firstPointIndex >= linePoints.Count - 1) Debug.LogError("distance greater than end of cliff line...");
-		float thisPointDistance = distances[firstPointIndex];
-		float nextPointDistance = distances[secondPointIndex];
-		float deltaDistance = placeDistance - thisPointDistance;
-		float betweenPointsDistance = nextPointDistance - thisPointDistance;
-		float pointLerp = deltaDistance / betweenPointsDistance;
-		return GetPositionBetweenLinePoints(firstPointIndex, secondPointIndex, pointLerp);
+		float placeDistance = PlaceToDistance(place);
+
+		int leftPointIndex = GetFirstPointIndexAtDistance(placeDistance);
+		int rightPointIndex = leftPointIndex + 1;
+
+		float leftPointDistance = GetDistanceAtIndex(leftPointIndex);
+		float segmentDistance = GetDistanceBetweenIndices(leftPointIndex, rightPointIndex);
+
+		float leftPointToPlaceDistance = placeDistance - leftPointDistance;
+		float percent = leftPointToPlaceDistance / segmentDistance;
+		Vector2 position = GetPositionBetweenEdgePointIndices(leftPointIndex, rightPointIndex, percent);
+		return position;
 	}
 
 	public float GetAverageYAtX(float x) {
-		Vector2 firstPoint = GetFirstLinePoint().pointVector;
-		Vector2 lastPoint = GetLastLinePoint().pointVector;
+		Vector2 firstPoint = GetFirstEdgePoint().pointVector;
+		Vector2 lastPoint = GetLastEdgePoint().pointVector;
 		float width = lastPoint.x - firstPoint.x;
 		float xDelta = x - firstPoint.x;
 		float percent = xDelta / width;
@@ -78,62 +67,42 @@ public class MountainChunk : GeneratableItem {
 		return position.y;
 	}
 
+
+
+	// ============= GENERATION ==============
 	private void Awake () {
-		linePoints = new List<Point>();
-		macroLinePoints = new List<Point>();
+		edgePoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<MountainChunkMeshCreator>();
 	}
 
-	private bool SlopeIsPositive() {
-		return slopeVector.y > 0;
+	protected override void HandleRecycled() {
+		base.HandleRecycled();
+		Reset();
 	}
 
-	private int GetIndexOfLinePoint(Point point) {
-		for (int i = 0; i < linePoints.Count; i++) {
-			Point tempPoint = linePoints[i];
-			if (tempPoint == point) return i;
-		}
-		Debug.LogError("couldn't find point!");
-		return -1;
+	private void Generate() {
+		List<Vector2> points = new List<Vector2>();
+
+		Reset();
+		CalculateSlope();
+		GenerateBasicShape(points);
+		RandomizeEdge(points);
+		InitMesh(points);
+		CalculateDistances();
 	}
 
-	private float GetTotalDistance() {
-		return distances[linePoints.Count - 1];
+	private void Reset() {
+		edgePoints.Clear();
+		distances.Clear();
+		polygonCollider.points = new Vector2[0];
+		slopeVector = Vector2.zero;
 	}
 
-	private Point GetLinePoint(int index) {
-		if (index < 0 || index >= linePoints.Count) {
-			Debug.LogError("invalid line point");
-			return null;
-		}
-
-		return linePoints[index];
-	}
-
-	private float PlaceToDistance(float place) {
-		float totalDistance = GetTotalDistance();
-		float placeDistance = totalDistance * place;
-		return placeDistance;
-	}
-
-	private float DistanceToPlace(float distance) {
-		return distance / GetTotalDistance();
-	}
-
-	private float PointToPlace(Point point) {
-		int index = GetIndexOfLinePoint(point);
-		float distance = distances[index];
-		float place = DistanceToPlace(distance);
-		return place;
-	}
-	private Vector2 GetPositionBetweenLinePoints(int indexA, int indexB, float lerp) {
-		lerp = Mathf.Clamp01(lerp);
-		Point pointA = GetLinePoint(indexA);
-		Point pointB = GetLinePoint(indexB);
-		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
-	}
-	private void CalculateSlope(float previousSlopeVal) {
+	private void CalculateSlope() {
+		float previousSlopeVal;
+		if (previousMountainChunk == null) previousSlopeVal = slopeRange.GetRandom();
+		else previousSlopeVal = previousMountainChunk.slopeVal;
 		float minChange = Mathf.Max(slopeRange.min - previousSlopeVal, -slopeChange);
 		float maxChange = Mathf.Min(slopeRange.max - previousSlopeVal, slopeChange);
 		slopeVal = Mathf.Clamp(previousSlopeVal + UnityEngine.Random.Range(minChange, maxChange), slopeRange.min, slopeRange.max);
@@ -142,56 +111,10 @@ public class MountainChunk : GeneratableItem {
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
 	}
 
-	private int GetIndexOfNearestLinePointBelowY(float y) {
-		if (y < linePoints[0].y) return 0;
-		for (int i = 0; i < linePoints.Count - 1; i++) {
-			Point pointA = linePoints[i];
-			Point pointB = linePoints[i+1];
-			if (y >= pointA.y && y <= pointB.y) return i;
-		}
-		Debug.LogError("didn't find point below y: " + y);
-		return -1;
-	}
-
-	private void CalculateDistances() {
-		distances.Add(0, 0);
-		for (int i = 1; i < linePoints.Count; i++) {
-			float previousDistance = distances[i-1];
-			Vector2 pointA = linePoints[i-1].pointVector;
-			Vector2 pointB = linePoints[i].pointVector;
-			float deltaDistance = (pointB - pointA).magnitude;
-			float distance = previousDistance + deltaDistance;
-			distances.Add(i, distance);
-		}
-	}
-
-
-	private void Reset() {
-		macroLinePoints.Clear();
-		linePoints.Clear();
-		distances.Clear();
-		polygonCollider.points = new Vector2[0];
-		slopeVector = Vector2.zero;
-	}
-
-	private int GetFirstPointIndexAtDistance(float distance) {
-		int index = 0;
-
-		for (int i = 1; i < linePoints.Count; i++) {
-			float tempDistance = distances[i];
-			if (tempDistance >= distance) {
-				index = i-1;
-				break;
-			}
-		}
-
-		return index;
-	}
-
-	private void GenerateBasicShape(List<Vector2> points, Vector2 origin) {
+	private void GenerateBasicShape(List<Vector2> points) {
 		Vector2 prevPoint = origin;
 		points.Add(prevPoint);
-		
+
 		for (int i = 0; i < numPoints; i++) {
 			float dist = pointDistRange.GetRandom();
 			Vector2 delta = slopeVector * dist;
@@ -202,8 +125,7 @@ public class MountainChunk : GeneratableItem {
 
 		foreach (Vector2 point in points) {
 			Point pointObject = new Point(point);
-			linePoints.Add(pointObject);
-			macroLinePoints.Add(pointObject);
+			edgePoints.Add(pointObject);
 		}
 
 		int extraHeightOnTop = 30;
@@ -219,30 +141,30 @@ public class MountainChunk : GeneratableItem {
 		}
 	}
 
-	private void MacroRandomizeEdges(List<Vector2> points) {
-		Vector2 firstPoint = linePoints[0].pointVector;
-		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
+	private void RandomizeEdge(List<Vector2> points) {
+		Vector2 firstPoint = edgePoints[0].pointVector;
+		Vector2 lastPoint = edgePoints.GetLastItem().pointVector;
 		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
 		float clampVal = 0.5f;
 
-		for (int i = 1; i < linePoints.Count - 1; i++) {
+		for (int i = 1; i < edgePoints.Count - 1; i++) {
 			Vector2 point = points[i];
 			Vector2 tempPoint = point;
-			float perpDist;
+			float perpDist = 0;
 
 			if (i == 1) {
 				do {
-					perpDist = UnityEngine.Random.Range(-perpDist, perpDist);
+					perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
 					tempPoint = point + slopeVectorPerp * perpDist;
 				} while (tempPoint.y < firstPoint.y);
 			}
-			else if (i == linePoints.Count - 2) {
+			else if (i == edgePoints.Count - 2) {
 				do {
-					perpDist = UnityEngine.Random.Range(-perpDist, perpDist);
+					perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
 					tempPoint = point + slopeVectorPerp * perpDist;
 				} while (tempPoint.y > lastPoint.y);
 			}
-			else perpDist = UnityEngine.Random.Range(-perpDist, perpDist);
+			else perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
 
 			point += slopeVectorPerp * perpDist;
 
@@ -252,43 +174,107 @@ public class MountainChunk : GeneratableItem {
 			if (point.y >= clampPoint.y) point.y = clampPoint.y - clampVal;
 
 			points[i] = point;
-			linePoints[i].pointVector = point;
-			macroLinePoints[i].pointVector = point;
+			edgePoints[i].pointVector = point;
+		}
+	}
+		
+	private void InitMesh(List<Vector2> points) {
+		Vector2[] pointsArray = points.ToArray();
+		polygonCollider.points = pointsArray;
+		meshCreator.InitMesh(pointsArray);
+	}
+
+	private void CalculateDistances() {
+		distances.Add(0, 0);
+		for (int i = 1; i < edgePoints.Count; i++) {
+			float previousDistance = distances[i-1];
+			Vector2 pointA = edgePoints[i-1].pointVector;
+			Vector2 pointB = edgePoints[i].pointVector;
+			float deltaDistance = (pointB - pointA).magnitude;
+			float distance = previousDistance + deltaDistance;
+			distances.Add(i, distance);
 		}
 	}
 
-	private void MicroRandomizeEdges(List<Vector2> points) {
-		Vector2 firstPoint = linePoints[0].pointVector;
-		Vector2 lastPoint = linePoints.GetLastItem().pointVector;
-		float clampVal = 0.5f;
 
-		for (int j = 0; j < linePoints.Count - 1; j++) {
-			Vector2 pointA = linePoints[j].pointVector;
-			Vector2 pointB = linePoints[j+1].pointVector;
-			float segmentMagnitude = (pointB - pointA).magnitude;
-			Vector2 segmentDirection = (pointB - pointA).normalized;
-			Vector2 segmentDirectionPerp = new Vector2(segmentDirection.y, -segmentDirection.x);
-			float bumpWidth = bumpWidthRange.GetRandom();
-			float bumpHeight = UnityEngine.Random.Range(-bumpHeight, bumpHeight);
-			int numBumps = (int)(segmentMagnitude / bumpWidth);
-			bumpWidth = segmentMagnitude / (numBumps + 1);
-			for (int i = 1; i < numBumps; i++) {
-				Vector2 bumpPoint = pointA + segmentDirection * (i * bumpWidth);
-				bumpPoint += segmentDirectionPerp * bumpHeight;
+	// ============= HELPERS ==============
+	private float GetDistanceAtIndex(int index) {
+		float distance;
+		if (distances.TryGetValue(index, out distance)) return distance;
+		else {
+			Debug.LogError("index " + index + " is not in distance dictionary");
+			return 0;
+		}
+	}
 
-				Vector2 clampPoint;
-				if (SlopeIsPositive()) clampPoint = lastPoint;
-				else clampPoint = firstPoint;
-				if (bumpPoint.y >= clampPoint.y) bumpPoint.y = clampPoint.y - clampVal;
+	private float GetDistanceBetweenIndices(int indexA, int indexB) {
+		float distanceA = GetDistanceAtIndex(indexA);
+		float distanceB = GetDistanceAtIndex(indexB);
+		float segmentDistance = distanceB - distanceA;
+		return segmentDistance;
+	}
 
-				linePoints.Insert(j+i, new Point(bumpPoint));
-				points.Insert(j+i, bumpPoint);
+	private bool SlopeIsPositive() {
+		return slopeVector.y > 0;
+	}
+
+	private int GetIndexOfEdgePoint(Point point) {
+		for (int i = 0; i < edgePoints.Count; i++) {
+			Point tempPoint = edgePoints[i];
+			if (tempPoint == point) return i;
+		}
+		Debug.LogError("couldn't find point!");
+		return -1;
+	}
+
+	private float GetTotalDistance() {
+		return distances[edgePoints.Count - 1];
+	}
+
+	private Point GetEdgePoint(int index) {
+		if (index < 0 || index >= edgePoints.Count) {
+			Debug.LogError("invalid edge point");
+			return null;
+		}
+
+		return edgePoints[index];
+	}
+
+	private float PlaceToDistance(float place) {
+		float totalDistance = GetTotalDistance();
+		float placeDistance = totalDistance * place;
+		return placeDistance;
+	}
+
+	private float DistanceToPlace(float distance) {
+		return distance / GetTotalDistance();
+	}
+
+	private float PointToPlace(Point point) {
+		int index = GetIndexOfEdgePoint(point);
+		float distance = distances[index];
+		float place = DistanceToPlace(distance);
+		return place;
+	}
+
+	private Vector2 GetPositionBetweenEdgePointIndices(int indexA, int indexB, float lerp) {
+		lerp = Mathf.Clamp01(lerp);
+		Point pointA = GetEdgePoint(indexA);
+		Point pointB = GetEdgePoint(indexB);
+		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
+	}
+
+	private int GetFirstPointIndexAtDistance(float distance) {
+		int index = 0;
+
+		for (int i = 1; i < edgePoints.Count; i++) {
+			float tempDistance = distances[i];
+			if (tempDistance >= distance) {
+				index = i-1;
+				break;
 			}
 		}
-	}
 
-	protected override void HandleRecycled() {
-		base.HandleRecycled();
-		Reset();
+		return index;
 	}
 }

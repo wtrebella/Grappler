@@ -4,6 +4,6 @@ using System;
 
 public class MountainChunkNeededDetector : MonoBehaviour {
 	public bool NeedsNewMountainChunk(MountainChunk lastMountainChunk) {
-		return lastMountainChunk.GetFirstLinePoint().x <= GameScreen.instance.maxX;
+		return lastMountainChunk.GetFirstEdgePoint().x <= GameScreen.instance.maxX;
 	}
 }

@@ -8,7 +8,7 @@ public class IcicleGenerator : ItemOnMountainGenerator {
 	}
 
 	protected override void HandleMountainChunkGenerated(MountainChunk chunk) {
-		int num = chunk.GetMacroLinePoints().Count;
+		int num = chunk.edgePoints.Count;
 		float chanceOfSmallIcicleSpawn = 0.05f;
 		float dist = 1f / ((float)num + 1f);
 		float distVar = dist / 3f;

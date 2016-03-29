@@ -29,7 +29,7 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 		if (!MountainChunksExist()) return null;
 
 		foreach (MountainChunk chunk in mountainChunks) {
-			float lastX = chunk.GetLastLinePoint().pointVector.x;
+			float lastX = chunk.GetLastEdgePoint().pointVector.x;
 			if (x < lastX) return chunk;
 		}
 
@@ -98,7 +98,7 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, null);
 		else {
 			MountainChunk lastChunk = mountainChunks.GetLastItem();
-			mountainChunk.Generate(lastChunk.GetLastLinePoint().pointVector, lastChunk);
+			mountainChunk.Generate(lastChunk.GetLastEdgePoint().pointVector, lastChunk);
 		}
 
 		mountainChunks.Add(mountainChunk);

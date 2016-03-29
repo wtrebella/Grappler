@@ -119,7 +119,7 @@ public class GroundChunk : GeneratableItem {
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		Reset();
 
-		slopeVector = (mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector).normalized;
+		slopeVector = (mountainChunk.GetLastEdgePoint().pointVector - mountainChunk.GetFirstEdgePoint().pointVector).normalized;
 	
 		List<Vector2> points = new List<Vector2>();
 		GenerateShape(points, mountainChunk, previousGroundChunk, distanceFromMountain);
@@ -131,16 +131,16 @@ public class GroundChunk : GeneratableItem {
 
 	private void GenerateShape(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		float directDistFromMountain = distanceFromMountain;
-		Vector2 mountainVector = mountainChunk.GetLastLinePoint().pointVector - mountainChunk.GetFirstLinePoint().pointVector;
+		Vector2 mountainVector = mountainChunk.GetLastEdgePoint().pointVector - mountainChunk.GetFirstEdgePoint().pointVector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
-		int numPoints = mountainChunk.GetMacroLinePoints().Count;
+		int numPoints = mountainChunk.edgePoints.Count;
 		float totalDistance = mountainVector.magnitude;
 		float distPerPoint = totalDistance / (numPoints - 1);
 		float angleFromMountain = Vector2.Angle(Vector2.down, slopePerp * directDistFromMountain);
 		float verticalDistFromMountain = directDistFromMountain / Mathf.Cos(angleFromMountain * Mathf.Deg2Rad);
 		Vector2 verticalVectorFromMountain = new Vector2(0, -verticalDistFromMountain);
 
-		Vector2 origin = mountainChunk.GetFirstLinePoint().pointVector + verticalVectorFromMountain;
+		Vector2 origin = mountainChunk.GetFirstEdgePoint().pointVector + verticalVectorFromMountain;
 		Vector2 prevPoint = origin;
 		points.Add(prevPoint);
 
