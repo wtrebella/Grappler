@@ -96,8 +96,8 @@ public class GroundChunk : GeneratableItem {
 	}
 
 	public float GetAverageYAtX(float x) {
-		Vector2 firstPoint = GetFirstLinePoint().pointVector;
-		Vector2 lastPoint = GetLastLinePoint().pointVector;
+		Vector2 firstPoint = GetFirstLinePoint().vector;
+		Vector2 lastPoint = GetLastLinePoint().vector;
 		float width = lastPoint.x - firstPoint.x;
 		float xDelta = x - firstPoint.x;
 		float percent = xDelta / width;
@@ -109,7 +109,7 @@ public class GroundChunk : GeneratableItem {
 		lerp = Mathf.Clamp01(lerp);
 		Point pointA = GetLinePoint(indexA);
 		Point pointB = GetLinePoint(indexB);
-		return Vector2.Lerp(pointA.pointVector, pointB.pointVector, lerp);
+		return Vector2.Lerp(pointA.vector, pointB.vector, lerp);
 	}
 
 	public List<Point> GetListOfLinePoints() {
@@ -119,7 +119,7 @@ public class GroundChunk : GeneratableItem {
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		Reset();
 
-		slopeVector = (mountainChunk.GetLastEdgePoint().pointVector - mountainChunk.GetFirstEdgePoint().pointVector).normalized;
+		slopeVector = (mountainChunk.GetLastEdgePoint().vector - mountainChunk.GetFirstEdgePoint().vector).normalized;
 	
 		List<Vector2> points = new List<Vector2>();
 		GenerateShape(points, mountainChunk, previousGroundChunk, distanceFromMountain);
@@ -131,7 +131,7 @@ public class GroundChunk : GeneratableItem {
 
 	private void GenerateShape(List<Vector2> points, MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
 		float directDistFromMountain = distanceFromMountain;
-		Vector2 mountainVector = mountainChunk.GetLastEdgePoint().pointVector - mountainChunk.GetFirstEdgePoint().pointVector;
+		Vector2 mountainVector = mountainChunk.GetLastEdgePoint().vector - mountainChunk.GetFirstEdgePoint().vector;
 		Vector2 slopePerp = new Vector2(slopeVector.y, -slopeVector.x);
 		int numPoints = mountainChunk.edgePoints.Count;
 		float totalDistance = mountainVector.magnitude;
@@ -140,7 +140,7 @@ public class GroundChunk : GeneratableItem {
 		float verticalDistFromMountain = directDistFromMountain / Mathf.Cos(angleFromMountain * Mathf.Deg2Rad);
 		Vector2 verticalVectorFromMountain = new Vector2(0, -verticalDistFromMountain);
 
-		Vector2 origin = mountainChunk.GetFirstEdgePoint().pointVector + verticalVectorFromMountain;
+		Vector2 origin = mountainChunk.GetFirstEdgePoint().vector + verticalVectorFromMountain;
 		Vector2 prevPoint = origin;
 		points.Add(prevPoint);
 
@@ -153,7 +153,7 @@ public class GroundChunk : GeneratableItem {
 
 		// make the first point of any new chunk the same as the last point of the previous chunk
 		if (previousGroundChunk != null) {
-			Vector2 previousFirstPoint = previousGroundChunk.GetLastLinePoint().pointVector;
+			Vector2 previousFirstPoint = previousGroundChunk.GetLastLinePoint().vector;
 			Vector2 fourthPoint = points[3];
 			Vector2 vector = fourthPoint - previousFirstPoint;
 			Vector2 direction = vector.normalized;
@@ -199,8 +199,8 @@ public class GroundChunk : GeneratableItem {
 		distances.Add(0, 0);
 		for (int i = 1; i < linePoints.Count; i++) {
 			float previousDistance = distances[i-1];
-			Vector2 pointA = linePoints[i-1].pointVector;
-			Vector2 pointB = linePoints[i].pointVector;
+			Vector2 pointA = linePoints[i-1].vector;
+			Vector2 pointB = linePoints[i].vector;
 			float deltaDistance = (pointB - pointA).magnitude;
 			float distance = previousDistance + deltaDistance;
 			distances.Add(i, distance);

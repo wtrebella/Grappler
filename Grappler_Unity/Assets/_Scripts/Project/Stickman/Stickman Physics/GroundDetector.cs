@@ -17,7 +17,7 @@ public class GroundDetector : MonoBehaviour {
 			Mathf.Infinity, 
 			1 << LayerMask.NameToLayer("Ground"));
 
-		Vector2 position = rigid.transform.position.ToVector2();
+		Vector2 position = (Vector2)rigid.transform.position;
 		if (hit.collider) return (position - hit.point).magnitude;
 		else {
 			Debug.LogError("no ground found!");

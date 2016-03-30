@@ -255,12 +255,12 @@ public class InputManager : MonoBehaviour {
 	}
 
 	private void DoMouseSwipeBeganPhase() {
-		beginningSwipePosition = Input.mousePosition.ToVector2();
+		beginningSwipePosition = (Vector2)Input.mousePosition;
 		beginningSwipeTime = Time.time;
 	}
 
 	private void DoMouseSwipeEndedPhase() {
-		endSwipePosition = Input.mousePosition.ToVector2();
+		endSwipePosition = (Vector2)Input.mousePosition;
 
 		currentSwipeVector = new Vector2(endSwipePosition.x - beginningSwipePosition.x, endSwipePosition.y - beginningSwipePosition.y);
 		currentSwipeMagnitude = currentSwipeVector.magnitude;

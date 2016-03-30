@@ -13,7 +13,7 @@ public class AnchorableGenerator : Generator {
 	private void CreateAnchorableAtPoint(MountainChunk chunk, Point point) {
 		Anchorable anchorable = (Anchorable)GenerateItem();
 		anchorable.transform.parent = chunk.transform;
-		anchorable.transform.position = point.pointVector;
+		anchorable.transform.position = point.vector;
 		anchorable.SetAnchorableID(currentAnchorableID++);
 		anchorable.SetLinePoint(point);
 	}

@@ -29,7 +29,7 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 		if (!MountainChunksExist()) return null;
 
 		foreach (MountainChunk chunk in mountainChunks) {
-			float lastX = chunk.GetLastEdgePoint().pointVector.x;
+			float lastX = chunk.GetLastEdgePoint().vector.x;
 			if (x < lastX) return chunk;
 		}
 
@@ -95,10 +95,10 @@ public class MountainChunkGeneratorOld : MonoBehaviour {
 		MountainChunk mountainChunk = mountainChunkPrefab.Spawn();
 		mountainChunk.transform.parent = transform;
 
-		if (mountainChunks.Count == 0) mountainChunk.Generate(Vector2.zero, null);
+		if (mountainChunks.Count == 0) mountainChunk.Initialize(Vector2.zero, null);
 		else {
 			MountainChunk lastChunk = mountainChunks.GetLastItem();
-			mountainChunk.Generate(lastChunk.GetLastEdgePoint().pointVector, lastChunk);
+			mountainChunk.Initialize(lastChunk.GetLastEdgePoint().vector, lastChunk);
 		}
 
 		mountainChunks.Add(mountainChunk);

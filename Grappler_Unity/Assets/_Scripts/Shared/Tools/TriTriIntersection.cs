@@ -186,12 +186,12 @@ public class TriTriIntersection : MonoBehaviour {
 
 		public static bool TriTriIntersect(Tri tri1, Tri tri2) {
 			return TriTriIntersect(
-				tri1.point1.ToVector3(),
-				tri1.point2.ToVector3(),
-				tri1.point3.ToVector3(),
-				tri2.point1.ToVector3(),
-				tri2.point2.ToVector3(),
-				tri2.point3.ToVector3()
+				(Vector3)tri1.point1,
+				(Vector3)tri1.point2,
+				(Vector3)tri1.point3,
+				(Vector3)tri2.point1,
+				(Vector3)tri2.point2,
+				(Vector3)tri2.point3
 			);
 		}
 

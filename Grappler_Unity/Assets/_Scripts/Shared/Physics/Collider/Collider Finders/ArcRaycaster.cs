@@ -58,8 +58,8 @@ public class ArcRaycaster : MonoBehaviour {
 		var colliders = new List<Collider2D>();
 		
 		while (true) {
-			if (upAngle <= maxAngle) colliders.AddItems(RaycastAngle(upAngle));
-			if (downAngle >= minAngle) colliders.AddItems(RaycastAngle(downAngle));
+			if (upAngle <= maxAngle) colliders.AddItemsFromArray(RaycastAngle(upAngle));
+			if (downAngle >= minAngle) colliders.AddItemsFromArray(RaycastAngle(downAngle));
 			
 			upAngle += incrementAngle;
 			downAngle -= incrementAngle;

@@ -15,6 +15,6 @@ public class CenterOfMassSetter : MonoBehaviour {
 	private void OnDrawGizmos() {
 		if (!showDebugPoint) return;
 		Gizmos.color = Color.red;
-		Gizmos.DrawSphere(transform.TransformPoint(centerOfMass.ToVector3()), 0.02f);
+		Gizmos.DrawSphere(transform.TransformPoint((Vector3)centerOfMass), 0.02f);
 	}
 }

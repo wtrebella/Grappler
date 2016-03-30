@@ -27,7 +27,7 @@ public class TreeGenerator : Generator {
 
 	private void GenerateTree(GroundChunk chunk, Point chunkLinePoint) {
 		GeneratableItem item = GenerateItem();
-		Vector3 position = chunkLinePoint.pointVector.ToVector3();
+		Vector3 position = (Vector3)chunkLinePoint.vector;
 		Rigidbody2D rigid = item.GetComponentInChildren<Rigidbody2D>();
 		rigid.isKinematic = true;
 		item.transform.parent = chunk.transform;

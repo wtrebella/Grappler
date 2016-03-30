@@ -5,61 +5,7 @@ using System;
 using UnityEngine.Events;
 using System.Linq;
 
-public static class WhitExtensions {
-	public static void IncrementWithWrap(this int value, IntRange wrapRange) {
-		value = WhitTools.IncrementWithWrap(value, wrapRange);
-	}
-
-	public static void DecrementWithWrap(this int value, IntRange wrapRange) {
-		value = WhitTools.DecrementWithWrap(value, wrapRange);
-	}
-
-	public static Vector2 GetConnectedAnchorInWorldPosition(this SpringJoint2D springJoint) {
-		return springJoint.connectedBody.transform.TransformPoint(springJoint.connectedAnchor);
-	}
-
-	public static Vector2 GetAnchorInWorldPosition(this SpringJoint2D springJoint) {
-		return springJoint.transform.TransformPoint(springJoint.anchor);
-	}
-
-	public static void ApplyAttributes(this SpringJoint2D springJoint, SpringJointAttributes attributes) {
-		SpringJointAttributes.ApplyAttributes(springJoint, attributes);
-	}
-
-	public static Vector2 ToVector2(this Vector3 v) {
-		return new Vector2(v.x, v.y);
-	}
-
-	public static Vector3 ToVector3(this Vector2 v, float z = 0) {
-		return new Vector3(v.x, v.y, z);
-	}
-
-	public static void SortWithTwoPeasantsPolygonAlgorithm(this List<Vector2> points) {
-		WhitTools.SortWithTwoPeasantsPolygonAlgorithm(points);
-	}
-
-	public static bool AssertIndexIsInBounds<T>(this List<T> list, int index) {
-		if (list.Count == 0) {
-			Debug.LogError("no items in list!");
-			return false;
-		}
-		else if (index < 0) {
-			Debug.LogError("index " + index + " is below zero!");
-			return false;
-		}
-		else if (index >= list.Count) {
-			Debug.LogError("index " + index + " is too high!");
-			return false;
-		}
-		else return true;
-	}
-
-	public static List<T> Copy<T>(this List<T> list) {
-		List<T> newList = new List<T>();
-		for (int i = 0; i < list.Count; i++) newList.Add(list[i]);
-		return newList;
-	}
-
+public static class TransformListExtensions {
 	public static void SortByX(this List<Transform> list) {
 		Transform[] array = list.ToArray();
 		Array.Sort(array, delegate(Transform t1, Transform t2) { return t1.position.x.CompareTo(t2.position.x); });
@@ -103,37 +49,17 @@ public static class WhitExtensions {
 		return index;
 	}
 
-	public static void AddItems<T>(this List<T> list, T[] array) {
-		foreach (T item in array) list.Add(item);
-	}
-
-	public static T GetLastItem<T>(this List<T> list) {
-		if (list.Count == 0) return default(T);
-
-		return list[list.Count - 1];
-	}
-
-	public static T GetPenultimateItem<T>(this List<T> list) {
-		if (list.Count <= 1) return default(T);
-		
-		return list[list.Count - 2];
-	}
-
 	public static Transform GetItemClosestTo(this List<Transform> list, Vector2 point) {
 		float dist = Mathf.Infinity;
 		Transform closestItem = null;
 		foreach (Transform t in list) {
-			float newDist = (t.position.ToVector2() - point).sqrMagnitude;
+			float newDist = ((Vector2)t.position - point).sqrMagnitude;
 			if (newDist < dist) {
 				dist = newDist;
 				closestItem = t;
 			}
 		}
 		return closestItem;
-	}
-
-	public static List<T> ToList<T>(this Array array) {
-		return array.OfType<T>().ToList();
 	}
 
 	public static void RemoveItemsWithXValsUnder(this List<Transform> list, float x) {

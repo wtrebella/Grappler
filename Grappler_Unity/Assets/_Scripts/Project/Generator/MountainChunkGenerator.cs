@@ -22,7 +22,7 @@ public class MountainChunkGenerator : Generator {
 		if (items.Count == 0) return null;
 		foreach (GeneratableItem item in items) {
 			MountainChunk chunk = ItemToMountainChunk(item);
-			float lastX = chunk.GetLastEdgePoint().pointVector.x;
+			float lastX = chunk.GetLastEdgePoint().vector.x;
 			if (x < lastX) return chunk;
 		}
 
@@ -89,7 +89,7 @@ public class MountainChunkGenerator : Generator {
 		}
 		else {
 			previousMountainChunk = ItemToMountainChunk(items[items.Count - 2]);
-			origin = previousMountainChunk.GetLastEdgePoint().pointVector;
+			origin = previousMountainChunk.GetLastEdgePoint().vector;
 		}
 
 		mountainChunk.Initialize(origin, previousMountainChunk);

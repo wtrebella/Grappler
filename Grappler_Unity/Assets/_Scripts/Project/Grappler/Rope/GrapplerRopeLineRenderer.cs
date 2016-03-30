@@ -22,8 +22,8 @@ public class GrapplerRopeLineRenderer : MonoBehaviour {
 	}
 	
 	private void DrawRope() {
-		Vector3 startPoint = grappleRopeEndPoints.GetStartPoint().ToVector3();
-		Vector3 endPoint = grappleRopeEndPoints.GetEndPoint().ToVector3();
+		Vector3 startPoint = (Vector3)grappleRopeEndPoints.GetStartPoint();
+		Vector3 endPoint = (Vector3)grappleRopeEndPoints.GetEndPoint();
 		startPoint.z = -0.01f;
 		endPoint.z = -0.01f;
 		line.points3.Clear();

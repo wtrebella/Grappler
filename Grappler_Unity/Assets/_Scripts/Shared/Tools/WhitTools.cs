@@ -46,7 +46,7 @@ public static class WhitTools {
 	}
 
 	public static Vector2 AngleToDirection(float angle) {
-		Vector2 direction = (Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right).ToVector2();
+		Vector2 direction = (Vector2)(Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right);
 		return direction;
 	}
 
@@ -113,7 +113,7 @@ public static class WhitTools {
 
 		for (int i = 0; i < points_postSort.Count; i++) {
 			Point point = points_postSort[i];
-			pointVectors.Add(point.pointVector);
+			pointVectors.Add(point.vector);
 		}
 	}
 
@@ -121,8 +121,8 @@ public static class WhitTools {
 		Point leftMost = points[0];
 		Point rightMost = points[points.Count - 1];
 		foreach (Point point in points) {
-			leftMost = point.pointVector.x < leftMost.pointVector.x ? point : leftMost;
-			rightMost = point.pointVector.x > rightMost.pointVector.x ? point : rightMost;
+			leftMost = point.vector.x < leftMost.vector.x ? point : leftMost;
+			rightMost = point.vector.x > rightMost.vector.x ? point : rightMost;
 		}
 		return new Segment(leftMost, rightMost);
 	}
