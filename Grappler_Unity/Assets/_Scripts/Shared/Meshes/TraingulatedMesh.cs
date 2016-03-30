@@ -4,14 +4,15 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class MountainChunkMeshCreator : MonoBehaviour {
+public class TriangulatedMesh : MonoBehaviour {
 	private List<Vector3> verts = new List<Vector3>();
 	private List<int> tris = new List<int>();
 	private MeshFilter meshFilter;
 	
-	public void InitMesh(Vector2[] points) {
-		CreateMesh(points);
-		ApplyToMesh();
+	public void RedrawMesh(Vector2[] outlinePoints) {
+		ClearMesh();
+		RegenerateMesh(outlinePoints);
+		ApplyPointsToMesh();
 	}
 
 	private void Awake() {
@@ -19,9 +20,7 @@ public class MountainChunkMeshCreator : MonoBehaviour {
 		meshFilter.mesh = new Mesh();
 	}
 
-	private void CreateMesh(Vector2[] points) {
-		ClearMesh();
-
+	private void RegenerateMesh(Vector2[] points) {
 		Triangulator triangulator = new Triangulator(points);
 		int[] triArray = triangulator.Triangulate();
 
@@ -29,7 +28,7 @@ public class MountainChunkMeshCreator : MonoBehaviour {
 		foreach (Vector2 point in points) verts.Add(point);
 	}
 
-	private void ApplyToMesh() {
+	private void ApplyPointsToMesh() {
 		meshFilter.mesh.vertices = verts.ToArray();
 		meshFilter.mesh.triangles = tris.ToArray();
 

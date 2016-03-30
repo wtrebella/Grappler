@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 [RequireComponent(typeof(PolygonCollider2D))]
-[RequireComponent(typeof(MountainChunkMeshCreator))]
+[RequireComponent(typeof(TriangulatedMesh))]
 public class MountainChunk : GeneratableItem {
 	public Vector2 origin {get; private set;}
 	public MountainChunk previousMountainChunk {get; private set;}
@@ -15,7 +15,7 @@ public class MountainChunk : GeneratableItem {
 	private MountainChunkAttributes attributes;
 	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
-	private MountainChunkMeshCreator meshCreator;
+	private TriangulatedMesh meshCreator;
 	private Vector2 slopeVector;
 	private float slopeVal;
 	private float extraHeightOnTop = 30;
@@ -73,7 +73,7 @@ public class MountainChunk : GeneratableItem {
 		edgePoints = new List<Point>();
 		finishingPoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
-		meshCreator = GetComponent<MountainChunkMeshCreator>();
+		meshCreator = GetComponent<TriangulatedMesh>();
 	}
 
 	protected override void HandleRecycled() {
@@ -187,7 +187,7 @@ public class MountainChunk : GeneratableItem {
 	private void InitMesh() {
 		var pointsArray = allPoints.ToVector2Array();
 		polygonCollider.points = pointsArray;
-		meshCreator.InitMesh(pointsArray);
+		meshCreator.RedrawMesh(pointsArray);
 	}
 
 	private void CalculateDistances() {

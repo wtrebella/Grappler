@@ -72,6 +72,14 @@ public static class WhitTools {
 		return angle;
 	}
 
+	public static Vector2 SlopeToVector2(float slope) {
+		Vector2 slopeVector = new Vector2();
+		slopeVector.x = Mathf.Cos(slope * Mathf.PI / 2f);
+		slopeVector.y = Mathf.Sin(slope * Mathf.PI / 2f);
+		slopeVector.Normalize();
+		return slopeVector;
+	}
+
 	// based on algorithm found here: http://www.geometrylab.de/applet-29-en#twopeasants
 	public static void SortWithTwoPeasantsPolygonAlgorithm(List<Vector2> pointVectors) {
 		List<Point> points_preSort = new List<Point>();
