@@ -159,38 +159,33 @@ public class MountainChunk : GeneratableItem {
 	}
 
 	private void RandomizeEdge() {
-		Vector2 firstPoint = edgePoints[0].vector;
-		Vector2 lastPoint = edgePoints.GetLastItem().vector;
-		Vector2 slopeVectorPerp = new Vector2(slopeVector.y, -slopeVector.x);
+		List<Point> innerEdgePoints = GetInnerEdgePoints();
+
+		Point firstEdgePoint = GetFirstEdgePoint();
+		Point lastEdgePoint = GetLastEdgePoint();
+
+		Vector2 slopePerpendicular = GetSlopePerpendicular();
+
 		float clampVal = 0.5f;
 
-		for (int i = 1; i < edgePoints.Count - 1; i++) {
-			Vector2 point = edgePoints[i].vector;
-			Vector2 tempPoint = point;
-			float perpDist = 0;
+		foreach (Point point in innerEdgePoints) {
+			Vector2 tempVector = 0;
+			float magnitude = 0;
 
-			if (i == 1) {
-				do {
-					perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
-					tempPoint = point + slopeVectorPerp * perpDist;
-				} while (tempPoint.y < firstPoint.y);
-			}
-			else if (i == edgePoints.Count - 2) {
-				do {
-					perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
-					tempPoint = point + slopeVectorPerp * perpDist;
-				} while (tempPoint.y > lastPoint.y);
-			}
-			else perpDist = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
+			do {
+				magnitude = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
+				tempVector = point.vector + slopePerpendicular * magnitude;
+			} 
+			while (tempVector.y < firstEdgePoint.y && tempVector.y > lastEdgePoint.y);
 
-			point += slopeVectorPerp * perpDist;
+			point.vector += slopePerpendicular * magnitude;
 
-			Vector2 clampPoint;
-			if (SlopeIsPositive()) clampPoint = lastPoint;
-			else clampPoint = firstPoint;
+			Point clampPoint;
+
+			if (SlopeIsPositive()) clampPoint = lastEdgePoint;
+			else clampPoint = firstEdgePoint;
+
 			if (point.y >= clampPoint.y) point.y = clampPoint.y - clampVal;
-
-			edgePoints[i].vector = point;
 		}
 	}
 		
@@ -212,9 +207,18 @@ public class MountainChunk : GeneratableItem {
 		}
 	}
 
-
-
 	// ============= HELPERS ==============
+	private List<Point> GetInnerEdgePoints() {
+		var innerEdgePoints = edgePoints.Copy<Point>();
+		innerEdgePoints.RemoveAt(0);
+		innerEdgePoints.RemoveAt(innerEdgePoints.Count - 1);
+		return innerEdgePoints;
+	}
+
+	private Vector2 GetSlopePerpendicular() {
+		return new Vector2(slopeVector.y, -slopeVector.x);
+	}
+
 	private void AddEdgePoint(Vector2 pointVector) {
 		edgePoints.Add(new Point(pointVector));
 	}
