@@ -12,13 +12,7 @@ public class MountainChunk : GeneratableItem {
 	public List<Point> finishingPoints {get; private set;}
 	public List<Point> allPoints {get; private set;}
 
-	[SerializeField] private int numPoints = 10;
-	[SerializeField] private float slopeChange = 0.15f;
-	[SerializeField] private float maxPerpDist = 0.75f;
-	[SerializeField] private float marginSize = 0.01f;
-	[SerializeField] private FloatRange slopeRange = new FloatRange(0.0f, 0.35f);
-	[SerializeField] private FloatRange pointDistRange = new FloatRange(1.5f, 2.5f);
-
+	private MountainChunkAttributes attributes;
 	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
 	private MountainChunkMeshCreator meshCreator;
@@ -29,9 +23,10 @@ public class MountainChunk : GeneratableItem {
 
 
 	// ============= PUBLICS ==============
-	public void Initialize(Vector2 origin, MountainChunk previousMountainChunk) {
+	public void Initialize(Vector2 origin, MountainChunk previousMountainChunk, MountainChunkAttributes attributes) {
 		this.origin = origin;
 		this.previousMountainChunk = previousMountainChunk;
+		this.attributes = attributes;
 
 		Generate();
 	}
@@ -73,7 +68,7 @@ public class MountainChunk : GeneratableItem {
 
 
 	// ============= GENERATION ==============
-	private void Awake () {
+	private void Awake() {
 		allPoints = new List<Point>();
 		edgePoints = new List<Point>();
 		finishingPoints = new List<Point>();
@@ -108,12 +103,12 @@ public class MountainChunk : GeneratableItem {
 
 	private void CalculateSlope() {
 		float previousSlopeVal;
-		if (previousMountainChunk == null) previousSlopeVal = slopeRange.GetRandom();
+		if (previousMountainChunk == null) previousSlopeVal = attributes.slopeRange.GetRandom();
 		else previousSlopeVal = previousMountainChunk.slopeVal;
-		float minChange = Mathf.Max(slopeRange.min - previousSlopeVal, -slopeChange);
-		float maxChange = Mathf.Min(slopeRange.max - previousSlopeVal, slopeChange);
+		float minChange = Mathf.Max(attributes.slopeRange.min - previousSlopeVal, -attributes.maxSlopeChange);
+		float maxChange = Mathf.Min(attributes.slopeRange.max - previousSlopeVal, attributes.maxSlopeChange);
 		float unclampedSlopeVal = previousSlopeVal + UnityEngine.Random.Range(minChange, maxChange);
-		slopeVal = slopeRange.Clamp(unclampedSlopeVal);
+		slopeVal = attributes.slopeRange.Clamp(unclampedSlopeVal);
 		slopeVector = new Vector2();
 		slopeVector.x = Mathf.Cos(slopeVal * Mathf.PI / 2f);
 		slopeVector.y = Mathf.Sin(slopeVal * Mathf.PI / 2f);
@@ -123,8 +118,8 @@ public class MountainChunk : GeneratableItem {
 		Vector2 prevPoint = origin;
 		AddEdgePoint(prevPoint);
 
-		for (int i = 0; i < numPoints; i++) {
-			float dist = pointDistRange.GetRandom();
+		for (int i = 0; i < attributes.numPoints; i++) {
+			float dist = attributes.pointDistRange.GetRandom();
 			Vector2 delta = slopeVector * dist;
 			Vector2 point = prevPoint + delta;
 			AddEdgePoint(point);
@@ -141,16 +136,16 @@ public class MountainChunk : GeneratableItem {
 		Vector2 lastEdgePoint = GetLastEdgePoint().vector;
 
 		AddFinishingPoint(new Vector2(lastEdgePoint.x, lastEdgePoint.y + extraHeightOnTop));
-		AddFinishingPoint(new Vector2(origin.x - marginSize, lastEdgePoint.y + extraHeightOnTop));
-		AddFinishingPoint(new Vector2(origin.x - marginSize, origin.y));
+		AddFinishingPoint(new Vector2(origin.x - attributes.marginSize, lastEdgePoint.y + extraHeightOnTop));
+		AddFinishingPoint(new Vector2(origin.x - attributes.marginSize, origin.y));
 	}
 
 	private void GenerateFinishingPointsNegativeSlope() {
 		Vector2 lastEdgePoint = GetLastEdgePoint().vector;
 
 		AddFinishingPoint(new Vector2(lastEdgePoint.x, origin.y + extraHeightOnTop));
-		AddFinishingPoint(new Vector2(origin.x - marginSize, origin.y + extraHeightOnTop));
-		AddFinishingPoint(new Vector2(origin.x - marginSize, origin.y));
+		AddFinishingPoint(new Vector2(origin.x - attributes.marginSize, origin.y + extraHeightOnTop));
+		AddFinishingPoint(new Vector2(origin.x - attributes.marginSize, origin.y));
 	}
 
 	private void FillAllPointsList() {
@@ -169,11 +164,11 @@ public class MountainChunk : GeneratableItem {
 		float clampVal = 0.5f;
 
 		foreach (Point point in innerEdgePoints) {
-			Vector2 tempVector = 0;
+			Vector2 tempVector = Vector2.zero;
 			float magnitude = 0;
 
 			do {
-				magnitude = UnityEngine.Random.Range(-maxPerpDist, maxPerpDist);
+				magnitude = UnityEngine.Random.Range(-attributes.maxPerpDist, attributes.maxPerpDist);
 				tempVector = point.vector + slopePerpendicular * magnitude;
 			} 
 			while (tempVector.y < firstEdgePoint.y && tempVector.y > lastEdgePoint.y);

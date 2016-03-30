@@ -8,6 +8,8 @@ using System.Collections.Generic;
 public class MountainChunkGenerator : Generator {
 	public Action<MountainChunk> SignalMountainChunkGenerated;
 
+	[SerializeField] private MountainChunkAttributes normalAttributes;
+
 	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
 
@@ -92,7 +94,7 @@ public class MountainChunkGenerator : Generator {
 			origin = previousMountainChunk.GetLastEdgePoint().vector;
 		}
 
-		mountainChunk.Initialize(origin, previousMountainChunk);
+		mountainChunk.Initialize(origin, previousMountainChunk, normalAttributes);
 		anchorableGenerator.GenerateAnchorables(mountainChunk);
 
 		if (SignalMountainChunkGenerated != null) SignalMountainChunkGenerated(mountainChunk);
