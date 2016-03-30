@@ -11,56 +11,50 @@ public class GroundChunk : GeneratableItem {
 	[SerializeField] private float maxBumpHeight = 0.3f;
 	[SerializeField] private float marginSize = 60.0f;
 
-	private List<Point> linePoints;
+	private List<Point> edgePoints;
 	private Dictionary<int, float> distances = new Dictionary<int, float>();
 	private PolygonCollider2D polygonCollider;
 	private GroundChunkMeshCreator meshCreator;
 	private Vector2 slopeVector;
 
 	public void Reset() {
-		linePoints.Clear();
+		edgePoints.Clear();
 		distances.Clear();
 		polygonCollider.points = new Vector2[0];
 		slopeVector = Vector2.zero;
 	}
 
 	public int GetRandomPointIndex() {
-		return UnityEngine.Random.Range(0, linePoints.Count);
+		return UnityEngine.Random.Range(0, edgePoints.Count);
 	}
 
 	public int GetPointsCount() {
-		return linePoints.Count;
+		return edgePoints.Count;
 	}
 
-	public Point GetLastLinePoint() {
-		if (linePoints.Count == 0) Debug.LogError("no line points!");
-		return linePoints.GetLastItem();
+	public Point GetLastEdgePoint() {
+		return edgePoints.GetLastItem();
 	}
 
-	public Point GetFirstLinePoint() {
-		return linePoints[0];
+	public Point GetFirstEdgePoint() {
+		return edgePoints.GetFirstItem();
 	}
 
-	public int GetIndexOfLinePoint(Point point) {
-		for (int i = 0; i < linePoints.Count; i++) {
-			Point tempPoint = linePoints[i];
-			if (tempPoint == point) return i;
+	public int GetIndexOfEdgePoint(Point point) {
+		for (int i = 0; i < edgePoints.Count; i++) {
+			if (edgePoints[i] == point) return i;
 		}
 		Debug.LogError("couldn't find point!");
 		return -1;
 	}
 
 	public float GetTotalDistance() {
-		return distances[linePoints.Count - 1];
+		return distances[edgePoints.Count - 1];
 	}
 
-	public Point GetLinePoint(int index) {
-		if (index < 0 || index >= linePoints.Count) {
-			Debug.LogError("invalid line point");
-			return null;
-		}
-
-		return linePoints[index];
+	public Point GetEdgePoint(int index) {
+		if (edgePoints.AssertIndexIsInBounds(index)) return null;
+		return edgePoints[index];
 	}
 
 	public float PlaceToDistance(float place) {
@@ -74,7 +68,7 @@ public class GroundChunk : GeneratableItem {
 	}
 
 	public float PointToPlace(Point point) {
-		int index = GetIndexOfLinePoint(point);
+		int index = GetIndexOfEdgePoint(point);
 		float distance = distances[index];
 		float place = DistanceToPlace(distance);
 		return place;
@@ -86,18 +80,18 @@ public class GroundChunk : GeneratableItem {
 		float placeDistance = totalDistance * place;
 		int firstPointIndex = GetFirstPointIndexAtDistance(placeDistance);
 		int secondPointIndex = firstPointIndex+1;
-		if (firstPointIndex >= linePoints.Count - 1) Debug.LogError("distance greater than end of cliff line...");
+		if (firstPointIndex >= edgePoints.Count - 1) Debug.LogError("distance greater than end of cliff line...");
 		float thisPointDistance = distances[firstPointIndex];
 		float nextPointDistance = distances[secondPointIndex];
 		float deltaDistance = placeDistance - thisPointDistance;
 		float betweenPointsDistance = nextPointDistance - thisPointDistance;
 		float pointLerp = deltaDistance / betweenPointsDistance;
-		return GetPositionBetweenLinePoints(firstPointIndex, secondPointIndex, pointLerp);
+		return GetPositionBetweenEdgePoints(firstPointIndex, secondPointIndex, pointLerp);
 	}
 
 	public float GetAverageYAtX(float x) {
-		Vector2 firstPoint = GetFirstLinePoint().vector;
-		Vector2 lastPoint = GetLastLinePoint().vector;
+		Vector2 firstPoint = GetFirstEdgePoint().vector;
+		Vector2 lastPoint = GetLastEdgePoint().vector;
 		float width = lastPoint.x - firstPoint.x;
 		float xDelta = x - firstPoint.x;
 		float percent = xDelta / width;
@@ -105,15 +99,15 @@ public class GroundChunk : GeneratableItem {
 		return position.y;
 	}
 
-	public Vector2 GetPositionBetweenLinePoints(int indexA, int indexB, float lerp) {
+	public Vector2 GetPositionBetweenEdgePoints(int indexA, int indexB, float lerp) {
 		lerp = Mathf.Clamp01(lerp);
-		Point pointA = GetLinePoint(indexA);
-		Point pointB = GetLinePoint(indexB);
+		Point pointA = GetEdgePoint(indexA);
+		Point pointB = GetEdgePoint(indexB);
 		return Vector2.Lerp(pointA.vector, pointB.vector, lerp);
 	}
 
-	public List<Point> GetListOfLinePoints() {
-		return linePoints;
+	public List<Point> GetEdgePoints() {
+		return edgePoints;
 	}
 	
 	public void Generate(MountainChunk mountainChunk, GroundChunk previousGroundChunk, float distanceFromMountain) {
@@ -153,7 +147,7 @@ public class GroundChunk : GeneratableItem {
 
 		// make the first point of any new chunk the same as the last point of the previous chunk
 		if (previousGroundChunk != null) {
-			Vector2 previousFirstPoint = previousGroundChunk.GetLastLinePoint().vector;
+			Vector2 previousFirstPoint = previousGroundChunk.GetLastEdgePoint().vector;
 			Vector2 fourthPoint = points[3];
 			Vector2 vector = fourthPoint - previousFirstPoint;
 			Vector2 direction = vector.normalized;
@@ -172,7 +166,7 @@ public class GroundChunk : GeneratableItem {
 		
 		foreach (Vector2 point in points) {
 			Point pointObject = new Point(point);
-			linePoints.Add(pointObject);
+			edgePoints.Add(pointObject);
 		}
 
 		// add one more point, this time with margin
@@ -190,17 +184,17 @@ public class GroundChunk : GeneratableItem {
 	}
 
 	private void Awake() {
-		linePoints = new List<Point>();
+		edgePoints = new List<Point>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 		meshCreator = GetComponent<GroundChunkMeshCreator>();
 	}
 
 	private void CalculateDistances() {
 		distances.Add(0, 0);
-		for (int i = 1; i < linePoints.Count; i++) {
+		for (int i = 1; i < edgePoints.Count; i++) {
 			float previousDistance = distances[i-1];
-			Vector2 pointA = linePoints[i-1].vector;
-			Vector2 pointB = linePoints[i].vector;
+			Vector2 pointA = edgePoints[i-1].vector;
+			Vector2 pointB = edgePoints[i].vector;
 			float deltaDistance = (pointB - pointA).magnitude;
 			float distance = previousDistance + deltaDistance;
 			distances.Add(i, distance);
@@ -210,7 +204,7 @@ public class GroundChunk : GeneratableItem {
 	private int GetFirstPointIndexAtDistance(float distance) {
 		int index = 0;
 
-		for (int i = 1; i < linePoints.Count; i++) {
+		for (int i = 1; i < edgePoints.Count; i++) {
 			float tempDistance = distances[i];
 			if (tempDistance >= distance) {
 				index = i-1;

@@ -9,6 +9,7 @@ public class MountainChunkGenerator : Generator {
 	public Action<MountainChunk> SignalMountainChunkGenerated;
 
 	[SerializeField] private MountainChunkAttributes normalAttributes;
+	[SerializeField] private MountainChunkAttributes crazyAttributes;
 
 	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
@@ -64,7 +65,10 @@ public class MountainChunkGenerator : Generator {
 		GenerateMountainChunks(3);
 	}
 
+	float t = 0;
+	bool hasUsed = false;
 	private void FixedUpdate() {
+		t += Time.fixedDeltaTime;
 		GenerateMountainChunkIfNeeded();
 	}
 
@@ -94,7 +98,9 @@ public class MountainChunkGenerator : Generator {
 			origin = previousMountainChunk.GetLastEdgePoint().vector;
 		}
 
-		mountainChunk.Initialize(origin, previousMountainChunk, normalAttributes);
+		MountainChunkAttributes attributes = t < 10 || hasUsed ? normalAttributes : crazyAttributes;
+		if (attributes == crazyAttributes) hasUsed = true;
+		mountainChunk.Initialize(origin, previousMountainChunk, attributes);
 		anchorableGenerator.GenerateAnchorables(mountainChunk);
 
 		if (SignalMountainChunkGenerated != null) SignalMountainChunkGenerated(mountainChunk);

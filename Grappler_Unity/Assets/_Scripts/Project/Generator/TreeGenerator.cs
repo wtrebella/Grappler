@@ -14,7 +14,7 @@ public class TreeGenerator : Generator {
 	private void HandleGroundChunkCreated(GroundChunk chunk) {
 		if (Random.value > chunkProbability) return;
 
-		var linePoints = chunk.GetListOfLinePoints();
+		var linePoints = chunk.GetEdgePoints();
 		int linePointsCount = linePoints.Count;
 		int startIndex = Random.Range(0, linePointsCount - 1);
 		int endIndex = Mathf.Min(linePointsCount - 1, startIndex + maxTreesPerChunk);
