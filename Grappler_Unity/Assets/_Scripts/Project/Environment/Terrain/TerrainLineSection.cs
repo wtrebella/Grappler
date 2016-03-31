@@ -5,18 +5,20 @@ using System;
 
 [Serializable]
 public class TerrainLineSection {
-	public Vector2 startPoint {get; private set;}
+	public Vector2 startPoint {get {return config.startPoint;}}
+	public float length {get {return config.length;}}
+	public float slope {get {return config.slope;}}
+
 	public Vector2 endPoint {get; private set;}
 	public List<Vector2> midPoints {get; private set;}
-	public float slope {get; private set;}
 
-	private TerrainLineAttributes attributes;
+	private TerrainLineSectionConfig config;
+	private TerrainLineSectionAttributes attributes;
 	private Vector2 slopeVector;
 	private Vector2 perpendicularSlopeVector;
 
-	public TerrainLineSection(Vector2 startPoint, float slope, TerrainLineAttributes attributes) {
-		this.startPoint = startPoint;
-		this.slope = slope;
+	public TerrainLineSection(TerrainLineSectionConfig config, TerrainLineSectionAttributes attributes) {
+		this.config = config;
 		this.attributes = attributes;
 
 		CalculateSlopeVector();
@@ -52,7 +54,7 @@ public class TerrainLineSection {
 
 			isOnLastPoint = 
 				(nextPointToEndPointSqrMagnitude < sqrSectionSegmentLength) ||
-				distance > attributes.sectionLength;
+				distance > length;
 
 			if (isOnLastPoint) nextPoint = prevPoint + previousPointToEndPointVector / 2f;
 
@@ -62,7 +64,7 @@ public class TerrainLineSection {
 	}
 
 	private void GenerateEndPoint() {
-		endPoint = startPoint + slopeVector * attributes.sectionLength;
+		endPoint = startPoint + slopeVector * length;
 	}
 
 	private void BumpifyMidPoints() {

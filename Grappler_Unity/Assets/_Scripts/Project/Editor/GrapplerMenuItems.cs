@@ -8,8 +8,8 @@ public class GrapplerMenuItems : Editor {
 		ScriptableObjectUtility.CreateAsset<MountainChunkAttributes>();
 	}
 
-	[MenuItem("Assets/Create/TerrainLineAttributes Asset", false, 102)]
-	public static void CreateTerrainLineAttributesAsset() {
-		ScriptableObjectUtility.CreateAsset<TerrainLineAttributes>();
+	[MenuItem("Assets/Create/TerrainLineSectionAttributes Asset", false, 102)]
+	public static void CreateTerrainLineSectionAttributesAsset() {
+		ScriptableObjectUtility.CreateAsset<TerrainLineSectionAttributes>();
 	}
 }
