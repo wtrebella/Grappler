@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
+[Serializable]
 public class TerrainLineSection {
 	public Vector2 startPoint {get; private set;}
 	public Vector2 endPoint {get; private set;}
@@ -13,15 +15,15 @@ public class TerrainLineSection {
 	private Vector2 perpendicularSlopeVector;
 
 	public TerrainLineSection(Vector2 startPoint, float slope, TerrainLineAttributes attributes) {
-		this.attributes = attributes;
-		this.slope = slope;
 		this.startPoint = startPoint;
+		this.slope = slope;
+		this.attributes = attributes;
 
 		CalculateSlopeVector();
 		CalculatePerpendicularSlopeVector();
+		GenerateEndPoint();
 		GenerateMidPoints();
 		BumpifyMidPoints();
-		GenerateEndPoint();
 	}
 
 	private void CalculateSlopeVector() {
@@ -35,14 +37,27 @@ public class TerrainLineSection {
 	private void GenerateMidPoints() {
 		midPoints = new List<Vector2>();
 
-		float distance = 0;
 		Vector2 prevPoint = startPoint;
+		float distance = 0;
+		bool isOnLastPoint = false;
 
-		while (distance < attributes.sectionLength) {
+		while (!isOnLastPoint) {
 			float segmentLength = attributes.sectionSegmentLengthRange.GetRandom();
-			Vector2 nextPoint = prevPoint + slopeVector * segmentLength;
 			distance += segmentLength;
+			float sqrSectionSegmentLength = Mathf.Pow(segmentLength, 2);
+			Vector2 nextPoint = prevPoint + slopeVector * segmentLength;
+			Vector2 previousPointToEndPointVector = endPoint - prevPoint;
+			Vector2 nextPointToEndPointVector = endPoint - nextPoint;
+			float nextPointToEndPointSqrMagnitude = nextPointToEndPointVector.sqrMagnitude;
+
+			isOnLastPoint = 
+				(nextPointToEndPointSqrMagnitude < sqrSectionSegmentLength) ||
+				distance > attributes.sectionLength;
+
+			if (isOnLastPoint) nextPoint = prevPoint + previousPointToEndPointVector / 2f;
+
 			midPoints.Add(nextPoint);
+			prevPoint = nextPoint;
 		}
 	}
 
@@ -55,6 +70,7 @@ public class TerrainLineSection {
 			Vector2 point = midPoints[i];
 			float bumpHeight = UnityEngine.Random.Range(-attributes.maxBumpHeight, attributes.maxBumpHeight);
 			point += perpendicularSlopeVector * bumpHeight;
+			midPoints[i] = point;
 		}
 	}
 }
