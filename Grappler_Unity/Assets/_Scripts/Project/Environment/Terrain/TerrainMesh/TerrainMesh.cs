@@ -14,11 +14,10 @@ public class TerrainMesh : MonoBehaviour {
 		isDirty = true;
 	}
 
-	private void Redraw() {
+	public void Redraw() {
 		isDirty = false;
 
 		List<Vector2> points = terrainLine.GetPoints();
-
 		Vector2 firstPoint = terrainLine.GetFirstPoint();
 		Vector2 lastPoint = terrainLine.GetLastPoint();
 

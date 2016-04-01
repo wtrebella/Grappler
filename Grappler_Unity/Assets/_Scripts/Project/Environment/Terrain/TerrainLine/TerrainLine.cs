@@ -17,7 +17,6 @@ public class TerrainLine : MonoBehaviour {
 
 	public void ClampSectionCount() {
 		while (sections.Count > maxSections) RemoveFirstSection();
-		Debug.Log(sections.Count);
 	}
 
 	public bool HasSections() {return sections != null && sections.Count > 0;}
@@ -56,6 +55,7 @@ public class TerrainLine : MonoBehaviour {
 	}
 
 	private void RemoveFirstSection() {
-		sections.RemoveAt(sections.Count - 1);
+		TerrainLineSection firstSection = sections[0];
+		sections.Remove(firstSection);
 	}
 }

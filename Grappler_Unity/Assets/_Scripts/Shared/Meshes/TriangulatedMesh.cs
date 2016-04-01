@@ -37,7 +37,8 @@ public class TriangulatedMesh : MonoBehaviour {
 	}
 
 	public void ClearMesh() {
-		verts.Clear();
 		tris.Clear();
+		verts.Clear();
+		meshFilter.mesh.Clear();
 	}
 }
