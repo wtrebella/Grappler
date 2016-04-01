@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class TerrainLineSectionGroupGenerator {
 	private TerrainLineSectionAttributes attributes;
-	private int resolution = 5;
+	private int resolution = 3;
 
 	public TerrainLineSectionGroupGenerator(TerrainLineSectionAttributes attributes) {
 		this.attributes = attributes;
@@ -19,7 +19,7 @@ public class TerrainLineSectionGroupGenerator {
 		Vector2 nextStartPoint = startPoint;
 
 		for (int i = 0; i < resolution; i++) {
-			TerrainLineSection section = GenerateSection(nextStartPoint, sectionLength, startSlope + deltaSlope * i);
+			TerrainLineSection section = GenerateSection(nextStartPoint, sectionLength / resolution, startSlope + deltaSlope * i);
 			nextStartPoint = section.endPoint;
 			sectionGroup.Add(section);
 		}

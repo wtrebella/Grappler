@@ -4,6 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(TerrainLine))]
 public class TerrainLineDebug : MonoBehaviour {
 	public bool isOn = true;
+	[Range(0.1f, 0.9f)] public float sphereRadius = 0.5f;
 
 	private enum GizmoColorType {
 		Color1,
@@ -36,21 +37,19 @@ public class TerrainLineDebug : MonoBehaviour {
 			if (i % 2 == 1) SetGizmoColorType1();
 			else SetGizmoColorType2();
 			UpdateGizmoColor();
-			DrawGizmosForSection(terrainLine.sections[i]);
+			DrawGizmosForSection(terrainLine.sections[i], i == terrainLine.sections.Count - 1);
 		}
 	}
 
-	private void DrawGizmosForSection(TerrainLineSection section) {
+	private void DrawGizmosForSection(TerrainLineSection section, bool withEndPoint) {
 		DrawGizmoForPoint(section.startPoint);
-		foreach (Vector2 point in section.midPoints) {
-			DrawGizmoForPoint(point);
-		}
+		foreach (Vector2 point in section.midPoints) DrawGizmoForPoint(point);
+		if (withEndPoint) DrawGizmoForPoint(section.endPoint);
 	}
 
 	private void DrawGizmoForPoint(Vector2 point) {
-		float radius = 0.5f;
 		Vector3 point3D = new Vector3(point.x, point.y, transform.position.z);
-		Gizmos.DrawSphere(point3D, radius);
+		Gizmos.DrawSphere(point3D, sphereRadius);
 	}
 
 	private void SetGizmoColorType1() {

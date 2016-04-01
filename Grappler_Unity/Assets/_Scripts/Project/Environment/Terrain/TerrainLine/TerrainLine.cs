@@ -14,11 +14,26 @@ public class TerrainLine : MonoBehaviour {
 		return sections != null && sections.Count > 0;
 	}
 
+	public List<Vector2> GetPoints() {
+		if (!HasSections()) return null;
+
+		List<Vector2> points = new List<Vector2>();
+		for (int i = 0; i < sections.Count; i++) {
+			TerrainLineSection section = sections[i];
+			points.Add(section.startPoint);
+			foreach (Vector2 point in section.midPoints) points.Add(point);
+			if (i == sections.Count - 1) points.Add(section.endPoint);
+		}
+		return points;
+	}
+
 	private void Awake() {
 		sections = new List<TerrainLineSection>();
 		sectionGenerator = new TerrainLineSectionGroupGenerator(sectionAttributes);
+	}
 
-		AddSectionsToLine(sectionGenerator.GenerateCurve(Vector2.zero, 10.0f, 0.1f, 0.9f));
+	private void Start() {
+		AddSectionsToLine(sectionGenerator.GenerateCurve(GameScreen.instance.lowerLeft, 30.0f, 0.1f, 0.9f));
 		TerrainLineSection lastSection = sections.GetLastItem();
 		AddSectionToLine(sectionGenerator.GenerateSection(lastSection.endPoint, 30.0f, 0.2f));
 	}
