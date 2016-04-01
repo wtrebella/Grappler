@@ -6,22 +6,18 @@ using System.Collections.Generic;
 public class TerrainMesh : MonoBehaviour {
 	[SerializeField] private TerrainLine terrainLine;
 
+	private bool isDirty = false;
+
 	private TriangulatedMesh mesh;
 
-	private void Awake() {
-		mesh = GetComponent<TriangulatedMesh>();
+	public void SetDirty() {
+		isDirty = true;
 	}
 
-	private void Update() {
-//		InitMesh();
-	}
+	private void Redraw() {
+		isDirty = false;
 
-	private bool hasInited = false;
-	private void InitMesh() {
-		if (hasInited) return;
 		List<Vector2> points = terrainLine.GetPoints();
-
-		hasInited = true;
 
 		Vector2 firstPoint = terrainLine.GetFirstPoint();
 		Vector2 lastPoint = terrainLine.GetLastPoint();
@@ -39,5 +35,13 @@ public class TerrainMesh : MonoBehaviour {
 		points.Add(p4);
 
 		mesh.RedrawMesh(points.ToArray());
+	}
+
+	private void Awake() {
+		mesh = GetComponent<TriangulatedMesh>();
+	}
+
+	private void LateUpdate() {
+		if (isDirty) Redraw();
 	}
 }

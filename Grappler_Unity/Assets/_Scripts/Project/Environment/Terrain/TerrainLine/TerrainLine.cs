@@ -8,10 +8,16 @@ public class TerrainLine : MonoBehaviour {
 
 	[SerializeField] private TerrainLineSectionAttributes sectionAttributes;
 
+	private int maxSections = 10;
 	private TerrainLineSectionGroupGenerator sectionGenerator;
 
 	public void AddStraightLine() {
 		AddSection(sectionGenerator.GenerateSection(GetLastSection(), 30.0f, 0.1f));
+	}
+
+	public void ClampSectionCount() {
+		while (sections.Count > maxSections) RemoveFirstSection();
+		Debug.Log(sections.Count);
 	}
 
 	public bool HasSections() {return sections != null && sections.Count > 0;}
@@ -21,8 +27,6 @@ public class TerrainLine : MonoBehaviour {
 	public Vector2 GetLastPoint() {return sections.GetLastItem().endPoint;}
 
 	public List<Vector2> GetPoints() {
-		if (!AssertHasSections()) return null;
-
 		List<Vector2> points = new List<Vector2>();
 		for (int i = 0; i < sections.Count; i++) {
 			TerrainLineSection section = sections[i];
@@ -36,16 +40,11 @@ public class TerrainLine : MonoBehaviour {
 	private void Awake() {
 		sections = new List<TerrainLineSection>();
 		sectionGenerator = new TerrainLineSectionGroupGenerator(sectionAttributes);
+		AddFirstSection();
+	}
+
+	private void AddFirstSection() {
 		AddSection(sectionGenerator.GenerateSection(Vector2.zero, 5.0f, 0.0f));
-	}
-
-	private void Start() {
-//		AddSections(sectionGenerator.GenerateCurve(GameScreen.instance.lowerLeft, 30.0f, 0.1f, 0.9f));
-//		AddSection(sectionGenerator.GenerateSection(GetLastSection(), 30.0f, 0.2f));
-	}
-
-	private bool AssertHasSections() {
-		return WhitTools.Assert(HasSections(), "has no sections!");
 	}
 
 	private void AddSection(TerrainLineSection sectionToAdd) {
@@ -53,6 +52,10 @@ public class TerrainLine : MonoBehaviour {
 	}
 
 	private void AddSections(List<TerrainLineSection> sectionsToAdd) {
-		foreach (TerrainLineSection section in sectionsToAdd) sections.Add(section);
+		foreach (TerrainLineSection section in sectionsToAdd) AddSection(section);
+	}
+
+	private void RemoveFirstSection() {
+		sections.RemoveAt(sections.Count - 1);
 	}
 }
