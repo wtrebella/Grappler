@@ -27,8 +27,8 @@ public class TerrainLineSectionGroupGenerator {
 		return sectionGroup;
 	}
 
-	public TerrainLineSection GenerateSection(TerrainLineSectionConfig config) {
-		return new TerrainLineSection(config, attributes);
+	public List<TerrainLineSection> GenerateCurve(TerrainLineSection previousSection, float sectionLength, float startSlope, float endSlope) {
+		return GenerateCurve(previousSection.endPoint, sectionLength, startSlope, endSlope);
 	}
 
 	public TerrainLineSection GenerateSection(Vector2 startPoint, float length, float slope) {
@@ -40,10 +40,10 @@ public class TerrainLineSectionGroupGenerator {
 	}
 
 	public TerrainLineSection GenerateSection(TerrainLineSection previousSection, float length, float slope) {
-		TerrainLineSectionConfig config = new TerrainLineSectionConfig();
-		config.startPoint = previousSection.endPoint;
-		config.length = length;
-		config.slope = slope;
-		return GenerateSection(config);
+		return GenerateSection(previousSection.endPoint, length, slope);
+	}
+
+	private TerrainLineSection GenerateSection(TerrainLineSectionConfig config) {
+		return new TerrainLineSection(config, attributes);
 	}
 }

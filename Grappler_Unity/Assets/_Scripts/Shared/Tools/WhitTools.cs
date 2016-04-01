@@ -29,8 +29,9 @@ public static class WhitTools {
 		if (unityEvent != null) unityEvent.Invoke(list);
 	}
 
-	public static void Assert(bool condition, string errorString = "") {
+	public static bool Assert(bool condition, string errorString = "") {
 		if (!condition) Debug.LogError(errorString);
+		return condition;
 	}
 
 	public static int IncrementWithWrap(int value, IntRange wrapRange) {
