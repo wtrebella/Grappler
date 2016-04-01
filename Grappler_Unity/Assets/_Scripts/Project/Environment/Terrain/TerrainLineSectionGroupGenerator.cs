@@ -27,11 +27,11 @@ public class TerrainLineSectionGroupGenerator {
 		return sectionGroup;
 	}
 
-	private TerrainLineSection GenerateSection(TerrainLineSectionConfig config) {
+	public TerrainLineSection GenerateSection(TerrainLineSectionConfig config) {
 		return new TerrainLineSection(config, attributes);
 	}
 
-	private TerrainLineSection GenerateSection(Vector2 startPoint, float length, float slope) {
+	public TerrainLineSection GenerateSection(Vector2 startPoint, float length, float slope) {
 		TerrainLineSectionConfig config = new TerrainLineSectionConfig();
 		config.startPoint = startPoint;
 		config.length = length;
@@ -39,7 +39,7 @@ public class TerrainLineSectionGroupGenerator {
 		return GenerateSection(config);
 	}
 
-	private TerrainLineSection GenerateSection(TerrainLineSection previousSection, float length, float slope) {
+	public TerrainLineSection GenerateSection(TerrainLineSection previousSection, float length, float slope) {
 		TerrainLineSectionConfig config = new TerrainLineSectionConfig();
 		config.startPoint = previousSection.endPoint;
 		config.length = length;

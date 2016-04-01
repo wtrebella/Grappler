@@ -18,12 +18,17 @@ public class TerrainLine : MonoBehaviour {
 		sections = new List<TerrainLineSection>();
 		sectionGenerator = new TerrainLineSectionGroupGenerator(sectionAttributes);
 
-		var sectionGroup = sectionGenerator.GenerateCurve(Vector2.zero, 10.0f, 0.1f, 0.9f);
-		foreach (TerrainLineSection section in sectionGroup) sections.Add(section);
+		AddSectionsToLine(sectionGenerator.GenerateCurve(Vector2.zero, 10.0f, 0.1f, 0.9f));
+		TerrainLineSection lastSection = sections.GetLastItem();
+		AddSectionToLine(sectionGenerator.GenerateSection(lastSection.endPoint, 30.0f, 0.2f));
 	}
 
-	private void AddSections() {
+	private void AddSectionToLine(TerrainLineSection sectionToAdd) {
+		sections.Add(sectionToAdd);
+	}
 
+	private void AddSectionsToLine(List<TerrainLineSection> sectionsToAdd) {
+		foreach (TerrainLineSection section in sectionsToAdd) sections.Add(section);
 	}
 
 	private void RemoveFirstSection() {
