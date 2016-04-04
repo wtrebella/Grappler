@@ -7,8 +7,8 @@ public class TerrainLine : MonoBehaviour {
 	public List<TerrainLineSection> sections {get; private set;}
 
 	[SerializeField] private TerrainLineSectionAttributes sectionAttributes;
+	[SerializeField] private int maxSections = 5;
 
-	private int maxSections = 10;
 	private TerrainLineSectionGroupGenerator sectionGenerator;
 
 	public void AddStraightLine() {
@@ -43,7 +43,7 @@ public class TerrainLine : MonoBehaviour {
 	}
 
 	private void AddFirstSection() {
-		AddSection(sectionGenerator.GenerateSection(Vector2.zero, 5.0f, 0.0f));
+		AddSection(sectionGenerator.GenerateSection(transform.position, 5.0f, 0.0f));
 	}
 
 	private void AddSection(TerrainLineSection sectionToAdd) {

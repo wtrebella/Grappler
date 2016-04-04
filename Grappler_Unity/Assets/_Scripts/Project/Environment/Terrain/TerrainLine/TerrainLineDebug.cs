@@ -48,7 +48,8 @@ public class TerrainLineDebug : MonoBehaviour {
 	}
 
 	private void DrawGizmoForPoint(Vector2 point) {
-		Vector3 point3D = new Vector3(point.x, point.y, transform.position.z);
+		Vector3 point3D = transform.TransformPoint(new Vector3(point.x, point.y, 0));
+
 		Gizmos.DrawSphere(point3D, sphereRadius);
 	}
 

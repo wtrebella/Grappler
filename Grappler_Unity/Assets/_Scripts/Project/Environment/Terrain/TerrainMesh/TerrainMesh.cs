@@ -4,7 +4,15 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(TriangulatedMesh))]
 public class TerrainMesh : MonoBehaviour {
+	public enum TerrainMeshType {
+		None,
+		BottomEdge,
+		TopEdge
+	}
+
+	[SerializeField] private TerrainMeshType meshType;
 	[SerializeField] private TerrainLine terrainLine;
+	[SerializeField] private PolygonCollider2D polygonCollider;
 
 	private bool isDirty = false;
 
@@ -24,7 +32,7 @@ public class TerrainMesh : MonoBehaviour {
 		float amt = 50.0f;
 
 		Vector2 p1 = lastPoint + Vector2.right * amt;
-		Vector2 p2 = p1 + Vector2.up * amt;
+		Vector2 p2 = p1 + GetMeshDirection() * amt;
 		Vector2 p3 = new Vector2(firstPoint.x - amt, p2.y);
 		Vector2 p4 = new Vector2(p3.x, firstPoint.y);
 
@@ -33,7 +41,18 @@ public class TerrainMesh : MonoBehaviour {
 		points.Add(p3);
 		points.Add(p4);
 
-		mesh.RedrawMesh(points.ToArray());
+		var pointsArray = points.ToArray();
+		polygonCollider.points = pointsArray;
+		mesh.RedrawMesh(pointsArray);
+	}
+
+	private Vector2 GetMeshDirection() {
+		if (meshType == TerrainMeshType.BottomEdge) return Vector2.up;
+		else if (meshType == TerrainMeshType.TopEdge) return Vector2.down;
+		else {
+			Debug.LogError("invalid mesh type: " + meshType.ToString());
+			return Vector2.zero;
+		}
 	}
 
 	private void Awake() {
