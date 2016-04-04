@@ -18,7 +18,10 @@ public class TerrainLineManager : MonoBehaviour {
 	}
 
 	private void AddNewSection() {
-		terrainLine.AddStraightLine();
+		// TODO you need to make an overall terrain controller that actually controls
+		// both ground AND terrain together, with preset patterns and slopes and curves
+		// and shit like that.
+		terrainLine.AddStraightLine(Random.Range(0.0f, 0.2f));
 		terrainMesh.SetDirty();
 	}
 }

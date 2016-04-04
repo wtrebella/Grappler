@@ -11,8 +11,8 @@ public class TerrainLine : MonoBehaviour {
 
 	private TerrainLineSectionGroupGenerator sectionGenerator;
 
-	public void AddStraightLine() {
-		AddSection(sectionGenerator.GenerateSection(GetLastSection(), 30.0f, 0.1f));
+	public void AddStraightLine(float slope) {
+		AddSection(sectionGenerator.GenerateSection(GetLastSection(), 30.0f, slope));
 	}
 
 	public void ClampSectionCount() {
@@ -24,6 +24,20 @@ public class TerrainLine : MonoBehaviour {
 	public TerrainLineSection GetLastSection() {return sections.GetLastItem();}
 	public Vector2 GetFirstPoint() {return sections.GetFirstItem().startPoint;}
 	public Vector2 GetLastPoint() {return sections.GetLastItem().endPoint;}
+	public Vector2 GetFirstPointGlobal() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
+	public Vector2 GetLastPointGlobal() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
+
+	public Vector2 GetAveragePointAtX(float x) {
+		Vector2 firstPoint = GetFirstPointGlobal();
+		Vector2 lastPoint = GetLastPointGlobal();
+
+		Vector2 totalVector = lastPoint - firstPoint;
+		float width = totalVector.x;
+		float relativeX = x - firstPoint.x;
+		float percent = relativeX / width;
+		Vector2 point = firstPoint + percent * totalVector;
+		return point;
+	}
 
 	public List<Vector2> GetPoints() {
 		List<Vector2> points = new List<Vector2>();
