@@ -16,15 +16,36 @@ public class WhitTerrainGroup : MonoBehaviour {
 		return WhitTools.GetAveragePoint(GetAveragePointsAtX(x));
 	}
 
-	public void AddPart(float slope) {
-		foreach (WhitTerrain terrainLine in terrains) terrainLine.AddPart(slope);
+	public Vector2 GetDirectionAtEnd() {
+		return WhitTools.GetSumPoint(GetDirectionsAtEnd()).normalized;
 	}
 
-	public bool HasSections() {
+	public void AddStraight(float slope, float length) {
+		foreach (WhitTerrain terrain in terrains) terrain.AddStraight(slope, length);
+	}
+
+	public void AddCurve(float targetSlope) {
+		foreach (WhitTerrain terrain in terrains) terrain.AddCurve(targetSlope);
+	}
+
+	public void AddCurveThenStraight(float targetSlope, float straightLength) {
+		foreach (WhitTerrain terrain in terrains) terrain.AddCurveThenStraight(targetSlope, straightLength);
+	}
+
+	public bool AllTerrainIsValid() {
 		foreach (WhitTerrain terrainLine in terrains) {
-			if (!terrainLine.HasSections()) return false;
+			if (!terrainLine.TerrainIsValid()) return false;
 		}
 		return true;
+	}
+
+	private Vector2[] GetDirectionsAtEnd() {
+		Vector2[] directions = new Vector2[terrains.Length];
+		for (int i = 0; i < terrains.Length; i++) {
+			WhitTerrain terrain = terrains[i];
+			directions[i] = terrain.GetDirectionAtEnd();
+		}
+		return directions;
 	}
 
 	private Vector2[] GetLastPoints() {

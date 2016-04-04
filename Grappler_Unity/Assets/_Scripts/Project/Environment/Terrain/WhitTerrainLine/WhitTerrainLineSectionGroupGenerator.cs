@@ -10,21 +10,23 @@ public class WhitTerrainLineSectionGroupGenerator {
 		this.attributes = attributes;
 	}
 
-	public List<WhitTerrainLineSection> GenerateCurve(Vector2 startPoint, float sectionLength, float startSlope, float endSlope) {
+	public List<WhitTerrainLineSection> GenerateCurve(Vector2 startPoint, float curveLength, float startSlope, float endSlope) {
 		float slopeRange = endSlope - startSlope;
 		float deltaSlope = slopeRange / (resolution - 1);
 
-		List<WhitTerrainLineSection> sectionGroup = new List<WhitTerrainLineSection>();
+		List<WhitTerrainLineSection> sections = new List<WhitTerrainLineSection>();
 
 		Vector2 nextStartPoint = startPoint;
 
 		for (int i = 0; i < resolution; i++) {
-			WhitTerrainLineSection section = GenerateSection(nextStartPoint, sectionLength / resolution, startSlope + deltaSlope * i);
+			float sectionLength = curveLength / resolution;
+			float sectionSlope = startSlope + deltaSlope * i;
+			WhitTerrainLineSection section = GenerateSection(nextStartPoint, sectionLength, sectionSlope);
 			nextStartPoint = section.endPoint;
-			sectionGroup.Add(section);
+			sections.Add(section);
 		}
 
-		return sectionGroup;
+		return sections;
 	}
 
 	public List<WhitTerrainLineSection> GenerateCurve(WhitTerrainLineSection previousSection, float sectionLength, float startSlope, float endSlope) {

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System;
 
 public class WhitTerrainLine : MonoBehaviour {
+	private static float lengthThreshold = 1.0f;
+	private static float curveRadius = 10.0f;
+
 	public List<WhitTerrainLineSection> sections {get; private set;}
 
 	[SerializeField] private WhitTerrainLineSectionAttributes sectionAttributes;
@@ -11,8 +14,20 @@ public class WhitTerrainLine : MonoBehaviour {
 
 	private WhitTerrainLineSectionGroupGenerator sectionGenerator;
 
-	public void AddPart(float slope) {
-		AddSection(sectionGenerator.GenerateSection(GetLastSection(), 30.0f, slope));
+	public void AddStraight(float slope, float length) {
+		if (length < lengthThreshold) return;
+		AddSection(sectionGenerator.GenerateSection(GetLastSection(), length, slope));
+	}
+
+	public void AddCurve(float targetSlope) {
+		float sectionLength;
+		float startSlope = GetLastSectionSlope();
+		float deltaSlope = targetSlope - startSlope;
+		float angle = deltaSlope * WhitTools.Slope2Deg;
+		float arcPercent = angle / 360.0f;
+		float length = 2 * Mathf.PI * curveRadius * arcPercent;
+		if (length < lengthThreshold) return;
+		AddSections(sectionGenerator.GenerateCurve(GetLastSection(), length, startSlope, targetSlope));
 	}
 
 	public void ClampSectionCount() {
@@ -26,6 +41,14 @@ public class WhitTerrainLine : MonoBehaviour {
 	public Vector2 GetLastPointLocal() {return sections.GetLastItem().endPoint;}
 	public Vector2 GetFirstPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
 	public Vector2 GetLastPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
+
+	public Vector2 GetLastSectionDirection() {
+		return GetLastSection().GetDirection();
+	}
+
+	public float GetLastSectionSlope() {
+		return GetLastSection().slope;
+	}
 
 	public Vector2 GetAveragePointAtX(float x) {
 		Vector2 firstPoint = GetFirstPoint();

@@ -8,26 +8,36 @@ public static class WhitTools {
 	public const float UnitsToPixels = 32.0f;
 	public const float GameUnitsToUnityUnits = 50.0f;
 	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
+	public const float Slope2Rad = Mathf.PI / 2f;
+	public const float Rad2Slope = 2f / Mathf.PI;
+	public const float Slope2Deg = (Mathf.PI / 2f) * Mathf.Rad2Deg;
+	public const float Deg2Slope = (2f / Mathf.PI) * Mathf.Deg2Rad;
 
 	public static Vector2 SlopeToDirection(float slope) {
-		Vector2 direction = new Vector2();
-		direction.x = Mathf.Cos(slope);
-		direction.y = Mathf.Sin(slope);
-		return direction;
+		Vector2 slopeVector = new Vector2();
+		float angle = slope * Slope2Rad;
+		slopeVector.x = Mathf.Cos(angle);
+		slopeVector.y = Mathf.Sin(angle);
+		slopeVector.Normalize();
+		return slopeVector;
 	}
 
 	public static float DirectionToSlope(Vector2 direction) {
-		// TODO not tested: need to probably add some things at the end
-		// maybe -90?
-		float slope = Mathf.Atan2(direction.y, direction.x);
+		float angle = Mathf.Atan2(direction.y, direction.x);
+		float slope = angle * Rad2Slope;
 		return slope;
 	}
 
 	public static Vector2 GetAveragePoint(params Vector2[] points) {
-		Vector2 totalPoints = Vector2.zero;
-		foreach (Vector2 point in points) totalPoints += point;
-		Vector2 averagePoint = totalPoints / points.Length;
+		Vector2 sumPoints = GetSumPoint(points);
+		Vector2 averagePoint = sumPoints / points.Length;
 		return averagePoint;
+	}
+
+	public static Vector2 GetSumPoint(params Vector2[] points) {
+		Vector2 sumPoints = Vector2.zero;
+		foreach (Vector2 point in points) sumPoints += point;
+		return sumPoints;
 	}
 
 	public static bool SpriteDefinitionIsNull(tk2dSpriteDefinition sprite) {
@@ -92,14 +102,6 @@ public static class WhitTools {
 	public static float DirectionToAngle(Vector2 direction) {
 		float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 		return angle;
-	}
-
-	public static Vector2 SlopeToVector2(float slope) {
-		Vector2 slopeVector = new Vector2();
-		slopeVector.x = Mathf.Cos(slope * Mathf.PI / 2f);
-		slopeVector.y = Mathf.Sin(slope * Mathf.PI / 2f);
-		slopeVector.Normalize();
-		return slopeVector;
 	}
 
 	// based on algorithm found here: http://www.geometrylab.de/applet-29-en#twopeasants

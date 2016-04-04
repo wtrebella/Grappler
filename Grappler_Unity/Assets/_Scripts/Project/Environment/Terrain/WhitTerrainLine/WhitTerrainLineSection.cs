@@ -28,8 +28,12 @@ public class WhitTerrainLineSection {
 		BumpifyMidPoints();
 	}
 
+	public Vector2 GetDirection() {
+		return (endPoint - startPoint).normalized;
+	}
+
 	private void CalculateSlopeVector() {
-		slopeVector = WhitTools.SlopeToVector2(slope);
+		slopeVector = WhitTools.SlopeToDirection(slope);
 	}
 
 	private void CalculatePerpendicularSlopeVector() {
