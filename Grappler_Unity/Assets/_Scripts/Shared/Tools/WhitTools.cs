@@ -9,6 +9,27 @@ public static class WhitTools {
 	public const float GameUnitsToUnityUnits = 50.0f;
 	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
 
+	public static Vector2 SlopeToDirection(float slope) {
+		Vector2 direction = new Vector2();
+		direction.x = Mathf.Cos(slope);
+		direction.y = Mathf.Sin(slope);
+		return direction;
+	}
+
+	public static float DirectionToSlope(Vector2 direction) {
+		// TODO not tested: need to probably add some things at the end
+		// maybe -90?
+		float slope = Mathf.Atan2(direction.y, direction.x);
+		return slope;
+	}
+
+	public static Vector2 GetAveragePoint(params Vector2[] points) {
+		Vector2 totalPoints = Vector2.zero;
+		foreach (Vector2 point in points) totalPoints += point;
+		Vector2 averagePoint = totalPoints / points.Length;
+		return averagePoint;
+	}
+
 	public static bool SpriteDefinitionIsNull(tk2dSpriteDefinition sprite) {
 		return sprite == null || sprite.name == "" || sprite.name == "Null";
 	}

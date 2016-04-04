@@ -10,6 +10,6 @@ public class GrapplerMenuItems : Editor {
 
 	[MenuItem("Assets/Create/TerrainLineSectionAttributes Asset", false, 102)]
 	public static void CreateTerrainLineSectionAttributesAsset() {
-		ScriptableObjectUtility.CreateAsset<TerrainLineSectionAttributes>();
+		ScriptableObjectUtility.CreateAsset<WhitTerrainLineSectionAttributes>();
 	}
 }

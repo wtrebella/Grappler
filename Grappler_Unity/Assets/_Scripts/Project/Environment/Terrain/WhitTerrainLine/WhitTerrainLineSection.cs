@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 [Serializable]
-public class TerrainLineSection {
+public class WhitTerrainLineSection {
 	public Vector2 startPoint {get {return config.startPoint;}}
 	public float length {get {return config.length;}}
 	public float slope {get {return config.slope;}}
@@ -12,12 +12,12 @@ public class TerrainLineSection {
 	public Vector2 endPoint {get; private set;}
 	public List<Vector2> midPoints {get; private set;}
 
-	private TerrainLineSectionConfig config;
-	private TerrainLineSectionAttributes attributes;
+	private WhitTerrainLineSectionConfig config;
+	private WhitTerrainLineSectionAttributes attributes;
 	private Vector2 slopeVector;
 	private Vector2 perpendicularSlopeVector;
 
-	public TerrainLineSection(TerrainLineSectionConfig config, TerrainLineSectionAttributes attributes) {
+	public WhitTerrainLineSection(WhitTerrainLineSectionConfig config, WhitTerrainLineSectionAttributes attributes) {
 		this.config = config;
 		this.attributes = attributes;
 

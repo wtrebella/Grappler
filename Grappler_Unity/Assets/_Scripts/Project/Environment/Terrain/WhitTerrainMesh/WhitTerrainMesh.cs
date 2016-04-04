@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(TriangulatedMesh))]
-public class TerrainMesh : MonoBehaviour {
-	public enum TerrainMeshType {
+public class WhitTerrainMesh : MonoBehaviour {
+	public enum WhitTerrainMeshType {
 		None,
 		BottomEdge,
 		TopEdge
 	}
 
-	[SerializeField] private TerrainMeshType meshType;
-	[SerializeField] private TerrainLine terrainLine;
+	[SerializeField] private WhitTerrainMeshType meshType;
+	[SerializeField] private WhitTerrainLine terrainLine;
 	[SerializeField] private PolygonCollider2D polygonCollider;
 
 	private bool isDirty = false;
@@ -26,10 +26,10 @@ public class TerrainMesh : MonoBehaviour {
 		isDirty = false;
 
 		List<Vector2> points = terrainLine.GetPoints();
-		Vector2 firstPoint = terrainLine.GetFirstPoint();
-		Vector2 lastPoint = terrainLine.GetLastPoint();
+		Vector2 firstPoint = terrainLine.GetFirstPointLocal();
+		Vector2 lastPoint = terrainLine.GetLastPointLocal();
 
-		float amt = 50.0f;
+		float amt = 100;
 
 		Vector2 p1 = lastPoint + Vector2.right * amt;
 		Vector2 p2 = p1 + GetMeshDirection() * amt;
@@ -47,8 +47,8 @@ public class TerrainMesh : MonoBehaviour {
 	}
 
 	private Vector2 GetMeshDirection() {
-		if (meshType == TerrainMeshType.BottomEdge) return Vector2.up;
-		else if (meshType == TerrainMeshType.TopEdge) return Vector2.down;
+		if (meshType == WhitTerrainMeshType.BottomEdge) return Vector2.up;
+		else if (meshType == WhitTerrainMeshType.TopEdge) return Vector2.down;
 		else {
 			Debug.LogError("invalid mesh type: " + meshType.ToString());
 			return Vector2.zero;

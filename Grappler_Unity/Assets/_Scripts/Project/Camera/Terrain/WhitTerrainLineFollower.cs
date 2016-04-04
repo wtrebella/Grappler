@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TerrainLineFollower : MonoBehaviour {
-	[SerializeField] private TerrainLine[] terrainLines;
+public class WhitTerrainLineFollower : MonoBehaviour {
+	[SerializeField] private WhitTerrainGroup terrainLineGroup;
 	[SerializeField] private float speed = 10;
 	[SerializeField] private float smoothDampTime = 0.3f;
 
@@ -11,13 +11,20 @@ public class TerrainLineFollower : MonoBehaviour {
 
 	private void Update() {
 		x += speed * Time.deltaTime;
-		Vector2 totalPoints = Vector2.zero;
-		foreach (TerrainLine terrainLine in terrainLines) {
-			totalPoints += terrainLine.GetAveragePointAtX(x);
-		}
-		Vector2 averagePoint = totalPoints / terrainLines.Length;
-		Vector3 targetPosition = new Vector3(x, averagePoint.y, transform.position.z);
-		Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref smoothDampVelocity, smoothDampTime);
+
+		Vector3 smoothedPosition = GetSmoothedTargetPosition();
 		transform.position = smoothedPosition;
+	}
+
+	private Vector2 GetTargetPosition() {
+		Vector2 averagePoint = terrainLineGroup.GetAveragePointAtX(x);
+		Vector3 targetPosition = new Vector3(x, averagePoint.y, transform.position.z);
+		return targetPosition;
+	}
+
+	private Vector2 GetSmoothedTargetPosition() {
+		Vector2 targetPosition = GetTargetPosition();
+		Vector3 smoothedPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref smoothDampVelocity, smoothDampTime);
+		return smoothedPosition;
 	}
 }

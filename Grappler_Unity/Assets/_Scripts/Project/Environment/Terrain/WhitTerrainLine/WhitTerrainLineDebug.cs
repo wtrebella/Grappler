@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(TerrainLine))]
-public class TerrainLineDebug : MonoBehaviour {
+[RequireComponent(typeof(WhitTerrainLine))]
+public class WhitTerrainLineDebug : MonoBehaviour {
 	public bool isOn = true;
 	[Range(0.1f, 0.9f)] public float sphereRadius = 0.5f;
 
@@ -11,11 +11,11 @@ public class TerrainLineDebug : MonoBehaviour {
 		Color2
 	}
 
-	private TerrainLine terrainLine;
+	private WhitTerrainLine terrainLine;
 	private GizmoColorType colorType = GizmoColorType.Color1;
 
 	private void Awake() {
-		terrainLine = GetComponent<TerrainLine>();
+		terrainLine = GetComponent<WhitTerrainLine>();
 	}
 
 	private void OnDrawGizmos() {
@@ -41,7 +41,7 @@ public class TerrainLineDebug : MonoBehaviour {
 		}
 	}
 
-	private void DrawGizmosForSection(TerrainLineSection section, bool withEndPoint) {
+	private void DrawGizmosForSection(WhitTerrainLineSection section, bool withEndPoint) {
 		DrawGizmoForPoint(section.startPoint);
 		foreach (Vector2 point in section.midPoints) DrawGizmoForPoint(point);
 		if (withEndPoint) DrawGizmoForPoint(section.endPoint);
