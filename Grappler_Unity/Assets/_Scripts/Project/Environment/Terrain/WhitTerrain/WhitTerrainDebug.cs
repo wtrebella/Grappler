@@ -29,7 +29,7 @@ public class WhitTerrainDebug : MonoBehaviour {
 	}
 
 	private bool TerrainLineIsValid() {
-		return terrainLine != null && terrainLine.HasSections();
+		return terrainLine != null && terrainLine.IsValid();
 	}
 
 	private void DrawGizmos() {

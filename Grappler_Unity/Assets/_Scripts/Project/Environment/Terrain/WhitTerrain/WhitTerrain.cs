@@ -13,12 +13,13 @@ public class WhitTerrain : MonoBehaviour {
 	[SerializeField] private WhitTerrainSectionAttributes sectionAttributes;
 	[SerializeField] private int maxSections = 5;
 
+	private Dictionary<WhitTerrainSection, float> sectionDists;
 	private WhitTerrainSectionGenerator sectionGenerator;
 	private bool changedThisFrame = false;
 
 	public void AddStraight(float slope, float length) {
 		if (length > lengthThreshold) {
-			AddSection(sectionGenerator.GenerateSection(GetLastSection(), length, slope));
+			AddSection(sectionGenerator.GenerateSection(this, GetLastSection(), length, slope));
 		}
 	}
 
@@ -29,11 +30,11 @@ public class WhitTerrain : MonoBehaviour {
 		float arcPercent = Mathf.Abs(angle / 360.0f);
 		float length = 2 * Mathf.PI * radius * arcPercent;
 		if (length > lengthThreshold) {
-			AddSections(sectionGenerator.GenerateCurve(GetLastSection(), length, startSlope, targetSlope));
+			AddSections(sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope));
 		}
 	}
 
-	public bool HasSections() {return sections != null && sections.Count > 0;}
+	public bool IsValid() {return sections != null && sections.Count > 0;}
 	public WhitTerrainSection GetFirstSection() {return sections.GetFirstItem();}
 	public WhitTerrainSection GetLastSection() {return sections.GetLastItem();}
 	public Vector2 GetFirstPointLocal() {return sections.GetFirstItem().startPoint;}
@@ -49,16 +50,18 @@ public class WhitTerrain : MonoBehaviour {
 		return GetLastSection().slope;
 	}
 
-	public Vector2 GetAveragePointAtX(float x) {
-		Vector2 firstPoint = GetFirstPoint();
-		Vector2 lastPoint = GetLastPoint();
+	public Vector2 GetPointAtDist(float dist) {
+		WhitTerrainSection section = GetSectionAtDist(dist);
+		if (section == null) return Vector2.zero;
+		Vector2 position = section.GetPointAtDist(dist);
+		return position;
+	}
 
-		Vector2 totalVector = lastPoint - firstPoint;
-		float width = totalVector.x;
-		float relativeX = x - firstPoint.x;
-		float percent = relativeX / width;
-		Vector2 point = firstPoint + percent * totalVector;
-		return point;
+	public Vector2 GetSurfacePointAtDist(float dist) {
+		WhitTerrainSection section = GetSectionAtDist(dist);
+		if (section == null) return Vector2.zero;
+		Vector2 position = section.GetSurfacePointAtDist(dist);
+		return position;
 	}
 
 	public List<Vector2> GetPoints() {
@@ -75,11 +78,22 @@ public class WhitTerrain : MonoBehaviour {
 	private void Awake() {
 		sections = new List<WhitTerrainSection>();
 		sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
+		sectionDists = new Dictionary<WhitTerrainSection, float>();
 		AddFirstSection();
 	}
 
 	private void Update() {
 		if (changedThisFrame) OnChange();
+	}
+
+	private WhitTerrainSection GetSectionAtDist(float dist) {
+		// TODO you are getting the section wrong here: shouldn't be turned into an index. needs to be gotten based on its distance
+		int index = Mathf.FloorToInt(dist);
+		WhitTerrainSection section;
+		if (index >= sections.Count) section = GetLastSection();
+		else section = sections[index];
+		Debug.Log(index + ", " + section.distStart + ", " + dist);
+		return section;
 	}
 
 	private void ClampSectionCount() {
@@ -93,11 +107,12 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void AddFirstSection() {
-		AddSection(sectionGenerator.GenerateSection(transform.position, 5.0f, 0.0f));
+		AddSection(sectionGenerator.GenerateSection(this, transform.position, 0.0f, 5.0f, 0.0f));
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
 		sections.Add(sectionToAdd);
+		sectionDists.Add(sectionToAdd, sectionToAdd.distStart);
 		changedThisFrame = true;
 	}
 
@@ -107,6 +122,7 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void RemoveFirstSection() {
 		WhitTerrainSection firstSection = sections[0];
+		sectionDists.Remove(firstSection);
 		sections.Remove(firstSection);
 		changedThisFrame = true;
 	}

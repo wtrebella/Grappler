@@ -149,8 +149,8 @@ public class MountainChunk : GeneratableItem {
 	}
 
 	private void FillAllPointsList() {
-		allPoints.AddItemsFromList<Point>(edgePoints);
-		allPoints.AddItemsFromList<Point>(finishingPoints);
+		allPoints.AddAll<Point>(edgePoints);
+		allPoints.AddAll<Point>(finishingPoints);
 	}
 
 	private void RandomizeEdge() {

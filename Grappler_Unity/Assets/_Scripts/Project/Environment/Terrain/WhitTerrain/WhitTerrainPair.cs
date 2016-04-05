@@ -6,7 +6,6 @@ public class WhitTerrainPair : MonoBehaviour {
 	[SerializeField] private WhitTerrain bottomTerrain;
 
 	[SerializeField] private float straightLength = 30;
-//	[SerializeField] priv
 	[SerializeField] private float minRadius = 20;
 
 	public bool shouldContinue = false;
@@ -15,15 +14,27 @@ public class WhitTerrainPair : MonoBehaviour {
 	public bool shouldWiden = false;
 	public bool shouldNarrow = false;
 
-	private float currentSlope = 0;
+	private float currentSlope = 0.2f;
+
+	public Vector2 GetAveragePointAtDist(float dist) {
+		return WhitTools.GetAveragePoint(
+			topTerrain.GetPointAtDist(dist),
+			bottomTerrain.GetPointAtDist(dist)
+		);
+	}
+
+	public bool IsValid() {
+		return topTerrain.IsValid() && bottomTerrain.IsValid();
+	}
 
 	public float GetWidth() {
-		return (topTerrain.GetLastPoint()- bottomTerrain.GetLastPoint()).magnitude;
+		return (topTerrain.GetLastPoint() - bottomTerrain.GetLastPoint()).magnitude;
 	}
 
 	public void Continue() {
-		topTerrain.AddStraight(currentSlope, straightLength);
-		bottomTerrain.AddStraight(currentSlope, straightLength);
+		float slopeVariation = WhitTerrainAttributes.instance.slopeVariationRange.GetRandom();
+		topTerrain.AddStraight(currentSlope + slopeVariation, straightLength);
+		bottomTerrain.AddStraight(currentSlope + slopeVariation, straightLength);
 	}
 
 	public void Widen() {

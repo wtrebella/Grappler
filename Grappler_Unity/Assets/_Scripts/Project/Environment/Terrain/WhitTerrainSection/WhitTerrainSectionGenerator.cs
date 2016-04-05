@@ -10,42 +10,45 @@ public class WhitTerrainSectionGenerator {
 		this.attributes = attributes;
 	}
 
-	public List<WhitTerrainSection> GenerateCurve(Vector2 startPoint, float curveLength, float startSlope, float endSlope) {
+	public List<WhitTerrainSection> GenerateCurve(WhitTerrain terrain, Vector2 startPoint, float dist, float curveLength, float startSlope, float endSlope) {
 		float slopeRange = endSlope - startSlope;
 		float deltaSlope = slopeRange / (resolution - 1);
 
 		List<WhitTerrainSection> sections = new List<WhitTerrainSection>();
 
 		Vector2 nextStartPoint = startPoint;
+		float nextDist = dist;
 
 		for (int i = 0; i < resolution; i++) {
 			float sectionLength = curveLength / resolution;
 			float sectionSlope = startSlope + deltaSlope * i;
-			WhitTerrainSection section = GenerateSection(nextStartPoint, sectionLength, sectionSlope);
+			WhitTerrainSection section = GenerateSection(terrain, nextStartPoint, nextDist, sectionLength, sectionSlope);
 			nextStartPoint = section.endPoint;
+			nextDist = section.distEnd;
 			sections.Add(section);
 		}
 
 		return sections;
 	}
 
-	public List<WhitTerrainSection> GenerateCurve(WhitTerrainSection previousSection, float sectionLength, float startSlope, float endSlope) {
-		return GenerateCurve(previousSection.endPoint, sectionLength, startSlope, endSlope);
+	public List<WhitTerrainSection> GenerateCurve(WhitTerrain terrain, WhitTerrainSection previousSection, float sectionLength, float startSlope, float endSlope) {
+		return GenerateCurve(terrain, previousSection.endPoint, previousSection.distEnd, sectionLength, startSlope, endSlope);
 	}
 
-	public WhitTerrainSection GenerateSection(Vector2 startPoint, float length, float slope) {
+	public WhitTerrainSection GenerateSection(WhitTerrain terrain, Vector2 startPoint, float dist, float length, float slope) {
 		WhitTerrainSectionConfig config = new WhitTerrainSectionConfig();
 		config.startPoint = startPoint;
 		config.length = length;
 		config.slope = slope;
-		return GenerateSection(config);
+		config.distStart = dist;
+		return GenerateSection(terrain, config);
 	}
 
-	public WhitTerrainSection GenerateSection(WhitTerrainSection previousSection, float length, float slope) {
-		return GenerateSection(previousSection.endPoint, length, slope);
+	public WhitTerrainSection GenerateSection(WhitTerrain terrain, WhitTerrainSection previousSection, float length, float slope) {
+		return GenerateSection(terrain, previousSection.endPoint, previousSection.distEnd, length, slope);
 	}
 
-	private WhitTerrainSection GenerateSection(WhitTerrainSectionConfig config) {
-		return new WhitTerrainSection(config, attributes);
+	private WhitTerrainSection GenerateSection(WhitTerrain terrain, WhitTerrainSectionConfig config) {
+		return new WhitTerrainSection(terrain, config, attributes);
 	}
 }

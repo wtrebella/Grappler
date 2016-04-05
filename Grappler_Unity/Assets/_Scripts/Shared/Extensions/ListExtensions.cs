@@ -26,11 +26,11 @@ public static class ListExtensions {
 		else return true;
 	}
 
-	public static void AddItemsFromList<T>(this List<T> list, List<T> otherList) {
+	public static void AddAll<T>(this List<T> list, List<T> otherList) {
 		foreach (T item in otherList) list.Add(item);
 	}
 
-	public static void AddItemsFromArray<T>(this List<T> list, T[] array) {
+	public static void AddAll<T>(this List<T> list, T[] array) {
 		foreach (T item in array) list.Add(item);
 	}
 

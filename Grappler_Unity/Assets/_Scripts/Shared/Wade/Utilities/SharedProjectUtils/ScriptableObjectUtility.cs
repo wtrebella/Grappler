@@ -9,7 +9,7 @@ public static class ScriptableObjectUtility {
 		T asset = ScriptableObject.CreateInstance<T> ();
 		#if UNITY_EDITOR
 		string path = AssetDatabase.GetAssetPath (Selection.activeObject);
-		if (path == "") path = "Assets";
+		if (path == "") path = "Assets/Resources";
 		else if (Path.GetExtension (path) != "") path = path.Replace (Path.GetFileName (AssetDatabase.GetAssetPath (Selection.activeObject)), "");
 		
 		string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath (path + "/" + name + ".asset");
