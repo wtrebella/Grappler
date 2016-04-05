@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(TriangulatedMesh))]
+[RequireComponent(typeof(PolygonCollider2D))]
 public class WhitTerrainMesh : MonoBehaviour {
 	public enum WhitTerrainMeshType {
 		None,
@@ -11,25 +12,21 @@ public class WhitTerrainMesh : MonoBehaviour {
 	}
 
 	[SerializeField] private WhitTerrainMeshType meshType;
-	[SerializeField] private WhitTerrainLine terrainLine;
-	[SerializeField] private PolygonCollider2D polygonCollider;
+	[SerializeField] private WhitTerrain terrain;
 
 	private bool isDirty = false;
 
+	private PolygonCollider2D polygonCollider;
 	private TriangulatedMesh mesh;
-
-	public void SetDirty() {
-		isDirty = true;
-	}
 
 	public void Redraw() {
 		isDirty = false;
 
-		List<Vector2> points = terrainLine.GetPoints();
-		Vector2 firstPoint = terrainLine.GetFirstPointLocal();
-		Vector2 lastPoint = terrainLine.GetLastPointLocal();
+		List<Vector2> points = terrain.GetPoints();
+		Vector2 firstPoint = terrain.GetFirstPointLocal();
+		Vector2 lastPoint = terrain.GetLastPointLocal();
 
-		float amt = 100;
+		float amt = 1000;
 
 		Vector2 p1 = lastPoint + Vector2.right * amt;
 		Vector2 p2 = p1 + GetMeshDirection() * amt;
@@ -57,6 +54,13 @@ public class WhitTerrainMesh : MonoBehaviour {
 
 	private void Awake() {
 		mesh = GetComponent<TriangulatedMesh>();
+		polygonCollider = GetComponent<PolygonCollider2D>();
+
+		terrain.SignalTerrainLineChanged += OnTerrainLineChanged;
+	}
+
+	private void OnTerrainLineChanged() {
+		isDirty = true;
 	}
 
 	private void LateUpdate() {
