@@ -24,12 +24,12 @@ public class WhitTerrainGroup : MonoBehaviour {
 		foreach (WhitTerrain terrain in terrains) terrain.AddStraight(slope, length);
 	}
 
-	public void AddCurve(float targetSlope) {
-		foreach (WhitTerrain terrain in terrains) terrain.AddCurve(targetSlope);
+	public void AddCurve(float targetSlope, float qValue) {
+		foreach (WhitTerrain terrain in terrains) terrain.AddCurve(targetSlope, qValue);
 	}
 
-	public void AddCurveThenStraight(float targetSlope, float straightLength) {
-		foreach (WhitTerrain terrain in terrains) terrain.AddCurveThenStraight(targetSlope, straightLength);
+	public void AddCurveThenStraight(float targetSlope, float qValue, float straightLength) {
+		foreach (WhitTerrain terrain in terrains) terrain.AddCurveThenStraight(targetSlope, qValue, straightLength);
 	}
 
 	public bool AllTerrainIsValid() {

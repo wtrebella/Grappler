@@ -13,7 +13,7 @@ public class WhitTerrainGroupManager : MonoBehaviour {
 
 	private void Update() {
 		if (shouldAddStraight) AddStraight();
-		if (shouldAddBump) AddBump();
+		if (shouldAddBump) AddBumps();
 	}
 
 	private void AddStraight() {
@@ -22,11 +22,15 @@ public class WhitTerrainGroupManager : MonoBehaviour {
 		terrainGroup.AddStraight(0, 30);
 	}
 
-	private void AddBump() {
+	private void AddBumps() {
 		shouldAddBump = false;
 
-		terrainGroup.AddCurveThenStraight(0.5f, 20.0f);
-		terrainGroup.AddCurveThenStraight(-0.5f, 20.0f);
-		terrainGroup.AddCurveThenStraight(0, 20.0f);
+		float qValue;
+
+		qValue = 0.5f;
+		terrainGroup.AddCurve(0.5f, qValue);
+		terrainGroup.AddCurve(0, qValue);
+		terrainGroup.AddCurve(-0.5f, qValue);
+		terrainGroup.AddCurve(0, qValue);
 	}
 }

@@ -9,7 +9,7 @@ public class ScriptableObjectSingleton<T> : ScriptableObject where T : Scriptabl
 		get {
 			if(!_instance) {
 				
-				_instance = Resources.Load(typeof(T).ToString()) as T;
+				_instance = Resources.Load("Attributes/Terrain/" + typeof(T).ToString()) as T;
 #if UNITY_EDITOR
 				if(!_instance) _instance = ScriptableObjectUtility.CreateAsset<T>();
 #endif

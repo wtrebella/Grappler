@@ -12,13 +12,13 @@ public class WhitTerrain : MonoBehaviour {
 		isDirty = true;
 	}
 
-	public void AddCurve(float targetSlope) {
-		terrainLine.AddCurve(targetSlope);
+	public void AddCurve(float targetSlope, float qValue) {
+		terrainLine.AddCurve(targetSlope, qValue);
 		isDirty = true;
 	}
 
-	public void AddCurveThenStraight(float targetSlope, float straightLength) {
-		AddCurve(targetSlope);
+	public void AddCurveThenStraight(float targetSlope, float qValue, float straightLength) {
+		AddCurve(targetSlope, qValue);
 		AddStraight(targetSlope, straightLength);
 	}
 

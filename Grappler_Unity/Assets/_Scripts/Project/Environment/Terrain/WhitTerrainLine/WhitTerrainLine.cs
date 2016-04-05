@@ -5,7 +5,6 @@ using System;
 
 public class WhitTerrainLine : MonoBehaviour {
 	private static float lengthThreshold = 1.0f;
-	private static float curveRadius = 10.0f;
 
 	public List<WhitTerrainLineSection> sections {get; private set;}
 
@@ -15,19 +14,20 @@ public class WhitTerrainLine : MonoBehaviour {
 	private WhitTerrainLineSectionGroupGenerator sectionGenerator;
 
 	public void AddStraight(float slope, float length) {
-		if (length < lengthThreshold) return;
-		AddSection(sectionGenerator.GenerateSection(GetLastSection(), length, slope));
+		if (length > lengthThreshold) {
+			AddSection(sectionGenerator.GenerateSection(GetLastSection(), length, slope));
+		}
 	}
 
-	public void AddCurve(float targetSlope) {
-		float sectionLength;
+	public void AddCurve(float targetSlope, float qValue) {
 		float startSlope = GetLastSectionSlope();
 		float deltaSlope = targetSlope - startSlope;
 		float angle = deltaSlope * WhitTools.Slope2Deg;
-		float arcPercent = angle / 360.0f;
-		float length = 2 * Mathf.PI * curveRadius * arcPercent;
-		if (length < lengthThreshold) return;
-		AddSections(sectionGenerator.GenerateCurve(GetLastSection(), length, startSlope, targetSlope));
+		float arcPercent = Mathf.Abs(angle / 360.0f);
+		float length = 2 * Mathf.PI * QValueToRadius(qValue) * arcPercent;
+		if (length > lengthThreshold) {
+			AddSections(sectionGenerator.GenerateCurve(GetLastSection(), length, startSlope, targetSlope));
+		}
 	}
 
 	public void ClampSectionCount() {
@@ -77,6 +77,11 @@ public class WhitTerrainLine : MonoBehaviour {
 		sections = new List<WhitTerrainLineSection>();
 		sectionGenerator = new WhitTerrainLineSectionGroupGenerator(sectionAttributes);
 		AddFirstSection();
+	}
+
+	private float QValueToRadius(float qValue) {
+		qValue = Mathf.Clamp01(qValue);
+		return WhitTerrainLineAttributes.instance.curveRadiusRange.Lerp(qValue);
 	}
 
 	private void AddFirstSection() {
