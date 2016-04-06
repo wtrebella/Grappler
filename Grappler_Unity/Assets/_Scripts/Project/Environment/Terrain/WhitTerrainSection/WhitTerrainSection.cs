@@ -84,7 +84,7 @@ public class WhitTerrainSection {
 	}
 
 	private float DistToPercent(float dist) {
-		return (dist - distStart) / length;
+		return Mathf.Clamp01((dist - distStart) / length);
 	}
 
 	private float PercentToSurfaceDist(float percent) {

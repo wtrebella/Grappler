@@ -11,7 +11,6 @@ public class WhitTerrain : MonoBehaviour {
 	public List<WhitTerrainSection> sections {get; private set;}
 
 	[SerializeField] private WhitTerrainSectionAttributes sectionAttributes;
-	[SerializeField] private int maxSections = 5;
 
 	private WhitTerrainSectionGenerator sectionGenerator;
 	private bool changedThisFrame = false;
@@ -80,9 +79,12 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void Update() {
 		if (changedThisFrame) OnChange();
+		RemoveOffScreenSections();
 	}
 
 	private WhitTerrainSection GetSectionAtDist(float dist) {
+		if (sections.Count == 0) return null;
+
 		for (int i = 0; i < sections.Count; i++) {
 			WhitTerrainSection section = sections[i];
 			if (section.ContainsDist(dist)) return section;
@@ -91,13 +93,19 @@ public class WhitTerrain : MonoBehaviour {
 		return null;
 	}
 
-	private void ClampSectionCount() {
-		while (sections.Count > maxSections) RemoveFirstSection();
+	private void RemoveOffScreenSections() {
+		while (FirstSectionIsOffScreen()) RemoveFirstSection();
+	}
+
+	private bool FirstSectionIsOffScreen() {
+		Vector2 localEndPoint = GetFirstSection().endPoint;
+		Vector2 worldEndPoint = transform.TransformPoint(localEndPoint);
+		return worldEndPoint.x < GameScreen.instance.lowerLeftWithMargin.x;
 	}
 
 	private void OnChange() {
 		changedThisFrame = false;
-		ClampSectionCount();
+		RemoveOffScreenSections();
 		if (SignalTerrainLineChanged != null) SignalTerrainLineChanged();
 	}
 
