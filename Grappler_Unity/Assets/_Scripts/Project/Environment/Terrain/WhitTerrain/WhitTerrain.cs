@@ -13,7 +13,6 @@ public class WhitTerrain : MonoBehaviour {
 	[SerializeField] private WhitTerrainSectionAttributes sectionAttributes;
 	[SerializeField] private int maxSections = 5;
 
-	private Dictionary<WhitTerrainSection, float> sectionDists;
 	private WhitTerrainSectionGenerator sectionGenerator;
 	private bool changedThisFrame = false;
 
@@ -53,15 +52,13 @@ public class WhitTerrain : MonoBehaviour {
 	public Vector2 GetPointAtDist(float dist) {
 		WhitTerrainSection section = GetSectionAtDist(dist);
 		if (section == null) return Vector2.zero;
-		Vector2 position = section.GetPointAtDist(dist);
-		return position;
+		else return section.GetPointAtDist(dist);
 	}
 
 	public Vector2 GetSurfacePointAtDist(float dist) {
 		WhitTerrainSection section = GetSectionAtDist(dist);
 		if (section == null) return Vector2.zero;
-		Vector2 position = section.GetSurfacePointAtDist(dist);
-		return position;
+		else return section.GetSurfacePointAtDist(dist);
 	}
 
 	public List<Vector2> GetPoints() {
@@ -78,7 +75,6 @@ public class WhitTerrain : MonoBehaviour {
 	private void Awake() {
 		sections = new List<WhitTerrainSection>();
 		sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
-		sectionDists = new Dictionary<WhitTerrainSection, float>();
 		AddFirstSection();
 	}
 
@@ -86,14 +82,13 @@ public class WhitTerrain : MonoBehaviour {
 		if (changedThisFrame) OnChange();
 	}
 
-	private WhitTerrainSection GetSectionAtDist(float dist) {
-		// TODO you are getting the section wrong here: shouldn't be turned into an index. needs to be gotten based on its distance
-		int index = Mathf.FloorToInt(dist);
-		WhitTerrainSection section;
-		if (index >= sections.Count) section = GetLastSection();
-		else section = sections[index];
-		Debug.Log(index + ", " + section.distStart + ", " + dist);
-		return section;
+	public WhitTerrainSection GetSectionAtDist(float dist) {
+		for (int i = 0; i < sections.Count; i++) {
+			WhitTerrainSection section = sections[i];
+			if (section.ContainsDist(dist)) return section;
+		}
+
+		return null;
 	}
 
 	private void ClampSectionCount() {
@@ -112,7 +107,6 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
 		sections.Add(sectionToAdd);
-		sectionDists.Add(sectionToAdd, sectionToAdd.distStart);
 		changedThisFrame = true;
 	}
 
@@ -122,7 +116,6 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void RemoveFirstSection() {
 		WhitTerrainSection firstSection = sections[0];
-		sectionDists.Remove(firstSection);
 		sections.Remove(firstSection);
 		changedThisFrame = true;
 	}

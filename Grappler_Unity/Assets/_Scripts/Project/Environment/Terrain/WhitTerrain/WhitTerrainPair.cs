@@ -17,10 +17,11 @@ public class WhitTerrainPair : MonoBehaviour {
 	private float currentSlope = 0.2f;
 
 	public Vector2 GetAveragePointAtDist(float dist) {
-		return WhitTools.GetAveragePoint(
+		Vector2 averagePoint = WhitTools.GetAveragePoint(
 			topTerrain.GetPointAtDist(dist),
 			bottomTerrain.GetPointAtDist(dist)
 		);
+		return averagePoint;
 	}
 
 	public bool IsValid() {
@@ -90,7 +91,7 @@ public class WhitTerrainPair : MonoBehaviour {
 		}
 		if (shouldContinue) {
 			shouldContinue = false;
-			Continue();
+			for (int i = 0; i < 20; i++) Continue();
 		}
 		if (shouldTurnRight) {
 			shouldTurnRight = false;

@@ -26,7 +26,7 @@ public class WhitTerrainFollower : MonoBehaviour {
 
 	private void IncreaseDist(float distDelta) {
 		dist += speed * Time.deltaTime;
-		Vector3 smoothedPosition = GetSmoothedTargetPosition();
+		Vector3 smoothedPosition = GetTargetPosition();
 		transform.position = smoothedPosition;
 	}
 

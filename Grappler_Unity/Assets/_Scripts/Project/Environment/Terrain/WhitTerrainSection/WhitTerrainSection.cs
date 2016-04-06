@@ -54,6 +54,10 @@ public class WhitTerrainSection {
 		return worldPoint;
 	}
 
+	public bool ContainsDist(float dist) {
+		return dist >= distStart && dist <= distEnd;
+	}
+
 	private Vector2 GetLocalSurfacePointAtPercent(float percent) {
 		percent = Mathf.Clamp01(percent);
 		float targetSurfaceDist = PercentToSurfaceDist(percent);
@@ -78,7 +82,7 @@ public class WhitTerrainSection {
 	}
 
 	private float DistToPercent(float dist) {
-		return dist - distStart;
+		return (dist - distStart) / length;
 	}
 
 	private float PercentToSurfaceDist(float percent) {
