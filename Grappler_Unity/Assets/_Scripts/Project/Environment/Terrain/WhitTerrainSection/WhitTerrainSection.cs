@@ -44,7 +44,9 @@ public class WhitTerrainSection {
 
 	public Vector2 GetPointAtDist(float dist) {
 		float percent = DistToPercent(dist);
-		return startPoint + GetDirection() * length * percent;
+		Vector2 localPoint = startPoint + GetDirection() * length * percent;
+		Vector2 worldPoint = terrain.transform.TransformPoint(localPoint);
+		return worldPoint;
 	}
 
 	public Vector2 GetSurfacePointAtDist(float dist) {

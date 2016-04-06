@@ -82,7 +82,7 @@ public class WhitTerrain : MonoBehaviour {
 		if (changedThisFrame) OnChange();
 	}
 
-	public WhitTerrainSection GetSectionAtDist(float dist) {
+	private WhitTerrainSection GetSectionAtDist(float dist) {
 		for (int i = 0; i < sections.Count; i++) {
 			WhitTerrainSection section = sections[i];
 			if (section.ContainsDist(dist)) return section;

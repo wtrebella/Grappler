@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class WhitTerrainFollower : MonoBehaviour {
+	[SerializeField] private bool smooth = true;
 	[SerializeField] private bool placeAtStart = true;
 	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private float speed = 10;
@@ -26,7 +27,7 @@ public class WhitTerrainFollower : MonoBehaviour {
 
 	private void IncreaseDist(float distDelta) {
 		dist += speed * Time.deltaTime;
-		Vector3 smoothedPosition = GetTargetPosition();
+		Vector3 smoothedPosition = smooth ? GetSmoothedTargetPosition() : GetTargetPosition();
 		transform.position = smoothedPosition;
 	}
 
