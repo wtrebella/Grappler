@@ -10,11 +10,17 @@ public class WhitTerrainPatternInstructionPropertyDrawer : PropertyDrawer {
 		SerializedProperty length = prop.FindPropertyRelative("length");
 		SerializedProperty radius = prop.FindPropertyRelative("radius");
 
-		Rect rect = new Rect(pos.x, pos.y, pos.width, pos.height);
+		EditorGUI.BeginProperty(pos, label, slope);
+		EditorGUI.PropertyField(new Rect(pos.x, pos.y + 20, pos.width, pos.height), slope);
+		EditorGUI.EndProperty();
+//
+//		EditorGUI.BeginProperty(pos, label, length);
+//		EditorGUI.PropertyField(new Rect(pos.x, pos.y + 40, pos.width, pos.height), length);
+//		EditorGUI.EndProperty();
+//		EditorGUI.PropertyField(new Rect(pos.x, pos.y, pos.width, pos.height), instructionType);
 
-		EditorGUI.PropertyField(rect, instructionType);
-		EditorGUI.PropertyField(rect, slope);
-		EditorGUI.PropertyField(rect, length);
-		EditorGUI.PropertyField(rect, radius);
+//		EditorGUI.PropertyField(new Rect(pos.x, pos.y + 60, pos.width, pos.height), length);
+//		EditorGUI.PropertyField(new Rect(pos.x, pos.y + 90, pos.width, pos.height), radius);
+
 	}
 }
