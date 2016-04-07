@@ -2,43 +2,43 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class WhitTerrainPairPatternManager : MonoBehaviour {
-	private List<WhitTerrainPairPattern> patterns;
-
-	private void Awake() {
-		InitializePatterns();
-	}
-
-	private void InitializePatterns() {
-		patterns = new List<WhitTerrainPairPattern>();
-
-		InitializeStraightPattern();
-	}
-
-	private void InitializeStraightPattern() {
-		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(0.0f, 30.0f);
-		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(0.0f, 30.0f);
+public class WhitTerrainPairPatternManager {
+	public static WhitTerrainPairPattern GetStraightPattern(float currentSlope, float length) {
+		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);
+		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);
 		WhitTerrainPatternInstructionPair straight = new WhitTerrainPatternInstructionPair(topStraight, bottomStraight);
 
-		WhitTerrainPairPattern straightPattern = new WhitTerrainPairPattern();
-		straightPattern.AddInstructionPair(straight);
-		patterns.Add(straightPattern);
+		WhitTerrainPairPattern straightPattern = new WhitTerrainPairPattern(straight);
+		return straightPattern;
 	}
 
-	private void InitializeWidenPattern() {
-		float slope = 30.0f;
-
-		WhitTerrainPatternInstructionCurve topCurveOut = new WhitTerrainPatternInstructionCurve(0.5f, slope);
-		WhitTerrainPatternInstructionCurve bottomCurveOut = new WhitTerrainPatternInstructionCurve(-0.5f, slope);
+	public static WhitTerrainPairPattern GetWidenPattern(float currentSlope, float widenSlope, float radius) {
+		WhitTerrainPatternInstructionCurve topCurveOut = new WhitTerrainPatternInstructionCurve(currentSlope + widenSlope, radius);
+		WhitTerrainPatternInstructionCurve bottomCurveOut = new WhitTerrainPatternInstructionCurve(currentSlope - widenSlope, radius);
 		WhitTerrainPatternInstructionPair curveOut = new WhitTerrainPatternInstructionPair(topCurveOut, bottomCurveOut);
 
-		WhitTerrainPatternInstructionCurve topCurveBack = new WhitTerrainPatternInstructionCurve(0.0f, slope);
-		WhitTerrainPatternInstructionCurve bottomCurveBack = new WhitTerrainPatternInstructionCurve(0.0f, slope);
+		WhitTerrainPatternInstructionCurve topCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius);
+		WhitTerrainPatternInstructionCurve bottomCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius);
 		WhitTerrainPatternInstructionPair curveBack = new WhitTerrainPatternInstructionPair(topCurveBack, bottomCurveBack);
 
-		WhitTerrainPairPattern widenPattern = new WhitTerrainPairPattern();
-		widenPattern.AddInstructionPair(curveOut);
-		widenPattern.AddInstructionPair(curveBack);
-		patterns.Add(widenPattern);
+		WhitTerrainPairPattern widenPattern = new WhitTerrainPairPattern(curveOut, curveBack);
+		return widenPattern;
+	}
+
+	public static WhitTerrainPairPattern GetBumpPattern(float currentSlope, float bumpSlope, float minRadius, float maxRadius) {
+		WhitTerrainPatternInstructionCurve topTurn1 = new WhitTerrainPatternInstructionCurve(currentSlope + bumpSlope, minRadius);
+		WhitTerrainPatternInstructionCurve bottomTurn1 = new WhitTerrainPatternInstructionCurve(currentSlope + bumpSlope, maxRadius);
+		WhitTerrainPatternInstructionPair turn1 = new WhitTerrainPatternInstructionPair(topTurn1, bottomTurn1);
+
+		WhitTerrainPatternInstructionCurve topTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope * 2, maxRadius);
+		WhitTerrainPatternInstructionCurve bottomTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope * 2, minRadius);
+		WhitTerrainPatternInstructionPair turn2 = new WhitTerrainPatternInstructionPair(topTurn2, bottomTurn2);
+
+		WhitTerrainPatternInstructionCurve topTurn3 = new WhitTerrainPatternInstructionCurve(currentSlope, minRadius);
+		WhitTerrainPatternInstructionCurve bottomTurn3 = new WhitTerrainPatternInstructionCurve(currentSlope, maxRadius);
+		WhitTerrainPatternInstructionPair turn3 = new WhitTerrainPatternInstructionPair(topTurn3, bottomTurn3);
+
+		WhitTerrainPairPattern bumpPattern = new WhitTerrainPairPattern(turn1, turn2, turn3);
+		return bumpPattern;
 	}
 }

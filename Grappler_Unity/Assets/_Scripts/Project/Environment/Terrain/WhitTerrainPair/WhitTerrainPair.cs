@@ -8,12 +8,6 @@ public class WhitTerrainPair : MonoBehaviour {
 	[SerializeField] private float straightLength = 30;
 	[SerializeField] private float minRadius = 20;
 
-	public bool shouldContinue = false;
-	public bool shouldTurnRight = false;
-	public bool shouldTurnLeft = false;
-	public bool shouldWiden = false;
-	public bool shouldNarrow = false;
-
 	private float currentSlope = 0.1f;
 
 	public Vector2 GetAveragePointAtDist(float dist) {
@@ -36,71 +30,50 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Continue() {
-		float slopeVariation = WhitTerrainAttributes.instance.slopeVariationRange.GetRandom();
-		topTerrain.AddStraight(currentSlope + slopeVariation, straightLength);
-		bottomTerrain.AddStraight(currentSlope + slopeVariation, straightLength);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetStraightPattern(currentSlope, 30.0f);
+		AddPattern(pattern);
 	}
 
-//	public void Bump(float slope, float radius
-
-	public void Widen(float slope, float radius) {
-		topTerrain.AddCurve(currentSlope + slope, radius);
-		bottomTerrain.AddCurve(currentSlope - slope, radius);
-
-		topTerrain.AddCurve(currentSlope, radius);
-		bottomTerrain.AddCurve(currentSlope, radius);
+	public void Widen() {
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetWidenPattern(currentSlope, 0.2f, 30.0f);
+		AddPattern(pattern);
 	}
 
-	public void Narrow(float slope, float radius) {
-		topTerrain.AddCurve(currentSlope - slope, radius);
-		bottomTerrain.AddCurve(currentSlope + slope, radius);
-
-		topTerrain.AddCurve(currentSlope, radius);
-		bottomTerrain.AddCurve(currentSlope, radius);
-	}
-
-	public void TurnToSlope(float slope) {
-		bool clockwise = slope < currentSlope;
+	public void Bump() {
+		float minRadius = 20;
 		float maxRadius = minRadius + GetWidth();
-
-		if (clockwise) {
-			topTerrain.AddCurve(slope, maxRadius);
-			bottomTerrain.AddCurve(slope, minRadius);
-		}
-		else {
-			topTerrain.AddCurve(slope, minRadius);
-			bottomTerrain.AddCurve(slope, maxRadius);
-		}
-
-		currentSlope = slope;
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetBumpPattern(currentSlope, 0.3f, minRadius, maxRadius);
+		AddPattern(pattern);
 	}
 
-	public void TurnBySlope(float deltaSlope) {
-		TurnToSlope(currentSlope + deltaSlope);
+	private void AddPattern(WhitTerrainPairPattern pattern) {
+		foreach (WhitTerrainPatternInstructionPair instructionPair in pattern.instructionPairs) {
+			if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
+				WhitTerrainPatternInstructionStraight topInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.topInstruction;
+				topTerrain.AddStraight(topInstruction.slope, topInstruction.length);
+			}
+			else if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
+				WhitTerrainPatternInstructionCurve topInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.topInstruction;
+				topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius);
+			}
+
+			if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
+				WhitTerrainPatternInstructionStraight bottomInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.bottomInstruction;
+				bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length);
+			}
+			else if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
+				WhitTerrainPatternInstructionCurve bottomInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.bottomInstruction;
+				bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
+			}
+		}
 	}
 
 	private void Update() {
-		if (NeedsNewPart()) Continue();
-
-		if (shouldWiden) {
-			shouldWiden = false;
-			Widen(0.5f, 30.0f);
-		}
-		if (shouldNarrow) {
-			shouldNarrow = false;
-			Narrow(0.5f, 30.0f);
-		}
-		if (shouldContinue) {
-			shouldContinue = false;
-			Continue();
-		}
-		if (shouldTurnRight) {
-			shouldTurnRight = false;
-			TurnBySlope(-0.3f);
-		}
-		if (shouldTurnLeft) {
-			shouldTurnLeft = false;
-			TurnBySlope(0.3f);
+		if (NeedsNewPart()) {
+			float val = Random.value;
+			if (val < 0.8f) Continue();
+			else if (val < 0.9f) Widen();
+			else Bump();
 		}
 	}
 }
