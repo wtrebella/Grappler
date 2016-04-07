@@ -13,6 +13,7 @@ public class WhitTerrainMesh : MonoBehaviour {
 
 	[SerializeField] private WhitTerrainMeshType meshType;
 	[SerializeField] private WhitTerrain terrain;
+	[SerializeField] private float outlineSize = 100;
 
 	private bool isDirty = false;
 
@@ -22,15 +23,13 @@ public class WhitTerrainMesh : MonoBehaviour {
 	public void Redraw() {
 		isDirty = false;
 
-		List<Vector2> points = terrain.GetPoints();
+		List<Vector2> points = terrain.GetPointsLocal();
 		Vector2 firstPoint = terrain.GetFirstPointLocal();
 		Vector2 lastPoint = terrain.GetLastPointLocal();
 
-		float amt = 1000;
-
-		Vector2 p1 = lastPoint + Vector2.right * amt;
-		Vector2 p2 = p1 + GetMeshDirection() * amt;
-		Vector2 p3 = new Vector2(firstPoint.x - amt, p2.y);
+		Vector2 p1 = lastPoint + Vector2.right * outlineSize;
+		Vector2 p2 = p1 + GetMeshDirection() * outlineSize;
+		Vector2 p3 = new Vector2(firstPoint.x - outlineSize, p2.y);
 		Vector2 p4 = new Vector2(p3.x, firstPoint.y);
 
 		points.Add(p1);

@@ -14,13 +14,17 @@ public class WhitTerrainPair : MonoBehaviour {
 	public bool shouldWiden = false;
 	public bool shouldNarrow = false;
 
-	private float currentSlope = 0.2f;
+	private float currentSlope = 0.1f;
 
 	public Vector2 GetAveragePointAtDist(float dist) {
 		Vector2 topPoint = topTerrain.GetPointAtDist(dist);
 		Vector2 bottomPoint = bottomTerrain.GetPointAtDist(dist);
 		Vector2 averagePoint = WhitTools.GetAveragePoint(topPoint, bottomPoint);
 		return averagePoint;
+	}
+
+	public bool NeedsNewPart() {
+		return topTerrain.LastSectionIsPastScreenMargin() || bottomTerrain.LastSectionIsPastScreenMargin();
 	}
 
 	public bool IsValid() {
@@ -37,10 +41,9 @@ public class WhitTerrainPair : MonoBehaviour {
 		bottomTerrain.AddStraight(currentSlope + slopeVariation, straightLength);
 	}
 
-	public void Widen() {
-		float slope = 0.5f;
-		float radius = 30;
+//	public void Bump(float slope, float radius
 
+	public void Widen(float slope, float radius) {
 		topTerrain.AddCurve(currentSlope + slope, radius);
 		bottomTerrain.AddCurve(currentSlope - slope, radius);
 
@@ -48,10 +51,7 @@ public class WhitTerrainPair : MonoBehaviour {
 		bottomTerrain.AddCurve(currentSlope, radius);
 	}
 
-	public void Narrow() {
-		float slope = 0.5f;
-		float radius = 30;
-
+	public void Narrow(float slope, float radius) {
 		topTerrain.AddCurve(currentSlope - slope, radius);
 		bottomTerrain.AddCurve(currentSlope + slope, radius);
 
@@ -59,20 +59,20 @@ public class WhitTerrainPair : MonoBehaviour {
 		bottomTerrain.AddCurve(currentSlope, radius);
 	}
 
-	public void TurnToSlope(float targetSlope) {
-		bool clockwise = targetSlope < currentSlope;
+	public void TurnToSlope(float slope) {
+		bool clockwise = slope < currentSlope;
 		float maxRadius = minRadius + GetWidth();
 
 		if (clockwise) {
-			topTerrain.AddCurve(targetSlope, maxRadius);
-			bottomTerrain.AddCurve(targetSlope, minRadius);
+			topTerrain.AddCurve(slope, maxRadius);
+			bottomTerrain.AddCurve(slope, minRadius);
 		}
 		else {
-			topTerrain.AddCurve(targetSlope, minRadius);
-			bottomTerrain.AddCurve(targetSlope, maxRadius);
+			topTerrain.AddCurve(slope, minRadius);
+			bottomTerrain.AddCurve(slope, maxRadius);
 		}
 
-		currentSlope = targetSlope;
+		currentSlope = slope;
 	}
 
 	public void TurnBySlope(float deltaSlope) {
@@ -80,17 +80,19 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void Update() {
+		if (NeedsNewPart()) Continue();
+
 		if (shouldWiden) {
 			shouldWiden = false;
-			Widen();
+			Widen(0.5f, 30.0f);
 		}
 		if (shouldNarrow) {
 			shouldNarrow = false;
-			Narrow();
+			Narrow(0.5f, 30.0f);
 		}
 		if (shouldContinue) {
 			shouldContinue = false;
-			for (int i = 0; i < 20; i++) Continue();
+			Continue();
 		}
 		if (shouldTurnRight) {
 			shouldTurnRight = false;

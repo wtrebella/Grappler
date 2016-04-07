@@ -14,6 +14,7 @@ public class WhitTerrain : MonoBehaviour {
 
 	private WhitTerrainSectionGenerator sectionGenerator;
 	private bool changedThisFrame = false;
+	private int maxSections = 30;
 
 	public void AddStraight(float slope, float length) {
 		if (length > lengthThreshold) {
@@ -60,7 +61,7 @@ public class WhitTerrain : MonoBehaviour {
 		else return section.GetSurfacePointAtDist(dist);
 	}
 
-	public List<Vector2> GetPoints() {
+	public List<Vector2> GetPointsLocal() {
 		List<Vector2> points = new List<Vector2>();
 		for (int i = 0; i < sections.Count; i++) {
 			WhitTerrainSection section = sections[i];
@@ -69,6 +70,12 @@ public class WhitTerrain : MonoBehaviour {
 			if (i == sections.Count - 1) points.Add(section.endPoint);
 		}
 		return points;
+	}
+
+	public bool LastSectionIsPastScreenMargin() {
+		Vector2 localEndPoint = GetLastSection().startPoint;
+		Vector2 worldEndPoint = transform.TransformPoint(localEndPoint);
+		return worldEndPoint.x < GameScreen.instance.lowerRightWithMargin.x;
 	}
 
 	private void Awake() {
@@ -94,10 +101,10 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void RemoveOffScreenSections() {
-		while (FirstSectionIsOffScreen()) RemoveFirstSection();
+		while (FirstSectionIsPastScreenMargin()) RemoveFirstSection();
 	}
 
-	private bool FirstSectionIsOffScreen() {
+	private bool FirstSectionIsPastScreenMargin() {
 		Vector2 localEndPoint = GetFirstSection().endPoint;
 		Vector2 worldEndPoint = transform.TransformPoint(localEndPoint);
 		return worldEndPoint.x < GameScreen.instance.lowerLeftWithMargin.x;
@@ -114,6 +121,7 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
+		if (sections.Count >= maxSections) return;
 		sections.Add(sectionToAdd);
 		changedThisFrame = true;
 	}
