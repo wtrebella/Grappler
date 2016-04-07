@@ -25,6 +25,19 @@ public class WhitTerrainPairPatternManager {
 		return widenPattern;
 	}
 
+	public static WhitTerrainPairPattern GetNarrowPattern(float currentSlope, float narrowSlope, float radius) {
+		WhitTerrainPatternInstructionCurve topCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope - narrowSlope, radius);
+		WhitTerrainPatternInstructionCurve bottomCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope + narrowSlope, radius);
+		WhitTerrainPatternInstructionPair curveOut = new WhitTerrainPatternInstructionPair(topCurveIn, bottomCurveIn);
+
+		WhitTerrainPatternInstructionCurve topCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius);
+		WhitTerrainPatternInstructionCurve bottomCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius);
+		WhitTerrainPatternInstructionPair curveBack = new WhitTerrainPatternInstructionPair(topCurveBack, bottomCurveBack);
+
+		WhitTerrainPairPattern narrowPattern = new WhitTerrainPairPattern(curveOut, curveBack);
+		return narrowPattern;
+	}
+
 	public static WhitTerrainPairPattern GetBumpPattern(float currentSlope, float bumpSlope, float minRadius, float maxRadius) {
 		WhitTerrainPatternInstructionCurve topTurn1 = new WhitTerrainPatternInstructionCurve(currentSlope + bumpSlope, minRadius);
 		WhitTerrainPatternInstructionCurve bottomTurn1 = new WhitTerrainPatternInstructionCurve(currentSlope + bumpSlope, maxRadius);

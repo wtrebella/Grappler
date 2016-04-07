@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WhitTerrainPair : MonoBehaviour {
 	[SerializeField] private WhitTerrain topTerrain;
@@ -8,7 +9,11 @@ public class WhitTerrainPair : MonoBehaviour {
 	[SerializeField] private float straightLength = 30;
 	[SerializeField] private float minRadius = 20;
 
-	private float currentSlope = 0.1f;
+	[SerializeField] private float initialSlope = 0.1f;
+	[SerializeField] private float initialWidth = 16.0f;
+
+	private float currentSlope;
+	private float currentWidth;
 
 	public Vector2 GetAveragePointAtDist(float dist) {
 		Vector2 topPoint = topTerrain.GetPointAtDist(dist);
@@ -39,11 +44,24 @@ public class WhitTerrainPair : MonoBehaviour {
 		AddPattern(pattern);
 	}
 
+	public void Narrow() {
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetNarrowPattern(currentSlope, 0.2f, 30.0f);
+		AddPattern(pattern);
+	}
+
 	public void Bump() {
 		float minRadius = 20;
 		float maxRadius = minRadius + GetWidth();
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetBumpPattern(currentSlope, 0.3f, minRadius, maxRadius);
 		AddPattern(pattern);
+	}
+
+	private void AddRandomPattern() {
+		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
+		if (patternType == WhitTerrainPairPatternType.Continue) Continue();
+		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
+		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
+		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
 	}
 
 	private void AddPattern(WhitTerrainPairPattern pattern) {
@@ -68,12 +86,15 @@ public class WhitTerrainPair : MonoBehaviour {
 		}
 	}
 
+	private void Awake() {
+		currentSlope = initialSlope;
+		currentWidth = initialWidth;
+
+		topTerrain.Initialize(Vector2.zero);
+		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
+	}
+
 	private void Update() {
-		if (NeedsNewPart()) {
-			float val = Random.value;
-			if (val < 0.8f) Continue();
-			else if (val < 0.9f) Widen();
-			else Bump();
-		}
+		if (NeedsNewPart()) AddRandomPattern();
 	}
 }

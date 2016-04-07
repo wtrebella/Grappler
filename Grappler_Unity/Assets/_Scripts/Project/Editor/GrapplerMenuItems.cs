@@ -8,13 +8,18 @@ public class GrapplerMenuItems : Editor {
 		ScriptableObjectUtility.CreateAsset<MountainChunkAttributes>();
 	}
 
-	[MenuItem("Assets/Create/TerrainLineSectionAttributes Asset", false, 102)]
-	public static void CreateTerrainLineSectionAttributesAsset() {
+	[MenuItem("Assets/Create/WhitTerrainSectionAttributes Asset", false, 102)]
+	public static void CreateWhitTerrainSectionAttributesAsset() {
 		ScriptableObjectUtility.CreateAsset<WhitTerrainSectionAttributes>();
 	}
 
-	[MenuItem("Assets/Create/TerrainLineAttributes Asset", false, 102)]
-	public static void CreateTerrainLineAttributesAsset() {
+	[MenuItem("Assets/Create/WhitTerrainAttributes Asset", false, 102)]
+	public static void CreateWhitTerrainAttributesAsset() {
 		ScriptableObjectUtility.CreateAsset<WhitTerrainAttributes>();
+	}
+
+	[MenuItem("Assets/Create/WhitTerrainPairAttributes Asset", false, 102)]
+	public static void CreateWhitTerrainPairAttributesAsset() {
+		ScriptableObjectUtility.CreateAsset<WhitTerrainPairAttributes>();
 	}
 }

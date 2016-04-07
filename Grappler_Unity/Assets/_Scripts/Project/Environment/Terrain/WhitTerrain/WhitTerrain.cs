@@ -16,6 +16,12 @@ public class WhitTerrain : MonoBehaviour {
 	private bool changedThisFrame = false;
 	private int maxSections = 30;
 
+	public void Initialize(Vector2 startPoint) {
+		sections = new List<WhitTerrainSection>();
+		sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
+		AddFirstSection(startPoint);
+	}
+
 	public void AddStraight(float slope, float length) {
 		if (length > lengthThreshold) {
 			AddSection(sectionGenerator.GenerateSection(this, GetLastSection(), length, slope));
@@ -78,12 +84,6 @@ public class WhitTerrain : MonoBehaviour {
 		return worldEndPoint.x < GameScreen.instance.lowerRightWithMargin.x;
 	}
 
-	private void Awake() {
-		sections = new List<WhitTerrainSection>();
-		sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
-		AddFirstSection();
-	}
-
 	private void Update() {
 		if (changedThisFrame) OnChange();
 		RemoveOffScreenSections();
@@ -101,13 +101,15 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void RemoveOffScreenSections() {
-		while (FirstSectionIsPastScreenMargin()) RemoveFirstSection();
+		while (NeedsToRemoveFirstSection()) RemoveFirstSection();
 	}
 
-	private bool FirstSectionIsPastScreenMargin() {
-		Vector2 localEndPoint = GetFirstSection().endPoint;
-		Vector2 worldEndPoint = transform.TransformPoint(localEndPoint);
-		return worldEndPoint.x < GameScreen.instance.lowerLeftWithMargin.x;
+	private float GetTotalDistanceWidth() {
+		return GetLastSection().distEnd - GetFirstSection().distStart;
+	}
+
+	private bool NeedsToRemoveFirstSection() {
+		return GetTotalDistanceWidth() > WhitTerrainAttributes.instance.drawDistanceWidth;
 	}
 
 	private void OnChange() {
@@ -116,8 +118,8 @@ public class WhitTerrain : MonoBehaviour {
 		if (SignalTerrainLineChanged != null) SignalTerrainLineChanged();
 	}
 
-	private void AddFirstSection() {
-		AddSection(sectionGenerator.GenerateSection(this, transform.position, 0.0f, 5.0f, 0.0f));
+	private void AddFirstSection(Vector2 startPoint) {
+		AddSection(sectionGenerator.GenerateSection(this, startPoint, 0.0f, 5.0f, 0.0f));
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
