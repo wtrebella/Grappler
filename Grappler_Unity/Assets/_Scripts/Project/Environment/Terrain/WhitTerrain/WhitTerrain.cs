@@ -14,7 +14,6 @@ public class WhitTerrain : MonoBehaviour {
 
 	private WhitTerrainSectionGenerator sectionGenerator;
 	private bool changedThisFrame = false;
-	private int maxSections = 30;
 
 	public void Initialize(Vector2 startPoint) {
 		sections = new List<WhitTerrainSection>();
@@ -24,7 +23,8 @@ public class WhitTerrain : MonoBehaviour {
 
 	public void AddStraight(float slope, float length) {
 		if (length > lengthThreshold) {
-			AddSection(sectionGenerator.GenerateSection(this, GetLastSection(), length, slope));
+			var newSection = sectionGenerator.GenerateSection(this, GetLastSection(), length, slope);
+			AddSection(newSection);
 		}
 	}
 
@@ -35,7 +35,8 @@ public class WhitTerrain : MonoBehaviour {
 		float arcPercent = Mathf.Abs(angle / 360.0f);
 		float length = 2 * Mathf.PI * radius * arcPercent;
 		if (length > lengthThreshold) {
-			AddSections(sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope));
+			var newSections = sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope);
+			AddSections(newSections);
 		}
 	}
 
@@ -78,10 +79,9 @@ public class WhitTerrain : MonoBehaviour {
 		return points;
 	}
 
-	public bool LastSectionIsPastScreenMargin() {
-		Vector2 localEndPoint = GetLastSection().startPoint;
-		Vector2 worldEndPoint = transform.TransformPoint(localEndPoint);
-		return worldEndPoint.x < GameScreen.instance.lowerRightWithMargin.x;
+	public bool DistIsWithinDistThreshold(float dist) {
+		float distFromLastSection = GetLastSection().distStart - dist;
+		return distFromLastSection < WhitTerrainAttributes.instance.playerDistThreshold;
 	}
 
 	private void Update() {
@@ -94,7 +94,16 @@ public class WhitTerrain : MonoBehaviour {
 
 		for (int i = 0; i < sections.Count; i++) {
 			WhitTerrainSection section = sections[i];
-			if (section.ContainsDist(dist)) return section;
+
+			if (i == 0) {
+				if (dist < section.distEnd) return section;
+			}
+			else if (i == sections.Count - 1) {
+				if (dist > section.distStart) return section;
+			}
+			else {
+				if (section.ContainsDist(dist)) return section;
+			}
 		}
 
 		return null;
@@ -109,7 +118,7 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private bool NeedsToRemoveFirstSection() {
-		return GetTotalDistanceWidth() > WhitTerrainAttributes.instance.drawDistanceWidth;
+		return GetTotalDistanceWidth() > WhitTerrainAttributes.instance.drawDistWidth;
 	}
 
 	private void OnChange() {
@@ -123,7 +132,6 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
-		if (sections.Count >= maxSections) return;
 		sections.Add(sectionToAdd);
 		changedThisFrame = true;
 	}

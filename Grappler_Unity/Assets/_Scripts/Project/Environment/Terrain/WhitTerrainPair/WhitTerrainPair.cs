@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPair : MonoBehaviour {
+	[SerializeField] private WhitTerrainFollower playerTest;
+
 	[SerializeField] private WhitTerrain topTerrain;
 	[SerializeField] private WhitTerrain bottomTerrain;
 
@@ -21,9 +23,24 @@ public class WhitTerrainPair : MonoBehaviour {
 		Vector2 averagePoint = WhitTools.GetAveragePoint(topPoint, bottomPoint);
 		return averagePoint;
 	}
+		
+	public void AddRandomPattern() {
+		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
+		if (patternType == WhitTerrainPairPatternType.Continue) Continue();
+		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
+		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
+		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
+	}
 
-	public bool NeedsNewPart() {
-		return topTerrain.LastSectionIsPastScreenMargin() || bottomTerrain.LastSectionIsPastScreenMargin();
+	private void Update() {
+		Debug.Log(topTerrain.GetLastSection().distStart + ", " + bottomTerrain.GetLastSection().distStart);
+		if (NeedsNewPattern(playerTest.dist)) AddRandomPattern();
+	}
+
+	public bool NeedsNewPattern(float playerDist) {
+		bool needsTopPattern = topTerrain.DistIsWithinDistThreshold(playerDist);
+		bool needsBottomPattern = bottomTerrain.DistIsWithinDistThreshold(playerDist);
+		return needsTopPattern || needsBottomPattern;
 	}
 
 	public bool IsValid() {
@@ -56,14 +73,6 @@ public class WhitTerrainPair : MonoBehaviour {
 		AddPattern(pattern);
 	}
 
-	private void AddRandomPattern() {
-		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
-		if (patternType == WhitTerrainPairPatternType.Continue) Continue();
-		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
-		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
-		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
-	}
-
 	private void AddPattern(WhitTerrainPairPattern pattern) {
 		foreach (WhitTerrainPatternInstructionPair instructionPair in pattern.instructionPairs) {
 			if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
@@ -92,9 +101,5 @@ public class WhitTerrainPair : MonoBehaviour {
 
 		topTerrain.Initialize(Vector2.zero);
 		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
-	}
-
-	private void Update() {
-		if (NeedsNewPart()) AddRandomPattern();
 	}
 }

@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class WhitTerrainFollower : MonoBehaviour {
+	public float dist {get; private set;}
+
 	[SerializeField] private bool smooth = true;
 	[SerializeField] private bool placeAtStart = true;
 	[SerializeField] private WhitTerrainPair terrainPair;
@@ -9,7 +11,10 @@ public class WhitTerrainFollower : MonoBehaviour {
 	[SerializeField] private float smoothDampTime = 0.3f;
 
 	private Vector3 smoothDampVelocity;
-	private float dist = 0;
+
+	private void Awake() {
+		dist = 0;
+	}
 
 	private void Start() {
 		if (placeAtStart) PlaceAtStart();
