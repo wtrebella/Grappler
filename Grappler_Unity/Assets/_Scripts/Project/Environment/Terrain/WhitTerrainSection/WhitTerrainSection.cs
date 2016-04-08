@@ -3,30 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-[Serializable]
-public class WhitTerrainSection {
+public class WhitTerrainSection : MonoBehaviour {
 	public Vector2 startPoint {get {return config.startPoint;}}
 	public float length {get {return config.length;}}
 	public float slope {get {return config.slope;}}
 	public float distStart {get {return config.distStart;}}
 
+	public float surfaceDistStart {get {return surfaceDists[0];}}
+	public float surfaceDistEnd {get {return surfaceDists[allPoints.Count - 1];}}
+
+	public WhitTerrain terrain {get; private set;}
 	public Vector2 endPoint {get; private set;}
 	public List<Vector2> midPoints {get; private set;}
 	public List<Vector2> allPoints {get; private set;}
 	public float surfaceLength {get; private set;}
 	public float distEnd {get; private set;}
 
-	private WhitTerrain terrain;
 	private Dictionary<int, float> surfaceDists;
 	private WhitTerrainSectionConfig config;
 	private WhitTerrainSectionAttributes attributes;
 	private Vector2 slopeVector;
 	private Vector2 perpendicularSlopeVector;
 
-	public WhitTerrainSection(WhitTerrain terrain, WhitTerrainSectionConfig config, WhitTerrainSectionAttributes attributes) {
+	public void Initialize(WhitTerrain terrain, WhitTerrainSectionConfig config, WhitTerrainSectionAttributes attributes) {
 		this.terrain = terrain;
 		this.config = config;
 		this.attributes = attributes;
+
+		transform.parent = terrain.transform;
+		transform.localPosition = Vector2.zero;
 
 		CalculateSlopeVector();
 		CalculatePerpendicularSlopeVector();
@@ -49,11 +54,37 @@ public class WhitTerrainSection {
 		return worldPoint;
 	}
 
-	public Vector2 GetSurfacePointAtDist(float dist) {
-		float percent = DistToPercent(dist);
+	public Vector2 GetSurfacePointAtPercent(float percent) {
+		percent = Mathf.Clamp01(percent);
 		Vector2 localPoint = GetLocalSurfacePointAtPercent(percent);
 		Vector2 worldPoint = terrain.transform.TransformPoint(localPoint);
 		return worldPoint;
+	}
+
+	public Vector2 GetSurfacePointAtDist(float dist) {
+		float percent = SurfaceDistToPercent(dist);
+		return GetSurfacePointAtPercent(percent);
+	}
+
+	public Vector2 GetSurfacePointAtRelativeDist(float relativeDist) {
+		float percent = RelativeSurfaceDistToPercent(relativeDist);
+		return GetSurfacePointAtPercent(percent);
+	}
+
+	private float DistToPercent(float dist) {
+		return RelativeDistToPercent(dist - distStart);
+	}
+
+	private float RelativeDistToPercent(float relativeDist) {
+		return Mathf.Clamp01(relativeDist / length);
+	}
+
+	private float SurfaceDistToPercent(float surfaceDist) {
+		return RelativeDistToPercent(surfaceDist - surfaceDistStart);
+	}
+
+	private float RelativeSurfaceDistToPercent(float relativeSurfaceDist) {
+		return Mathf.Clamp01(relativeSurfaceDist / surfaceLength);
 	}
 
 	public bool ContainsDist(float dist) {
@@ -81,10 +112,6 @@ public class WhitTerrainSection {
 		Vector2 segmentDirection = (pointB - pointA).normalized;
 		Vector2 position = pointA + segmentDirection * targetSegmentDist;
 		return position;
-	}
-
-	private float DistToPercent(float dist) {
-		return Mathf.Clamp01((dist - distStart) / length);
 	}
 
 	private float PercentToSurfaceDist(float percent) {
@@ -150,11 +177,14 @@ public class WhitTerrainSection {
 	private void GenerateEndPoint() {
 		endPoint = startPoint + slopeVector * length;
 	}
-		
+
 	private void BumpifyMidPoints() {
+		// TODO fix this so it's not a hacky solution
+		float bumpHeightMultiplier = 1;
+		if (midPoints.Count <= 2) bumpHeightMultiplier = 0.3f;
 		for (int i = 0; i < midPoints.Count; i++) {
 			Vector2 point = midPoints[i];
-			float bumpHeight = UnityEngine.Random.Range(-attributes.maxBumpHeight, attributes.maxBumpHeight);
+			float bumpHeight = bumpHeightMultiplier * UnityEngine.Random.Range(-attributes.maxBumpHeight, attributes.maxBumpHeight);
 			point += perpendicularSlopeVector * bumpHeight;
 			midPoints[i] = point;
 		}

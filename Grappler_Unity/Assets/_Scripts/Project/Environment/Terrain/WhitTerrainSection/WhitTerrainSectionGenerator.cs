@@ -48,6 +48,8 @@ public class WhitTerrainSectionGenerator {
 	}
 
 	private WhitTerrainSection GenerateSection(WhitTerrain terrain, WhitTerrainSectionConfig config) {
-		return new WhitTerrainSection(terrain, config, attributes);
+		WhitTerrainSection section = new GameObject("Section", typeof(WhitTerrainSection)).GetComponent<WhitTerrainSection>();
+		section.Initialize(terrain, config, attributes);
+		return section;
 	}
 }

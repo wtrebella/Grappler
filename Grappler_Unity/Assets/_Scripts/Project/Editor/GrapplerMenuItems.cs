@@ -13,11 +13,6 @@ public class GrapplerMenuItems : Editor {
 		ScriptableObjectUtility.CreateAsset<WhitTerrainSectionAttributes>();
 	}
 
-	[MenuItem("Assets/Create/WhitTerrainAttributes Asset", false, 102)]
-	public static void CreateWhitTerrainAttributesAsset() {
-		ScriptableObjectUtility.CreateAsset<WhitTerrainAttributes>();
-	}
-
 	[MenuItem("Assets/Create/WhitTerrainPairAttributes Asset", false, 102)]
 	public static void CreateWhitTerrainPairAttributesAsset() {
 		ScriptableObjectUtility.CreateAsset<WhitTerrainPairAttributes>();

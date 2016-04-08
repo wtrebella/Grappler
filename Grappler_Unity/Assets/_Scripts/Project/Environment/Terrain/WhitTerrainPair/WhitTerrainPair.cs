@@ -43,11 +43,11 @@ public class WhitTerrainPair : MonoBehaviour {
 		return endDist;
 	}
 
-	public float GetTotalDist() {
-		float topTotalDist = topTerrain.GetTotalDist();
-		float bottomTotalDist = bottomTerrain.GetTotalDist();
-		float totalDist = (topTotalDist + bottomTotalDist) / 2f;
-		return totalDist;
+	public float GetDistLength() {
+		float topDistLength = topTerrain.GetDistLength();
+		float bottomDistLength = bottomTerrain.GetDistLength();
+		float distLength = (topDistLength + bottomDistLength) / 2f;
+		return distLength;
 	}
 		
 	public void AddRandomPattern() {
@@ -81,7 +81,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Straight() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope, GetTopStraightLength(), GetBottomStraightLength());
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
 		AddPattern(pattern);
 	}
 
@@ -130,14 +130,14 @@ public class WhitTerrainPair : MonoBehaviour {
 		Vector2 startToPosition = position - startPoint;
 		Vector2 startToEnd = endPoint - startPoint;
 
-		float projection = WhitTools.Project(startToPosition, startToEnd);
-		float totalLength = startToEnd.magnitude;
-		float percent = projection / totalLength;
+		float projection = WhitTools.Project(startToEnd, startToPosition);
+		float totalMagnitude = startToEnd.magnitude;
+		float percent = projection / totalMagnitude;
 
 		float startDist = GetStartDist();
-		float totalDist = GetTotalDist();
+		float distLength = GetDistLength();
 
-		float dist = startDist + totalDist * percent;
+		float dist = startDist + distLength * percent;
 
 		return dist;
 	}

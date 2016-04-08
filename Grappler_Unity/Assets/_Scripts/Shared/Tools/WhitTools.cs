@@ -14,7 +14,8 @@ public static class WhitTools {
 	public const float Deg2Slope = (2f / Mathf.PI) * Mathf.Deg2Rad;
 
 	public static float Project(Vector2 a, Vector2 b) {
-		return Vector2.Dot(a, b) / a.magnitude;
+		float projection = Vector2.Dot(a, b) / a.magnitude;
+		return projection;
 	}
 
 	public static Vector2 SlopeToDirection(float slope) {

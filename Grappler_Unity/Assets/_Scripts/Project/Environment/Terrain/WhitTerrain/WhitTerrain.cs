@@ -7,6 +7,8 @@ public class WhitTerrain : MonoBehaviour {
 	private static float lengthThreshold = 1.0f;
 
 	public Action SignalTerrainChanged;
+	public Action<WhitTerrainSection> SignalTerrainSectionAdded;
+	public Action<WhitTerrainSection> SignalTerrainSectionRemoved;
 
 	public List<WhitTerrainSection> sections {get; private set;}
 
@@ -47,8 +49,8 @@ public class WhitTerrain : MonoBehaviour {
 	public Vector2 GetStartPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
 	public Vector2 GetEndPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
 
-	public float GetTotalDist() {
-		return GetLastSection().distEnd;
+	public float GetDistLength() {
+		return GetEndDist() - GetStartDist();
 	}
 
 	public float GetStartDist() {
@@ -91,8 +93,8 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	public bool DistIsWithinDistThreshold(float dist) {
-		float distToEnd = GetTotalDist() - dist;
-		return distToEnd < WhitTerrainAttributes.instance.playerDistThreshold;
+		float distToEnd = GetEndDist() - dist;
+		return distToEnd < WhitTerrainPairAttributes.instance.playerDistThreshold;
 	}
 
 	private void Update() {
@@ -120,19 +122,15 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void RemoveOffScreenSections() {
-		while (NeedsToRemoveFirstSection()) RemoveFirstSection();
+		while (ShouldRemoveFirstSection()) RemoveFirstSection();
 	}
 
-	private float GetTotalDistanceWidth() {
-		return GetLastSection().distEnd - GetFirstSection().distStart;
-	}
-
-	private bool NeedsToRemoveFirstSection() {
-		return GetTotalDistanceWidth() > WhitTerrainAttributes.instance.drawDistWidth;
+	private bool ShouldRemoveFirstSection() {
+		float distLength = GetDistLength();
+		return distLength > WhitTerrainPairAttributes.instance.drawDistWidth;
 	}
 
 	private void OnChange() {
-		RemoveOffScreenSections();
 		if (SignalTerrainChanged != null) SignalTerrainChanged();
 	}
 
@@ -142,7 +140,8 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
 		sections.Add(sectionToAdd);
-		OnChange();
+		if (SignalTerrainSectionAdded != null) SignalTerrainSectionAdded(sectionToAdd);
+		RemoveOffScreenSections();
 	}
 
 	private void AddSections(List<WhitTerrainSection> sectionsToAdd) {
@@ -152,6 +151,6 @@ public class WhitTerrain : MonoBehaviour {
 	private void RemoveFirstSection() {
 		WhitTerrainSection firstSection = sections[0];
 		sections.Remove(firstSection);
-		OnChange();
+		if (SignalTerrainSectionRemoved != null) SignalTerrainSectionRemoved(firstSection);
 	}
 }

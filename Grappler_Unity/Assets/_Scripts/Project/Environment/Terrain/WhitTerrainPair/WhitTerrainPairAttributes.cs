@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPairAttributes> {
+	public FloatRange slopeVariationRange = new FloatRange(-0.2f, 0.2f);
 	public FloatRange widthRange = new FloatRange(6.0f, 20.0f);
 
+	public float drawDistWidth = 200.0f;
+	public float playerDistThreshold = 30.0f;
 	public float straightLength = 30.0f;
 	public float minCurveRadius = 20.0f;
 
