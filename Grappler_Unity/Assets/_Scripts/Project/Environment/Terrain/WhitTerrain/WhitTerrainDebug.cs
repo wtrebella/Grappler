@@ -11,11 +11,11 @@ public class WhitTerrainDebug : MonoBehaviour {
 		Color2
 	}
 
-	private WhitTerrain terrainLine;
+	private WhitTerrain terrain;
 	private GizmoColorType colorType = GizmoColorType.Color1;
 
 	private void Awake() {
-		terrainLine = GetComponent<WhitTerrain>();
+		terrain = GetComponent<WhitTerrain>();
 	}
 
 	private void OnDrawGizmos() {
@@ -25,19 +25,19 @@ public class WhitTerrainDebug : MonoBehaviour {
 	}
 
 	private bool ShouldDrawGizmos() {
-		return isOn && TerrainLineIsValid();
+		return isOn && TerrainIsValid();
 	}
 
-	private bool TerrainLineIsValid() {
-		return terrainLine != null && terrainLine.IsValid();
+	private bool TerrainIsValid() {
+		return terrain != null && terrain.IsValid();
 	}
 
 	private void DrawGizmos() {
-		for (int i = 0; i < terrainLine.sections.Count; i++) {
+		for (int i = 0; i < terrain.sections.Count; i++) {
 			if (i % 2 == 1) SetGizmoColorType1();
 			else SetGizmoColorType2();
 			UpdateGizmoColor();
-			DrawGizmosForSection(terrainLine.sections[i], i == terrainLine.sections.Count - 1);
+			DrawGizmosForSection(terrain.sections[i], i == terrain.sections.Count - 1);
 		}
 	}
 

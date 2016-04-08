@@ -33,7 +33,6 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void Update() {
-		Debug.Log(topTerrain.GetLastSection().distStart + ", " + bottomTerrain.GetLastSection().distStart);
 		if (NeedsNewPattern(playerTest.dist)) AddRandomPattern();
 	}
 
@@ -52,24 +51,23 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Continue() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetStraightPattern(currentSlope, 30.0f);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope, straightLength);
 		AddPattern(pattern);
 	}
 
 	public void Widen() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetWidenPattern(currentSlope, 0.2f, 30.0f);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetWidenPattern(currentSlope, 0.2f, 30.0f);
 		AddPattern(pattern);
 	}
 
 	public void Narrow() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetNarrowPattern(currentSlope, 0.2f, 30.0f);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetNarrowPattern(currentSlope, 0.2f, 30.0f);
 		AddPattern(pattern);
 	}
 
 	public void Bump() {
-		float minRadius = 20;
 		float maxRadius = minRadius + GetWidth();
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternManager.GetBumpPattern(currentSlope, 0.3f, minRadius, maxRadius);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, minRadius, maxRadius);
 		AddPattern(pattern);
 	}
 
@@ -92,6 +90,21 @@ public class WhitTerrainPair : MonoBehaviour {
 				WhitTerrainPatternInstructionCurve bottomInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.bottomInstruction;
 				bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
 			}
+		}
+
+		ReconcileDistances();
+	}
+
+	private void ReconcileDistances() {
+		float topDist = topTerrain.GetTotalDist();
+		float bottomDist = bottomTerrain.GetTotalDist();
+		if (topDist < bottomDist) {
+			float deltaDist = bottomDist - topDist;
+			topTerrain.AddStraight(currentSlope, deltaDist);
+		}
+		else if (bottomDist < topDist) {
+			float deltaDist = topDist - bottomDist;
+			bottomTerrain.AddStraight(currentSlope, deltaDist);
 		}
 	}
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class WhitTerrainPairPatternManager {
+public class WhitTerrainPairPatternGenerator {
 	public static WhitTerrainPairPattern GetStraightPattern(float currentSlope, float length) {
 		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);
 		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);

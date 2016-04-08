@@ -13,7 +13,7 @@ public class WhitTerrainMesh : MonoBehaviour {
 
 	[SerializeField] private WhitTerrainMeshType meshType;
 	[SerializeField] private WhitTerrain terrain;
-	[SerializeField] private float outlineSize = 100;
+	[SerializeField] private float outlineSize = 200;
 
 	private bool isDirty = false;
 
@@ -55,10 +55,10 @@ public class WhitTerrainMesh : MonoBehaviour {
 		mesh = GetComponent<TriangulatedMesh>();
 		polygonCollider = GetComponent<PolygonCollider2D>();
 
-		terrain.SignalTerrainLineChanged += OnTerrainLineChanged;
+		terrain.SignalTerrainChanged += OnTerrainChanged;
 	}
 
-	private void OnTerrainLineChanged() {
+	private void OnTerrainChanged() {
 		isDirty = true;
 	}
 

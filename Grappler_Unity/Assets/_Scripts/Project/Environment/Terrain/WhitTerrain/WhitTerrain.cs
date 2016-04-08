@@ -6,7 +6,7 @@ using System;
 public class WhitTerrain : MonoBehaviour {
 	private static float lengthThreshold = 1.0f;
 
-	public Action SignalTerrainLineChanged;
+	public Action SignalTerrainChanged;
 
 	public List<WhitTerrainSection> sections {get; private set;}
 
@@ -48,6 +48,10 @@ public class WhitTerrain : MonoBehaviour {
 	public Vector2 GetFirstPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
 	public Vector2 GetLastPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
 
+	public float GetTotalDist() {
+		return GetLastSection().distEnd;
+	}
+
 	public Vector2 GetLastSectionDirection() {
 		return GetLastSection().GetDirection();
 	}
@@ -80,12 +84,12 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	public bool DistIsWithinDistThreshold(float dist) {
-		float distFromLastSection = GetLastSection().distStart - dist;
-		return distFromLastSection < WhitTerrainAttributes.instance.playerDistThreshold;
+		float distToEnd = GetTotalDist() - dist;
+		Debug.Log(name + ": " + distToEnd + ", " + dist + ", " + GetTotalDist());
+		return distToEnd < WhitTerrainAttributes.instance.playerDistThreshold;
 	}
 
 	private void Update() {
-		if (changedThisFrame) OnChange();
 		RemoveOffScreenSections();
 	}
 
@@ -122,9 +126,8 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void OnChange() {
-		changedThisFrame = false;
 		RemoveOffScreenSections();
-		if (SignalTerrainLineChanged != null) SignalTerrainLineChanged();
+		if (SignalTerrainChanged != null) SignalTerrainChanged();
 	}
 
 	private void AddFirstSection(Vector2 startPoint) {
@@ -133,7 +136,7 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
 		sections.Add(sectionToAdd);
-		changedThisFrame = true;
+		OnChange();
 	}
 
 	private void AddSections(List<WhitTerrainSection> sectionsToAdd) {
@@ -143,6 +146,6 @@ public class WhitTerrain : MonoBehaviour {
 	private void RemoveFirstSection() {
 		WhitTerrainSection firstSection = sections[0];
 		sections.Remove(firstSection);
-		changedThisFrame = true;
+		OnChange();
 	}
 }
