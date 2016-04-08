@@ -13,7 +13,6 @@ public class WhitTerrain : MonoBehaviour {
 	[SerializeField] private WhitTerrainSectionAttributes sectionAttributes;
 
 	private WhitTerrainSectionGenerator sectionGenerator;
-	private bool changedThisFrame = false;
 
 	public void Initialize(Vector2 startPoint) {
 		sections = new List<WhitTerrainSection>();
@@ -43,10 +42,10 @@ public class WhitTerrain : MonoBehaviour {
 	public bool IsValid() {return sections != null && sections.Count > 0;}
 	public WhitTerrainSection GetFirstSection() {return sections.GetFirstItem();}
 	public WhitTerrainSection GetLastSection() {return sections.GetLastItem();}
-	public Vector2 GetFirstPointLocal() {return sections.GetFirstItem().startPoint;}
-	public Vector2 GetLastPointLocal() {return sections.GetLastItem().endPoint;}
-	public Vector2 GetFirstPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
-	public Vector2 GetLastPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
+	public Vector2 GetStartPointLocal() {return sections.GetFirstItem().startPoint;}
+	public Vector2 GetEndPointLocal() {return sections.GetLastItem().endPoint;}
+	public Vector2 GetStartPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
+	public Vector2 GetEndPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
 
 	public float GetTotalDist() {
 		return GetLastSection().distEnd;
@@ -85,7 +84,6 @@ public class WhitTerrain : MonoBehaviour {
 
 	public bool DistIsWithinDistThreshold(float dist) {
 		float distToEnd = GetTotalDist() - dist;
-		Debug.Log(name + ": " + distToEnd + ", " + dist + ", " + GetTotalDist());
 		return distToEnd < WhitTerrainAttributes.instance.playerDistThreshold;
 	}
 

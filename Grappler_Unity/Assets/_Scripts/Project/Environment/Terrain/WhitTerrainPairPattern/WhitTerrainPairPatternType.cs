@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum WhitTerrainPairPatternType {
 	None,
-	Continue,
+	Straight,
 	Bump,
 	Widen,
 	Narrow

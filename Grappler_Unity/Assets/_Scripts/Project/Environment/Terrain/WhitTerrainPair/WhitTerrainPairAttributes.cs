@@ -12,7 +12,7 @@ public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPa
 
 	public WhitTerrainPairPatternType GetRandomPatternType() {
 		List<WhitTerrainPairPatternType> patternTypes = new List<WhitTerrainPairPatternType>();
-		for (int i = 0; i < continuePatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Continue);
+		for (int i = 0; i < continuePatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Straight);
 		for (int i = 0; i < widenPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Widen);
 		for (int i = 0; i < narrowPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Narrow);
 		for (int i = 0; i < bumpPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Bump);

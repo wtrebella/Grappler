@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPairPatternGenerator {
-	public static WhitTerrainPairPattern GetStraightPattern(float currentSlope, float length) {
-		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);
-		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length);
+	public static WhitTerrainPairPattern GetStraightPattern(float currentSlope, float topLength, float bottomLength) {
+		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, topLength);
+		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, bottomLength);
 		WhitTerrainPatternInstructionPair straight = new WhitTerrainPatternInstructionPair(topStraight, bottomStraight);
 
 		WhitTerrainPairPattern straightPattern = new WhitTerrainPairPattern(straight);
@@ -43,8 +43,8 @@ public class WhitTerrainPairPatternGenerator {
 		WhitTerrainPatternInstructionCurve bottomTurn1 = new WhitTerrainPatternInstructionCurve(currentSlope + bumpSlope, maxRadius);
 		WhitTerrainPatternInstructionPair turn1 = new WhitTerrainPatternInstructionPair(topTurn1, bottomTurn1);
 
-		WhitTerrainPatternInstructionCurve topTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope * 2, maxRadius);
-		WhitTerrainPatternInstructionCurve bottomTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope * 2, minRadius);
+		WhitTerrainPatternInstructionCurve topTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope, maxRadius);
+		WhitTerrainPatternInstructionCurve bottomTurn2 = new WhitTerrainPatternInstructionCurve(currentSlope - bumpSlope, minRadius);
 		WhitTerrainPatternInstructionPair turn2 = new WhitTerrainPatternInstructionPair(topTurn2, bottomTurn2);
 
 		WhitTerrainPatternInstructionCurve topTurn3 = new WhitTerrainPatternInstructionCurve(currentSlope, minRadius);

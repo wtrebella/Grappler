@@ -24,13 +24,13 @@ public class WhitTerrainMesh : MonoBehaviour {
 		isDirty = false;
 
 		List<Vector2> points = terrain.GetPointsLocal();
-		Vector2 firstPoint = terrain.GetFirstPointLocal();
-		Vector2 lastPoint = terrain.GetLastPointLocal();
+		Vector2 startPointLocal = terrain.GetStartPointLocal();
+		Vector2 endPointLocal = terrain.GetEndPointLocal();
 
-		Vector2 p1 = lastPoint + Vector2.right * outlineSize;
+		Vector2 p1 = endPointLocal + Vector2.right * outlineSize;
 		Vector2 p2 = p1 + GetMeshDirection() * outlineSize;
-		Vector2 p3 = new Vector2(firstPoint.x - outlineSize, p2.y);
-		Vector2 p4 = new Vector2(p3.x, firstPoint.y);
+		Vector2 p3 = new Vector2(startPointLocal.x - outlineSize, p2.y);
+		Vector2 p4 = new Vector2(p3.x, startPointLocal.y);
 
 		points.Add(p1);
 		points.Add(p2);

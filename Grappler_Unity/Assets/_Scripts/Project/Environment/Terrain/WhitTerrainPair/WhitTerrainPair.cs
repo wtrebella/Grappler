@@ -26,7 +26,7 @@ public class WhitTerrainPair : MonoBehaviour {
 		
 	public void AddRandomPattern() {
 		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
-		if (patternType == WhitTerrainPairPatternType.Continue) Continue();
+		if (patternType == WhitTerrainPairPatternType.Straight) Straight();
 		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
 		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
 		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
@@ -47,11 +47,11 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public float GetWidth() {
-		return (topTerrain.GetLastPoint() - bottomTerrain.GetLastPoint()).magnitude;
+		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
 	}
 
-	public void Continue() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope, straightLength);
+	public void Straight() {
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope, GetTopStraightLength(), GetBottomStraightLength());
 		AddPattern(pattern);
 	}
 
@@ -91,21 +91,43 @@ public class WhitTerrainPair : MonoBehaviour {
 				bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
 			}
 		}
-
-		ReconcileDistances();
 	}
 
-	private void ReconcileDistances() {
-		float topDist = topTerrain.GetTotalDist();
-		float bottomDist = bottomTerrain.GetTotalDist();
-		if (topDist < bottomDist) {
-			float deltaDist = bottomDist - topDist;
-			topTerrain.AddStraight(currentSlope, deltaDist);
-		}
-		else if (bottomDist < topDist) {
-			float deltaDist = topDist - bottomDist;
-			bottomTerrain.AddStraight(currentSlope, deltaDist);
-		}
+	private Vector2 GetDirectionAtEnd() {
+		Vector2 topDirection = topTerrain.GetLastSectionDirection();
+		Vector2 bottomDirection = bottomTerrain.GetLastSectionDirection();
+		Vector2 averageDirection = WhitTools.GetAveragePoint(topDirection, bottomDirection).normalized;
+		return averageDirection;
+	}
+
+	private Vector2 GetDirectionBetweenEndPoints() {
+		Vector2 topEndPoint = topTerrain.GetEndPoint();
+		Vector2 bottomEndPoint = bottomTerrain.GetEndPoint();
+
+		Vector2 endPointVector = topEndPoint - bottomEndPoint;
+		Vector2 endPointDirection = endPointVector.normalized;
+
+		return endPointDirection;
+	}
+
+	private float GetTopStraightLength() {
+		return straightLength;
+	}
+
+	private float GetBottomStraightLength() {
+		float width = GetWidth();
+		Vector2 directionAtEnd = GetDirectionAtEnd();
+
+		Vector2 targetDirectionBetweenEndPoints = new Vector2(directionAtEnd.y, -directionAtEnd.x);
+
+		Vector2 topEndPoint = topTerrain.GetEndPoint();
+		Vector2 bottomEndPoint = bottomTerrain.GetEndPoint();
+
+		float topLength = GetTopStraightLength();
+		Vector2 newTopEndPoint = topEndPoint + directionAtEnd * topLength;
+		Vector2 newBottomEndPoint = newTopEndPoint + targetDirectionBetweenEndPoints * width;
+		float bottomLength = (newBottomEndPoint - bottomEndPoint).magnitude;
+		return bottomLength;
 	}
 
 	private void Awake() {
