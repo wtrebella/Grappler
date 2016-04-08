@@ -8,9 +8,6 @@ public class WhitTerrainPair : MonoBehaviour {
 	[SerializeField] private WhitTerrain topTerrain;
 	[SerializeField] private WhitTerrain bottomTerrain;
 
-	[SerializeField] private float straightLength = 30;
-	[SerializeField] private float minRadius = 20;
-
 	[SerializeField] private float initialSlope = 0.1f;
 	[SerializeField] private float initialWidth = 16.0f;
 
@@ -66,8 +63,8 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Bump() {
-		float maxRadius = minRadius + GetWidth();
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, minRadius, maxRadius);
+		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidth();
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
 		AddPattern(pattern);
 	}
 
@@ -111,7 +108,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private float GetTopStraightLength() {
-		return straightLength;
+		return WhitTerrainPairAttributes.instance.straightLength;
 	}
 
 	private float GetBottomStraightLength() {

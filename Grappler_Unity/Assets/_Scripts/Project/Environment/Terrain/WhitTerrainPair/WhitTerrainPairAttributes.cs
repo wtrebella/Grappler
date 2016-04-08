@@ -5,10 +5,13 @@ using System.Collections.Generic;
 public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPairAttributes> {
 	public FloatRange widthRange = new FloatRange(6.0f, 20.0f);
 
-	public int continuePatternWeight = 10;
-	public int widenPatternWeight = 2;
-	public int narrowPatternWeight = 2;
-	public int bumpPatternWeight = 1;
+	public float straightLength = 30.0f;
+	public float minCurveRadius = 20.0f;
+
+	[SerializeField] private int continuePatternWeight = 10;
+	[SerializeField] private int widenPatternWeight = 2;
+	[SerializeField] private int narrowPatternWeight = 2;
+	[SerializeField] private int bumpPatternWeight = 1;
 
 	public WhitTerrainPairPatternType GetRandomPatternType() {
 		List<WhitTerrainPairPatternType> patternTypes = new List<WhitTerrainPairPatternType>();

@@ -27,7 +27,6 @@ public class WhitTerrainSectionGenerator {
 			nextDist = section.distEnd;
 			sections.Add(section);
 		}
-
 		return sections;
 	}
 
