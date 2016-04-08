@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPair : MonoBehaviour {
-	[SerializeField] private WhitTerrainFollower playerTest;
+	[SerializeField] private Transform focusObject;
 
 	[SerializeField] private WhitTerrain topTerrain;
 	[SerializeField] private WhitTerrain bottomTerrain;
@@ -20,6 +20,35 @@ public class WhitTerrainPair : MonoBehaviour {
 		Vector2 averagePoint = WhitTools.GetAveragePoint(topPoint, bottomPoint);
 		return averagePoint;
 	}
+
+	public Vector2 GetStartPoint() {
+		return WhitTools.GetAveragePoint(topTerrain.GetStartPoint(), bottomTerrain.GetStartPoint());
+	}
+
+	public Vector2 GetEndPoint() {
+		return WhitTools.GetAveragePoint(topTerrain.GetEndPoint(), bottomTerrain.GetEndPoint());
+	}
+
+	public float GetStartDist() {
+		float topStartDist = topTerrain.GetStartDist();
+		float bottomStartDist = bottomTerrain.GetStartDist();
+		float startDist = (topStartDist + bottomStartDist) / 2f;
+		return startDist;
+	}
+
+	public float GetEndDist() {
+		float topEndDist = topTerrain.GetEndDist();
+		float bottomEndDist = bottomTerrain.GetEndDist();
+		float endDist = (topEndDist + bottomEndDist) / 2f;
+		return endDist;
+	}
+
+	public float GetTotalDist() {
+		float topTotalDist = topTerrain.GetTotalDist();
+		float bottomTotalDist = bottomTerrain.GetTotalDist();
+		float totalDist = (topTotalDist + bottomTotalDist) / 2f;
+		return totalDist;
+	}
 		
 	public void AddRandomPattern() {
 		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
@@ -30,20 +59,24 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (NeedsNewPattern(playerTest.dist)) AddRandomPattern();
+		if (NeedsNewPattern(focusObject.position)) AddRandomPattern();
 	}
 
-	public bool NeedsNewPattern(float playerDist) {
-		bool needsTopPattern = topTerrain.DistIsWithinDistThreshold(playerDist);
-		bool needsBottomPattern = bottomTerrain.DistIsWithinDistThreshold(playerDist);
+	private bool NeedsNewPattern(float focusObjectDist) {
+		bool needsTopPattern = topTerrain.DistIsWithinDistThreshold(focusObjectDist);
+		bool needsBottomPattern = bottomTerrain.DistIsWithinDistThreshold(focusObjectDist);
 		return needsTopPattern || needsBottomPattern;
+	}
+
+	private bool NeedsNewPattern(Vector2 focusObjectPosition) {
+		return NeedsNewPattern(GetDistAtPosition(focusObjectPosition));
 	}
 
 	public bool IsValid() {
 		return topTerrain.IsValid() && bottomTerrain.IsValid();
 	}
 
-	public float GetWidth() {
+	public float GetWidthAtEnd() {
 		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
 	}
 
@@ -63,7 +96,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Bump() {
-		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidth();
+		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidthAtEnd();
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
 		AddPattern(pattern);
 	}
@@ -90,6 +123,25 @@ public class WhitTerrainPair : MonoBehaviour {
 		}
 	}
 
+	public float GetDistAtPosition(Vector2 position) {
+		Vector2 startPoint = GetStartPoint();
+		Vector2 endPoint = GetEndPoint();
+
+		Vector2 startToPosition = position - startPoint;
+		Vector2 startToEnd = endPoint - startPoint;
+
+		float projection = WhitTools.Project(startToPosition, startToEnd);
+		float totalLength = startToEnd.magnitude;
+		float percent = projection / totalLength;
+
+		float startDist = GetStartDist();
+		float totalDist = GetTotalDist();
+
+		float dist = startDist + totalDist * percent;
+
+		return dist;
+	}
+
 	private Vector2 GetDirectionAtEnd() {
 		Vector2 topDirection = topTerrain.GetLastSectionDirection();
 		Vector2 bottomDirection = bottomTerrain.GetLastSectionDirection();
@@ -112,7 +164,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private float GetBottomStraightLength() {
-		float width = GetWidth();
+		float width = GetWidthAtEnd();
 		Vector2 directionAtEnd = GetDirectionAtEnd();
 
 		Vector2 targetDirectionBetweenEndPoints = new Vector2(directionAtEnd.y, -directionAtEnd.x);

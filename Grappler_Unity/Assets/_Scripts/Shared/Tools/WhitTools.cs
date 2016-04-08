@@ -13,6 +13,10 @@ public static class WhitTools {
 	public const float Slope2Deg = (Mathf.PI / 2f) * Mathf.Rad2Deg;
 	public const float Deg2Slope = (2f / Mathf.PI) * Mathf.Deg2Rad;
 
+	public static float Project(Vector2 a, Vector2 b) {
+		return Vector2.Dot(a, b) / a.magnitude;
+	}
+
 	public static Vector2 SlopeToDirection(float slope) {
 		Vector2 slopeVector = new Vector2();
 		float angle = slope * Slope2Rad;

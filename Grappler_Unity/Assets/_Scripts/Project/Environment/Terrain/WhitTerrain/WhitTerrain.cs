@@ -51,6 +51,14 @@ public class WhitTerrain : MonoBehaviour {
 		return GetLastSection().distEnd;
 	}
 
+	public float GetStartDist() {
+		return GetFirstSection().distStart;
+	}
+
+	public float GetEndDist() {
+		return GetLastSection().distEnd;
+	}
+
 	public Vector2 GetLastSectionDirection() {
 		return GetLastSection().GetDirection();
 	}
