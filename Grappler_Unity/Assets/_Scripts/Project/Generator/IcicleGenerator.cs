@@ -8,7 +8,7 @@ public class IcicleGenerator : ItemOnTerrainGenerator {
 	}
 
 	protected override void OnTerrainSectionAdded(WhitTerrainSection section) {
-		int num = 1;
+//		int num = 1;
 //		float chanceOfSmallIcicleSpawn = 0.05f;
 
 //		float surfaceLength = section.surfaceLength;

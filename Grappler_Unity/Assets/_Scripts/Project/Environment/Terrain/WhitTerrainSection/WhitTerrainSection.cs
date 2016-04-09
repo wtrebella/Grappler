@@ -179,7 +179,10 @@ public class WhitTerrainSection : MonoBehaviour {
 	}
 
 	private void BumpifyMidPoints() {
-		// TODO fix this so it's not a hacky solution
+		#warning this is a hacky solution.
+		// TODO the terrain section's bump height multiplier shouldn't be hard-coded 
+		// to be 0.3f if there are two or fewer midpoints. it should be determined
+		// on a more sliding, average scale range or something.
 		float bumpHeightMultiplier = 1;
 		if (midPoints.Count <= 2) bumpHeightMultiplier = 0.3f;
 		for (int i = 0; i < midPoints.Count; i++) {
