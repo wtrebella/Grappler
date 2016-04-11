@@ -11,7 +11,7 @@ public class MountainChunkGenerator : Generator {
 	[SerializeField] private MountainChunkAttributes normalAttributes;
 	[SerializeField] private MountainChunkAttributes crazyAttributes;
 
-	private AnchorableGenerator anchorableGenerator;
+//	private AnchorableGenerator anchorableGenerator;
 	private MountainChunkNeededDetector neededDetector;
 
 	public MountainChunk GetMountainChunkAtPlace(float place) {
@@ -58,7 +58,7 @@ public class MountainChunkGenerator : Generator {
 	private void Awake() {
 		base.BaseAwake();
 		neededDetector = GetComponent<MountainChunkNeededDetector>();
-		anchorableGenerator = GetComponent<AnchorableGenerator>();
+//		anchorableGenerator = GetComponent<AnchorableGenerator>();
 	}
 
 	private void Start() {
@@ -101,7 +101,7 @@ public class MountainChunkGenerator : Generator {
 		MountainChunkAttributes attributes = t < 10 || hasUsed ? normalAttributes : crazyAttributes;
 		if (attributes == crazyAttributes) hasUsed = true;
 		mountainChunk.Initialize(origin, previousMountainChunk, attributes);
-		anchorableGenerator.GenerateAnchorables(mountainChunk);
+//		anchorableGenerator.GenerateAnchorables(mountainChunk);
 
 		if (SignalMountainChunkGenerated != null) SignalMountainChunkGenerated(mountainChunk);
 	}

@@ -69,6 +69,12 @@ public class WhitTerrain : MonoBehaviour {
 		return GetLastSection().slope;
 	}
 
+	public Vector2 GetPointAtX(float x) {
+		WhitTerrainSection section = GetSectionAtX(x);
+		if (section == null) return Vector2.zero;
+		return section.GetWorldPointAtWorldX(x);
+	}
+
 	public Vector2 GetPointAtDist(float dist) {
 		WhitTerrainSection section = GetSectionAtDist(dist);
 		if (section == null) return Vector2.zero;
@@ -115,6 +121,26 @@ public class WhitTerrain : MonoBehaviour {
 			}
 			else {
 				if (section.ContainsDist(dist)) return section;
+			}
+		}
+
+		return null;
+	}
+
+	private WhitTerrainSection GetSectionAtX(float x) {
+		if (sections.Count == 0) return null;
+
+		for (int i = 0; i < sections.Count; i++) {
+			WhitTerrainSection section = sections[i];
+
+			if (i == 0) {
+				if (x < section.GetWorldStartPoint().x) return section;
+			}
+			else if (i == sections.Count - 1) {
+				if (x > section.GetWorldEndPoint().x) return section;
+			}
+			else {
+				if (section.ContainsWorldX(x)) return section;
 			}
 		}
 

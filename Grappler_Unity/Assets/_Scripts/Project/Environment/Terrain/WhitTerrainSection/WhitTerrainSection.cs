@@ -54,6 +54,17 @@ public class WhitTerrainSection : MonoBehaviour {
 		return worldPoint;
 	}
 
+	public Vector2 GetWorldPointAtWorldX(float x) {
+		Vector2 start = GetWorldStartPoint();
+		Vector2 end = GetWorldEndPoint();
+		Vector2 vector = end - start;
+		float width = vector.x;
+		float delta = Mathf.Clamp(x - start.x, 0, width);
+		float percent = delta / width;
+		Vector2 point = start + percent * vector;
+		return point;
+	}
+
 	public Vector2 GetSurfacePointAtPercent(float percent) {
 		percent = Mathf.Clamp01(percent);
 		Vector2 localPoint = GetLocalSurfacePointAtPercent(percent);
@@ -69,6 +80,14 @@ public class WhitTerrainSection : MonoBehaviour {
 	public Vector2 GetSurfacePointAtRelativeDist(float relativeDist) {
 		float percent = RelativeSurfaceDistToPercent(relativeDist);
 		return GetSurfacePointAtPercent(percent);
+	}
+
+	public Vector2 GetWorldStartPoint() {
+		return terrain.transform.TransformPoint(startPoint);
+	}
+
+	public Vector2 GetWorldEndPoint() {
+		return terrain.transform.TransformPoint(endPoint);
 	}
 
 	private float DistToPercent(float dist) {
@@ -89,6 +108,14 @@ public class WhitTerrainSection : MonoBehaviour {
 
 	public bool ContainsDist(float dist) {
 		return dist >= distStart && dist <= distEnd;
+	}
+
+	public bool ContainsWorldX(float x) {
+		return x >= GetWorldStartPoint().x && x <= GetWorldEndPoint().x;
+	}
+
+	public bool ContainsWorldY(float y) {
+		return y >= GetWorldStartPoint().y && y <= GetWorldEndPoint().y;
 	}
 
 	private Vector2 GetLocalSurfacePointAtPercent(float percent) {

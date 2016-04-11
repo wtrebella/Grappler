@@ -4,7 +4,6 @@ using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Anchorable : GeneratableItem {
-	public Point linePoint {get; private set;}
 	public int anchorableID {get; private set;}
 
 	public bool isConnected {get; private set;}
@@ -13,10 +12,6 @@ public class Anchorable : GeneratableItem {
 
 	public void SetAnchorableID(int id) {
 		anchorableID = id;
-	}
-
-	public void SetLinePoint(Point point) {
-		linePoint = point;
 	}
 
 	private void Awake() {

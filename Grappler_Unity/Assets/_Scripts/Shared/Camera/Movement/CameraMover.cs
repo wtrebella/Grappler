@@ -5,10 +5,9 @@ using System;
 public class CameraMover : MonoBehaviour {
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private Transform horizontalMovementObject;
-	[SerializeField] private MountainChunkGenerator mountainChunkGenerator;
+	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private Vector2 offset;
 	[SerializeField] private Vector2 smoothDampTime = new Vector2(0.3f, 0.1f);
-	[SerializeField] private float maxDistanceToObject = 9;
 
 	private float smoothDampVelocityX;
 	private float smoothDampVelocityY;
@@ -68,16 +67,7 @@ public class CameraMover : MonoBehaviour {
 	private Vector3 GetTargetPosition() {
 		Vector3 objectPosition = horizontalMovementObject.position;
 		float x = objectPosition.x + offset.x;
-		MountainChunk chunk = mountainChunkGenerator.GetMountainChunkAtX(x);
-		if (chunk) {
-			float y = chunk.GetAverageYAtX(x) + offset.y;
-			Vector3 targetPosition = new Vector3(x, y, transform.position.z);
-			float yDistToObject = targetPosition.y - objectPosition.y;
-			if (yDistToObject > maxDistanceToObject) targetPosition.y = objectPosition.y + maxDistanceToObject;
-			else if (yDistToObject < -maxDistanceToObject) targetPosition.y = objectPosition.y - maxDistanceToObject;
-			return targetPosition;
-		}
-		else return new Vector3(0, 0, transform.position.z);
+		return terrainPair.GetPointAtX(x);
 	}
 
 	private Vector3 GetSmoothedTargetPosition() {
