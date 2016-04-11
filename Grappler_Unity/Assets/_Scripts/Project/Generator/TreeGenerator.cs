@@ -2,12 +2,21 @@
 using System.Collections;
 
 public class TreeGenerator : ItemOnTerrainGenerator {
-	[SerializeField] private int maxTreesPerChunk = 10;
-	[SerializeField] private float chunkProbability = 0.1f;
-	[SerializeField] private float treeProbability = 0.8f;
+	[SerializeField] private float sectionProbability = 0.5f;
+	[SerializeField] private FloatRange deltaDistRange = new FloatRange(3.0f, 30.0f);
 
 	protected override void OnTerrainSectionAdded(WhitTerrainSection section) {
+		if (Random.value < sectionProbability) GenerateTrees(section);
+	}
 
+	private void GenerateTrees(WhitTerrainSection section) {
+		var items = GenerateItemsOnSection(section, deltaDistRange);
+		foreach (GeneratableItem item in items) {
+			float xScale = Random.Range(0.7f, 1f);
+			float yScale = Random.Range(0.7f, 1f);
+			Vector3 scale = new Vector3(xScale, yScale, 1);
+			item.transform.localScale = scale;
+		}
 	}
 
 //	private void HandleGroundChunkCreated(GroundChunk chunk) {

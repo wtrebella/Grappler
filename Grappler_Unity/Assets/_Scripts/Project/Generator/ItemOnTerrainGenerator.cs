@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ItemOnTerrainGenerator : Generator {
 	[SerializeField] private WhitTerrain terrain;
-
-	private void Awake() {
-		base.BaseAwake();
-	}
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
@@ -20,6 +17,18 @@ public class ItemOnTerrainGenerator : Generator {
 
 	protected virtual void OnTerrainSectionRemoved(WhitTerrainSection section) {
 
+	}
+
+	protected List<GeneratableItem> GenerateItemsOnSection(WhitTerrainSection section, FloatRange deltaDistRange) {
+		List<GeneratableItem> items = new List<GeneratableItem>();
+		float length = section.surfaceLength;
+		float dist = 0;
+		while (true) {
+			dist += deltaDistRange.GetRandom();
+			if (dist > length) break;
+			items.Add(GenerateItemOnSection(section, dist));
+		}
+		return items;
 	}
 
 	protected GeneratableItem GenerateItemOnSection(WhitTerrainSection section, float relativeSurfaceDist) {

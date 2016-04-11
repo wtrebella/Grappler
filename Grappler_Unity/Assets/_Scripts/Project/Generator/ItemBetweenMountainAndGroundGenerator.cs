@@ -2,17 +2,6 @@
 using System.Collections;
 
 public class ItemBetweenMountainAndGroundGenerator : Generator {
-	[SerializeField] private WhitTerrain grounTerrain;
-
-	private void Awake() {
-		BaseAwake();
-	}
-
-	protected override void BaseAwake() {
-		base.BaseAwake();
-		grounTerrain.SignalGroundChunkGenerated += HandleGroundChunkGenerated;
-	}
-
 	protected virtual void HandleGroundChunkGenerated(GroundChunk chunk) {
 
 	}
