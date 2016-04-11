@@ -20,7 +20,7 @@ public class AnchorableGenerator : Generator {
 	private void CreateAnchorableAtPoint(WhitTerrainSection section, Vector2 point) {
 		Anchorable anchorable = (Anchorable)GenerateItem();
 		anchorable.transform.parent = section.transform;
-		anchorable.transform.localScale = point;
+		anchorable.transform.localPosition = point;
 		anchorable.SetAnchorableID(currentAnchorableID++);
 	}
 

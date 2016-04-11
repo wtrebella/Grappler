@@ -67,7 +67,9 @@ public class CameraMover : MonoBehaviour {
 	private Vector3 GetTargetPosition() {
 		Vector3 objectPosition = horizontalMovementObject.position;
 		float x = objectPosition.x + offset.x;
-		return terrainPair.GetPointAtX(x);
+		Vector3 terrainPoint = (Vector3)terrainPair.GetPointAtX(x);
+		terrainPoint.z = transform.position.z;
+		return terrainPoint;
 	}
 
 	private Vector3 GetSmoothedTargetPosition() {

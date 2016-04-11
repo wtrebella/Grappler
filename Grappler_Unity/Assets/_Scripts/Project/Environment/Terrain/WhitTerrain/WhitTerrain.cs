@@ -119,9 +119,8 @@ public class WhitTerrain : MonoBehaviour {
 			else if (i == sections.Count - 1) {
 				if (dist > section.distStart) return section;
 			}
-			else {
-				if (section.ContainsDist(dist)) return section;
-			}
+
+			if (section.ContainsDist(dist)) return section;
 		}
 
 		return null;
@@ -129,21 +128,17 @@ public class WhitTerrain : MonoBehaviour {
 
 	private WhitTerrainSection GetSectionAtX(float x) {
 		if (sections.Count == 0) return null;
-
 		for (int i = 0; i < sections.Count; i++) {
 			WhitTerrainSection section = sections[i];
-
 			if (i == 0) {
 				if (x < section.GetWorldStartPoint().x) return section;
 			}
 			else if (i == sections.Count - 1) {
 				if (x > section.GetWorldEndPoint().x) return section;
 			}
-			else {
-				if (section.ContainsWorldX(x)) return section;
-			}
-		}
 
+			if (section.ContainsWorldX(x)) return section;
+		}
 		return null;
 	}
 
@@ -167,6 +162,7 @@ public class WhitTerrain : MonoBehaviour {
 	private void AddSection(WhitTerrainSection sectionToAdd) {
 		sections.Add(sectionToAdd);
 		if (SignalTerrainSectionAdded != null) SignalTerrainSectionAdded(sectionToAdd);
+		OnChange();
 		RemoveOffScreenSections();
 	}
 
@@ -178,5 +174,6 @@ public class WhitTerrain : MonoBehaviour {
 		WhitTerrainSection firstSection = sections[0];
 		sections.Remove(firstSection);
 		if (SignalTerrainSectionRemoved != null) SignalTerrainSectionRemoved(firstSection);
+		OnChange();
 	}
 }

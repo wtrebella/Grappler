@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ItemBetweenMountainAndGroundGenerator : Generator {
-	[SerializeField] private GroundChunkGenerator groundChunkGenerator;
+	[SerializeField] private WhitTerrain grounTerrain;
 
 	private void Awake() {
 		BaseAwake();
@@ -10,7 +10,7 @@ public class ItemBetweenMountainAndGroundGenerator : Generator {
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
-		groundChunkGenerator.SignalGroundChunkGenerated += HandleGroundChunkGenerated;
+		grounTerrain.SignalGroundChunkGenerated += HandleGroundChunkGenerated;
 	}
 
 	protected virtual void HandleGroundChunkGenerated(GroundChunk chunk) {
