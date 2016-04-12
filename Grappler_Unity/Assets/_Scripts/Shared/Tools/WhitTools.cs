@@ -13,6 +13,11 @@ public static class WhitTools {
 	public const float Slope2Deg = (Mathf.PI / 2f) * Mathf.Rad2Deg;
 	public const float Deg2Slope = (2f / Mathf.PI) * Mathf.Deg2Rad;
 
+	public static void SetTimeScale(float timeScale) {
+		Time.timeScale = timeScale;
+		Time.fixedDeltaTime = (1.0f/30.0f) * timeScale;
+	}
+
 	public static float Project(Vector2 a, Vector2 b) {
 		float projection = Vector2.Dot(a, b) / a.magnitude;
 		return projection;
@@ -43,6 +48,11 @@ public static class WhitTools {
 		Vector2 sumPoints = Vector2.zero;
 		foreach (Vector2 point in points) sumPoints += point;
 		return sumPoints;
+	}
+
+	public static T CreateGameObjectWithComponent<T>(string name = "GameObject") {
+		T obj = new GameObject(name, typeof(T)).GetComponent<T>();
+		return obj;
 	}
 
 	public static bool SpriteDefinitionIsNull(tk2dSpriteDefinition sprite) {

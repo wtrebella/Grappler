@@ -10,12 +10,6 @@ public class IcicleGenerator : ItemOnTerrainGenerator {
 	}
 
 	private void GenerateIcicles(WhitTerrainSection section) {
-		var items = GenerateItemsOnSection(section, deltaDistRange);
-		foreach (GeneratableItem item in items) {
-			float xScale = Random.Range(0.2f, 1f);
-			float yScale = Random.Range(0.2f, 1f);
-			Vector3 scale = new Vector3(xScale, yScale, 1);
-			item.transform.localScale = scale;
-		}
+		GenerateItemsOnSection(section, deltaDistRange);
 	}
 }

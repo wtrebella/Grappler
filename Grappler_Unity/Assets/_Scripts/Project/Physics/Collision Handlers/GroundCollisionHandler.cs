@@ -23,17 +23,12 @@ public class GroundCollisionHandler : CollisionHandler {
 	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
 		base.HandleCollisionEnter(rigid, collision);
 		SaveCollisionTime();
-		ReturnTimeToNormalIfDead();
 		if (ShouldCarryOutOnGroundEvents()) CarryOutOnGroundEvents(rigid, collision);
 	}
 
 	private void Awake() {
 		base.BaseAwake();
 		// TODO player.SignalEnteredGrapplingState += HandleEnteredGrapplingState;
-	}
-
-	private void ReturnTimeToNormalIfDead() {
-		if (player.isDead) TimeScaler.instance.ScaleToNormal();
 	}
 
 	private bool ShouldCarryOutOnGroundEvents() {

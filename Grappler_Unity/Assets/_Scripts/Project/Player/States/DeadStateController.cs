@@ -15,7 +15,6 @@ public class DeadStateController : PlayerStateController {
 	public override void EnterState() {
 		base.EnterState();
 		player.grapplingManager.Disconnect();
-		TimeScaler.instance.ScaleToSlow();
 		cameraSmoothDampAdjuster.enabled = false;
 		cameraMover.SetSmoothDampTimeX(0.1f);
 		player.ghostController.EnableGhosting();

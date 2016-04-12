@@ -2,6 +2,8 @@
 using System.Collections;
 
 public class Pickup : GeneratableItem {
+	[SerializeField] protected PickupEffect effectPrefab;
+
 	public override void HandleSpawned(Generator generator) {
 		base.HandleSpawned(generator);
 	}
@@ -11,6 +13,12 @@ public class Pickup : GeneratableItem {
 	}
 
 	public void Collect() {
+		RunEffect();
 		RecycleItem();
+	}
+
+	private void RunEffect() {
+		PickupEffect effect = Instantiate(effectPrefab);
+		effect.Run();
 	}
 }

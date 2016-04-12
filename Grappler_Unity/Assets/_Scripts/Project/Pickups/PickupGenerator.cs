@@ -5,8 +5,7 @@ using System;
 using System.Collections.Generic;
 
 public class PickupGenerator : ItemBetweenTerrainPairGenerator {
-	[SerializeField] private List<Pickup> pickupPrefabs;
-	[SerializeField] private float probability = 0.5f;
+	[SerializeField] private float probability = 0.1f;
 
 	protected override void OnPatternAdded(FloatRange distRange) {
 		if (UnityEngine.Random.value > probability) return;
