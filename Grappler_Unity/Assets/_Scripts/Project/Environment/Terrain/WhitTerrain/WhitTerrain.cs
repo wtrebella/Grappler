@@ -22,14 +22,16 @@ public class WhitTerrain : MonoBehaviour {
 		AddFirstSection(startPoint);
 	}
 
-	public void AddStraight(float slope, float length) {
+	public WhitTerrainSection AddStraight(float slope, float length) {
 		if (length > lengthThreshold) {
 			var newSection = sectionGenerator.GenerateSection(this, GetLastSection(), length, slope);
 			AddSection(newSection);
+			return newSection;
 		}
+		return null;
 	}
 
-	public void AddCurve(float targetSlope, float radius) {
+	public List<WhitTerrainSection> AddCurve(float targetSlope, float radius) {
 		float startSlope = GetLastSectionSlope();
 		float deltaSlope = targetSlope - startSlope;
 		float angle = deltaSlope * WhitTools.Slope2Deg;
@@ -38,7 +40,9 @@ public class WhitTerrain : MonoBehaviour {
 		if (length > lengthThreshold) {
 			var newSections = sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope);
 			AddSections(newSections);
+			return newSections;
 		}
+		return new List<WhitTerrainSection>();
 	}
 
 	public bool IsValid() {return sections != null && sections.Count > 0;}

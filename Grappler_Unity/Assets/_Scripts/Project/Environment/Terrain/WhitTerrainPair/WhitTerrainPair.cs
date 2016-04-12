@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class WhitTerrainPair : MonoBehaviour {
-	[SerializeField] private Transform focusObject;
+	public Action<List<WhitTerrainSection>, List<WhitTerrainSection>> SignalPatternAdded;
 
-	[SerializeField] private WhitTerrain topTerrain;
-	[SerializeField] private WhitTerrain bottomTerrain;
+	public WhitTerrain topTerrain;
+	public WhitTerrain bottomTerrain;
+
+	[SerializeField] private Transform focusObject;
 
 	[SerializeField] private float initialSlope = 0.1f;
 	[SerializeField] private float initialWidth = 16.0f;
@@ -62,6 +65,14 @@ public class WhitTerrainPair : MonoBehaviour {
 		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
 	}
 
+	private void Awake() {
+		currentSlope = initialSlope;
+		currentWidth = initialWidth;
+
+		topTerrain.Initialize(Vector2.zero);
+		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
+	}
+
 	private void Update() {
 		if (NeedsNewPattern(focusObject.position)) AddRandomPattern();
 	}
@@ -106,25 +117,38 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void AddPattern(WhitTerrainPairPattern pattern) {
+		List<WhitTerrainSection> topSections = new List<WhitTerrainSection>();
+		List<WhitTerrainSection> bottomSections = new List<WhitTerrainSection>();
+
 		foreach (WhitTerrainPatternInstructionPair instructionPair in pattern.instructionPairs) {
 			if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
 				WhitTerrainPatternInstructionStraight topInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.topInstruction;
-				topTerrain.AddStraight(topInstruction.slope, topInstruction.length);
+				var newSection = topTerrain.AddStraight(topInstruction.slope, topInstruction.length);
+				if (newSection) topSections.Add(newSection);
 			}
 			else if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
 				WhitTerrainPatternInstructionCurve topInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.topInstruction;
-				topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius);
+				var newSections = topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius);
+				if (newSections.Count > 0) topSections.AddAll(newSections);
 			}
 
 			if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
 				WhitTerrainPatternInstructionStraight bottomInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.bottomInstruction;
-				bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length);
+				var newSection = bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length);
+				if (newSection) bottomSections.Add(newSection);
 			}
 			else if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
 				WhitTerrainPatternInstructionCurve bottomInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.bottomInstruction;
-				bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
+				var newSections = bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
+				if (newSections.Count > 0) bottomSections.AddAll(newSections);
 			}
 		}
+
+		OnPatternAdded(topSections, bottomSections);
+	}
+
+	private void OnPatternAdded(List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+		if (SignalPatternAdded != null) SignalPatternAdded(topSections, bottomSections);
 	}
 
 	public float GetDistAtPosition(Vector2 position) {
@@ -181,13 +205,5 @@ public class WhitTerrainPair : MonoBehaviour {
 		Vector2 newBottomEndPoint = newTopEndPoint + targetDirectionBetweenEndPoints * width;
 		float bottomLength = (newBottomEndPoint - bottomEndPoint).magnitude;
 		return bottomLength;
-	}
-
-	private void Awake() {
-		currentSlope = initialSlope;
-		currentWidth = initialWidth;
-
-		topTerrain.Initialize(Vector2.zero);
-		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
 	}
 }
