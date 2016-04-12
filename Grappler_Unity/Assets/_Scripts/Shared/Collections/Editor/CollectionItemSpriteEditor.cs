@@ -44,6 +44,8 @@ public class CollectionItemSpriteEditor : Editor {
 		tk2dSpriteDefinition[] allSprites = spriteCollectionData.spriteDefinitions;
 
 		foreach (tk2dSpriteDefinition sprite in allSprites) {
+			if (string.IsNullOrEmpty(sprite.name)) continue;
+
 			if (GUILayout.Button(sprite.name)) {
 				spriteData.SetSprite(sprite.name);
 				GUI.changed = true;

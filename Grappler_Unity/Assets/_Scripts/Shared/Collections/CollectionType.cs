@@ -2,5 +2,5 @@
 	None,
 	Hats,
 	Shoes,
-	PowerUps
+	Pickups
 }

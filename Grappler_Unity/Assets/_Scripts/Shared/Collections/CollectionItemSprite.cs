@@ -3,14 +3,6 @@ using System.Collections;
 
 [System.Serializable]
 public class CollectionItemSprite : ScriptableObject {
-	public string spritePathRoot = "";
-	public string spritePath {
-		get {
-			if (HasValidSpriteName()) return spritePathRoot + spriteName;
-			else return "";
-		}
-	}
-
 	[SerializeField] private tk2dSpriteCollectionData spriteCollectionData;
 
 	[SerializeField, HideInInspector] private string _spriteName;

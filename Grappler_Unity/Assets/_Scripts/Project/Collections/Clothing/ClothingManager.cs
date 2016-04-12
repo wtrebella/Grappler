@@ -84,7 +84,7 @@ public class ClothingManager : Singleton<ClothingManager> {
 
 	public void WearHat(CollectionItem item) {
 		if (item == null) hatSpineSlot.RemoveSprite();
-		else hatSpineSlot.SetSprite(item.GetFirstSprite());
+		else hatSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
 	}
 
 	public void WearShoes(CollectionItem item) {
@@ -93,8 +93,8 @@ public class ClothingManager : Singleton<ClothingManager> {
 			frontShoeSpineSlot.RemoveSprite();
 		}
 		else {
-			backShoeSpineSlot.SetSprite(item.GetFirstSprite());
-			frontShoeSpineSlot.SetSprite(item.GetSecondSprite());
+			backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+			frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
 		}
 	}
 

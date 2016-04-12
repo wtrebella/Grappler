@@ -18,4 +18,9 @@ public class MenuItems : Editor {
 	public static void CreateCollectionItemAsset() {
 		ScriptableObjectUtility.CreateAsset<CollectionItem>();
 	}
+
+	[MenuItem("Assets/Create/SpineCollectionItemSprite Asset", false, 102)]
+	public static void CreateSpineCollectionItemSpriteDataAsset() {
+		ScriptableObjectUtility.CreateAsset<SpineCollectionItemSprite>();
+	}
 }
