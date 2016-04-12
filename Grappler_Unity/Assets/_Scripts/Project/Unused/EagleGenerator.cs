@@ -19,9 +19,9 @@ public class EagleGenerator : MonoBehaviour {
 		Eagle eagle = eaglePrefab.Spawn();
 		eagle.transform.parent = transform;
 		Vector3 position = Vector3.zero;
-		position.x = GameScreen.instance.lowerRightWithMargin.x;
-		float minY = GameScreen.instance.center.y;
-		float maxY = GameScreen.instance.center.y + GameScreen.instance.height;
+		position.x = ScreenUtility.instance.lowerRightWithMargin.x;
+		float minY = ScreenUtility.instance.center.y;
+		float maxY = ScreenUtility.instance.center.y + ScreenUtility.instance.height;
 		position.y = Mathf.Lerp(minY, maxY, Random.value);
 		eagle.transform.position = position;
 		eagle.StartFlying();

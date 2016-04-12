@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameScreen : MonoBehaviour {
-	public static GameScreen instance;
+public class ScreenUtility : MonoBehaviour {
+	public static ScreenUtility instance;
 
-	public Camera cam {get; private set;}
+	public Camera cam;
 
 	[SerializeField] private tk2dCameraAnchor lowerLeftAnchor;
 	[SerializeField] private tk2dCameraAnchor upperRightAnchor;
@@ -12,7 +12,6 @@ public class GameScreen : MonoBehaviour {
 	
 	private void Awake() {
 		instance = this;
-		cam = GetComponent<Camera>();
 	}
 
 	public Vector2 center {

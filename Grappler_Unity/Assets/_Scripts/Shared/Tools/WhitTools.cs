@@ -13,6 +13,35 @@ public static class WhitTools {
 	public const float Slope2Deg = (Mathf.PI / 2f) * Mathf.Rad2Deg;
 	public const float Deg2Slope = (2f / Mathf.PI) * Mathf.Deg2Rad;
 
+	public static float GetFrustumHeight(Camera camera, float distance) {
+		float frustumHeight = 2.0f * distance * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		return frustumHeight;
+	}
+
+	public static float GetFrustumWidth(Camera camera, float distance) {
+		return FrustumHeightToWidth(camera, GetFrustumHeight(camera, distance));
+	}
+
+	public static float FrustumHeightToWidth(Camera camera, float frustumHeight) {
+		float frustumWidth = frustumHeight * camera.aspect;
+		return frustumWidth;
+	}
+
+	public static float FrustumWidthToHeight(Camera camera, float frustumWidth) {
+		float frustumHeight = frustumWidth / camera.aspect;
+		return frustumHeight;
+	}
+
+	public static float GetDistanceAtFrustumHeight(Camera camera, float frustumHeight) {
+		float distance = frustumHeight * 0.5f / Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+		return distance;
+	}
+
+	public static float GetFieldOfView(Camera camera, float distance, float frustumHeight) {
+		float fieldOfView = 2.0f * Mathf.Atan(frustumHeight * 0.5f / distance) * Mathf.Rad2Deg;
+		return fieldOfView;
+	}
+
 	public static void SetTimeScale(float timeScale) {
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = (1.0f/30.0f) * timeScale;

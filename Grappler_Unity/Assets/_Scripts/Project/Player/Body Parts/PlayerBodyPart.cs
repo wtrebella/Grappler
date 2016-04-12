@@ -8,7 +8,7 @@ public class PlayerBodyPart : MonoBehaviour {
 	
 	public bool IsBelowScreen() {
 		float margin = -5;
-		float minY = GameScreen.instance.lowerLeft.y + margin;
+		float minY = ScreenUtility.instance.lowerLeft.y + margin;
 		return transform.position.y < minY;
 	}
 

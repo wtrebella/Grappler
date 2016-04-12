@@ -43,7 +43,7 @@ public class OldAnchorableGenerator : MonoBehaviour {
 	}
 	
 	private bool ShouldRecycleAnchorable(Anchorable anchorable) {
-		return !anchorable.isConnected && GameScreen.instance.IsOffLeftOfScreenWithMargin(anchorable.transform.position.x);
+		return !anchorable.isConnected && ScreenUtility.instance.IsOffLeftOfScreenWithMargin(anchorable.transform.position.x);
 	}
 
 	private void RecycleAnchorable(Anchorable anchorable) {

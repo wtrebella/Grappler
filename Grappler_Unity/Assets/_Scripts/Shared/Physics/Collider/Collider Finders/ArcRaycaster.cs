@@ -38,7 +38,7 @@ public class ArcRaycaster : MonoBehaviour {
 		foreach (Collider2D collider in colliders) {
 			Anchorable anchorable = collider.GetComponent<Anchorable>();
 			if (!CanDirectlyReachAnchorable(anchorable)) continue;
-			if (!GameScreen.instance.IsOnscreen(collider.transform.position)) continue;
+			if (!ScreenUtility.instance.IsOnscreen(collider.transform.position)) continue;
 			if (furthestAnchorable != null) {
 				if (anchorable.anchorableID > furthestAnchorable.anchorableID) furthestAnchorable = anchorable;
 			}

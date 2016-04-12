@@ -72,12 +72,12 @@ public class Building : MonoBehaviour {
 
 	public bool IsOffLeftOfScreen() {
 		AssertAttributesHaveBeenSet();
-		return GameScreen.instance.IsOffLeftOfScreenWithMargin(attributes.quad.bounds.max.x);
+		return ScreenUtility.instance.IsOffLeftOfScreenWithMargin(attributes.quad.bounds.max.x);
 	}
 
 	public bool IsOffRightOfScreen() {
 		AssertAttributesHaveBeenSet();
-		return GameScreen.instance.IsOffRightOfScreenWithMargin(attributes.quad.bounds.max.x);
+		return ScreenUtility.instance.IsOffRightOfScreenWithMargin(attributes.quad.bounds.max.x);
 	}
 
 	private void AssertAttributesHaveBeenSet() {

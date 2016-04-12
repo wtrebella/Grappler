@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(CameraMover))]
+[RequireComponent(typeof(GameCamera))]
 public class CameraMoverUpdateTypeSwitcher : MonoBehaviour {
-	private CameraMover cameraMover;
+	private GameCamera cameraMover;
 
 	private void Awake() {
-		cameraMover = GetComponent<CameraMover>();
+		cameraMover = GetComponent<GameCamera>();
 	}
 
 	public void UseUpdate() {

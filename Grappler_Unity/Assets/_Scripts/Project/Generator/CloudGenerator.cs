@@ -15,7 +15,7 @@ public class CloudGenerator : Generator {
 	}
 
 	private float GetDistanceMovedSinceLastCloud() {
-		Vector3 camPosition = GameScreen.instance.cam.transform.position;
+		Vector3 camPosition = ScreenUtility.instance.cam.transform.position;
 		return (camPositionAtLastCloudCreation - camPosition).magnitude;
 	}
 
@@ -30,7 +30,7 @@ public class CloudGenerator : Generator {
 	private void GenerateCloudInRandomScreenSpot() {
 		Cloud cloud = (Cloud)GenerateItem();
 		float z = zRange.GetRandom();
-		Vector3 position = GameScreen.instance.GetRandomWorldPoint(z);
+		Vector3 position = ScreenUtility.instance.GetRandomWorldPoint(z);
 		cloud.transform.position = position;
 	}
 
@@ -39,10 +39,10 @@ public class CloudGenerator : Generator {
 		float y = Random.Range(250, Screen.height + 500);
 		float z = zRange.GetRandom();
 		Vector3 newCloudScreenPosition = new Vector3(x, y, z);
-		Vector3 newCloudWorldPosition = GameScreen.instance.ScreenPointToWorldPoint(newCloudScreenPosition, z);
+		Vector3 newCloudWorldPosition = ScreenUtility.instance.ScreenPointToWorldPoint(newCloudScreenPosition, z);
 		Cloud cloud = (Cloud)GenerateItem();
 		cloud.transform.position = newCloudWorldPosition;
-		camPositionAtLastCloudCreation = GameScreen.instance.cam.transform.position;
+		camPositionAtLastCloudCreation = ScreenUtility.instance.cam.transform.position;
 		CalculateCamDistanceToNextCloud();
 	}
 
