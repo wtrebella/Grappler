@@ -7,6 +7,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private Transform focusObject;
 	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private Camera cam;
+	[SerializeField] private float marginSize = 10;
 
 	public void SetUpdateType(WhitUpdateType newUpdateType) {
 		updateType = newUpdateType;
@@ -51,9 +52,15 @@ public class GameCamera : MonoBehaviour {
 	private Vector3 GetTargetPosition() {
 		Vector3 objectPosition = focusObject.position;
 		Vector3 terrainPoint = (Vector3)terrainPair.GetPointAtX(objectPosition.x);
-		terrainPoint.z = transform.position.z;
+		terrainPoint.z = GetTargetZ();
 		return terrainPoint;
 	}
 
-
+	private float GetTargetZ() {
+		float x = transform.position.x;
+		float terrainWidth = terrainPair.GetWidthAtX(x);
+		float targetFrustumHeight = terrainWidth + marginSize * 2;
+		float distance = cam.GetDistanceAtFrustumHeight(targetFrustumHeight);
+		return -distance;
+	}
 }

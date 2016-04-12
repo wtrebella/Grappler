@@ -36,6 +36,14 @@ public class WhitTerrainPair : MonoBehaviour {
 		return WhitTools.GetAveragePoint(topTerrain.GetPointAtX(x), bottomTerrain.GetPointAtX(x));
 	}
 
+	public float GetWidthAtX(float x) {
+		Vector2 topPoint = topTerrain.GetPointAtX(x);
+		Vector2 bottomPoint = bottomTerrain.GetPointAtX(x);
+		Vector2 diff = topPoint - bottomPoint;
+		float width = diff.magnitude;
+		return width;
+	}
+
 	public float GetStartDist() {
 		float topStartDist = topTerrain.GetStartDist();
 		float bottomStartDist = bottomTerrain.GetStartDist();

@@ -37,6 +37,10 @@ public static class WhitTools {
 		return distance;
 	}
 
+	public static float GetDistanceAtFrustumWidth(Camera camera, float frustumWidth) {
+		return GetDistanceAtFrustumHeight(camera, FrustumWidthToHeight(camera, frustumWidth));
+	}
+
 	public static float GetFieldOfView(Camera camera, float distance, float frustumHeight) {
 		float fieldOfView = 2.0f * Mathf.Atan(frustumHeight * 0.5f / distance) * Mathf.Rad2Deg;
 		return fieldOfView;
