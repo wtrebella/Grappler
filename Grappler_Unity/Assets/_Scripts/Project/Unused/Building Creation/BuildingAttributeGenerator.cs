@@ -81,7 +81,7 @@ public class BuildingAttributeGenerator : MonoBehaviour {
 		Building previousBuilding;
 		Quad previousQuad = Quad.zero;
 		if (buildings.Count > 0) {
-			previousBuilding = buildings.GetLastItem();
+			previousBuilding = buildings.GetLast();
 			previousQuad = previousBuilding.attributes.quad;
 		}
 		

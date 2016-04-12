@@ -86,7 +86,7 @@ public class BuildingGenerator : MonoBehaviour {
 	private Building GetLastBuilding() {
 		WhitTools.Assert(buildings.Count > 0, "no buildings to get!");
 
-		return buildings.GetLastItem();
+		return buildings.GetLast();
 	}
 
 	private bool BuildingsExist() {

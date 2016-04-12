@@ -40,20 +40,26 @@ public static class ListExtensions {
 		return newList;
 	}
 
-	public static T GetLastItem<T>(this List<T> list) {
+	public static T GetLast<T>(this List<T> list) {
 		if (list.Count == 0) return default(T);
 
 		return list[list.Count - 1];
 	}
 		
-	public static T GetFirstItem<T>(this List<T> list) {
+	public static T GetFirst<T>(this List<T> list) {
 		if (list.Count == 0) return default(T);
 
 		return list[0];
 	}
+
+	public static T GetRandom<T>(this List<T> list) {
+		if (list.Count == 0) return default(T);
+
+		return list[UnityEngine.Random.Range(0, list.Count - 1)];
+	}
 		
-	public static T GetPenultimateItem<T>(this List<T> list) {
-		if (list.Count <= 1) return default(T);
+	public static T GetPenultimate<T>(this List<T> list) {
+		if (list.Count < 2) return default(T);
 
 		return list[list.Count - 2];
 	}

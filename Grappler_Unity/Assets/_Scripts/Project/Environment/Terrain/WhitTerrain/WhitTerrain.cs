@@ -46,12 +46,12 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	public bool IsValid() {return sections != null && sections.Count > 0;}
-	public WhitTerrainSection GetFirstSection() {return sections.GetFirstItem();}
-	public WhitTerrainSection GetLastSection() {return sections.GetLastItem();}
-	public Vector2 GetStartPointLocal() {return sections.GetFirstItem().startPoint;}
-	public Vector2 GetEndPointLocal() {return sections.GetLastItem().endPoint;}
-	public Vector2 GetStartPoint() {return transform.TransformPoint(sections.GetFirstItem().startPoint);}
-	public Vector2 GetEndPoint() {return transform.TransformPoint(sections.GetLastItem().endPoint);}
+	public WhitTerrainSection GetFirstSection() {return sections.GetFirst();}
+	public WhitTerrainSection GetLastSection() {return sections.GetLast();}
+	public Vector2 GetStartPointLocal() {return sections.GetFirst().startPoint;}
+	public Vector2 GetEndPointLocal() {return sections.GetLast().endPoint;}
+	public Vector2 GetStartPoint() {return transform.TransformPoint(sections.GetFirst().startPoint);}
+	public Vector2 GetEndPoint() {return transform.TransformPoint(sections.GetLast().endPoint);}
 
 	public float GetDistLength() {
 		return GetEndDist() - GetStartDist();

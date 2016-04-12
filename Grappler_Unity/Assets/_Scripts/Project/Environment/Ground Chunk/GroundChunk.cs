@@ -33,11 +33,11 @@ public class GroundChunk : GeneratableItem {
 	}
 
 	public Point GetLastEdgePoint() {
-		return edgePoints.GetLastItem();
+		return edgePoints.GetLast();
 	}
 
 	public Point GetFirstEdgePoint() {
-		return edgePoints.GetFirstItem();
+		return edgePoints.GetFirst();
 	}
 
 	public int GetIndexOfEdgePoint(Point point) {

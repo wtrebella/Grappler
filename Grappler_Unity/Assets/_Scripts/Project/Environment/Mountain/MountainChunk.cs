@@ -36,7 +36,7 @@ public class MountainChunk : GeneratableItem {
 	}
 
 	public Point GetLastEdgePoint() {
-		return edgePoints.GetLastItem();
+		return edgePoints.GetLast();
 	}
 
 	public Vector2 PlaceToPosition(float place) {

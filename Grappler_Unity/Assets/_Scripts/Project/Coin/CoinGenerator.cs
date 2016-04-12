@@ -5,7 +5,6 @@ using System;
 
 public class CoinGenerator : ItemBetweenTerrainPairGenerator {
 	[SerializeField] private float probability = 0.5f;
-//	public Action OnCoinCollected;
 
 	protected override void OnPatternAdded(FloatRange distRange) {
 		if (UnityEngine.Random.value > probability) return;
@@ -14,10 +13,5 @@ public class CoinGenerator : ItemBetweenTerrainPairGenerator {
 		float dist = distRange.Lerp(distPercent);
 		float verticalPercent = UnityEngine.Random.Range(0.1f, 0.9f);
 		GenerateItem(dist, verticalPercent);
-	}
-
-	public void OnChildCoinCollected() {
-//		WhitTools.Invoke(OnCoinCollected);
-		GameStats.OnCoinCollected();
 	}
 }

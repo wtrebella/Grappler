@@ -11,15 +11,14 @@ public class ItemBetweenTerrainPairGenerator : Generator {
 	}
 
 	private void OnPatternAdded(List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
-		float topDistStart = topSections.GetFirstItem().distStart;
-		float topDistEnd = topSections.GetLastItem().distEnd;
+		float topDistStart = topSections.GetFirst().distStart;
+		float topDistEnd = topSections.GetLast().distEnd;
 
-		float bottomDistStart = bottomSections.GetFirstItem().distStart;
-		float bottomDistEnd = bottomSections.GetLastItem().distEnd;
+		float bottomDistStart = bottomSections.GetFirst().distStart;
+		float bottomDistEnd = bottomSections.GetLast().distEnd;
 
 		float distStart = (topDistStart + bottomDistStart) / 2.0f;
 		float distEnd = (topDistEnd + bottomDistEnd) / 2.0f;
-
 		FloatRange distRange = new FloatRange(distStart, distEnd);
 
 		OnPatternAdded(distRange);

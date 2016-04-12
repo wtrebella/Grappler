@@ -6,9 +6,9 @@ using System;
 public class Generator : MonoBehaviour {
 	public int numItemsCreated {get; private set;}
 
-	[SerializeField] private int maxItems = 10;
 	[SerializeField] private bool autoRecycle = true;
-	[SerializeField] protected GeneratableItem prefab;
+	[SerializeField] private int autoRecycleMaxItemCount = 10;
+	[SerializeField] protected List<GeneratableItem> prefabs;
 
 	protected List<GeneratableItem> items;
 
@@ -32,15 +32,19 @@ public class Generator : MonoBehaviour {
 	protected GeneratableItem GenerateItem() {
 		numItemsCreated++;
 
-		GeneratableItem item = prefab.Spawn();
+		GeneratableItem item = GetPrefab().Spawn();
 		item.transform.parent = transform;
 	
 		items.Add(item);
 		item.HandleSpawned(this);
 
-		if (autoRecycle && items.Count > maxItems) RecycleFirstItem();
+		if (autoRecycle && items.Count > autoRecycleMaxItemCount) RecycleFirstItem();
 
 		return item;
+	}
+
+	private GeneratableItem GetPrefab() {
+		return prefabs.GetRandom();
 	}
 
 	protected void RecycleFirstItem() {
