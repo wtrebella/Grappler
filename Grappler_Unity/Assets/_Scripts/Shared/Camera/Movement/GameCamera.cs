@@ -16,10 +16,6 @@ public class GameCamera : MonoBehaviour {
 		UpdateMovementImmediate();
 	}
 
-	private void Awake() {
-
-	}
-
 	private void Update() {
 		if (updateType != WhitUpdateType.Update) return;
 
