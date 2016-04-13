@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ItemBetweenTerrainPairGenerator : Generator {
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] protected WhitTerrainPair terrainPair;
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
@@ -37,5 +37,9 @@ public class ItemBetweenTerrainPairGenerator : Generator {
 		position.z += 0.1f;
 		item.transform.position = position;
 		return item;
+	}
+
+	protected T GenerateItem<T>(float dist, float betweenPercent) where T : GeneratableItem  {
+		return (T)GenerateItem(dist, betweenPercent);
 	}
 }

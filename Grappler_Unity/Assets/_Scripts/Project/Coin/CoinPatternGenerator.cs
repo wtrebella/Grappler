@@ -1,30 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
+using System;
 
-public class CoinPatternGenerator {
-	private static CoinPattern _testPattern;
-	public static CoinPattern testPattern {
-		get {
-			if (_testPattern == null) _testPattern = GenerateTestPattern();
-			return _testPattern;
-		}
+public class CoinPatternGenerator : ItemBetweenTerrainPairGenerator {
+	[SerializeField] private float probability = 0.5f;
+
+	protected override void OnPatternAdded(FloatRange distRange) {
+		if (UnityEngine.Random.value > probability) return;
+		GenerateCoinPattern(distRange);
 	}
 
-	private static CoinPattern GenerateTestPattern() {
-		CoinPattern coinPattern = new CoinPattern();
-
-		coinPattern.AddCoinPlacement(0.2f, 0.5f);
-		coinPattern.AddCoinPlacement(0.3f, 0.5f);
-		coinPattern.AddCoinPlacement(0.4f, 0.5f);
-		coinPattern.AddCoinPlacement(0.5f, 0.5f);
-		coinPattern.AddCoinPlacement(0.6f, 0.5f);
-
-		coinPattern.AddCoinPlacement(0.3f, 0.6f);
-		coinPattern.AddCoinPlacement(0.4f, 0.6f);
-		coinPattern.AddCoinPlacement(0.5f, 0.6f);
-
-		coinPattern.AddCoinPlacement(0.4f, 0.7f);
-
-		return coinPattern;
+	private void GenerateCoinPattern(FloatRange distRange) {
+		CoinPattern coinPattern = GenerateItem<CoinPattern>(distRange.GetRandom(), 0.5f);
+		coinPattern.Initialize(CoinPatternType.RightArrow);
 	}
 }

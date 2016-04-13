@@ -43,6 +43,10 @@ public class Generator : MonoBehaviour {
 		return item;
 	}
 
+	protected T GenerateItem<T>() where T : GeneratableItem {
+		return (T)GenerateItem();
+	}
+
 	private GeneratableItem GetPrefab() {
 		return prefabs.GetRandom();
 	}

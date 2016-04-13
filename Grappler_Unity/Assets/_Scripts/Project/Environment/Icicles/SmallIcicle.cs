@@ -39,8 +39,4 @@ public class SmallIcicle : GeneratableItem {
 		hasCollided = false;
 		rigid.gravityScale = 0;
 	}
-
-	protected override void HandleRecycled() {
-		base.HandleRecycled();
-	}
 }
