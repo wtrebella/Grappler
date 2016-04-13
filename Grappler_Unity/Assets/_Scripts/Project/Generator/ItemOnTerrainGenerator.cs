@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ItemOnTerrainGenerator : Generator {
-	[SerializeField] private WhitTerrain terrain;
+	[SerializeField] protected WhitTerrain terrain;
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
@@ -38,5 +38,10 @@ public class ItemOnTerrainGenerator : Generator {
 		position.z += 0.1f;
 		item.transform.position = position;
 		return item;
+	}
+
+	protected void RecycleItemsOnSection<T>(WhitTerrainSection section) where T : GeneratableItem {
+		var items = section.GetComponentsInChildren<T>();
+		foreach (T item in items) item.RecycleItem();
 	}
 }

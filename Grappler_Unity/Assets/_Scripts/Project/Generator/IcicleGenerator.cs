@@ -9,6 +9,10 @@ public class IcicleGenerator : ItemOnTerrainGenerator {
 		GenerateIcicles(section);
 	}
 
+	protected override void OnTerrainSectionRemoved(WhitTerrainSection section) {
+		RecycleItemsOnSection<SmallIcicle>(section);
+	}
+
 	private void GenerateIcicles(WhitTerrainSection section) {
 		GenerateItemsOnSection(section, deltaDistRange);
 	}

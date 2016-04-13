@@ -178,6 +178,7 @@ public class WhitTerrain : MonoBehaviour {
 		WhitTerrainSection firstSection = sections[0];
 		sections.Remove(firstSection);
 		if (SignalTerrainSectionRemoved != null) SignalTerrainSectionRemoved(firstSection);
+		GameObject.Destroy(firstSection.gameObject, 0.5f);
 		OnChange();
 	}
 }

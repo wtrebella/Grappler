@@ -9,6 +9,10 @@ public class TreeGenerator : ItemOnTerrainGenerator {
 		if (Random.value < sectionProbability) GenerateTrees(section);
 	}
 
+	protected override void OnTerrainSectionRemoved(WhitTerrainSection section) {
+		RecycleItemsOnSection<FirTree>(section);
+	}
+
 	private void GenerateTrees(WhitTerrainSection section) {
 		GenerateItemsOnSection(section, deltaDistRange);
 	}

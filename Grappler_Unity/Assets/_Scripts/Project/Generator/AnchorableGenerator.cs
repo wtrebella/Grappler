@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class AnchorableGenerator : Generator {
-	[SerializeField] private WhitTerrain terrain;
-
+public class AnchorableGenerator : ItemOnTerrainGenerator {
 	private static int currentAnchorableID = 0;
 
-	private void Awake() {
-		BaseAwake();
-		terrain.SignalTerrainSectionAdded += OnSectionAdded;
+	protected override void OnTerrainSectionAdded(WhitTerrainSection section) {
+		GenerateAnchorables(section);
+	}
+
+	protected override void OnTerrainSectionRemoved(WhitTerrainSection section) {
+		RecycleItemsOnSection<Anchorable>(section);
 	}
 
 	private void GenerateAnchorables(WhitTerrainSection section) {
@@ -22,9 +23,5 @@ public class AnchorableGenerator : Generator {
 		anchorable.transform.parent = section.transform;
 		anchorable.transform.localPosition = point;
 		anchorable.SetAnchorableID(currentAnchorableID++);
-	}
-
-	private void OnSectionAdded(WhitTerrainSection section) {
-		GenerateAnchorables(section);
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FirTree : MonoBehaviour {
+public class FirTree : GeneratableItem {
 	[SerializeField] private FloatRange xScaleRange = new FloatRange(0.7f, 1.0f);
 	[SerializeField] private FloatRange yScaleRange = new FloatRange(0.7f, 1.0f);
 
