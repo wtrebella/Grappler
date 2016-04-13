@@ -6,18 +6,26 @@ public class CollectionItem : ScriptableObject {
 	public string itemName = "New Item";
 
 	private string ownedKey {get {return "collectionItem_" + itemName + "_owned";}}
-	private bool _owned = false;
 	public bool owned {
 		get {
-			return WhitPrefs.GetBool(ownedKey, PrefsBoolPriority.True, _owned, false);
+			return WhitPrefs.GetBool(ownedKey, PrefsBoolPriority.True, ownedByDefault);
 		}
 		set {
-			_owned = value;
-			WhitPrefs.SetBool(ownedKey, PrefsBoolPriority.True, _owned);
+			WhitPrefs.SetBool(ownedKey, PrefsBoolPriority.True, value);
 		}
 	}
 
+	public void OnEnable() {
+		if (ownedByDefault) owned = ownedByDefault;
+	}
+
+	public bool ownedByDefault = false;
+
 	public CollectionItemSprite[] sprites;
+
+	public void RemovePrefsData() {
+		WhitPrefs.RemovePrefsKeyData(ownedKey);
+	}
 
 	public CollectionItemSprite GetFirstSprite() {
 		return GetSprite(0);

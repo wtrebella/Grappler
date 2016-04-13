@@ -49,7 +49,7 @@ public class WhitPrefs : AutoSingleton<WhitPrefs> {
 		return P31Prefs.synchronize();
 	}
 
-	public static void RemoveObjectForKey(string aKey) {
+	public static void RemovePrefsKeyData(string aKey) {
 		P31Prefs.removeObjectForKey(aKey);
 	}
 
