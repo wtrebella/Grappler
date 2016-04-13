@@ -14,14 +14,15 @@ public class CoinGenerator : ItemBetweenTerrainPairGenerator {
 	}
 
 	private void GenerateCoins(FloatRange distRange) {
-		int numPerChunk = numPerChunkRange.GetRandom();
-		FloatRange horizontalSpawnRange = new FloatRange(0.05f, 0.95f);
+		CoinPattern coinPattern = CoinPatternGenerator.testPattern;
+		GenerateCoinPattern(coinPattern, distRange);
+	}
 
-		for (int i = 0; i < numPerChunk; i++) {
-			float distPercent = horizontalSpawnRange.GetRandom();
-			float dist = distRange.Lerp(distPercent);
-			float verticalPercent = verticalSpawnRange.GetRandom();
-			GenerateItem(dist, verticalPercent);
+	private void GenerateCoinPattern(CoinPattern coinPattern, FloatRange distRange) {
+		for (int i = 0; i < coinPattern.coinPlacements.Count; i++) {
+			CoinPlacement coinPlacement = coinPattern.coinPlacements[i];
+			float dist = distRange.Lerp(coinPlacement.distPercent);
+			GenerateItem(dist, coinPlacement.vertPercent);
 		}
 	}
 }
