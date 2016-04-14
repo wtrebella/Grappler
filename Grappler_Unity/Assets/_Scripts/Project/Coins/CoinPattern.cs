@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class CoinPatternData {
+public class CoinPattern {
 	public List<Vector2> points {get; private set;}
 
-	public CoinPatternData() {
+	public CoinPattern() {
 		points = new List<Vector2>();
 	}
 

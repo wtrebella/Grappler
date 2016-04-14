@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Events;
 using System;
 
-public class CoinPatternGenerator : ItemBetweenTerrainPairGenerator {
+public class CoinClusterGenerator : ItemBetweenTerrainPairGenerator {
 	[SerializeField] private float probability = 0.5f;
 
 	protected override void OnPatternAdded(FloatRange distRange) {
@@ -12,7 +12,11 @@ public class CoinPatternGenerator : ItemBetweenTerrainPairGenerator {
 	}
 
 	private void GenerateCoinPattern(FloatRange distRange) {
-		CoinPattern coinPattern = GenerateItem<CoinPattern>(distRange.GetRandom(), 0.5f);
-		coinPattern.Initialize(CoinPatternType.RightArrow);
+		CoinCluster coinPattern = GenerateItem<CoinCluster>(distRange.GetRandom(), 0.5f);
+		coinPattern.Initialize(GetCoinPatternData());
+	}
+
+	private CoinPattern GetCoinPatternData() {
+		return CoinPatterns.RandomPattern;
 	}
 }
