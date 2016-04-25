@@ -45,7 +45,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 60
+  spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
@@ -62,12 +62,13 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 22, y: 22, z: 22, w: 22}
       outline:
-      - - {x: -21, y: 22}
-        - {x: -25, y: 21}
+      - - {x: -17, y: 24}
+        - {x: -25, y: 15}
         - {x: -25, y: -25}
         - {x: 21, y: -25}
-        - {x: 22, y: -19}
-        - {x: 22, y: 22}
+        - {x: 24, y: -20}
+        - {x: 24, y: 17}
+        - {x: 23, y: 24}
     outline: []
   spritePackingTag: 
   userData: 
