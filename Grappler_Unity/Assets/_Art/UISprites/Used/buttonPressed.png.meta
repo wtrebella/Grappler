@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 29df1fcef99d443cca281a9c77d8912e
-timeCreated: 1456304466
+timeCreated: 1461628938
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -54,23 +54,24 @@ TextureImporter:
     - name: buttonPressed_0
       rect:
         serializedVersion: 2
-        x: 7
-        y: 7
-        width: 50
-        height: 50
+        x: 0
+        y: 0
+        width: 58
+        height: 64
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 22, y: 22, z: 22, w: 22}
+      border: {x: 25, y: 33, z: 25, w: 28}
       outline:
-      - - {x: -17, y: 24}
-        - {x: -25, y: 15}
-        - {x: -25, y: -25}
-        - {x: 21, y: -25}
-        - {x: 24, y: -20}
-        - {x: 24, y: 17}
-        - {x: 23, y: 24}
+      - - {x: -25, y: 31}
+        - {x: -29, y: 25}
+        - {x: -29, y: -27}
+        - {x: -22, y: -32}
+        - {x: 23, y: -32}
+        - {x: 29, y: -24}
+        - {x: 29, y: 29}
+        - {x: 23, y: 31}
     outline: []
-  spritePackingTag: 
+  spritePackingTag: UI
   userData: 
   assetBundleName: 
   assetBundleVariant: 
