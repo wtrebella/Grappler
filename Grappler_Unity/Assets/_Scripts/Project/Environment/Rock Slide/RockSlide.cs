@@ -7,7 +7,6 @@ using UnityEngine.Events;
 public class RockSlide : MonoBehaviour {
 	public UnityEventWithFloat OnPushBack;
 
-	[SerializeField] private Player player;
 	[SerializeField] private Transform startPoint;
 	[SerializeField] private Follow follow;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
@@ -16,33 +15,14 @@ public class RockSlide : MonoBehaviour {
 	[SerializeField] private float slowZoneDistanceFromPlayer = 10;
 	[SerializeField] private float slowZoneMultiplier = 0.1f;
 	[SerializeField] private float pushBackAmount = -10;
-	[SerializeField] private float streakThreshold = 0.3f;
 
 	private bool hasStarted = false;
 
 	private float invertedSpeedPercent = 1;
 	private float currentOffsetChangeRate = 0;
 
-	public float GetStreakThreshold() {
-		return streakThreshold;
-	}
-
 	public void StopMoving() {
 		follow.enabled = false;
-	}
-
-	public void OnAirTimeStreakEndedByCollision(float streak) {
-
-	}
-
-	public void OnGrapple() {
-//		float pushBackPercent = 1 - player.groundDetector.GetDistanceFromGroundPercent();
-//		PushBack(pushBackPercent);
-	}
-
-	public void OnAirTimeStreakEndedByGrapple(float streak) {
-		if (streak < streakThreshold) return;
-		PushBack(streak);
 	}
 
 	public void OnSpeedPercentChanged(float percent) {
@@ -58,7 +38,7 @@ public class RockSlide : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)) hasStarted = true;
+		if (InputManager.instance.GetMouseButtonDown(0) || InputManager.instance.GetTouchBegan()) hasStarted = true;
 
 		if (updateType != WhitUpdateType.Update) return;
 		if (!hasStarted) return;
@@ -80,11 +60,26 @@ public class RockSlide : MonoBehaviour {
 	}
 	
 	private void UpdateOffsetUpdate() {
-		UpdateOffset(Time.deltaTime * Time.timeScale);
+		float deltaTime = Time.deltaTime * Time.timeScale;
+//		UpdateOffset(deltaTime);
+		Move(deltaTime);
 	}
 
 	private void UpdateOffsetFixedUpdate() {
-		UpdateOffset(Time.fixedDeltaTime * Time.timeScale);
+		float deltaTime = Time.fixedDeltaTime * Time.timeScale;
+//		UpdateOffset(deltaTime);
+		Move(deltaTime);
+	}
+
+	private void Move(float deltaTime) {
+		float speed;
+		if (IsInSlowZone()) speed = 40;
+		else speed = 80;
+		if (IsInSlowZone()) Debug.Log("slow zone");
+		else Debug.Log("fast zone");
+		Vector3 position = transform.position;
+		position.x += speed * deltaTime;
+		transform.position = position;
 	}
 
 	private void UpdateOffset(float deltaTime) {

@@ -5,6 +5,8 @@ using System;
 public class InputManager : MonoBehaviour {
 	public static InputManager instance {get; private set;}
 
+	public bool inputEnabled {get; private set;}
+
 	public Action SignalTap;
 	public Action SignalRightSwipe;
 	public Action SignalLeftSwipe;
@@ -28,11 +30,31 @@ public class InputManager : MonoBehaviour {
 	private int leftTouchID;
 	private int rightTouchID;
 
+	public void DisableInput() {
+		inputEnabled = false;
+	}
+
+	public void EnableInput() {
+		inputEnabled = true;
+	}
+
+	public bool GetMouseButtonDown(int button) {
+		if (!inputEnabled) return false;
+		return Input.GetMouseButtonDown(button);
+	}
+
+	public bool GetTouchBegan() {
+		if (!inputEnabled) return false;
+		return Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
+	}
+
 	private void Awake() {
 		Init();
 	}
 
 	private void Update() {
+		if (!inputEnabled) return;
+
 		if (PlatformInfo.IsEditor() || PlatformInfo.IsStandalone()) {
 			DetectMouseInput();
 			DetectKeyboardInput();
@@ -43,6 +65,7 @@ public class InputManager : MonoBehaviour {
 	}
 
 	private void Init() {
+		inputEnabled = true;
 		InputManager inputManager = GameObject.FindObjectOfType<InputManager>();
 		if (inputManager != this) {
 			Destroy(gameObject);

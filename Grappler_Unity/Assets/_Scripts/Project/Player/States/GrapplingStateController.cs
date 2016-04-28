@@ -16,7 +16,6 @@ public class GrapplingStateController : PlayerStateController {
 		base.EnterState();
 
 		airTimeTimer.OnGrapple();
-		rockSlide.OnGrapple();
 
 		player.rigidbodyAffecterGroup.ReduceVelocity();
 		player.rigidbodyAffecterGroup.SetNonKinematic();

@@ -69,7 +69,6 @@ public class UIManager : Singleton<UIManager> {
 		panel.SetPanelInfo(panelInfo);
 		RegisterPanel(panel);
 		panel.Show();
-		Debug.Log(panelQueue.Count);
 	}
 
 	private bool RegisteredPanelExists() {
