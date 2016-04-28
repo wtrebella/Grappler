@@ -71,6 +71,7 @@ public class WhitTerrainPair : MonoBehaviour {
 		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
 		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
 		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
+		else if (patternType == WhitTerrainPairPatternType.Flat) Flat();
 	}
 
 	private void Awake() {
@@ -105,6 +106,11 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	public void Straight() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
+		AddPattern(pattern);
+	}
+
+	public void Flat() {
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetFlatPattern(100.0f);
 		AddPattern(pattern);
 	}
 

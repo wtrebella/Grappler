@@ -54,4 +54,13 @@ public class WhitTerrainPairPatternGenerator {
 		WhitTerrainPairPattern bumpPattern = new WhitTerrainPairPattern(turn1, turn2, turn3);
 		return bumpPattern;
 	}
+
+	public static WhitTerrainPairPattern GetFlatPattern(float length) {
+		WhitTerrainPatternInstructionStraight topFlat = new WhitTerrainPatternInstructionStraight(0, length);
+		WhitTerrainPatternInstructionStraight bottomFlat = new WhitTerrainPatternInstructionStraight(0, length);
+		WhitTerrainPatternInstructionPair flat = new WhitTerrainPatternInstructionPair(topFlat, bottomFlat);
+
+		WhitTerrainPairPattern flatPattern = new WhitTerrainPairPattern(flat);
+		return flatPattern;
+	}
 }

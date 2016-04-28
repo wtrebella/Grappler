@@ -6,5 +6,6 @@ public enum WhitTerrainPairPatternType {
 	Straight,
 	Bump,
 	Widen,
-	Narrow
+	Narrow,
+	Flat
 }

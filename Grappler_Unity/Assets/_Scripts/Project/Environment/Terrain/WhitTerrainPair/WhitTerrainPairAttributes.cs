@@ -15,6 +15,7 @@ public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPa
 	[SerializeField] private int widenPatternWeight = 2;
 	[SerializeField] private int narrowPatternWeight = 2;
 	[SerializeField] private int bumpPatternWeight = 1;
+	[SerializeField] private int flatPatternWeight = 3;
 
 	public WhitTerrainPairPatternType GetRandomPatternType() {
 		List<WhitTerrainPairPatternType> patternTypes = new List<WhitTerrainPairPatternType>();
@@ -22,6 +23,7 @@ public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPa
 		for (int i = 0; i < widenPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Widen);
 		for (int i = 0; i < narrowPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Narrow);
 		for (int i = 0; i < bumpPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Bump);
+		for (int i = 0; i < flatPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Flat);
 		return patternTypes.Random();
 	}
 }
