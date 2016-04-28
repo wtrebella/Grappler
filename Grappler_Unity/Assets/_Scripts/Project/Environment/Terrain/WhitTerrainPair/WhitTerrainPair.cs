@@ -137,23 +137,23 @@ public class WhitTerrainPair : MonoBehaviour {
 		foreach (WhitTerrainPatternInstructionPair instructionPair in pattern.instructionPairs) {
 			if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
 				WhitTerrainPatternInstructionStraight topInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.topInstruction;
-				var newSection = topTerrain.AddStraight(topInstruction.slope, topInstruction.length);
+				var newSection = topTerrain.AddStraight(topInstruction.slope, topInstruction.length, topInstruction.bumpify);
 				if (newSection) topSections.Add(newSection);
 			}
 			else if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
 				WhitTerrainPatternInstructionCurve topInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.topInstruction;
-				var newSections = topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius);
+				var newSections = topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius, topInstruction.bumpify);
 				if (newSections.Count > 0) topSections.AddAll(newSections);
 			}
 
 			if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
 				WhitTerrainPatternInstructionStraight bottomInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.bottomInstruction;
-				var newSection = bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length);
+				var newSection = bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length, bottomInstruction.bumpify);
 				if (newSection) bottomSections.Add(newSection);
 			}
 			else if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
 				WhitTerrainPatternInstructionCurve bottomInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.bottomInstruction;
-				var newSections = bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius);
+				var newSections = bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius, bottomInstruction.bumpify);
 				if (newSections.Count > 0) bottomSections.AddAll(newSections);
 			}
 		}

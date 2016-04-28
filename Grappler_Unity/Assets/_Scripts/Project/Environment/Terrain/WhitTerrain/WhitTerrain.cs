@@ -22,23 +22,23 @@ public class WhitTerrain : MonoBehaviour {
 		AddFirstSection(startPoint);
 	}
 
-	public WhitTerrainSection AddStraight(float slope, float length) {
+	public WhitTerrainSection AddStraight(float slope, float length, bool bumpify) {
 		if (length > lengthThreshold) {
-			var newSection = sectionGenerator.GenerateSection(this, GetLastSection(), length, slope);
+			var newSection = sectionGenerator.GenerateSection(this, GetLastSection(), length, slope, bumpify);
 			AddSection(newSection);
 			return newSection;
 		}
 		return null;
 	}
 
-	public List<WhitTerrainSection> AddCurve(float targetSlope, float radius) {
+	public List<WhitTerrainSection> AddCurve(float targetSlope, float radius, bool bumpify) {
 		float startSlope = GetLastSectionSlope();
 		float deltaSlope = targetSlope - startSlope;
 		float angle = deltaSlope * WhitTools.Slope2Deg;
 		float arcPercent = Mathf.Abs(angle / 360.0f);
 		float length = 2 * Mathf.PI * radius * arcPercent;
 		if (length > lengthThreshold) {
-			var newSections = sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope);
+			var newSections = sectionGenerator.GenerateCurve(this, GetLastSection(), length, startSlope, targetSlope, bumpify);
 			AddSections(newSections);
 			return newSections;
 		}
@@ -160,7 +160,7 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void AddFirstSection(Vector2 startPoint) {
-		AddSection(sectionGenerator.GenerateSection(this, startPoint, 0.0f, 5.0f, 0.0f));
+		AddSection(sectionGenerator.GenerateSection(this, startPoint, 0.0f, 5.0f, 0.0f, true));
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
