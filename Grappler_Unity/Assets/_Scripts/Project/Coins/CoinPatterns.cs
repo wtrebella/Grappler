@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CoinPatterns {
-	public static CoinPattern Square {get {return GenerateCoinPatternData(stringArray_square);}}
+	public static CoinPattern Square {get {return GenerateCoinPattern(stringArray_square);}}
 	private static string[] stringArray_square = new string[] {
 		"xxxxx",
 		"x   x",
@@ -11,7 +11,7 @@ public class CoinPatterns {
 		"xxxxx"
 	};
 
-	public static CoinPattern Heart {get {return GenerateCoinPatternData(stringArray_heart);}}
+	public static CoinPattern Heart {get {return GenerateCoinPattern(stringArray_heart);}}
 	private static string[] stringArray_heart = new string[] {
 		" xx xx ",
 		"x  x  x",
@@ -21,18 +21,39 @@ public class CoinPatterns {
 		"   x   "
 	};
 
-	public static CoinPattern RandomPattern {get {return GetRandomCoinPatternData();}}
+	public static CoinPattern ArcUp {get {return GenerateCoinPattern(stringArray_arcUp);}}
+	private static string[] stringArray_arcUp = new string[] {
+		"        xxxx",
+		"     xxx    ",
+		"   xx       ",
+		" x          ",
+		"x           "
+	};
 
-	private static CoinPattern GetRandomCoinPatternData() {
+	public static CoinPattern ArcDown {get {return GenerateCoinPattern(stringArray_arcDown);}}
+	private static string[] stringArray_arcDown = new string[] {
+		"xxxx       ",
+		"    xxx    ",
+		"       xx  ",
+		"         x ",
+		"          x"
+	};
+
+
+	public static CoinPattern RandomPattern {get {return GetRandomCoinPattern();}}
+
+	private static CoinPattern GetRandomCoinPattern() {
 		string[] stringArray = (string[])RXRandom.Select(
 			stringArray_square,
-			stringArray_heart
+			stringArray_heart,
+			stringArray_arcUp,
+			stringArray_arcDown
 		);
 
-		return GenerateCoinPatternData(stringArray);
+		return GenerateCoinPattern(stringArray);
 	}
 		
-	private static CoinPattern GenerateCoinPatternData(string[] pattern) {
+	private static CoinPattern GenerateCoinPattern(string[] pattern) {
 		CoinPattern coinPattern = new CoinPattern();
 		char[][] charArray = StringArrayToCharArray(pattern);
 		Vector2 percentSize = new Vector2(0.3f, 0.3f);
@@ -56,7 +77,7 @@ public class CoinPatterns {
 	}
 
 	private static Vector2 GetCenterIndex(char[][] charArray) {
-		return new Vector2((charArray.Length - 1) / 2f, (charArray[0].Length - 1) / 2f);
+		return new Vector2((charArray[0].Length - 1) / 2f, (charArray.Length - 1) / 2f);
 	}
 
 	private static char[][] StringArrayToCharArray(string[] stringArray) {

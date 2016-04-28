@@ -7,12 +7,6 @@ public class CoinCluster : GeneratableItem {
 
 	public void Initialize(CoinPattern coinPatternData) {
 		GenerateCoins(coinPatternData);
-		Vector3 relativeRotation = new Vector3(0, 0, -360);
-		Go.to(transform, 3.0f, new GoTweenConfig()
-			.setEaseType(GoEaseType.Linear)
-			.setIterations(-1)
-			.localRotation(relativeRotation, true)
-		);
 	}
 
 	private void GenerateCoins(CoinPattern coinPatternData) {
