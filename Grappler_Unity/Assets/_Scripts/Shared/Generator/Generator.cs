@@ -34,7 +34,7 @@ public class Generator : MonoBehaviour {
 
 		GeneratableItem item = GetPrefab().Spawn();
 		item.transform.parent = transform;
-	
+
 		items.Add(item);
 		item.HandleSpawned(this);
 

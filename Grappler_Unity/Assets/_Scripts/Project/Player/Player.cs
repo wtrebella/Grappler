@@ -4,7 +4,7 @@ using System;
 using UnityEngine.Events;
 
 public class Player : WhitStateMachine {
-	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround}
+	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround, Skating}
 
 	public Rigidbody2DAffecterGroup rigidbodyAffecterGroup;
 	public GrapplingManager grapplingManager;
@@ -22,16 +22,15 @@ public class Player : WhitStateMachine {
 	public bool isOnGround {get {return CurrentStateIs(PlayerStates.OnGround);}}
 	public bool isPaused {get {return CurrentStateIs(PlayerStates.Paused);}}
 	public bool isIdle {get {return CurrentStateIs(PlayerStates.Idle);}}
+	public bool isSkating {get {return CurrentStateIs(PlayerStates.Skating);}}
 
 	private IEnumerator Start() {
 		SetState(PlayerStates.Idle);
 		yield return StartCoroutine(ClothingManager.instance.WaitForInit());
 		yield return new WaitForSeconds(2);
 		ClothingManager.instance.WearSavedOrFirstItems();
-		var hat = CollectionManager.instance.GetItem(CollectionType.Hats, "Sombrero");
-		EquipmentManager.instance.GetHatSlot().EquipItem(hat);
-		ClothingManager.instance.WearHat(hat);
-		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Stilettos"));
+		ClothingManager.instance.WearHat(CollectionManager.instance.GetItem(CollectionType.Hats, "Baseball Cap"));
+		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Converse"));
 	}
 
 	public void SetState(PlayerStates state) {
