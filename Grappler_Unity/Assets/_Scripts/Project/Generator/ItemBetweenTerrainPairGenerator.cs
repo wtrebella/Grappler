@@ -10,7 +10,7 @@ public class ItemBetweenTerrainPairGenerator : Generator {
 		terrainPair.SignalPatternAdded += OnPatternAdded;
 	}
 
-	private void OnPatternAdded(List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
 		float topDistStart = topSections.GetFirst().distStart;
 		float topDistEnd = topSections.GetLast().distEnd;
 

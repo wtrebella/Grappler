@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 public class WhitTerrainPair : MonoBehaviour {
-	public Action<List<WhitTerrainSection>, List<WhitTerrainSection>> SignalPatternAdded;
+	public Action<WhitTerrainPairPatternType, List<WhitTerrainSection>, List<WhitTerrainSection>> SignalPatternAdded;
 
 	public WhitTerrain topTerrain;
 	public WhitTerrain bottomTerrain;
@@ -106,31 +106,31 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	public void Straight() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
-		AddPattern(pattern);
+		AddPattern(WhitTerrainPairPatternType.Straight, pattern);
 	}
 
 	public void Flat() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetFlatPattern(100.0f);
-		AddPattern(pattern);
+		AddPattern(WhitTerrainPairPatternType.Flat, pattern);
 	}
 
 	public void Widen() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetWidenPattern(currentSlope, 0.2f, 30.0f);
-		AddPattern(pattern);
+		AddPattern(WhitTerrainPairPatternType.Widen, pattern);
 	}
 
 	public void Narrow() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetNarrowPattern(currentSlope, 0.2f, 30.0f);
-		AddPattern(pattern);
+		AddPattern(WhitTerrainPairPatternType.Narrow, pattern);
 	}
 
 	public void Bump() {
 		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidthAtEnd();
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
-		AddPattern(pattern);
+		AddPattern(WhitTerrainPairPatternType.Bump, pattern);
 	}
 
-	private void AddPattern(WhitTerrainPairPattern pattern) {
+	private void AddPattern(WhitTerrainPairPatternType patternType, WhitTerrainPairPattern pattern) {
 		List<WhitTerrainSection> topSections = new List<WhitTerrainSection>();
 		List<WhitTerrainSection> bottomSections = new List<WhitTerrainSection>();
 
@@ -158,11 +158,11 @@ public class WhitTerrainPair : MonoBehaviour {
 			}
 		}
 
-		OnPatternAdded(topSections, bottomSections);
+		OnPatternAdded(patternType, topSections, bottomSections);
 	}
 
-	private void OnPatternAdded(List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
-		if (SignalPatternAdded != null) SignalPatternAdded(topSections, bottomSections);
+	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+		if (SignalPatternAdded != null) SignalPatternAdded(patternType, topSections, bottomSections);
 	}
 
 	public float GetDistAtPosition(Vector2 position) {
