@@ -7,6 +7,7 @@ public class PlayerAnimator : MonoBehaviour {
 	private string clipName_falling = "falling";
 	private string clipName_onGround = "onGround";
 	private string clipName_idle = "idle";
+	private string clipName_skating = "idle";// TODO add skating animation
 
 	[SerializeField] private SkeletonAnimation topAnimation;
 	[SerializeField] private SkeletonAnimation bottomAnimation;
@@ -22,6 +23,10 @@ public class PlayerAnimator : MonoBehaviour {
 
 	public void PlayIdleAnimations() {
 		PlayAnimations(clipName_idle);
+	}
+
+	public void PlaySkatingAnimations() {
+		PlayAnimations(clipName_skating);
 	}
 
 	public void PlayOnGroundAnimations() {

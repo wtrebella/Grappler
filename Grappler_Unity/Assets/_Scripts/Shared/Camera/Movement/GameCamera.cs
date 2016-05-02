@@ -9,6 +9,9 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private Camera cam;
 	[SerializeField] private float marginSize = 10;
 
+	private Vector3 smoothVelocity;
+	private float smoothTime = 0.2f;
+
 	public void SetUpdateType(WhitUpdateType newUpdateType) {
 		updateType = newUpdateType;
 	}
@@ -30,11 +33,17 @@ public class GameCamera : MonoBehaviour {
 	}
 
 	private void UpdateMovement() {
-		UpdateMovementImmediate();
+		UpdateMovementSmoothed();
 	}
 		
 	private void UpdateMovementImmediate() {
 		transform.position = GetTargetPosition();
+	}
+
+	private void UpdateMovementSmoothed() {
+		Vector3 position = transform.position;
+		position = Vector3.SmoothDamp(position, GetTargetPosition(), ref smoothVelocity, smoothTime);
+		transform.position = position;
 	}
 
 	private float GetObjectToThisDistance() {

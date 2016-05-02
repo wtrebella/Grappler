@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class IceCollisionHandler : CollisionHandler {
+	[SerializeField] private SkatingController skatingController;
 
 	private Player _player;
 	protected Player player {
@@ -14,9 +15,16 @@ public class IceCollisionHandler : CollisionHandler {
 
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
 		base.HandleTriggerEnter(rigid, collider);
+//		if (WhitTools.IsInLayer(collider.gameObject, "Ice")) {
+			if (!player.isSkating) {
+			Ice ice = collider.gameObject.GetComponentInParent<Ice>();
+				if (ice) StartSkating(ice);
+			}
+//		}
+	}
 
-		if (WhitTools.IsInLayer(collider.gameObject, "Ice")) {
-			player.SetState(Player.PlayerStates.Skating);
-		}
+	private void StartSkating(Ice ice) {
+		skatingController.SetIce(ice);
+		player.SetState(Player.PlayerStates.Skating);
 	}
 }
