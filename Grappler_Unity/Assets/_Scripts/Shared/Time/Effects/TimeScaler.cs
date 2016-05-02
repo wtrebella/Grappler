@@ -4,6 +4,8 @@ using System.Collections;
 public class TimeScaler : MonoBehaviour {
 	public static TimeScaler instance;
 
+	private const float fixedFrameRate = 60.0f;
+
 	private enum ScaleType {
 		None,
 		ScaleUp,
@@ -68,7 +70,7 @@ public class TimeScaler : MonoBehaviour {
 		timeScaleChangeRate = totalTimeScaleChange / scaleDuration;
 		totalFixedDeltaTimeChange = fixedDeltaTimeGoal - Time.fixedDeltaTime;
 		fixedDeltaTimeChangeRate = totalFixedDeltaTimeChange / scaleDuration;
-		fixedDeltaTimeGoal = (1.0f/30.0f) * scale;
+		fixedDeltaTimeGoal = (1.0f/fixedFrameRate) * scale;
 	}
 
 	public void StopScalingTime() {
@@ -83,7 +85,7 @@ public class TimeScaler : MonoBehaviour {
 		if (scaleType == ScaleType.None) return;
 
 		float newTimeScale = Mathf.Min(timeScaleNormal, Mathf.Max(timeScaleMin, Time.timeScale + timeScaleChangeRate * Time.unscaledDeltaTime));
-		float newFixedDeltaTime = Mathf.Min(1.0f/30.0f, Mathf.Max((1.0f/30.0f) * timeScaleMin, Time.fixedDeltaTime + fixedDeltaTimeChangeRate * Time.unscaledDeltaTime));
+		float newFixedDeltaTime = Mathf.Min(1.0f/fixedFrameRate, Mathf.Max((1.0f/fixedFrameRate) * timeScaleMin, Time.fixedDeltaTime + fixedDeltaTimeChangeRate * Time.unscaledDeltaTime));
 
 		Time.timeScale = newTimeScale;
 		Time.fixedDeltaTime = newFixedDeltaTime;

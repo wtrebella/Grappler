@@ -6,8 +6,14 @@ public class Ice : GeneratableItem {
 	[SerializeField] private SpriteRenderer sprite;
 	[SerializeField] private Collider2D endCollider;
 
-	private void Awake() {
-		
+	private bool doneSkating = false;
+
+	public void SetDoneSkating() {
+		doneSkating = true;
+	}
+
+	public bool GetDoneSkating() {
+		return doneSkating;
 	}
 
 	public void SetSection(WhitTerrainSection section) {
@@ -29,5 +35,10 @@ public class Ice : GeneratableItem {
 	private void SetEndColliderPosition(float width) {
 		Vector2 endColliderLocalPosition = new Vector3(width, 0, 0);
 		endCollider.transform.localPosition = endColliderLocalPosition;
+	}
+
+	protected override void HandleRecycled() {
+		base.HandleRecycled();
+		doneSkating = false;
 	}
 }

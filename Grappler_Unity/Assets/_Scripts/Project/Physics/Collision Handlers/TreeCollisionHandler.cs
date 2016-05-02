@@ -13,9 +13,12 @@ public class TreeCollisionHandler : CollisionHandler {
 
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
 		base.HandleTriggerEnter(rigid, collider);
-		ScreenShaker.instance.ShakeLerp(0.2f);
 
-		Rigidbody2DVelocityReducer velocityReducer = player.rigidbodyAffecterGroup.GetAffecter<Rigidbody2DVelocityReducer>();
-		if (velocityReducer != null) velocityReducer.Reduce();
+		if (!player.isSkating) {
+			ScreenShaker.instance.ShakeLerp(0.2f);
+
+			Rigidbody2DVelocityReducer velocityReducer = player.rigidbodyAffecterGroup.GetAffecter<Rigidbody2DVelocityReducer>();
+			if (velocityReducer != null) velocityReducer.Reduce();
+		}
 	}
 }

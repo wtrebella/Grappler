@@ -3,14 +3,22 @@ using System.Collections;
 
 public class SkatingController : MonoBehaviour {
 	[SerializeField] private Player player;
-	[SerializeField] private float speed = 10;
 	[SerializeField] private float verticalIceOffset = 0.9f;
 
 	private Ice ice;
 	private bool isSkating = false;
+	private float speed;
 
 	public void SetIce(Ice ice) {
 		this.ice = ice;
+	}
+
+	public void SetSpeed(float speed) {
+		this.speed = speed;
+	}
+
+	public float GetSpeed() {
+		return speed;
 	}
 
 	public void StartSkating() {
@@ -20,6 +28,7 @@ public class SkatingController : MonoBehaviour {
 	}
 
 	public void StopSkating() {
+		ice.SetDoneSkating();
 		isSkating = false;
 	}
 
@@ -31,7 +40,6 @@ public class SkatingController : MonoBehaviour {
 
 	private void FixedUpdate() {
 		if (!isSkating) return;
-
 		Vector3 position = player.body.transform.position;
 		position.x += speed * Time.deltaTime * Time.timeScale;
 		player.body.transform.position = position;

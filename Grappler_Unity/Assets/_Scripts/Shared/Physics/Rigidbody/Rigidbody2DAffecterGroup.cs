@@ -69,6 +69,14 @@ public class Rigidbody2DAffecterGroup : MonoBehaviour {
 		forcer.AddForce(force, forceMode);
 	}
 
+	public void SetXVelocity(float x) {
+		forcer.SetXVelocity(x);	
+	}
+
+	public void SetYVelocity(float y) {
+		forcer.SetYVelocity(y);	
+	}
+
 	public void SetVelocity(Vector2 velocity) {
 		forcer.SetVelocity(velocity);
 	}

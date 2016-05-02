@@ -14,6 +14,22 @@ public class Rigidbody2DForcer : Rigidbody2DAffecter {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.velocity = velocity;
 	}
 
+	public void SetXVelocity(float x) {
+		foreach (Rigidbody2D rigid in rigidbodies) {
+			Vector2 velocity = rigid.velocity;
+			velocity.x = x;
+			rigid.velocity = velocity;
+		}
+	}
+
+	public void SetYVelocity(float y) {
+		foreach (Rigidbody2D rigid in rigidbodies) {
+			Vector2 velocity = rigid.velocity;
+			velocity.y = y;
+			rigid.velocity = velocity;
+		}
+	}
+
 	public void AddVelocity(Vector2 velocity) {
 		foreach (Rigidbody2D rigid in rigidbodies) rigid.velocity += velocity;
 	}
