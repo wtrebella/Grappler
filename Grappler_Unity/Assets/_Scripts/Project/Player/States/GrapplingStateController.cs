@@ -17,7 +17,7 @@ public class GrapplingStateController : PlayerStateController {
 
 		airTimeTimer.OnGrapple();
 
-		player.rigidbodyAffecterGroup.ReduceVelocity();
+//		player.rigidbodyAffecterGroup.ReduceVelocity();
 		player.rigidbodyAffecterGroup.SetNonKinematic();
 		player.playerAnimator.PlayGrapplingAnimations();
 	}

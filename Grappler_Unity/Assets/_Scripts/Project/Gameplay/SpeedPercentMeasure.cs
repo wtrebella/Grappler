@@ -2,13 +2,13 @@
 using System.Collections;
 
 public class SpeedPercentMeasure : MonoBehaviour {
-	[SerializeField] private float maxSpeed = 80;
+	[SerializeField] private FloatRange speedRange = new FloatRange(30, 90);
 	[SerializeField] private SpeedMeasure speedMeasure;
 
 	public float GetSpeedPercent() {
-		float speed = speedMeasure.GetXSpeed();
-		float clampedSpeed = Mathf.Clamp(speed, 0, maxSpeed);
-		float percent = clampedSpeed / maxSpeed;
+		float speed = speedMeasure.GetSpeed();
+		float clampedSpeed = speedRange.Clamp(speed);
+		float percent = speedRange.GetPercent(clampedSpeed);
 		return percent;
 	}
 }

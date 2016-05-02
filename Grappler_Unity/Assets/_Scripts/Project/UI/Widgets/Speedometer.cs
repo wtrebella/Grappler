@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class Speedometer : MonoBehaviour {
-	[SerializeField] private SpeedPercentMeasure speedPercentMeasure;
+	[SerializeField] private SpeedometerMeasure speedometerMeasure;
 	[SerializeField] private Slider slider;
 	[SerializeField] private Image fill;
 	[SerializeField] private float smoothTime = 0.3f;
@@ -31,6 +31,6 @@ public class Speedometer : MonoBehaviour {
 	}
 
 	private float GetSpeedPercent() {
-		return speedPercentMeasure.GetSpeedPercent();
+		return speedometerMeasure.GetSpeedometerPercent();
 	}
 }
