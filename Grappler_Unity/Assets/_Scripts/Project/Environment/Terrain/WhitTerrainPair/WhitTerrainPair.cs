@@ -110,7 +110,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Flat() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetFlatPattern(100.0f);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetFlatPattern(WhitTerrainPairAttributes.instance.iceWidthRange.GetRandom());
 		AddPattern(WhitTerrainPairPatternType.Flat, pattern);
 	}
 
