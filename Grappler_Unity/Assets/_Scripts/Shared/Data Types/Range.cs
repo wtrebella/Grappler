@@ -53,9 +53,8 @@ public class FloatRange : Range {
 	}
 
 	public float GetPercent(float value) {
-		float range = max - min;
 		float adjustedValue = value - min;
-		return Mathf.Clamp01(adjustedValue / range);
+		return Mathf.Clamp01(adjustedValue / difference);
 	}
 
 	public float GetRandom() {

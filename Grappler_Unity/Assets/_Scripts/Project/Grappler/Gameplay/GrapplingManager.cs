@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class GrapplingManager : MonoBehaviour {
 	[SerializeField] private RockSlide rockSlide;
-	[SerializeField] private AirTimeTimer airTimeTimer;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private GrapplerRope grapplerRope;
 	[SerializeField] private Vector2 grappleBoost = new Vector2(25, -100);
@@ -19,18 +19,14 @@ public class GrapplingManager : MonoBehaviour {
 
 	private bool hasConnected = false;
 
-	float connectSpeed;
 	public bool Connect() {
-		connectSpeed = player.body.rigid.velocity.magnitude;
-		return ConnectGrapplerToHighestAnchorable();
+		bool connected = ConnectGrapplerToHighestAnchorable();
+		return connected;
 	}
 
-	float disconnectSpeed;
 	public bool Disconnect() {
-		disconnectSpeed = player.body.rigid.velocity.magnitude;
-
-		Debug.Log((int)(disconnectSpeed - connectSpeed));
-		return DisconnectGrapplerIfPossible();
+		bool disconnected = DisconnectGrapplerIfPossible();
+		return disconnected;
 	}
 
 	private bool ConnectGrapplerToHighestAnchorable() {
