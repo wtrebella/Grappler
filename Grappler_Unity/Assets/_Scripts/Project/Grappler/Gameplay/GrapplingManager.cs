@@ -19,11 +19,17 @@ public class GrapplingManager : MonoBehaviour {
 
 	private bool hasConnected = false;
 
+	float connectSpeed;
 	public bool Connect() {
+		connectSpeed = player.body.rigid.velocity.magnitude;
 		return ConnectGrapplerToHighestAnchorable();
 	}
 
+	float disconnectSpeed;
 	public bool Disconnect() {
+		disconnectSpeed = player.body.rigid.velocity.magnitude;
+
+		Debug.Log((int)(disconnectSpeed - connectSpeed));
 		return DisconnectGrapplerIfPossible();
 	}
 
@@ -73,7 +79,7 @@ public class GrapplingManager : MonoBehaviour {
 	}
 
 	private void FixedUpdate() {
-		ApplyGrappleBoost();
+		if (grapplerRope.IsConnected()) ApplyGrappleBoost();
 	}
 
 	private void ApplyGrappleBoost() {

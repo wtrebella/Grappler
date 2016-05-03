@@ -8,7 +8,6 @@ public class AnchorableFinder : MonoBehaviour {
 
 	public bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
 		anchorable = null;
-
 		foreach (ArcRaycaster arcRaycaster in arcRaycasters) {
 			if (arcRaycaster.FindAnchorable(out anchorable, direction)) break;
 		}
@@ -18,7 +17,6 @@ public class AnchorableFinder : MonoBehaviour {
 
 	public bool FindAnchorableInCircle(out Anchorable anchorable) {
 		anchorable = null;
-		
 		foreach (CircleOverlapper circleOverlapper in circleOverlappers) {
 			if (circleOverlapper.FindAnchorable(out anchorable)) break;
 		}
@@ -28,7 +26,6 @@ public class AnchorableFinder : MonoBehaviour {
 
 	public bool FindAnchorableInScreenOverlap(out Anchorable anchorable) {
 		anchorable = null;
-		
 		return screenOverlapper.FindAnchorable(out anchorable);
 	}
 }
