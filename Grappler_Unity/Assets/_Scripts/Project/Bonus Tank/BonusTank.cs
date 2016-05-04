@@ -32,13 +32,9 @@ public class BonusTank : MonoBehaviour {
 
 	public void Set(int amt) {
 		int previousLevel = level;
-		level = ClampToCapacity(level);
+		level = ClampToCapacity(amt);
 		FireSignals(previousLevel);
 	}
-
-
-
-
 
 	private int ClampToCapacity(int amt) {
 		return Mathf.Clamp(amt, 0, capacity);

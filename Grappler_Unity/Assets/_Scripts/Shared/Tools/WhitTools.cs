@@ -48,7 +48,7 @@ public static class WhitTools {
 
 	public static void SetTimeScale(float timeScale) {
 		Time.timeScale = timeScale;
-		Time.fixedDeltaTime = (1.0f/30.0f) * timeScale;
+		Time.fixedDeltaTime = (1.0f/60.0f) * timeScale;
 	}
 
 	public static float Project(Vector2 a, Vector2 b) {

@@ -48,7 +48,7 @@ public class JumpMeasure : MonoBehaviour {
 	private void ReportJumpDistance() {
 		Vector2 delta = pointAtJumpStart - pointAtJumpEnd;
 		float jumpDistance = delta.magnitude;
-		Debug.Log("just jumped: " + (int)jumpDistance + " meters!");
 		ScoreManager.instance.ReportJumpDistance(jumpDistance);
+		BonusTankManager.instance.ReportJumpDistance(jumpDistance);
 	}
 }
