@@ -8,6 +8,7 @@ public class BonusTank : MonoBehaviour {
 	public Action SignalTankLevelChanged;
 	public Action SignalTankFull;
 	public Action SignalTankEmpty;
+	public Action SignalTankLostFull;
 
 	public float percentFull {
 		get {
@@ -43,6 +44,8 @@ public class BonusTank : MonoBehaviour {
 	private void FireSignals(int previousLevel) {
 		if (level != previousLevel) {
 			OnChange();
+			if (previousLevel == capacity) OnLostFull();
+
 			if (level == 0) OnEmpty();
 			else if (level == capacity) OnFull();
 		}
@@ -58,5 +61,9 @@ public class BonusTank : MonoBehaviour {
 
 	private void OnEmpty() {
 		if (SignalTankEmpty != null) SignalTankEmpty();
+	}
+
+	private void OnLostFull() {
+		if (SignalTankLostFull != null) SignalTankLostFull();
 	}
 }

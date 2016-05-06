@@ -6,6 +6,7 @@ public class BonusTankMeter : MonoBehaviour {
 	[SerializeField] private BonusTank bonusTank;
 	[SerializeField] private Slider slider;
 	[SerializeField] private Image fill;
+	[SerializeField] private Text bonusText;
 	[SerializeField] private float smoothTime = 0.3f;
 
 	private float smoothVelocity;
@@ -13,9 +14,10 @@ public class BonusTankMeter : MonoBehaviour {
 
 	private void Awake() {
 		SetSliderValue(0);
+		HideBonusText();
 		bonusTank.SignalTankLevelChanged += OnTankLevelChanged;
 		bonusTank.SignalTankFull += OnTankFull;
-		bonusTank.SignalTankEmpty += OnTankEmpty;
+		bonusTank.SignalTankLostFull += OnTankLostFull;
 	}
 
 	public void SetSliderValue(float value) {
@@ -47,10 +49,18 @@ public class BonusTankMeter : MonoBehaviour {
 	}
 
 	private void OnTankFull() {
-		isDirty = true;
+		ShowBonusText();
 	}
 
-	private void OnTankEmpty() {
-		isDirty = true;
+	private void OnTankLostFull() {
+		HideBonusText();
+	}
+
+	private void ShowBonusText() {
+		bonusText.enabled = true;
+	}
+
+	private void HideBonusText() {
+		bonusText.enabled = false;
 	}
 }
