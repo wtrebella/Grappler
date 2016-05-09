@@ -15,11 +15,13 @@ public class FlipManager : MonoBehaviour {
 	private void OnBackflip() {
 		ApplyForce();
 		PlayParticles();
+		ScoreManager.instance.ReportFlip();
 	}
 
 	private void OnFrontFlip() {
 		ApplyForce();
 		PlayParticles();
+		ScoreManager.instance.ReportFlip();
 	}
 
 	private void ApplyForce() {
