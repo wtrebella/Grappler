@@ -13,9 +13,14 @@ public class ScoreItemManager : MonoBehaviour {
 		scoreItems = new List<ScoreItem>();
 	}
 
-	public void AddScoreItem() {
+	private void Start() {
+		ScoreManager.instance.SignalScoreEvent += OnScoreEvent;
+	}
+
+	public void AddScoreItem(int score) {
 		ScoreItem scoreItem = Instantiate(scoreItemPrefab);
 		scoreItem.transform.SetParent(layoutGroup.transform);
+		scoreItem.SetScore(score);
 		scoreItems.Add(scoreItem);
 		scoreItem.Show();
 	}
@@ -23,14 +28,14 @@ public class ScoreItemManager : MonoBehaviour {
 	public void RemoveScoreItem() {
 		if (scoreItems.Count == 0) return;
 
-		ScoreItem scoreItem = scoreItems[0];
+		int index = Random.Range(0, scoreItems.Count);
+		ScoreItem scoreItem = scoreItems[index];
 		scoreItem.Hide();
-		scoreItems.RemoveAt(0);
+		scoreItems.RemoveAt(index);
 		Destroy(scoreItem.gameObject, 1);
 	}
 
-	private void Update() {
-		if (Input.GetKeyDown(KeyCode.T)) AddScoreItem();
-		if (Input.GetKeyDown(KeyCode.Y)) RemoveScoreItem();
+	private void OnScoreEvent(int score) {
+		AddScoreItem(score);
 	}
 }

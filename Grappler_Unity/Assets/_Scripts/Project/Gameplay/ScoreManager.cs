@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class ScoreManager : MonoBehaviour {
 	public static ScoreManager instance;
+
+	public Action<int> SignalScoreEvent;
 
 	[SerializeField] private CollisionSignaler collisionSignaler;
 
@@ -12,7 +15,7 @@ public class ScoreManager : MonoBehaviour {
 	}
 
 	public void ReportJumpDistance(float jumpDistance) {
-
+		if (SignalScoreEvent != null) SignalScoreEvent(Round(jumpDistance));
 	}
 
 	public void ReportCollision() {
@@ -21,5 +24,9 @@ public class ScoreManager : MonoBehaviour {
 
 	private void OnCollision() {
 		ReportCollision();
+	}
+
+	private int Round(float value) {
+		return Mathf.RoundToInt(value);
 	}
 }
