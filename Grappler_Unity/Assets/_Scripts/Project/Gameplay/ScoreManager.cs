@@ -25,11 +25,12 @@ public class ScoreManager : MonoBehaviour {
 	}
 
 	public void ReportJumpDistance(float jumpDistance) {
-		Add(Round(jumpDistance));
+		float jumpDistanceInGameUnits = jumpDistance * WhitTools.UnityUnitsToGameUnits;
+		Add(Round(jumpDistanceInGameUnits));
 	}
 
 	public void ReportFlip() {
-		Add(10);
+
 	}
 
 	public void ReportCollision() {

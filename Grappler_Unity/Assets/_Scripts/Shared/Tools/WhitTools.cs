@@ -6,8 +6,8 @@ using UnityEngine.Events;
 public static class WhitTools {
 	public const float PixelsToUnits = 1.0f / 100.0f;
 	public const float UnitsToPixels = 100.0f;
-	public const float GameUnitsToUnityUnits = 50.0f;
-	public const float UnityUnitsToGameUnits = 1.0f/50.0f;
+	public const float GameUnitsToUnityUnits = 10.0f;
+	public const float UnityUnitsToGameUnits = 1.0f/10.0f;
 	public const float Slope2Rad = Mathf.PI / 2f;
 	public const float Rad2Slope = 2f / Mathf.PI;
 	public const float Slope2Deg = (Mathf.PI / 2f) * Mathf.Rad2Deg;
