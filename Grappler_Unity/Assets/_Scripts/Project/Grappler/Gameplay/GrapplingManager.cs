@@ -3,6 +3,10 @@ using System.Collections;
 using System;
 
 public class GrapplingManager : MonoBehaviour {
+	public static GrapplingManager instance;
+
+	public Vector2 targetDirection {get; private set;}
+
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private GrapplerRope grapplerRope;
@@ -18,6 +22,19 @@ public class GrapplingManager : MonoBehaviour {
 	}
 
 	private bool hasConnected = false;
+
+	public void SetTargetDirection(Vector2 targetDirection) {
+		this.targetDirection = targetDirection;
+	}
+
+	private void Awake() {
+		targetDirection = Vector2.zero;
+		instance = this;
+	}
+
+	public Vector2 GetGrapplePoint() {
+		return grapplerRope.GetEndPoint();
+	}
 
 	public bool Connect() {
 		bool connected = ConnectGrapplerToHighestAnchorable();
