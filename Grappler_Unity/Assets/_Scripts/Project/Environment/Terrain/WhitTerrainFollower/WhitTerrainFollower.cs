@@ -37,7 +37,7 @@ public class WhitTerrainFollower : MonoBehaviour {
 	}
 
 	private Vector3 GetTargetPosition() {
-		Vector2 averagePoint = terrainPair.GetAveragePointAtDist(dist);
+		Vector2 averagePoint = terrainPair.GetPointAtDist(dist);
 		Vector3 targetPosition = new Vector3(averagePoint.x, averagePoint.y, transform.position.z);
 		return targetPosition;
 	}

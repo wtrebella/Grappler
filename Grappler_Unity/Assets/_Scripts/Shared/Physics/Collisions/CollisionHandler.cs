@@ -6,6 +6,17 @@ public class CollisionHandler : MonoBehaviour {
 	[FormerlySerializedAs("layer")]	
 	public LayerMask layerMask;
 
+	private Player _player;
+	protected Player player {
+		get {
+			if (_player == null) _player = GetComponentInParent<Player>();
+			if (_player == null) Debug.LogError("must be child of Player");
+			return _player;
+		}
+	}
+
+	[SerializeField] private float reductionMultiplier = 0.7f;
+
 	protected virtual void BaseAwake() {
 
 	}
@@ -20,6 +31,10 @@ public class CollisionHandler : MonoBehaviour {
 
 	private void Awake() {
 		BaseAwake();
+	}
+
+	protected void ReduceVelocity() {
+		player.rigidbodyAffecterGroup.ReduceVelocity(reductionMultiplier);
 	}
 	
 	public virtual void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {

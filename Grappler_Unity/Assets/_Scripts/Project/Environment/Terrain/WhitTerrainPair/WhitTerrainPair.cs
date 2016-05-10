@@ -17,7 +17,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	private float currentSlope;
 	private float currentWidth;
 
-	public Vector2 GetAveragePointAtDist(float dist) {
+	public Vector2 GetPointAtDist(float dist) {
 		Vector2 topPoint = topTerrain.GetPointAtDist(dist);
 		Vector2 bottomPoint = bottomTerrain.GetPointAtDist(dist);
 		Vector2 averagePoint = WhitTools.GetAveragePoint(topPoint, bottomPoint);

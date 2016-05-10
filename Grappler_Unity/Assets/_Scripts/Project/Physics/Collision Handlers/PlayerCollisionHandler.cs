@@ -4,15 +4,6 @@ using System.Collections;
 public class PlayerCollisionHandler : CollisionHandler {
 	private CollisionHandler[] collisionHandlers;
 
-	private Player _player;
-	protected Player player {
-		get {
-			if (_player == null) _player = GetComponentInParent<Player>();
-			if (_player == null) Debug.LogError("must be child of Player");
-			return _player;
-		}
-	}
-
 	protected override void BaseAwake() {
 		base.BaseAwake();
 		collisionHandlers = GetComponentsInChildren<CollisionHandler>();

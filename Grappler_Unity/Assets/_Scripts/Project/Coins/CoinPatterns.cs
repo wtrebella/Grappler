@@ -56,7 +56,6 @@ public class CoinPatterns {
 	private static CoinPattern GenerateCoinPattern(string[] pattern) {
 		CoinPattern coinPattern = new CoinPattern();
 		char[][] charArray = StringArrayToCharArray(pattern);
-		Vector2 percentSize = new Vector2(0.3f, 0.3f);
 
 		for (int y = 0; y < charArray.Length; y++) {
 			for (int x = 0; x < charArray[y].Length; x++) {

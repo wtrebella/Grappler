@@ -61,8 +61,8 @@ public class Rigidbody2DAffecterGroup : MonoBehaviour {
 		stopper.StartStoppingProcess();
 	}
 
-	public void ReduceVelocity() {
-		velocityReducer.Reduce();
+	public void ReduceVelocity(float reductionMultiplier) {
+		velocityReducer.Reduce(reductionMultiplier);
 	}
 
 	public void AddForce(Vector2 force, ForceMode2D forceMode) {

@@ -6,15 +6,6 @@ public class IceEndCollisionHandler : CollisionHandler {
 	[SerializeField] private float vertical = 10;
 	[SerializeField] private float torque = -500;
 
-	private Player _player;
-	protected Player player {
-		get {
-			if (_player == null) _player = GetComponentInParent<Player>();
-			if (_player == null) Debug.LogError("must be child of Player");
-			return _player;
-		}
-	}
-
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
 		base.HandleTriggerEnter(rigid, collider);
 		if (player.isSkating) {

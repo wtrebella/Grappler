@@ -7,6 +7,7 @@ public class GrapplingStateController : PlayerStateController {
 	public Action SignalGrappleBegan;
 	public Action SignalGrappleEnded;
 
+	[SerializeField] private float slopeAddition = 0.15f;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;
 	[SerializeField] private WhitTerrainPair terrainPair;
@@ -48,11 +49,19 @@ public class GrapplingStateController : PlayerStateController {
 	public override void FixedUpdateState() {
 		base.FixedUpdateState();
 
+		float dist = terrainPair.GetDistAtPosition(player.body.transform.position);
+		Vector2 distPoint = terrainPair.GetPointAtDist(dist);
+		Vector2 endPoint = terrainPair.GetEndPoint();
+		Vector2 delta = endPoint - distPoint;
+		Vector2 targetDirection = delta.normalized;
+
 		if (player.body.transform.position.x > GrapplingManager.instance.GetGrapplePoint().x) {
 			Vector2 velocity = player.body.rigid.velocity;
-			Vector2 direction = velocity.normalized;
-			float slope = WhitTools.DirectionToSlope(direction);
-			if (slope > 0.45f) EndGrappling();
+			Vector2 playerDirection = velocity.normalized;
+			float playerSlope = WhitTools.DirectionToSlope(playerDirection);
+			float targetSlope = WhitTools.DirectionToSlope(targetDirection);
+			targetSlope += slopeAddition;
+			if (playerSlope > targetSlope) EndGrappling();
 		}
 	}
 

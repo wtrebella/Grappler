@@ -3,9 +3,8 @@ using System.Collections;
 
 public class Rigidbody2DVelocityReducer : Rigidbody2DAffecter {
 	[SerializeField] private WhitAxisType axis;
-	[SerializeField, Range(0, 1)] private float reductionMultiplier = 0.9f;
 
-	public void Reduce() {
+	public void Reduce(float reductionMultiplier) {
 		foreach (Rigidbody2D rigid in rigidbodies) {
 			Vector2 velocity = rigid.velocity;
 			velocity *= reductionMultiplier;
