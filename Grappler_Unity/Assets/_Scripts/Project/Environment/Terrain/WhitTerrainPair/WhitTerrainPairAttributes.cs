@@ -25,6 +25,6 @@ public class WhitTerrainPairAttributes : ScriptableObjectSingleton<WhitTerrainPa
 		for (int i = 0; i < narrowPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Narrow);
 		for (int i = 0; i < bumpPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Bump);
 		for (int i = 0; i < flatPatternWeight; i++) patternTypes.Add(WhitTerrainPairPatternType.Flat);
-		return patternTypes.Random();
+		return patternTypes[Random.Range(0, patternTypes.Count)];
 	}
 }
