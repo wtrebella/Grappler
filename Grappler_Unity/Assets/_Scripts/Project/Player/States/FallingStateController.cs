@@ -19,4 +19,9 @@ public class FallingStateController : PlayerStateController {
 		base.TouchDown();
 		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
+
+	public override void Swipe(Vector2 direction, float magnitude) {
+		base.Swipe(direction, magnitude);
+		Debug.Log(direction + ", " + magnitude);
+	}
 }

@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour {
 	public Action SignalLeftSwipe;
 	public Action SignalUpSwipe;
 	public Action SignalDownSwipe;
+	public Action<Vector2, float> SignalSwipe;
 	public Action SignalTouchDown;
 	public Action SignalTouchUp;
 	public Action SignalLeftTouchDown;
@@ -103,6 +104,9 @@ public class InputManager : MonoBehaviour {
 			if (swipeDirection.y > 0) HandleUpSwipe();
 			else HandleDownSwipe();
 		}
+
+		// any swipe
+		if (SignalSwipe != null) SignalSwipe(swipeDirection, swipeMagnitude);
 	}
 
 	private bool IsOnLeftOfScreen(Vector2 position) {
@@ -117,7 +121,6 @@ public class InputManager : MonoBehaviour {
 	private void HandleLeftTouchUp() 	{if (SignalLeftTouchUp != null) SignalLeftTouchUp();}
 	private void HandleRightTouchDown() {if (SignalRightTouchDown != null) SignalRightTouchDown();}
 	private void HandleRightTouchUp() 	{if (SignalRightTouchUp != null) SignalRightTouchUp();}
-
 
 
 

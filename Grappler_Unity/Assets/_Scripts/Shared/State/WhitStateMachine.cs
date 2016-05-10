@@ -15,6 +15,7 @@ public class WhitStateMachine : MonoBehaviour {
 		public Action RightSwipe = DoNothing;
 		public Action UpSwipe = DoNothing;
 		public Action DownSwipe = DoNothing;
+		public Action<Vector2, float> Swipe = DoNothingSwipe;
 		public Action Tap = DoNothing;
 		public Action TouchUp = DoNothing;
 		public Action TouchDown = DoNothing;
@@ -65,6 +66,7 @@ public class WhitStateMachine : MonoBehaviour {
 	private void HandleRightSwipe() {state.RightSwipe();}
 	private void HandleUpSwipe() {state.UpSwipe();}
 	private void HandleDownSwipe() {state.DownSwipe();}
+	private void HandleSwipe(Vector2 direction, float magnitude) {state.Swipe(direction, magnitude);}
 	private void HandleLeftTouchDown() {state.LeftTouchDown();}
 	private void HandleLeftTouchUp() {state.LeftTouchUp();}
 	private void HandleRightTouchDown() {state.RightTouchDown();}
@@ -105,6 +107,7 @@ public class WhitStateMachine : MonoBehaviour {
 		state.RightSwipe = 			ConfigureDelegate<Action>("RightSwipe", target, DoNothing);
 		state.UpSwipe = 			ConfigureDelegate<Action>("UpSwipe", target, DoNothing);
 		state.DownSwipe = 			ConfigureDelegate<Action>("DownSwipe", target, DoNothing);
+		state.Swipe = 				ConfigureDelegate<Action<Vector2, float>>("Swipe", target, DoNothingSwipe);
 		state.Tap = 				ConfigureDelegate<Action>("Tap", target, DoNothing);
 		state.TouchUp = 			ConfigureDelegate<Action>("TouchUp", target, DoNothing);
 		state.TouchDown = 			ConfigureDelegate<Action>("TouchDown", target, DoNothing);
@@ -166,6 +169,7 @@ public class WhitStateMachine : MonoBehaviour {
 		InputManager.instance.SignalRightSwipe += HandleRightSwipe;
 		InputManager.instance.SignalUpSwipe += HandleUpSwipe;
 		InputManager.instance.SignalDownSwipe += HandleDownSwipe;
+		InputManager.instance.SignalSwipe += HandleSwipe;
 		InputManager.instance.SignalTouchDown += HandleTouchDown;
 		InputManager.instance.SignalTouchUp += HandleTouchUp;
 		InputManager.instance.SignalLeftTouchDown += HandleLeftTouchDown;
@@ -184,6 +188,7 @@ public class WhitStateMachine : MonoBehaviour {
 		InputManager.instance.SignalRightSwipe -= HandleRightSwipe;
 		InputManager.instance.SignalUpSwipe -= HandleUpSwipe;
 		InputManager.instance.SignalDownSwipe -= HandleDownSwipe;
+		InputManager.instance.SignalSwipe -= HandleSwipe;
 		InputManager.instance.SignalTouchDown -= HandleTouchDown;
 		InputManager.instance.SignalTouchUp -= HandleTouchUp;
 		InputManager.instance.SignalLeftTouchDown -= HandleLeftTouchDown;
@@ -193,6 +198,7 @@ public class WhitStateMachine : MonoBehaviour {
 	}
 
 	static void DoNothing() {}
+	static void DoNothingSwipe(Vector2 direction, float magnitude) {}
 
 	private void OnDestroy() {
 		RemoveSwipeDetection();

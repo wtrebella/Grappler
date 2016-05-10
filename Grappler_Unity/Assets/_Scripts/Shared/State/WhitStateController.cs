@@ -49,6 +49,10 @@ public class WhitStateController : MonoBehaviour {
 	public virtual void DownSwipe() {
 		
 	}
+
+	public virtual void Swipe(Vector2 direction, float magnitude) {
+
+	}
 	
 	public virtual void Tap() {
 		
