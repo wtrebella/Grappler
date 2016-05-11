@@ -8,4 +8,8 @@ public class BigTree : GeneratableItem {
 	private void Awake() {
 		transform.localScale = new Vector3(xScaleRange.GetRandom(), yScaleRange.GetRandom(), 1.0f);
 	}
+
+	private void Update() {
+		if (Input.GetKeyDown(KeyCode.E)) GetComponent<Breakable>().Explode();
+	}
 }

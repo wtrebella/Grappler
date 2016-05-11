@@ -36,7 +36,14 @@ public class Breakable : MonoBehaviour {
 
 	private void Slice() {
 		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
-		SpriteSlicer2D.ExplodeSprite(spriteObject, 10, 100);
+		Vector2 pos = spriteObject.transform.position;
+		Vector2 startPos = pos;
+		Vector2 endPos = pos;
+		startPos.x -= 5;
+		endPos.x += 5;
+		startPos.y += 10;
+		endPos.y += 10;
+		SpriteSlicer2D.SliceSprite(startPos, endPos, spriteObject);
 	}
 
 	private void PlayParticles() {
