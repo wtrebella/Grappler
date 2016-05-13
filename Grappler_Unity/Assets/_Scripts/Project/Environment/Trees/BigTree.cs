@@ -10,6 +10,6 @@ public class BigTree : GeneratableItem {
 	}
 
 	private void Update() {
-		if (Input.GetKeyDown(KeyCode.E)) GetComponent<Breakable>().Explode();
+
 	}
 }

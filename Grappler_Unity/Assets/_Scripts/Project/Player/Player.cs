@@ -4,7 +4,7 @@ using System;
 using UnityEngine.Events;
 
 public class Player : WhitStateMachine {
-	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround, Skating}
+	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround, Skating, Punching}
 
 	public Rigidbody2DAffecterGroup rigidbodyAffecterGroup;
 	public GrapplingManager grapplingManager;

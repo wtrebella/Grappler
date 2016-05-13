@@ -7,10 +7,11 @@ public class GrapplingStateController : PlayerStateController {
 	public Action SignalGrappleBegan;
 	public Action SignalGrappleEnded;
 
+	[SerializeField] private CragFinder cragFinder;
 	[SerializeField] private float slopeAddition = 0.15f;
+	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;
-	[SerializeField] private WhitTerrainPair terrainPair;
 
 	private void Awake() {
 		base.BaseAwake();
@@ -41,6 +42,13 @@ public class GrapplingStateController : PlayerStateController {
 		if (SignalGrappleEnded != null) SignalGrappleEnded();
 		SetToFallingState();
 	}
+
+	public override void Tap() {
+		base.Tap();
+
+		Crag crag = cragFinder.FindInDirection(terrainPair.GetThroughDirection(player.body.transform.position));
+		if (crag) player.SetState(Player.PlayerStates.Punching);
+	}
 		
 	public override void Swipe(Vector2 direction, float magnitude) {
 		base.Swipe(direction, magnitude);
@@ -49,11 +57,7 @@ public class GrapplingStateController : PlayerStateController {
 	public override void FixedUpdateState() {
 		base.FixedUpdateState();
 
-		float dist = terrainPair.GetDistAtPosition(player.body.transform.position);
-		Vector2 distPoint = terrainPair.GetPointAtDist(dist);
-		Vector2 endPoint = terrainPair.GetEndPoint();
-		Vector2 delta = endPoint - distPoint;
-		Vector2 targetDirection = delta.normalized;
+		Vector2 targetDirection = terrainPair.GetThroughDirection(player.body.transform.position);
 
 		if (player.body.transform.position.x > GrapplingManager.instance.GetGrapplePoint().x) {
 			Vector2 velocity = player.body.rigid.velocity;

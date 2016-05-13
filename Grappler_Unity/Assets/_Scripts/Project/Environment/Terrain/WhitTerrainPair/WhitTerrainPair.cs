@@ -17,6 +17,15 @@ public class WhitTerrainPair : MonoBehaviour {
 	private float currentSlope;
 	private float currentWidth;
 
+	public Vector2 GetThroughDirection(Vector3 origin) {
+		float dist = GetDistAtPosition(origin);
+		Vector2 distPoint = GetPointAtDist(dist);
+		Vector2 endPoint = GetEndPoint();
+		Vector2 delta = endPoint - distPoint;
+		Vector2 targetDirection = delta.normalized;
+		return targetDirection;
+	}
+
 	public Vector2 GetPointAtDist(float dist) {
 		Vector2 topPoint = topTerrain.GetPointAtDist(dist);
 		Vector2 bottomPoint = bottomTerrain.GetPointAtDist(dist);
