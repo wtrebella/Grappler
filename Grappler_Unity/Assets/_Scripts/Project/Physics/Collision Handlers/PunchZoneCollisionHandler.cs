@@ -6,6 +6,10 @@ public class PunchZoneCollisionHandler : CollisionHandler {
 	private bool successfullyPunched = false;
 	private Breakable breakable;
 
+	private void Start() {
+		if (InputManager.instance != null) InputManager.instance.SignalLeftTouchDown += OnLeftTouchDown;
+	}
+
 	public override void HandleTriggerEnter(Rigidbody2D rigid, Collider2D collider) {
 		base.HandleTriggerEnter(rigid, collider);
 
@@ -26,15 +30,13 @@ public class PunchZoneCollisionHandler : CollisionHandler {
 		breakable = null;
 	}
 
-	private void Update() {
-		if (isInPunchZone) {
-			if (Input.GetKeyDown(KeyCode.P)) successfullyPunched = true;
-		}
-	}
-
 	private void Punch() {
 		successfullyPunched = true;
 		isInPunchZone = false;
 		if (breakable) breakable.Explode();
+	}
+
+	private void OnLeftTouchDown() {
+		if (isInPunchZone) successfullyPunched = true;
 	}
 }

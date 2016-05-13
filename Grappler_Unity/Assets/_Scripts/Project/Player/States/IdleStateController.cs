@@ -17,6 +17,12 @@ public class IdleStateController : PlayerStateController {
 	
 	public override void TouchDown() {
 		base.TouchDown();
+
+	}
+
+	public override void RightSwipe() {
+		base.RightSwipe();
+
 		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 
