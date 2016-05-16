@@ -43,11 +43,16 @@ public class GrapplingStateController : PlayerStateController {
 		SetToFallingState();
 	}
 
-	public override void Tap() {
-		base.Tap();
+	public override void LeftTouchDown() {
+		base.LeftTouchDown();
 
-		Crag crag = cragFinder.FindInDirection(terrainPair.GetThroughDirection(player.body.transform.position));
-		if (crag) player.SetState(Player.PlayerStates.Punching);
+		PunchManager.instance.PunchThroughCragIfNear();
+	}
+
+	public override void UpdateState() {
+		base.UpdateState();
+
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) PunchManager.instance.PunchThroughCragIfNear();
 	}
 		
 	public override void Swipe(Vector2 direction, float magnitude) {

@@ -25,13 +25,23 @@ public class FallingStateController : PlayerStateController {
 	public override void RightSwipe() {
 		base.RightSwipe();
 
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+		Grapple();
 	}
 
-	public override void Tap() {
-		base.Tap();
+	public override void LeftTouchDown() {
+		base.LeftTouchDown();
 
-		Crag crag = cragFinder.FindInDirection(terrainPair.GetThroughDirection(player.body.transform.position));
-		if (crag) player.SetState(Player.PlayerStates.Punching);
+		PunchManager.instance.PunchThroughCragIfNear();
+	}
+
+	public override void UpdateState() {
+		base.UpdateState();
+
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) PunchManager.instance.PunchThroughCragIfNear();
+		if (Input.GetKeyDown(KeyCode.RightArrow)) Grapple();
+	}
+
+	private void Grapple() {
+		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 }

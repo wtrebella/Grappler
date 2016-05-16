@@ -7,8 +7,6 @@ public class PunchingStateController : PlayerStateController {
 	[SerializeField] private float speed = 10;
 	[SerializeField] private Timer timer;
 
-	private Vector2 initialVelocity; 
-
 	private void Awake() {
 		BaseAwake();
 		state = Player.PlayerStates.Punching;
@@ -17,8 +15,6 @@ public class PunchingStateController : PlayerStateController {
 	public override void EnterState() {
 		base.EnterState();
 
-		initialVelocity = player.body.rigid.velocity;
-		player.rigidbodyAffecterGroup.SetKinematic();
 		timer.ResetTimer();
 		timer.StartTimer();
 	}
@@ -34,7 +30,14 @@ public class PunchingStateController : PlayerStateController {
 	}
 
 	public override void FixedUpdateState() {
+		base.FixedUpdateState();
 		UpdatePunch();
+	}
+
+	public override void UpdateState() {
+		base.UpdateState();
+
+		if (Input.GetKeyUp(KeyCode.LeftArrow)) StopPunching();
 	}
 
 	private void UpdatePunch() {
@@ -54,7 +57,5 @@ public class PunchingStateController : PlayerStateController {
 		timer.StopTimer();
 		timer.ResetTimer();
 		player.SetState(Player.PlayerStates.Falling);
-		player.rigidbodyAffecterGroup.SetNonKinematic();
-		player.rigidbodyAffecterGroup.SetVelocity((Vector3)GetPunchVelocity());
 	}
 }

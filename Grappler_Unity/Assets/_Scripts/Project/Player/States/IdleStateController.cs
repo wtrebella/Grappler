@@ -30,4 +30,14 @@ public class IdleStateController : PlayerStateController {
 		player.body.transform.localRotation = Quaternion.identity;
 		player.feet.transform.localRotation = Quaternion.identity;
 	}
+
+	public override void UpdateState() {
+		base.UpdateState();
+
+		if (Input.GetKeyDown(KeyCode.RightArrow)) Grapple();
+	}
+
+	private void Grapple() {
+		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+	}
 }
