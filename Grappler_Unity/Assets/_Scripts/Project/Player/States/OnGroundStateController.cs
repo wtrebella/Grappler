@@ -12,11 +12,7 @@ public class OnGroundStateController : PlayerStateController {
 		player.rigidbodyAffecterGroup.StopMoving();
 		player.playerAnimator.PlayOnGroundAnimations();
 		player.grapplingManager.Disconnect();
-	}
-	
-	public override void TouchDown() {
-		base.TouchDown();
-		player.rigidbodyAffecterGroup.AllowMovement();
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+
+		player.SetState(Player.PlayerStates.Dead);
 	}
 }

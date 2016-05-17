@@ -9,7 +9,7 @@ public class PunchingStateController : PlayerStateController {
 
 	private void Awake() {
 		BaseAwake();
-		state = Player.PlayerStates.Punching;
+//		state = Player.PlayerStates.Punching;
 	}
 
 	public override void EnterState() {

@@ -15,9 +15,4 @@ public class DeadStateController : PlayerStateController {
 		player.grapplingManager.Disconnect();
 		player.ghostController.EnableGhosting();
 	}
-
-	public override void TouchDown() {
-		base.TouchDown();
-		GameplayManager.instance.RestartGame();
-	}
 }

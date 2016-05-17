@@ -36,6 +36,7 @@ public class GrapplingStateController : PlayerStateController {
 	public override void TouchUp() {
 		base.TouchUp();
 
+		EndGrappling();
 	}
 
 	private void EndGrappling() {
@@ -43,43 +44,22 @@ public class GrapplingStateController : PlayerStateController {
 		SetToFallingState();
 	}
 
-	public override void LeftTouchDown() {
-		base.LeftTouchDown();
-
-		PunchManager.instance.PunchThroughCragIfNear();
+	private bool PlayerIsPastGrapplePointX() {
+		return player.body.transform.position.x > GrapplingManager.instance.GetGrapplePoint().x;
 	}
 
-	public override void UpdateState() {
-		base.UpdateState();
-
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) PunchManager.instance.PunchThroughCragIfNear();
-	}
-		
-	public override void Swipe(Vector2 direction, float magnitude) {
-		base.Swipe(direction, magnitude);
-	}
-
-	public override void FixedUpdateState() {
-		base.FixedUpdateState();
-
+	private bool SlopeIsAboveTarget() {
 		Vector2 targetDirection = terrainPair.GetThroughDirection(player.body.transform.position);
-
-		if (player.body.transform.position.x > GrapplingManager.instance.GetGrapplePoint().x) {
-			Vector2 velocity = player.body.rigid.velocity;
-			Vector2 playerDirection = velocity.normalized;
-			float playerSlope = WhitTools.DirectionToSlope(playerDirection);
-			float targetSlope = WhitTools.DirectionToSlope(targetDirection);
-			targetSlope += slopeAddition;
-			if (playerSlope > targetSlope) EndGrappling();
-		}
+		Vector2 velocity = player.body.rigid.velocity;
+		Vector2 playerDirection = velocity.normalized;
+		float playerSlope = WhitTools.DirectionToSlope(playerDirection);
+		float targetSlope = WhitTools.DirectionToSlope(targetDirection);
+		targetSlope += slopeAddition;
+		return playerSlope > targetSlope;
 	}
 
 	private bool DisconnectPlayer() {
 		return player.grapplingManager.Disconnect();
-	}
-
-	private void SetToFallingState() {
-		player.SetState(Player.PlayerStates.Falling);
 	}
 
 	private void OnCollision() {

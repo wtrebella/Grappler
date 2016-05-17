@@ -18,26 +18,11 @@ public class IdleStateController : PlayerStateController {
 	public override void TouchDown() {
 		base.TouchDown();
 
-	}
-
-	public override void RightSwipe() {
-		base.RightSwipe();
-
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+		Grapple();
 	}
 
 	public void ResetRotation() {
 		player.body.transform.localRotation = Quaternion.identity;
 		player.feet.transform.localRotation = Quaternion.identity;
-	}
-
-	public override void UpdateState() {
-		base.UpdateState();
-
-		if (Input.GetKeyDown(KeyCode.RightArrow)) Grapple();
-	}
-
-	private void Grapple() {
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 }

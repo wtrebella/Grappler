@@ -20,28 +20,6 @@ public class FallingStateController : PlayerStateController {
 	public override void TouchDown() {
 		base.TouchDown();
 
-	}
-
-	public override void RightSwipe() {
-		base.RightSwipe();
-
 		Grapple();
-	}
-
-	public override void LeftTouchDown() {
-		base.LeftTouchDown();
-
-		PunchManager.instance.PunchThroughCragIfNear();
-	}
-
-	public override void UpdateState() {
-		base.UpdateState();
-
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) PunchManager.instance.PunchThroughCragIfNear();
-		if (Input.GetKeyDown(KeyCode.RightArrow)) Grapple();
-	}
-
-	private void Grapple() {
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
 	}
 }

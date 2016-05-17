@@ -15,7 +15,7 @@ public class PunchManager : MonoBehaviour {
 	public void PunchThroughCragIfNear() {
 		Crag crag = cragFinder.FindInDirection(terrainPair.GetThroughDirection(player.body.transform.position));
 		if (crag) {
-			player.SetState(Player.PlayerStates.Punching);
+//			player.SetState(Player.PlayerStates.Punching);
 			crag.Explode();
 		}
 	}

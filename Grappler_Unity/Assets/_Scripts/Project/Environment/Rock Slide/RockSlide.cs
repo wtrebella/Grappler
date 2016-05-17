@@ -14,8 +14,6 @@ public class RockSlide : MonoBehaviour {
 
 	private bool hasStarted = false;
 	private bool isMoving = false;
-	private float invertedSpeedPercent = 1;
-	private float currentOffsetChangeRate = 0;
 
 	public void StartMoving() {
 		isMoving = true;
@@ -23,10 +21,6 @@ public class RockSlide : MonoBehaviour {
 
 	public void StopMoving() {
 		isMoving = false;
-	}
-
-	public void OnSpeedPercentChanged(float percent) {
-		invertedSpeedPercent = 1 - percent;
 	}
 
 	private float GetDistanceToPlayer() {

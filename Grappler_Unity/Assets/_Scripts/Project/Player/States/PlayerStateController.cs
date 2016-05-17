@@ -13,4 +13,12 @@ public class PlayerStateController : WhitStateController {
 		base.BaseAwake();
 		player = GetComponentInParent<Player>();
 	}
+
+	protected virtual void Grapple() {
+		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+	}
+
+	protected void SetToFallingState() {
+		player.SetState(Player.PlayerStates.Falling);
+	}
 }

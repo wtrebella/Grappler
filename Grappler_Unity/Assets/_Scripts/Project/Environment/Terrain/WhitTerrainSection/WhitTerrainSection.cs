@@ -208,7 +208,6 @@ public class WhitTerrainSection : MonoBehaviour {
 	private void BumpifyMidPointsIfNeeded() {
 		if (!config.bumpify) return;
 
-		#warning this is a hacky solution.
 		// TODO the terrain section's bump height multiplier shouldn't be hard-coded 
 		// to be 0.3f if there are two or fewer midpoints. it should be determined
 		// on a more sliding, average scale range or something.

@@ -25,11 +25,12 @@ public class SkatingStateController : PlayerStateController {
 
 	public override void TouchDown() {
 		base.TouchDown();
+
 		Grapple();
 	}
 
-	private void Grapple() {
-		if (player.grapplingManager.Connect()) player.SetState(Player.PlayerStates.Grappling);
+	protected override void Grapple() {
+		base.Grapple();
 
 		player.rigidbodyAffecterGroup.SetXVelocity(skatingController.GetSpeed());
 	}
