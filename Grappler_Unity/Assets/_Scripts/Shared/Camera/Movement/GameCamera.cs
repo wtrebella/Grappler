@@ -34,7 +34,7 @@ public class GameCamera : MonoBehaviour {
 	}
 
 	private void UpdateMovement() {
-		UpdateMovementSmoothed();
+		UpdateMovementImmediate();
 	}
 		
 	private void UpdateMovementImmediate() {
