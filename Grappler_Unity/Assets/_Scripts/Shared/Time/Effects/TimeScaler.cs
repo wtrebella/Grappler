@@ -12,7 +12,7 @@ public class TimeScaler : MonoBehaviour {
 		ScaleDown
 	}
 
-	[SerializeField] private float timeScaleMin = 0.3f;
+	[SerializeField] private float timeScaleSlow = 0.3f;
 	[SerializeField] private float timeScaleNormal = 1.0f;
 	[SerializeField] private float timeScaleUpDuration = 0.05f;
 	[SerializeField] private float timeScaleDownDuration = 0.25f;
@@ -40,14 +40,14 @@ public class TimeScaler : MonoBehaviour {
 	}
 
 	public void ScaleToSlow() {
-		if (Time.timeScale <= timeScaleMin) {
-			Time.timeScale = timeScaleMin;
+		if (Time.timeScale <= timeScaleSlow) {
+			Time.timeScale = timeScaleSlow;
 			return;
 		}
 		if (scaleType == ScaleType.ScaleDown) return;
 
 		StopScalingTime();
-		ScaleTime(timeScaleMin, timeScaleDownDuration);
+		ScaleTime(timeScaleSlow, timeScaleDownDuration);
 		scaleType = ScaleType.ScaleDown;
 	}
 
@@ -84,8 +84,8 @@ public class TimeScaler : MonoBehaviour {
 	private void Update() {
 		if (scaleType == ScaleType.None) return;
 
-		float newTimeScale = Mathf.Min(timeScaleNormal, Mathf.Max(timeScaleMin, Time.timeScale + timeScaleChangeRate * Time.unscaledDeltaTime));
-		float newFixedDeltaTime = Mathf.Min(1.0f/fixedFrameRate, Mathf.Max((1.0f/fixedFrameRate) * timeScaleMin, Time.fixedDeltaTime + fixedDeltaTimeChangeRate * Time.unscaledDeltaTime));
+		float newTimeScale = Mathf.Min(timeScaleNormal, Mathf.Max(timeScaleSlow, Time.timeScale + timeScaleChangeRate * Time.unscaledDeltaTime));
+		float newFixedDeltaTime = Mathf.Min(1.0f/fixedFrameRate, Mathf.Max((1.0f/fixedFrameRate) * timeScaleSlow, Time.fixedDeltaTime + fixedDeltaTimeChangeRate * Time.unscaledDeltaTime));
 
 		Time.timeScale = newTimeScale;
 		Time.fixedDeltaTime = newFixedDeltaTime;

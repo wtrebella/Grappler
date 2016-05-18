@@ -26,12 +26,12 @@ public class WhitTerrainPairPatternGenerator {
 	}
 
 	public static WhitTerrainPairPattern GetNarrowPattern(float currentSlope, float narrowSlope, float radius) {
-		WhitTerrainPatternInstructionCurve topCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope - narrowSlope, radius, true);
-		WhitTerrainPatternInstructionCurve bottomCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope + narrowSlope, radius, true);
+		WhitTerrainPatternInstructionCurve topCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope - narrowSlope, radius, false);
+		WhitTerrainPatternInstructionCurve bottomCurveIn = new WhitTerrainPatternInstructionCurve(currentSlope + narrowSlope, radius, false);
 		WhitTerrainPatternInstructionPair curveOut = new WhitTerrainPatternInstructionPair(topCurveIn, bottomCurveIn);
 
-		WhitTerrainPatternInstructionCurve topCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius, true);
-		WhitTerrainPatternInstructionCurve bottomCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius, true);
+		WhitTerrainPatternInstructionCurve topCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius, false);
+		WhitTerrainPatternInstructionCurve bottomCurveBack = new WhitTerrainPatternInstructionCurve(currentSlope, radius, false);
 		WhitTerrainPatternInstructionPair curveBack = new WhitTerrainPatternInstructionPair(topCurveBack, bottomCurveBack);
 
 		WhitTerrainPairPattern narrowPattern = new WhitTerrainPairPattern(curveOut, curveBack);

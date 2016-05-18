@@ -5,7 +5,7 @@ using System;
 public class ScoreManager : MonoBehaviour {
 	public static ScoreManager instance;
 
-	public Action<int> SignalScoreEvent;
+	public Action<int, int> SignalScoreEvent;
 	public Action<int> SignalScoreChanged;
 
 	public int score {get; private set;}
@@ -18,19 +18,17 @@ public class ScoreManager : MonoBehaviour {
 		collisionSignaler.SignalCollision += OnCollision;
 	}
 
-	private void Add(int scoreToAdd) {
-		if (SignalScoreEvent != null) SignalScoreEvent(scoreToAdd);
-		score += scoreToAdd;
+	private void Add(int scoreToAdd, int multiplier) {
+		if (SignalScoreEvent != null) SignalScoreEvent(scoreToAdd, multiplier);
+		score += (scoreToAdd * multiplier);
 		if (SignalScoreChanged != null) SignalScoreChanged(score);
 	}
 
-	public void ReportJumpDistance(float jumpDistance) {
+	public void ReportJump(float jumpDistance, int flipCount) {
 		float jumpDistanceInGameUnits = jumpDistance * WhitTools.UnityUnitsToGameUnits;
-		Add(Round(jumpDistanceInGameUnits));
-	}
-
-	public void ReportFlip() {
-
+		int scoreToAdd = Round(jumpDistanceInGameUnits);
+		int multiplier = flipCount + 1;
+		Add(scoreToAdd, multiplier);
 	}
 
 	public void ReportCollision() {

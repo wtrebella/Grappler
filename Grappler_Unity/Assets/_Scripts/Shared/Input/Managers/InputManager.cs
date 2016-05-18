@@ -160,7 +160,7 @@ public class InputManager : MonoBehaviour {
 				HandleTouchUp();
 
 				if (touch.fingerId == leftTouchID) HandleLeftTouchUp();
-				else if (touch.fingerId == rightTouchID) HandleRightTouchUp();
+				if (touch.fingerId == rightTouchID) HandleRightTouchUp();
 			}
 		}
 	}

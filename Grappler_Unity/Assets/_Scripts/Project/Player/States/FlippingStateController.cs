@@ -2,9 +2,11 @@ using UnityEngine;
 using System.Collections;
 
 public class FlippingStateController : PlayerStateController {
+	[SerializeField] private FlipManager flipManager;
 	[SerializeField] private float uprightMargin = 20;
-	[SerializeField] private float flipSpeed = 10;
+	[SerializeField] private float flipSpeed = 500;
 	[SerializeField] private Rigidbody2D body;
+	[SerializeField] private Rigidbody2D feet;
 
 	private void Awake() {
 		BaseAwake();
@@ -13,21 +15,19 @@ public class FlippingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
-		
+	
+		flipManager.ResetFlipCount();
 		body.constraints = RigidbodyConstraints2D.None;
 	}
 
 	public override void ExitState() {
 		base.ExitState();
 	
-		if (IsWithinUprightMargin()) SetRotation(0);
+		// if you end the flip at the wrong time you don't get the bonus!
+		if (!IsWithinUprightMargin()) flipManager.ResetFlipCount();
+		
+		SetRotation(0);
 		body.constraints = RigidbodyConstraints2D.FreezeRotation;
-	}
-
-	public override void RightTouchDown() {
-		base.RightTouchDown();
-
-		Grapple();
 	}
 
 	public override void LeftTouchUp() {
@@ -36,14 +36,14 @@ public class FlippingStateController : PlayerStateController {
 		SetToFallingState();
 	}
 
-	public override void FixedUpdateState() {
-		UpdateFlip();
-		UpdateGrapplingAvailability();
+	public override void RightTouchDown() {
+		base.RightTouchDown();
+
+		Grapple();
 	}
 
-	private void UpdateGrapplingAvailability() {
-		if (IsWithinUprightMargin()) GrapplingManager.instance.EnableGrappling();
-		else GrapplingManager.instance.DisableGrappling();
+	public override void FixedUpdateState() {
+		UpdateFlip();
 	}
 
 	private void UpdateFlip() {
@@ -59,6 +59,7 @@ public class FlippingStateController : PlayerStateController {
 		float curRotation = GetRotation();
 		float newRotation = Mathf.LerpAngle(curRotation, targetRotation, 1);
 		body.transform.eulerAngles = new Vector3(0, 0, newRotation);
+		feet.transform.localEulerAngles = Vector3.zero;
 	}
 
 	private bool IsWithinUprightMargin() {

@@ -2,38 +2,21 @@
 using System.Collections;
 
 public class FlipManager : MonoBehaviour {
-	[SerializeField] private FlipCounter counter;
-	[SerializeField] private Rigidbody2DForcer forcer;
-	[SerializeField] private ParticleSystem particles;
-	[SerializeField] private Vector2 force = new Vector2(100, 30);
+	public int flipCount {get; private set;}
+
+	[SerializeField] private FlipCounter flipCounter;
 
 	private void Awake() {
-		counter.SignalBackflip += OnBackflip;
-		counter.SignalFrontFlip += OnFrontFlip;
+		flipCount = 0;
+		flipCounter.SignalBackflip += OnFlip;
+		flipCounter.SignalFrontFlip += OnFlip;
 	}
 
-	private void OnBackflip() {
-		ApplyForce();
-		PlayParticles();
-		ScoreManager.instance.ReportFlip();
+	private void OnFlip() {
+		flipCount++;
 	}
 
-	private void OnFrontFlip() {
-		ApplyForce();
-		PlayParticles();
-		ScoreManager.instance.ReportFlip();
-	}
-
-	private void ApplyForce() {
-		forcer.AddImpulseForce(force);
-	}
-
-	private void PlayParticles() {
-		ResetParticles();
-		particles.Play();
-	}
-			
-	private void ResetParticles() {
-		particles.Clear();
+	public void ResetFlipCount() {
+		flipCount = 0;
 	}
 }

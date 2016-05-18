@@ -34,8 +34,9 @@ public class GrapplingStateController : PlayerStateController {
 		playerTrajectory.Hide();
 		collisionSignaler.SignalCollision -= OnCollision;
 		DisconnectPlayer();
+		if (SignalGrappleEnded != null) SignalGrappleEnded();
 	}
-	
+
 	public override void RightTouchUp() {
 		base.RightTouchUp();
 
@@ -49,7 +50,6 @@ public class GrapplingStateController : PlayerStateController {
 	}
 
 	private void EndGrappling() {
-		if (SignalGrappleEnded != null) SignalGrappleEnded();
 		SetToFallingState();
 	}
 

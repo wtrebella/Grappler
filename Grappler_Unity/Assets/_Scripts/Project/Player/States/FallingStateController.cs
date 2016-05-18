@@ -18,7 +18,6 @@ public class FallingStateController : PlayerStateController {
 
 	public override void RightTouchDown() {
 		base.RightTouchDown();
-
 		Grapple();
 	}
 

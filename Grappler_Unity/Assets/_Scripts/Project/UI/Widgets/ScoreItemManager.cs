@@ -12,14 +12,14 @@ public class ScoreItemManager : MonoBehaviour {
 		ScoreManager.instance.SignalScoreEvent += OnScoreEvent;
 	}
 
-	public void AddScoreItem(int score) {
+	public void AddScoreItem(int score, int multiplier) {
 		ScoreItem scoreItem = Instantiate(scoreItemPrefab);
 		scoreItem.transform.SetParent(layoutGroup.transform);
-		scoreItem.SetScore(score);
+		scoreItem.SetScore(score, multiplier);
 		scoreItem.Show(showDuration);
 	}
 
-	private void OnScoreEvent(int score) {
-		AddScoreItem(score);
+	private void OnScoreEvent(int score, int multiplier) {
+		AddScoreItem(score, multiplier);
 	}
 }

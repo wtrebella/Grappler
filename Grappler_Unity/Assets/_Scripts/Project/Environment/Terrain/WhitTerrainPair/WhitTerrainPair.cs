@@ -129,7 +129,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void Narrow() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetNarrowPattern(currentSlope, 0.2f, 30.0f);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetNarrowPattern(currentSlope, 0.1f, 30.0f);
 		AddPattern(WhitTerrainPairPatternType.Narrow, pattern);
 	}
 
@@ -166,7 +166,7 @@ public class WhitTerrainPair : MonoBehaviour {
 				if (newSections.Count > 0) bottomSections.AddAll(newSections);
 			}
 		}
-
+			
 		OnPatternAdded(patternType, topSections, bottomSections);
 	}
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 
 public class JumpMeasure : MonoBehaviour {
+	[SerializeField] private FlipManager flipManager;
 	[SerializeField] private CollisionSignaler collisionSignaler;
 	[SerializeField] private GrapplingStateController grapplingStateController;
 	[SerializeField] private Rigidbody2D body;
@@ -48,7 +49,8 @@ public class JumpMeasure : MonoBehaviour {
 	private void ReportJumpDistance() {
 		Vector2 delta = pointAtJumpStart - pointAtJumpEnd;
 		float jumpDistance = delta.magnitude;
-		ScoreManager.instance.ReportJumpDistance(jumpDistance);
+		ScoreManager.instance.ReportJump(jumpDistance, flipManager.flipCount);
+		flipManager.ResetFlipCount();
 		BonusTankManager.instance.ReportJumpDistance(jumpDistance);
 	}
 }

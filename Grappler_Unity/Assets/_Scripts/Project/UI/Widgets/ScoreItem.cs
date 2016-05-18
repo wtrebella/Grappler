@@ -10,8 +10,10 @@ public class ScoreItem : MonoBehaviour {
 	private float showDuration = 0;
 	private bool isShowing = false;
 
-	public void SetScore(int score) {
-		scoreText.text = score.ToString();
+	public void SetScore(int score, int multiplier) {
+		string scoreString = score.ToString();
+		if (multiplier > 1) scoreString += " x " + multiplier;
+		scoreText.text = scoreString;
 	}
 
 	public void Show(float duration) {
