@@ -13,5 +13,6 @@ public class TrajectoryPredictorTest : MonoBehaviour {
 	private void Update () {
 		tp.debugLineDuration = Time.unscaledDeltaTime;
 		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
+		if (tp.hitInfo2D.collider != null) Debug.Log(tp.hitInfo2D.collider.name);
 	}
 }

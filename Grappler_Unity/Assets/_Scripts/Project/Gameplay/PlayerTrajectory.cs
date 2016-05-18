@@ -25,7 +25,6 @@ public class PlayerTrajectory : MonoBehaviour {
 
 	private void Update () {
 		if (!IsShowing()) return;
-
 		tp.debugLineDuration = Time.unscaledDeltaTime;
 		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
 	}

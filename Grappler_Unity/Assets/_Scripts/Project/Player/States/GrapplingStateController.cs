@@ -36,10 +36,16 @@ public class GrapplingStateController : PlayerStateController {
 		DisconnectPlayer();
 	}
 	
-	public override void TouchUp() {
-		base.TouchUp();
+	public override void RightTouchUp() {
+		base.RightTouchUp();
 
 		EndGrappling();
+	}
+
+	public override void LeftTouchDown() {
+		base.LeftTouchDown();
+
+		SetToFlippingState();
 	}
 
 	private void EndGrappling() {

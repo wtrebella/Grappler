@@ -21,4 +21,8 @@ public class PlayerStateController : WhitStateController {
 	protected void SetToFallingState() {
 		player.SetState(Player.PlayerStates.Falling);
 	}
+
+	protected void SetToFlippingState() {
+		player.SetState(Player.PlayerStates.Flipping);
+	}
 }

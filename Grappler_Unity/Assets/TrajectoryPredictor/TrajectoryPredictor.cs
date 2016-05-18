@@ -25,6 +25,9 @@ public class TrajectoryPredictor : MonoBehaviour {
 	[Tooltip("Stop the prediction where the line hits an object? Objects can be set to ignore this collision by putting them on the Ignore Raycast layer.")]
 	public bool stopOnCollision = true;
 
+	[Tooltip("Only collide with the layers chosen here (if stopOnCollision is true).")]
+	public LayerMask layerMask;
+
 	[Header("Line Settings")]
 	[Tooltip("The type of line to draw for debug stuff. DrawRay: uses built in Debug.DrawRay only visible in editor." +
 		" LineRenderer: uses a line renderer on a separate created GameObject to draw the line, is visble in editor and play mode")]
@@ -356,7 +359,7 @@ public class TrajectoryPredictor : MonoBehaviour {
 			lineDistance += dist;
 			if(stopOnCollision){
 				if(predictionType == predictionMode.Prediction2D){
-					RaycastHit2D hit = Physics2D.Raycast(pos, dir, dist);
+					RaycastHit2D hit = Physics2D.Raycast(pos, dir, dist, layerMask.value);
 					if(hit){
 						if(hit.collider.transform)
 						if(hit.collider.transform != transform){
@@ -365,6 +368,7 @@ public class TrajectoryPredictor : MonoBehaviour {
 							predictionPoints.Add(hit.point);
 						}
 					}
+					else hitInfo2D = hit;
 				}else{
 					Ray ray = new Ray(pos, dir); 
 					RaycastHit hit;

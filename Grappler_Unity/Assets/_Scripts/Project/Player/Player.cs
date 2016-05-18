@@ -4,7 +4,7 @@ using System;
 using UnityEngine.Events;
 
 public class Player : WhitStateMachine {
-	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround, Skating}
+	public enum PlayerStates {Idle, Paused, Falling, Grappling, Dead, OnGround, Skating, Flipping}
 
 	public Rigidbody2DAffecterGroup rigidbodyAffecterGroup;
 	public GrapplingManager grapplingManager;
@@ -28,9 +28,9 @@ public class Player : WhitStateMachine {
 		SetState(PlayerStates.Idle);
 		yield return StartCoroutine(ClothingManager.instance.WaitForInit());
 		yield return new WaitForSeconds(2);
-		ClothingManager.instance.WearSavedOrFirstItems();
-		ClothingManager.instance.WearHat(CollectionManager.instance.GetItem(CollectionType.Hats, "Baseball Cap"));
-		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Converse"));
+//		ClothingManager.instance.WearSavedOrFirstItems();
+//		ClothingManager.instance.WearHat(CollectionManager.instance.GetItem(CollectionType.Hats, "Baseball Cap"));
+//		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Converse"));
 	}
 
 	public void SetState(PlayerStates state) {

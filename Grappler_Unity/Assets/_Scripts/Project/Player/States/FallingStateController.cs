@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class FallingStateController : PlayerStateController {
-	[SerializeField] private CragFinder cragFinder;
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private WhitTerrainPair terrainPair;
 
@@ -17,9 +16,15 @@ public class FallingStateController : PlayerStateController {
 		player.playerAnimator.PlayFallingAnimations();
 	}
 
-	public override void TouchDown() {
-		base.TouchDown();
+	public override void RightTouchDown() {
+		base.RightTouchDown();
 
 		Grapple();
+	}
+
+	public override void LeftTouchDown() {
+		base.LeftTouchDown();
+
+		SetToFlippingState();
 	}
 }

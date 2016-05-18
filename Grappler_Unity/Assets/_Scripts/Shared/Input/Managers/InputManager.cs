@@ -228,7 +228,7 @@ public class InputManager : MonoBehaviour {
 			HandleTouchDown();
 			HandleLeftTouchDown();
 		}
-		else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+		if (Input.GetKeyDown(KeyCode.RightArrow)) {
 			HandleTouchDown();
 			HandleRightTouchDown();
 		}
@@ -239,7 +239,7 @@ public class InputManager : MonoBehaviour {
 			HandleTouchUp();
 			HandleLeftTouchUp();
 		}
-		else if (Input.GetKeyUp(KeyCode.RightArrow)) {
+		if (Input.GetKeyUp(KeyCode.RightArrow)) {
 			HandleTouchUp();
 			HandleRightTouchUp();
 		}
@@ -255,7 +255,7 @@ public class InputManager : MonoBehaviour {
 			HandleTouchUp();
 			HandleLeftTouchUp();
 		}
-		else if (Input.GetMouseButtonUp(1)) {
+		if (Input.GetMouseButtonUp(1)) {
 			HandleTouchUp();
 			HandleRightTouchUp();
 		}

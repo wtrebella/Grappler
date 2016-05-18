@@ -15,8 +15,8 @@ public class IdleStateController : PlayerStateController {
 		ResetRotation();
 	}
 	
-	public override void TouchDown() {
-		base.TouchDown();
+	public override void RightTouchDown() {
+		base.RightTouchDown();
 
 		Grapple();
 	}
