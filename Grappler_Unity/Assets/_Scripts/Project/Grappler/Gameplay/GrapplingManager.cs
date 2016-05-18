@@ -5,6 +5,8 @@ using System;
 public class GrapplingManager : MonoBehaviour {
 	public static GrapplingManager instance;
 
+	public Action<bool> SignalGrapplingEnabledChanged;
+
 	public Vector2 targetDirection {get; private set;}
 
 	[SerializeField] private RockSlide rockSlide;
@@ -22,6 +24,21 @@ public class GrapplingManager : MonoBehaviour {
 	}
 
 	private bool hasConnected = false;
+	private bool grapplingIsEnabled = true;
+
+	public void EnableGrappling() {
+		grapplingIsEnabled = true;
+		RunGrapplingEnabledChangedSignal();
+	}
+
+	public void DisableGrappling() {
+		grapplingIsEnabled = false;
+		RunGrapplingEnabledChangedSignal();
+	}
+
+	private void RunGrapplingEnabledChangedSignal() {
+		if (SignalGrapplingEnabledChanged != null) SignalGrapplingEnabledChanged(grapplingIsEnabled);	
+	}
 
 	public void SetTargetDirection(Vector2 targetDirection) {
 		this.targetDirection = targetDirection;
@@ -84,7 +101,7 @@ public class GrapplingManager : MonoBehaviour {
 	}
 
 	private bool ReadyToConnect() {
-		return grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
+		return grapplingIsEnabled && grapplerRope.IsRetracted() && !grapplerRope.IsConnected();
 	}
 
 	private bool ReadyToDisconnect() {

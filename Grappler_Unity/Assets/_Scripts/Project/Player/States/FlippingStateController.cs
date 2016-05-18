@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class FlippingStateController : PlayerStateController {
+	[SerializeField] private float uprightMargin = 20;
 	[SerializeField] private float flipSpeed = 10;
 	[SerializeField] private Rigidbody2D body;
 
@@ -12,15 +13,15 @@ public class FlippingStateController : PlayerStateController {
 
 	public override void EnterState() {
 		base.EnterState();
-
-//		body.constraints = RigidbodyConstraints2D.None;
+		
+		body.constraints = RigidbodyConstraints2D.None;
 	}
 
 	public override void ExitState() {
 		base.ExitState();
-
-		SetRotation(0);
-//		body.constraints = RigidbodyConstraints2D.FreezeRotation;
+	
+		if (IsWithinUprightMargin()) SetRotation(0);
+		body.constraints = RigidbodyConstraints2D.FreezeRotation;
 	}
 
 	public override void RightTouchDown() {
@@ -37,6 +38,12 @@ public class FlippingStateController : PlayerStateController {
 
 	public override void FixedUpdateState() {
 		UpdateFlip();
+		UpdateGrapplingAvailability();
+	}
+
+	private void UpdateGrapplingAvailability() {
+		if (IsWithinUprightMargin()) GrapplingManager.instance.EnableGrappling();
+		else GrapplingManager.instance.DisableGrappling();
 	}
 
 	private void UpdateFlip() {
@@ -52,5 +59,10 @@ public class FlippingStateController : PlayerStateController {
 		float curRotation = GetRotation();
 		float newRotation = Mathf.LerpAngle(curRotation, targetRotation, 1);
 		body.transform.eulerAngles = new Vector3(0, 0, newRotation);
+	}
+
+	private bool IsWithinUprightMargin() {
+		float rot = GetRotation();
+		return (Mathf.Abs(360 - rot) < uprightMargin) || (rot < uprightMargin);
 	}
 }

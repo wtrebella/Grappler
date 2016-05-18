@@ -14,5 +14,6 @@ public class DeadStateController : PlayerStateController {
 		base.EnterState();
 		player.grapplingManager.Disconnect();
 		player.ghostController.EnableGhosting();
+		GrapplingManager.instance.DisableGrappling();
 	}
 }
