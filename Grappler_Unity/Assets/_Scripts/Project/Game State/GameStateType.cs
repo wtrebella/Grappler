@@ -5,6 +5,7 @@ public enum GameStateType
 {
 	None = 0,
 
-	CharacterCustomization = 100,
-	Gameplay = 200
+	Title = 100,
+	CharacterCustomization = 200,
+	Gameplay = 300
 }

@@ -47,6 +47,7 @@ public class GameStateManager : Singleton<GameStateManager> {
 	private void InitializeGameStateTypes() {
 		_stateTypeToStateMap.Add(GameStateType.CharacterCustomization, SpawnGameState<GameStateCharacterCustomization>());
 		_stateTypeToStateMap.Add(GameStateType.Gameplay, SpawnGameState<GameStateGameplay>());
+		_stateTypeToStateMap.Add(GameStateType.Title, SpawnGameState<GameStateTitle>());
 	}
 
 	private void InitializePayloads() {
