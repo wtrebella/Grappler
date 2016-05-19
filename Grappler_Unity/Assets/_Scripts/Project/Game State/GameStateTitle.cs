@@ -9,6 +9,8 @@ public class GameStateTitle : GameStateBase {
 
 	public override void OnEnterState() {
 		base.OnEnterState();
+
+		InputManager.instance.SignalTouchDown += OnTouchDown;
 	}
 
 	public override IEnumerator OnEnterState_Routine() {
@@ -16,12 +18,24 @@ public class GameStateTitle : GameStateBase {
 		yield break;
 	}
 
+	private void OnTouchDown() {
+		StartGame();
+	}
+
+	private void StartGame() {
+		GameStateManager.instance.PopGameState();
+		GameStateManager.instance.PushGameState(GameStateType.Gameplay);
+	}
+
 	public override void OnUpdateState() {
 		base.OnUpdateState();
+
 	}
 
 	public override void OnExitState() {
 		base.OnExitState();
+
+		InputManager.instance.SignalTouchDown -= OnTouchDown;
 	}
 
 	public override void OnPauseState() {
