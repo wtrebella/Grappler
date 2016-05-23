@@ -11,7 +11,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private float marginSize = 10;
 
 	private Vector3 smoothVelocity;
-	private float smoothTime = 0.2f;
+	private float smoothTime = 0.1f;
 
 	public void SetUpdateType(WhitUpdateType newUpdateType) {
 		updateType = newUpdateType;
@@ -34,7 +34,7 @@ public class GameCamera : MonoBehaviour {
 	}
 
 	private void UpdateMovement() {
-		UpdateMovementImmediate();
+		UpdateMovementSmoothed();
 	}
 		
 	private void UpdateMovementImmediate() {

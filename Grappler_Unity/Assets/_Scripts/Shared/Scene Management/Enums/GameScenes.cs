@@ -5,6 +5,7 @@ using System.Collections;
 
 public enum GameScenes {
 	Root,
+	Title,
 	Gameplay,
 	CharacterCustomization
 }

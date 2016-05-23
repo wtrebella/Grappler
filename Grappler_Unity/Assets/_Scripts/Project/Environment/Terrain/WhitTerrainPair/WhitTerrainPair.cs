@@ -17,13 +17,19 @@ public class WhitTerrainPair : MonoBehaviour {
 	private float currentSlope;
 	private float currentWidth;
 
-	public Vector2 GetThroughDirection(Vector3 origin) {
-		float dist = GetDistAtPosition(origin);
+	public Vector2 GetThroughDirection(Vector3 position) {
+		float dist = GetDistAtPosition(position);
 		Vector2 distPoint = GetPointAtDist(dist);
 		Vector2 endPoint = GetEndPoint();
 		Vector2 delta = endPoint - distPoint;
 		Vector2 targetDirection = delta.normalized;
 		return targetDirection;
+	}
+
+	public float GetThroughSlope(Vector3 position) {
+		Vector2 direction = GetThroughDirection(position);
+		float slope = WhitTools.DirectionToSlope(direction);
+		return slope;
 	}
 
 	public Vector2 GetPointAtDist(float dist) {
