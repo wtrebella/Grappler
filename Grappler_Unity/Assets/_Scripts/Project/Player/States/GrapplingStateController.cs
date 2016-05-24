@@ -31,17 +31,20 @@ public class GrapplingStateController : PlayerStateController {
 	public override void ExitState() {
 		base.ExitState();
 
+		ReduceVelocityBasedOnDeviationFromThroughSlope();
+		playerTrajectory.Hide();
+		collisionSignaler.SignalCollision -= OnCollision;
+		DisconnectPlayer();
+		if (SignalGrappleEnded != null) SignalGrappleEnded();
+	}
+
+	private void ReduceVelocityBasedOnDeviationFromThroughSlope() {
 		Vector2 velocity = player.body.rigid.velocity;
 		Vector2 direction = velocity.normalized;
 		float slope = WhitTools.DirectionToSlope(direction);
 		float throughSlope = terrainPair.GetThroughSlope(player.body.transform.position);
 		float diff = Mathf.Abs(throughSlope - slope);
 		player.rigidbodyAffecterGroup.ReduceVelocity(1.0f - diff);
-
-		playerTrajectory.Hide();
-		collisionSignaler.SignalCollision -= OnCollision;
-		DisconnectPlayer();
-		if (SignalGrappleEnded != null) SignalGrappleEnded();
 	}
 
 	public override void RightTouchUp() {

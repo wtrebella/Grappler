@@ -17,37 +17,31 @@ public class Breakable : MonoBehaviour {
 		this.Recycle();
 	}
 
-	public void Explode() {
-		Slice();
-		PlayParticles();
-	}
-
 	public void HandleCollision(Collision2D collision) {
 		if (hasBeenSliced) return;
 
-		if (autoExplode) Explode();
+		if (autoExplode) Slice(collision.collider.transform.position, collision.relativeVelocity.normalized);
 	}
 
 	public void HandleTrigger(Collider2D collider) {
 		if (hasBeenSliced) return;
 
-		if (autoExplode) Explode();
+		if (autoExplode) Slice(collider.transform.position, collider.attachedRigidbody.velocity.normalized);
 	}
 
-	private void Slice() {
+	private void Slice(Vector2 hitPoint, Vector2 hitDirection) {
 		GameObject spriteObject = GetComponentInChildren<tk2dSprite>().gameObject;
-		Vector2 pos = spriteObject.transform.position;
+		Vector2 pos = hitPoint - hitDirection * 20;
 		Vector2 startPos = pos;
-		Vector2 endPos = pos;
-		startPos.x -= 5;
-		endPos.x += 5;
-		startPos.y += 10;
-		endPos.y += 10;
+		Vector2 endPos = pos + hitDirection * 60;
+		Debug.DrawLine(startPos, endPos, Color.blue, 1);
+		hasBeenSliced = true;
 		SpriteSlicer2D.SliceSprite(startPos, endPos, spriteObject);
+		sliceParticles.Play();
 	}
 
 	private void PlayParticles() {
-		sliceParticles.Play();
+		
 	}
 
 	private void Awake() {

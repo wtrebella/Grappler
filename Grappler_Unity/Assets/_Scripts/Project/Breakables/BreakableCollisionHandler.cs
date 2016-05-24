@@ -12,7 +12,7 @@ public class BreakableCollisionHandler : MonoBehaviour {
 
 	private void OnCollisionEnter2D(Collision2D collision) {
 		if (breakable == null) {
-			Debug.LogError("no parent object with Breakable.cs attached!");
+			Debug.LogWarning("no parent object with Breakable.cs attached!");
 			return;
 		}
 
