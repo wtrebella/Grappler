@@ -15,6 +15,7 @@ public class CoinCluster : GeneratableItem {
 			Coin coin = coinPrefab.Spawn();
 			coin.transform.parent = transform;
 			coin.transform.localPosition = point * multiplier;
+			coin.Reset();
 		}
 	}
 }
