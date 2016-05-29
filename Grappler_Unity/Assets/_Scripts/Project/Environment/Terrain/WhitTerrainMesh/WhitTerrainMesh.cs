@@ -27,8 +27,14 @@ public class WhitTerrainMesh : MonoBehaviour {
 		Vector2 startPointLocal = terrain.GetStartPointLocal();
 		Vector2 endPointLocal = terrain.GetEndPointLocal();
 
+		float yMin = Mathf.Min(startPointLocal.y, endPointLocal.y);
+		float yMax = Mathf.Max(startPointLocal.y, endPointLocal.y);
+		float yExtant = 0;
+		if (meshType == WhitTerrainMeshType.BottomEdge) yExtant = yMax;
+		else if (meshType == WhitTerrainMeshType.TopEdge) yExtant = yMin;
+
 		Vector2 p1 = endPointLocal + Vector2.right * outlineSize;
-		Vector2 p2 = p1 + GetMeshDirection() * outlineSize;
+		Vector2 p2 = new Vector2(p1.x, yExtant + (GetMeshDirection() * outlineSize).y);
 		Vector2 p3 = new Vector2(startPointLocal.x - outlineSize, p2.y);
 		Vector2 p4 = new Vector2(p3.x, startPointLocal.y);
 

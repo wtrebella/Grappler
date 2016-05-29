@@ -119,6 +119,11 @@ public class WhitTerrainPair : MonoBehaviour {
 		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
 	}
 
+	public void End() {
+//		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
+//		AddPattern(WhitTerrainPairPatternType.Straight, pattern);
+	}
+
 	public void Straight() {
 		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
 		AddPattern(WhitTerrainPairPatternType.Straight, pattern);
