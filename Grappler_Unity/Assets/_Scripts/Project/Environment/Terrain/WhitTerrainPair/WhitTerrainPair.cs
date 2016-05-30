@@ -16,6 +16,7 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	private float currentSlope;
 	private float currentWidth;
+	private List<WhitTerrainPairPatternType> patternTypes;
 
 	public Vector2 GetThroughDirection(Vector3 position) {
 		float dist = GetDistAtPosition(position);
@@ -80,7 +81,14 @@ public class WhitTerrainPair : MonoBehaviour {
 		return distLength;
 	}
 		
+
+	int temp = 0;
 	public void AddRandomPattern() {
+		temp++;
+		if (temp >= 20) {
+			End();
+			return;
+		}
 		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
 		if (patternType == WhitTerrainPairPatternType.Straight) Straight();
 		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
@@ -92,12 +100,14 @@ public class WhitTerrainPair : MonoBehaviour {
 	private void Awake() {
 		currentSlope = initialSlope;
 		currentWidth = initialWidth;
+		patternTypes = new List<WhitTerrainPairPatternType>();
 
 		topTerrain.Initialize(Vector2.zero);
 		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
 	}
 
 	private void Update() {
+		if (LastPatternIsEnd()) return;
 		if (NeedsNewPattern(focusObject.position)) AddRandomPattern();
 	}
 
@@ -120,8 +130,8 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void End() {
-//		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
-//		AddPattern(WhitTerrainPairPatternType.Straight, pattern);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, GetTopStraightLength(), GetBottomStraightLength());
+		AddPattern(WhitTerrainPairPatternType.End, pattern);
 	}
 
 	public void Straight() {
@@ -182,7 +192,13 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+		patternTypes.Add(patternType);
 		if (SignalPatternAdded != null) SignalPatternAdded(patternType, topSections, bottomSections);
+	}
+
+	private bool LastPatternIsEnd() {
+		if (patternTypes.Count == 0) return false;
+		return patternTypes.GetLast() == WhitTerrainPairPatternType.End;
 	}
 
 	public float GetDistAtPosition(Vector2 position) {

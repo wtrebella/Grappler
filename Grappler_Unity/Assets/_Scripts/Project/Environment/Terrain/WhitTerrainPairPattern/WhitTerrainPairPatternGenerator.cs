@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPairPatternGenerator {
-	public static WhitTerrainPairPattern GetEndPattern(float currentSlope, float length) {
-		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length, true);
-		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, length, true);
+	public static WhitTerrainPairPattern GetEndPattern(float currentSlope, float topLength, float bottomLength) {
+		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, topLength, true);
+		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, bottomLength, true);
 		WhitTerrainPatternInstructionPair straight = new WhitTerrainPatternInstructionPair(topStraight, bottomStraight);
 
 		WhitTerrainPairPattern straightPattern = new WhitTerrainPairPattern(straight);
