@@ -2,6 +2,13 @@
 using System.Collections;
 using System;
 
+public enum CameraFollowMode {
+	NONE,
+	Terrain,
+	Player,
+	MAX
+}
+
 public class GameCamera : MonoBehaviour {
 	[SerializeField] private float offset = 10;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
@@ -10,6 +17,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private Camera cam;
 	[SerializeField] private float marginSize = 10;
 
+	private CameraFollowMode cameraFollowMode = CameraFollowMode.Terrain;
 	private Vector3 smoothVelocity;
 	private float smoothTime = 0.1f;
 
@@ -24,12 +32,14 @@ public class GameCamera : MonoBehaviour {
 	private void Update() {
 		if (updateType != WhitUpdateType.Update) return;
 
+		UpdateCameraFollowMode();
 		UpdateMovement();
 	}
 
 	private void FixedUpdate() {
 		if (updateType != WhitUpdateType.FixedUpdate) return;
 
+		UpdateCameraFollowMode();
 		UpdateMovement();
 	}
 
@@ -56,14 +66,34 @@ public class GameCamera : MonoBehaviour {
 	}
 
 	private Vector2 GetObjectToThisVector() {
-		return (Vector2)transform.position - GetFocusPosition();
+		return (Vector2)transform.position - GetFocusObjectPosition();
 	}
 
 	private Vector3 GetTargetPosition() {
-		Vector3 objectPosition = GetFocusPosition();
-		Vector3 terrainPoint = (Vector3)terrainPair.GetPointAtX(objectPosition.x);
-		terrainPoint.z = GetTargetZ();
-		return terrainPoint;
+		Vector3 objectPosition = GetFocusObjectPosition();
+
+		if (cameraFollowMode == CameraFollowMode.Terrain) {
+			Vector3 terrainPoint = (Vector3)terrainPair.GetPointAtX(objectPosition.x);
+			terrainPoint.z = GetTargetZ();
+			return terrainPoint;
+		}
+		else if (cameraFollowMode == CameraFollowMode.Player) {
+			Vector3 newPos = objectPosition;
+			newPos.z = transform.position.z;
+			return newPos;
+		}
+
+		else return transform.position;
+	}
+
+	private void UpdateCameraFollowMode() {
+		if (cameraFollowMode == CameraFollowMode.Terrain) {
+			if (ShouldSwitchToPlayerFollowMode()) cameraFollowMode = CameraFollowMode.Player;
+		}
+	}
+
+	private bool ShouldSwitchToPlayerFollowMode() {
+		return terrainPair.HasEnd() && terrainPair.GetXIsPastEnd(GetFocusObjectPosition().x);
 	}
 
 	private float GetTargetZ() {
@@ -74,7 +104,7 @@ public class GameCamera : MonoBehaviour {
 		return -distance;
 	}
 
-	private Vector2 GetFocusPosition() {
+	private Vector2 GetFocusObjectPosition() {
 		Vector2 position = focusObject.position;
 		position.x += offset;
 		return position;

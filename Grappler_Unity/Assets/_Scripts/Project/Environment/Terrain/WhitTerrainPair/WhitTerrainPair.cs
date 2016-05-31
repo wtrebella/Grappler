@@ -79,16 +79,22 @@ public class WhitTerrainPair : MonoBehaviour {
 		float bottomDistLength = bottomTerrain.GetDistLength();
 		float distLength = (topDistLength + bottomDistLength) / 2f;
 		return distLength;
-	}
-		
+	}		
 
-	public void AddRandomPattern() {
-		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
+	public void AddNextPattern() {
+		WhitTerrainPairPatternType patternType = GetNextPatternType();
+
 		if (patternType == WhitTerrainPairPatternType.Straight) Straight();
 		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
 		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
 		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
 		else if (patternType == WhitTerrainPairPatternType.Flat) Flat();
+		else if (patternType == WhitTerrainPairPatternType.End) End();
+	}
+
+	public WhitTerrainPairPatternType GetNextPatternType() {
+		if (NeedsEnd()) return WhitTerrainPairPatternType.End;
+		else return WhitTerrainPairAttributes.instance.GetRandomPatternType();
 	}
 
 	private void Awake() {
@@ -101,11 +107,16 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (LastPatternIsEnd()) return;
-		if (NeedsNewPattern(focusObject.position)) AddRandomPattern();
+		if (NeedsNewPattern(focusObject.position)) AddNextPattern();
+	}
+
+	private bool NeedsEnd() {
+		return patternTypes.Count >= 20;
 	}
 
 	private bool NeedsNewPattern(float focusObjectDist) {
+		bool hasEnd = HasEnd();
+		if (hasEnd) return false;
 		bool needsTopPattern = topTerrain.DistIsWithinDistThreshold(focusObjectDist);
 		bool needsBottomPattern = bottomTerrain.DistIsWithinDistThreshold(focusObjectDist);
 		return needsTopPattern || needsBottomPattern;
@@ -121,6 +132,12 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	public float GetWidthAtEnd() {
 		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
+	}
+
+	public bool GetXIsPastEnd(float x) {
+		float topEnd = topTerrain.GetEndPoint().x;
+		float bottomEnd = bottomTerrain.GetEndPoint().x;
+		return x > topEnd || x > bottomEnd;
 	}
 
 	public void End() {
@@ -190,7 +207,7 @@ public class WhitTerrainPair : MonoBehaviour {
 		if (SignalPatternAdded != null) SignalPatternAdded(patternType, topSections, bottomSections);
 	}
 
-	private bool LastPatternIsEnd() {
+	public bool HasEnd() {
 		if (patternTypes.Count == 0) return false;
 		return patternTypes.GetLast() == WhitTerrainPairPatternType.End;
 	}
