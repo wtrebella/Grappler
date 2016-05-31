@@ -40,6 +40,10 @@ public class WhitTerrainPair : MonoBehaviour {
 		return averagePoint;
 	}
 
+	public float GetCurrentWidth() {
+		return currentWidth;
+	}
+
 	public Vector2 GetStartPoint() {
 		return WhitTools.GetAveragePoint(topTerrain.GetStartPoint(), bottomTerrain.GetStartPoint());
 	}
@@ -102,8 +106,12 @@ public class WhitTerrainPair : MonoBehaviour {
 		currentWidth = initialWidth;
 		patternTypes = new List<WhitTerrainPairPatternType>();
 
-		topTerrain.Initialize(Vector2.zero);
-		bottomTerrain.Initialize(new Vector2(0, -currentWidth));
+		InitializeTerrains(Vector2.zero);
+	}
+
+	private void InitializeTerrains(Vector2 startPosition) {
+		topTerrain.Initialize(startPosition);
+		bottomTerrain.Initialize(new Vector2(startPosition.x, startPosition.y - currentWidth));
 	}
 
 	private void Update() {
@@ -134,10 +142,23 @@ public class WhitTerrainPair : MonoBehaviour {
 		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
 	}
 
+	public void RestartTerrain(Vector2 newStartPoint) {
+		topTerrain.ResetTerrain();
+		bottomTerrain.ResetTerrain();
+		patternTypes.Clear();
+		InitializeTerrains(newStartPoint);
+	}
+
 	public bool GetXIsPastEnd(float x) {
 		float topEnd = topTerrain.GetEndPoint().x;
 		float bottomEnd = bottomTerrain.GetEndPoint().x;
 		return x > topEnd || x > bottomEnd;
+	}
+
+	public bool GetXIsPastStart(float x) {
+		float topStart = topTerrain.GetStartPoint().x;
+		float bottomStart = bottomTerrain.GetStartPoint().x;
+		return x > topStart || x > bottomStart;
 	}
 
 	public void End() {

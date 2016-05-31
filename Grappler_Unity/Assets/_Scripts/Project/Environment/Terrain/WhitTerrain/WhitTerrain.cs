@@ -17,8 +17,8 @@ public class WhitTerrain : MonoBehaviour {
 	private WhitTerrainSectionGenerator sectionGenerator;
 
 	public void Initialize(Vector2 startPoint) {
-		sections = new List<WhitTerrainSection>();
-		sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
+		if (sections == null) sections = new List<WhitTerrainSection>();
+		if (sectionGenerator == null) sectionGenerator = new WhitTerrainSectionGenerator(sectionAttributes);
 		AddFirstSection(startPoint);
 	}
 
@@ -71,6 +71,10 @@ public class WhitTerrain : MonoBehaviour {
 
 	public float GetLastSectionSlope() {
 		return GetLastSection().slope;
+	}
+
+	public void ResetTerrain() {
+		RemoveAllSections();
 	}
 
 	public Vector2 GetPointAtX(float x) {
@@ -160,7 +164,7 @@ public class WhitTerrain : MonoBehaviour {
 	}
 
 	private void AddFirstSection(Vector2 startPoint) {
-		AddSection(sectionGenerator.GenerateSection(this, startPoint, 0.0f, 5.0f, 0.0f, true));
+		AddSection(sectionGenerator.GenerateSection(this, startPoint, 0.0f, 100.0f, 0.0f, true));
 	}
 
 	private void AddSection(WhitTerrainSection sectionToAdd) {
@@ -176,9 +180,20 @@ public class WhitTerrain : MonoBehaviour {
 
 	private void RemoveFirstSection() {
 		WhitTerrainSection firstSection = sections[0];
-		sections.Remove(firstSection);
-		if (SignalTerrainSectionRemoved != null) SignalTerrainSectionRemoved(firstSection);
-		GameObject.Destroy(firstSection.gameObject, 0.5f);
+		RemoveSection(firstSection);
+	}
+
+	private void RemoveSection(WhitTerrainSection section) {
+		sections.Remove(section);
+		if (SignalTerrainSectionRemoved != null) SignalTerrainSectionRemoved(section);
+		GameObject.Destroy(section.gameObject, 0.5f);
 		OnChange();
+	}
+
+	private void RemoveAllSections() {
+		for (int i = sections.Count - 1; i >= 0; i--) {
+			WhitTerrainSection section = sections[i];
+			RemoveSection(section);
+		}
 	}
 }

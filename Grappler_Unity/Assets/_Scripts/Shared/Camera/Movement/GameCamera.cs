@@ -16,6 +16,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private Camera cam;
 	[SerializeField] private float marginSize = 10;
+	[SerializeField] private float newTerrainSwitchMargin = -20;
 
 	private CameraFollowMode cameraFollowMode = CameraFollowMode.Terrain;
 	private Vector3 smoothVelocity;
@@ -90,10 +91,17 @@ public class GameCamera : MonoBehaviour {
 		if (cameraFollowMode == CameraFollowMode.Terrain) {
 			if (ShouldSwitchToPlayerFollowMode()) cameraFollowMode = CameraFollowMode.Player;
 		}
+		else if (cameraFollowMode == CameraFollowMode.Player) {
+			if (ShouldSwitchToTerrainFollowMode()) cameraFollowMode = CameraFollowMode.Terrain;
+		}
 	}
 
 	private bool ShouldSwitchToPlayerFollowMode() {
 		return terrainPair.HasEnd() && terrainPair.GetXIsPastEnd(GetFocusObjectPosition().x);
+	}
+
+	private bool ShouldSwitchToTerrainFollowMode() {
+		return !terrainPair.HasEnd() && terrainPair.GetXIsPastStart(GetFocusObjectPosition().x + newTerrainSwitchMargin);
 	}
 
 	private float GetTargetZ() {

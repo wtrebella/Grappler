@@ -23,9 +23,16 @@ public class PlayerTrajectory : MonoBehaviour {
 		return tp.drawDebugOnPrediction;
 	}
 
-	private void Update () {
+	private void Update() {
 		if (!IsShowing()) return;
 		tp.debugLineDuration = Time.unscaledDeltaTime;
 		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
+	}
+
+	public Vector2 GetPredictedPoint() {
+		tp.debugLineDuration = 10;
+		tp.drawDebugOnPrediction = true;
+		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
+		return tp.predictionPoints.GetLast();
 	}
 }
