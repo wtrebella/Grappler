@@ -82,13 +82,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 		
 
-	int temp = 0;
 	public void AddRandomPattern() {
-		temp++;
-		if (temp >= 20) {
-			End();
-			return;
-		}
 		WhitTerrainPairPatternType patternType = WhitTerrainPairAttributes.instance.GetRandomPatternType();
 		if (patternType == WhitTerrainPairPatternType.Straight) Straight();
 		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
