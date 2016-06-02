@@ -6,12 +6,14 @@ using UnityEngine.Events;
 public class GrapplingStateController : PlayerStateController {
 	public Action SignalGrappleBegan;
 	public Action SignalGrappleEnded;
+	public Action<float> SignalGrappleEndedWithSlopeDeviation;
 
 	[SerializeField] private float slopeAddition = 0.15f;
 	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;
 	[SerializeField] private PlayerTrajectory playerTrajectory;
+	[SerializeField] private Trail trail;
 
 	private void Awake() {
 		base.BaseAwake();
@@ -31,20 +33,28 @@ public class GrapplingStateController : PlayerStateController {
 	public override void ExitState() {
 		base.ExitState();
 
-		ReduceVelocityBasedOnDeviationFromThroughSlope();
+		float deviation = GetDeviationFromThroughSlope();
+		ReduceVelocity(deviation);
 		playerTrajectory.Hide();
 		collisionSignaler.SignalCollision -= OnCollision;
 		DisconnectPlayer();
+		if (deviation < 0.3f) trail.SetTrailColor(Color.green);
+		else trail.SetTrailColor(Color.red);
 		if (SignalGrappleEnded != null) SignalGrappleEnded();
+		if (SignalGrappleEndedWithSlopeDeviation != null) SignalGrappleEndedWithSlopeDeviation(deviation);
 	}
 
-	private void ReduceVelocityBasedOnDeviationFromThroughSlope() {
+	private void ReduceVelocity(float throughSlopeDeviation) {
+		player.rigidbodyAffecterGroup.ReduceVelocity(1.0f - throughSlopeDeviation);
+	}
+
+	private float GetDeviationFromThroughSlope() {
 		Vector2 velocity = player.body.rigid.velocity;
 		Vector2 direction = velocity.normalized;
 		float slope = WhitTools.DirectionToSlope(direction);
 		float throughSlope = terrainPair.GetThroughSlope(player.body.transform.position);
 		float diff = Mathf.Abs(throughSlope - slope);
-		player.rigidbodyAffecterGroup.ReduceVelocity(1.0f - diff);
+		return diff;
 	}
 
 	public override void RightTouchUp() {

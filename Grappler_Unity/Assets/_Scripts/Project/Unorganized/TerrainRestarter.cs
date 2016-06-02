@@ -16,7 +16,7 @@ public class TerrainRestarter : MonoBehaviour {
 	}
 
 	private bool NeedsRestart() {
-		return terrainPair.HasEnd() && terrainPair.GetXIsPastEnd(player.body.transform.position.x + pastEndOffset);
+		return terrainPair.HasEnd() && terrainPair.GetXIsPastEnd(player.body.transform.position.x + pastEndOffset) && !player.isGrappling;
 	}
 
 	private void FixedUpdate() {

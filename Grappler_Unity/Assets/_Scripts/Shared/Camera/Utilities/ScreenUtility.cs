@@ -47,6 +47,18 @@ public class ScreenUtility : MonoBehaviour {
 		return cam.ScreenToWorldPoint(new Vector3(screenPoint.x, screenPoint.y, z));
 	}
 
+	public Vector2 WorldPointToUIScreenPoint(RectTransform rectTransform, Vector3 worldPoint) {
+		Vector2 viewPos = ScreenUtility.instance.cam.WorldToViewportPoint(worldPoint);
+		// 0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint
+		// treats the lower left corner as 0,0. Because of this, you need to subtract the
+		// height / width of the canvas * 0.5 to get the correct position.
+		Vector2 screenPos = new Vector2(
+			((viewPos.x * rectTransform.sizeDelta.x) - (rectTransform.sizeDelta.x * 0.5f)),
+			((viewPos.y * rectTransform.sizeDelta.y) - (rectTransform.sizeDelta.y * 0.5f))
+		);
+		return screenPos;
+	}
+
 	public Vector2 origin {
 		get {return lowerLeftAnchor.transform.position;}
 	}

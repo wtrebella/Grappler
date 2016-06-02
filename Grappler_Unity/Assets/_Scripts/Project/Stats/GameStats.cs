@@ -1,18 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
+using System;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+public class GameStats : MonoBehaviour {
+	public static GameStats instance;
 
-[System.Serializable]
-public class GameStats : ScriptableObjectSingleton<GameStats> {
-	#if UNITY_EDITOR
-	[MenuItem("Assets/Create/GameStatsAsset", false, 103)]
-	public static void CreateGameStatsAsset() {
-		ScriptableObjectUtility.CreateAsset<GameStats>("GameStats");
+	public Action SignalCoinCollected;
+	public Action SignalCoinCountChanged;
+
+	private void Awake() {
+		if (instance == null) {
+			instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+		else {
+			Destroy(gameObject);
+		}
 	}
-	#endif
 
 	private string coinCountKey = "GameStats_CoinCount";
 	private int _coinCount = 0;
@@ -21,13 +26,17 @@ public class GameStats : ScriptableObjectSingleton<GameStats> {
 			_coinCount = WhitPrefs.GetInt(coinCountKey, 0);
 			return _coinCount;
 		}
-		set {
+		private set {
+			if (_coinCount == value) return;
+
 			_coinCount = value;
 			WhitPrefs.SetInt(coinCountKey, _coinCount);
+			if (SignalCoinCountChanged != null) SignalCoinCountChanged();
 		}
 	}
 
-	public static void OnCoinCollected() {
+	public void OnCoinCollected() {
 		instance.coinCount++;
+		if (SignalCoinCollected != null) SignalCoinCollected();
 	}
 }

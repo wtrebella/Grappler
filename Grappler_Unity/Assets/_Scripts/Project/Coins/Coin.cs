@@ -9,6 +9,7 @@ public class Coin : MonoBehaviour {
 	}
 
 	public void Collect() {
+		GameStats.instance.OnCoinCollected();
 		this.Recycle();
 	}
 

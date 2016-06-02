@@ -23,6 +23,7 @@ public class Player : WhitStateMachine {
 	public bool isPaused {get {return CurrentStateIs(PlayerStates.Paused);}}
 	public bool isIdle {get {return CurrentStateIs(PlayerStates.Idle);}}
 	public bool isSkating {get {return CurrentStateIs(PlayerStates.Skating);}}
+	public bool isFlipping {get {return CurrentStateIs(PlayerStates.Flipping);}}
 
 	private IEnumerator Start() {
 		SetState(PlayerStates.Idle);

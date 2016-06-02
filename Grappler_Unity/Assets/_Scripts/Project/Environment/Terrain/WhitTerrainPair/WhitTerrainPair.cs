@@ -119,7 +119,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private bool NeedsEnd() {
-		return patternTypes.Count >= 20;
+		return patternTypes.Count >= 30;
 	}
 
 	private bool NeedsNewPattern(float focusObjectDist) {

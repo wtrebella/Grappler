@@ -11,7 +11,8 @@ public class CoinMagnetism : MonoBehaviour {
 	private void OnTriggerEnter2D(Collider2D collider) {
 		if (isMagnetized) return;
 		if (WhitTools.IsInLayer(collider.gameObject, "Player")) {
-			Magnetize(collider.gameObject.transform);
+			Player player = collider.gameObject.GetComponentInParent<Player>();
+			if (player.isFlipping) Magnetize(collider.gameObject.transform);
 		}
 	}
 

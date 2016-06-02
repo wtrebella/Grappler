@@ -13,7 +13,7 @@ public class WhitTerrainMesh : MonoBehaviour {
 
 	[SerializeField] private WhitTerrainMeshType meshType;
 	[SerializeField] private WhitTerrain terrain;
-	[SerializeField] private float outlineSize = 200;
+	[SerializeField] private Vector2 outlineSize = new Vector2(1, 200);
 
 	private bool isDirty = false;
 
@@ -33,9 +33,9 @@ public class WhitTerrainMesh : MonoBehaviour {
 		if (meshType == WhitTerrainMeshType.BottomEdge) yExtant = yMax;
 		else if (meshType == WhitTerrainMeshType.TopEdge) yExtant = yMin;
 
-		Vector2 p1 = endPointLocal + Vector2.right * outlineSize;
-		Vector2 p2 = new Vector2(p1.x, yExtant + (GetMeshDirection() * outlineSize).y);
-		Vector2 p3 = new Vector2(startPointLocal.x - outlineSize, p2.y);
+		Vector2 p1 = endPointLocal + Vector2.right * outlineSize.x;
+		Vector2 p2 = new Vector2(p1.x, yExtant + (GetMeshDirection() * outlineSize.y).y);
+		Vector2 p3 = new Vector2(startPointLocal.x - outlineSize.x, p2.y);
 		Vector2 p4 = new Vector2(p3.x, startPointLocal.y);
 
 		points.Add(p1);

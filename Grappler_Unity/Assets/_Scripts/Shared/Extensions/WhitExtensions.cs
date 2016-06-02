@@ -31,4 +31,9 @@ public static class WhitExtensions {
 		for (int i = 0; i < list.Count; i++) array[i] = list[i].vector;
 		return array;
 	}
+
+	public static void SetViewportPosition(this RectTransform rectTransform, Vector2 viewportPosition) {
+		rectTransform.anchorMin = viewportPosition;
+		rectTransform.anchorMax = viewportPosition;
+	}
 }
