@@ -13,6 +13,8 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	[SerializeField] private float initialSlope = 0.1f;
 	[SerializeField] private float initialWidth = 16.0f;
+	[SerializeField] private bool withEndings = true;
+	[SerializeField] private int numPatternsBeforeEnd = 40;
 
 	private float currentSlope;
 	private float currentWidth;
@@ -119,7 +121,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private bool NeedsEnd() {
-		return patternTypes.Count >= 30;
+		return patternTypes.Count >= numPatternsBeforeEnd;
 	}
 
 	private bool NeedsNewPattern(float focusObjectDist) {
@@ -162,7 +164,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void End() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, GetTopStraightLength(), GetBottomStraightLength());
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, 200, 200);
 		AddPattern(WhitTerrainPairPatternType.End, pattern);
 	}
 

@@ -22,9 +22,6 @@ public class FlippingStateController : PlayerStateController {
 
 	public override void ExitState() {
 		base.ExitState();
-	
-		// if you end the flip at the wrong time you don't get the bonus!
-		if (!IsWithinUprightMargin()) flipManager.ResetFlipCount();
 		
 		SetRotation(0);
 		body.constraints = RigidbodyConstraints2D.FreezeRotation;

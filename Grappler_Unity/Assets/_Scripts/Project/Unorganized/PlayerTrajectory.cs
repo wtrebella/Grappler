@@ -29,9 +29,13 @@ public class PlayerTrajectory : MonoBehaviour {
 		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
 	}
 
+	public bool PredictedPointHitsMountain() {
+		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
+		if (tp.hitInfo2D.collider != null) Debug.Log(tp.hitInfo2D.collider.name);
+		return tp.hitInfo2D.collider != null;
+	}
+
 	public Vector2 GetPredictedPoint() {
-		tp.debugLineDuration = 10;
-		tp.drawDebugOnPrediction = true;
 		tp.Predict2D(rigid.transform.position, rigid.velocity, Physics2D.gravity);
 		return tp.predictionPoints.GetLast();
 	}

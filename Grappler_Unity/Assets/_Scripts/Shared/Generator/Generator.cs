@@ -34,7 +34,7 @@ public class Generator : MonoBehaviour {
 
 		GeneratableItem item = GetPrefab().Spawn();
 		item.transform.parent = transform;
-
+		if (items == null) Debug.LogError("Items list hasn't been initialized. Make sure to call the Generator class's BaseAwake function.");
 		items.Add(item);
 		item.HandleSpawned(this);
 

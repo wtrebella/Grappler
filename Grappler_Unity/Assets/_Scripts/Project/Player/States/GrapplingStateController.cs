@@ -9,6 +9,7 @@ public class GrapplingStateController : PlayerStateController {
 	public Action<float> SignalGrappleEndedWithSlopeDeviation;
 
 	[SerializeField] private float slopeAddition = 0.15f;
+	[SerializeField] private float allowedSlopeDeviation = 0.25f;
 	[SerializeField] private WhitTerrainPair terrainPair;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;
@@ -33,19 +34,30 @@ public class GrapplingStateController : PlayerStateController {
 	public override void ExitState() {
 		base.ExitState();
 
-		float deviation = GetDeviationFromThroughSlope();
-		ReduceVelocity(deviation);
+		OnGrappleEndDeviation();
 		playerTrajectory.Hide();
 		collisionSignaler.SignalCollision -= OnCollision;
 		DisconnectPlayer();
-		if (deviation < 0.3f) trail.SetTrailColor(Color.green);
-		else trail.SetTrailColor(Color.red);
 		if (SignalGrappleEnded != null) SignalGrappleEnded();
+	}
+
+	private void OnGrappleEndDeviation() {
+		float deviation = GetDeviationFromThroughSlope();
+
+		if (deviation > allowedSlopeDeviation) {
+			trail.SetTrailColor(Color.red);
+			ReduceVelocity(deviation);
+		}
+		else {
+			trail.SetTrailColor(Color.green);
+		}
 		if (SignalGrappleEndedWithSlopeDeviation != null) SignalGrappleEndedWithSlopeDeviation(deviation);
 	}
 
 	private void ReduceVelocity(float throughSlopeDeviation) {
-		player.rigidbodyAffecterGroup.ReduceVelocity(1.0f - throughSlopeDeviation);
+		float absSlopeDeviation = Mathf.Abs(throughSlopeDeviation);
+		float reductionMultiplier = Mathf.Max(0, 1.0f - absSlopeDeviation);
+		player.rigidbodyAffecterGroup.ReduceVelocity(reductionMultiplier);
 	}
 
 	private float GetDeviationFromThroughSlope() {
@@ -53,7 +65,7 @@ public class GrapplingStateController : PlayerStateController {
 		Vector2 direction = velocity.normalized;
 		float slope = WhitTools.DirectionToSlope(direction);
 		float throughSlope = terrainPair.GetThroughSlope(player.body.transform.position);
-		float diff = Mathf.Abs(throughSlope - slope);
+		float diff = slope - throughSlope;
 		return diff;
 	}
 
