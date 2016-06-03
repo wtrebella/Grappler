@@ -17,7 +17,7 @@ public class AreaOverlapper : MonoBehaviour {
 	private Anchorable ScreenOverlap() {
 		float xMargin = 20;
 		Vector2 bodyPos = transform.position;
-		Vector2 screenLowerLeftInWorldPoints =  ScreenUtility.instance.lowerLeft;
+		Vector2 screenLowerLeftInWorldPoints = ScreenUtility.instance.lowerLeft;
 		Vector2 lowerLeft = new Vector2(bodyPos.x - xMargin, screenLowerLeftInWorldPoints.y - xMargin);
 		Vector2 upperRight = new Vector2(lowerLeft.x + overlapWidth + xMargin, lowerLeft.y + ScreenUtility.instance.height + xMargin * 2);
 		Collider2D[] colliders = Physics2D.OverlapAreaAll(lowerLeft, upperRight, anchorableLayerMask);

@@ -13,7 +13,6 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	[SerializeField] private float initialSlope = 0.1f;
 	[SerializeField] private float initialWidth = 16.0f;
-	[SerializeField] private bool withEndings = true;
 	[SerializeField] private int numPatternsBeforeEnd = 40;
 
 	private float currentSlope;

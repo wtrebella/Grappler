@@ -32,7 +32,6 @@ public class Pointer : MonoBehaviour {
 		transform.position = rigid.transform.position;
 		Vector2 velocity = rigid.velocity;
 		Vector2 direction = velocity.normalized;
-		float magnitude = velocity.magnitude;
 		float angle = WhitTools.DirectionToAngle(direction);
 		Vector3 eulerAngles = new Vector3(0, 0, angle);
 		transform.eulerAngles = eulerAngles;

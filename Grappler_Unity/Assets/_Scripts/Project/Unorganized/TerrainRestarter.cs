@@ -9,7 +9,6 @@ public class TerrainRestarter : MonoBehaviour {
 	[SerializeField] private float pastEndOffset = -50;
 
 	private void RestartTerrain() {
-		Vector2 playerPos = player.body.transform.position;
 		Vector3 newStartPos = playerTrajectory.GetPredictedPoint();
 		newStartPos.y += startPointOffset;
 		terrainPair.RestartTerrain((Vector2)newStartPos);
