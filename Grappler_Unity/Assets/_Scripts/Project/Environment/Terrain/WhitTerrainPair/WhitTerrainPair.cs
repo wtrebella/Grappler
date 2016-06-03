@@ -163,7 +163,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public void End() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, 200, 200);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, 150, 150, 1f, 30.0f);
 		AddPattern(WhitTerrainPairPatternType.End, pattern);
 	}
 

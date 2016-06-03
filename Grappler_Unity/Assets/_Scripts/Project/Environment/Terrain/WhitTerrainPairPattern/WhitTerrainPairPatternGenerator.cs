@@ -3,13 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainPairPatternGenerator {
-	public static WhitTerrainPairPattern GetEndPattern(float currentSlope, float topLength, float bottomLength) {
+	public static WhitTerrainPairPattern GetEndPattern(float currentSlope, float topLength, float bottomLength, float endSlope, float radius) {
 		WhitTerrainPatternInstructionStraight topStraight = new WhitTerrainPatternInstructionStraight(currentSlope, topLength, true);
 		WhitTerrainPatternInstructionStraight bottomStraight = new WhitTerrainPatternInstructionStraight(currentSlope, bottomLength, true);
 		WhitTerrainPatternInstructionPair straight = new WhitTerrainPatternInstructionPair(topStraight, bottomStraight);
 
-		WhitTerrainPairPattern straightPattern = new WhitTerrainPairPattern(straight);
-		return straightPattern;
+		WhitTerrainPatternInstructionCurve topCurveOut = new WhitTerrainPatternInstructionCurve(currentSlope + endSlope, radius, true);
+		WhitTerrainPatternInstructionCurve bottomCurveOut = new WhitTerrainPatternInstructionCurve(currentSlope - endSlope, radius, true);
+		WhitTerrainPatternInstructionPair curveOut = new WhitTerrainPatternInstructionPair(topCurveOut, bottomCurveOut);
+
+		WhitTerrainPairPattern endPattern = new WhitTerrainPairPattern(straight, curveOut);
+		return endPattern;
 	}
 
 	public static WhitTerrainPairPattern GetStraightPattern(float currentSlope, float topLength, float bottomLength) {

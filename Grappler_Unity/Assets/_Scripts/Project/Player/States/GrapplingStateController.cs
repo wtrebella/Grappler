@@ -44,7 +44,7 @@ public class GrapplingStateController : PlayerStateController {
 	private void OnGrappleEndDeviation() {
 		float deviation = GetDeviationFromThroughSlope();
 
-		if (deviation > allowedSlopeDeviation) {
+		if (deviation > allowedSlopeDeviation || playerTrajectory.PredictedPointHitsMountain()) {
 			trail.BurstTrailColor(Color.red);
 			ReduceVelocity(deviation);
 		}
