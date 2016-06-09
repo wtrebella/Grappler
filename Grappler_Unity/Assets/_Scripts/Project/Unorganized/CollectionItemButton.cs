@@ -15,7 +15,8 @@ public class CollectionItemButton : MonoBehaviour {
 	}
 
 	private void SetupButton(CollectionItem item) {
-		button.onClick.AddListener(delegate {OnButtonClicked(item);});
+		if (item.owned)	button.onClick.AddListener(delegate {OnButtonClicked(item);});
+		else button.interactable = false;
 	}
 
 	private void SetupSprite(CollectionItem item) {
