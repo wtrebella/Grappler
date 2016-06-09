@@ -2,7 +2,13 @@
 using System.Collections;
 
 public class CollectionManager : Singleton<CollectionManager> {
-	private Collection[] collections;
+	private Collection[] _collections;
+	private Collection[] collections {
+		get {
+			if (_collections == null) LoadCollections();
+			return _collections;
+		}
+	}
 
 	public CollectionItem GetItem(CollectionType collectionType, string itemName) {
 		Collection collection = GetCollection(collectionType);
@@ -11,8 +17,9 @@ public class CollectionManager : Singleton<CollectionManager> {
 	}
 
 	private void Awake() {
+		if (!GameStateManager.DoesExist()) return;
+
 		MakePersistent();
-		LoadCollections();
 	}
 
 	public Collection GetCollection(CollectionType collectionType) {
@@ -30,6 +37,6 @@ public class CollectionManager : Singleton<CollectionManager> {
 	}
 
 	private void LoadCollections() {
-		collections = GetComponentsInChildren<Collection>();
+		_collections = GetComponentsInChildren<Collection>();
 	}
 }

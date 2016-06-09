@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Collection : MonoBehaviour {
-	public List<CollectionItem> items {get; private set;}
+	private List<CollectionItem> _items;
+	public List<CollectionItem> items {
+		get {
+			if (_items == null) LoadItems();
+			return _items;
+		}
+	}
 
 	public CollectionType collectionType = CollectionType.None;
 
 	[SerializeField] private string path = "Collections/";
-
-	private void Awake() {
-		LoadItems();
-	}
 
 	public CollectionItem GetFirstItem() {
 		return GetItem(0);
@@ -51,6 +53,10 @@ public class Collection : MonoBehaviour {
 	public bool HasItems() {
 		return items != null && items.Count > 0;
 	}
+		
+	public List<CollectionItem> GetAllItems() {
+		return items;
+	}
 
 	public List<CollectionItem> GetOwnedItems() {
 		var ownedItems = new List<CollectionItem>();
@@ -69,6 +75,6 @@ public class Collection : MonoBehaviour {
 	}
 		
 	private void LoadItems() {
-		items = Resources.LoadAll(path, typeof(CollectionItem)).Cast<CollectionItem>().ToArray().ToList();
+		_items = Resources.LoadAll(path, typeof(CollectionItem)).Cast<CollectionItem>().ToArray().ToList();
 	}
 }

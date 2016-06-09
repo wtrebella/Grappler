@@ -9,6 +9,7 @@ public class EquipmentSlot : MonoBehaviour {
 	private CollectionItem equippedItem;
 
 	private void Awake() {
+		if (!GameStateManager.DoesExist()) return;
 		Load();
 	}
 
