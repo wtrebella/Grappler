@@ -86,28 +86,31 @@ public class ClothingManager : Singleton<ClothingManager> {
 		WearShoes(shoesCollection.GetFirstItem());
 	}
 
+	public void WearItem(CollectionItem item) {
+		if (item.type == CollectionItemType.Hat) WearHat(item);
+		else if (item.type == CollectionItemType.Shoes) WearShoes(item);
+	}
+
+	public void RemoveHat() {
+		hatSpineSlot.RemoveSprite();
+		hatEquipmentSlot.RemoveItem();
+	}
+
+	public void RemoveShoes() {
+		backShoeSpineSlot.RemoveSprite();
+		frontShoeSpineSlot.RemoveSprite();
+		shoesEquipmentSlot.RemoveItem();
+	}
+
 	public void WearHat(CollectionItem item) {
-		if (item == null) {
-			hatSpineSlot.RemoveSprite();
-			hatEquipmentSlot.RemoveItem();
-		}
-		else {
-			hatSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
-			hatEquipmentSlot.EquipItem(item);
-		}
+		hatSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+		hatEquipmentSlot.EquipItem(item);
 	}
 
 	public void WearShoes(CollectionItem item) {
-		if (item == null) {
-			backShoeSpineSlot.RemoveSprite();
-			frontShoeSpineSlot.RemoveSprite();
-			shoesEquipmentSlot.RemoveItem();
-		}
-		else {
-			backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
-			frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
-			shoesEquipmentSlot.EquipItem(item);
-		}
+		backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+		frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
+		shoesEquipmentSlot.EquipItem(item);
 	}
 
 	public bool HatIsEquipped() {

@@ -4,6 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class CollectionItem : ScriptableObject {
 	public string itemName = "New Item";
+	public CollectionItemType type;
 
 	private string ownedKey {get {return "collectionItem_" + itemName + "_owned";}}
 	public bool owned {
