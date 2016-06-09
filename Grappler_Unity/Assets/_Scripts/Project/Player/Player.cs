@@ -25,13 +25,8 @@ public class Player : WhitStateMachine {
 	public bool isSkating {get {return CurrentStateIs(PlayerStates.Skating);}}
 	public bool isFlipping {get {return CurrentStateIs(PlayerStates.Flipping);}}
 
-	private IEnumerator Start() {
+	private void Start() {
 		SetState(PlayerStates.Idle);
-		yield return StartCoroutine(ClothingManager.instance.WaitForInit());
-		yield return new WaitForSeconds(2);
-//		ClothingManager.instance.WearSavedOrFirstItems();
-//		ClothingManager.instance.WearHat(CollectionManager.instance.GetItem(CollectionType.Hats, "Baseball Cap"));
-//		ClothingManager.instance.WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Converse"));
 	}
 
 	public void SetState(PlayerStates state) {

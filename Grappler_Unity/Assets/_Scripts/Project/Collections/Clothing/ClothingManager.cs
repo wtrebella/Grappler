@@ -30,10 +30,16 @@ public class ClothingManager : Singleton<ClothingManager> {
 	//	public UnityEvent OnShoeFrontUnequipped;
 
 	private void Start() {
+		if (!GameStateManager.DoesExist()) return;
+
 		InitializeCollections();
 		InitializeEquipmentSlots();
 		InitializeSpineSlots();
 		InitializationComplete();
+
+		WearSavedOrFirstItems();
+		//		WearHat(CollectionManager.instance.GetItem(CollectionType.Hats, "Baseball Cap"));
+		//		WearShoes(CollectionManager.instance.GetItem(CollectionType.Shoes, "Converse"));
 	}
 
 	public IEnumerator WaitForInit() {
@@ -45,13 +51,11 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	private void InitializeEquipmentSlots() {
-		if (!EquipmentManager.DoesExist()) return;
 		hatEquipmentSlot = EquipmentManager.instance.GetHatSlot();
 		shoesEquipmentSlot = EquipmentManager.instance.GetShoesSlot();
 	}
 
 	private void InitializeCollections() {
-		if (!CollectionManager.DoesExist()) return;
 		hatCollection = CollectionManager.instance.GetCollection(CollectionType.Hats);
 		shoesCollection = CollectionManager.instance.GetCollection(CollectionType.Shoes);
 	}
@@ -83,18 +87,26 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	public void WearHat(CollectionItem item) {
-		if (item == null) hatSpineSlot.RemoveSprite();
-		else hatSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+		if (item == null) {
+			hatSpineSlot.RemoveSprite();
+			hatEquipmentSlot.RemoveItem();
+		}
+		else {
+			hatSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+			hatEquipmentSlot.EquipItem(item);
+		}
 	}
 
 	public void WearShoes(CollectionItem item) {
 		if (item == null) {
 			backShoeSpineSlot.RemoveSprite();
 			frontShoeSpineSlot.RemoveSprite();
+			shoesEquipmentSlot.RemoveItem();
 		}
 		else {
 			backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
 			frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
+			shoesEquipmentSlot.EquipItem(item);
 		}
 	}
 
