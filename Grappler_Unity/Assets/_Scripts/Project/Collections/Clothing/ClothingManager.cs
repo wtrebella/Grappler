@@ -74,8 +74,10 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	public void WearSavedItems() {
-		WearHat(hatEquipmentSlot.GetItem());
-		WearShoes(shoesEquipmentSlot.GetItem());
+		CollectionItem savedHat = hatEquipmentSlot.GetItem();
+		CollectionItem savedShoes = shoesEquipmentSlot.GetItem();
+		if (savedHat) WearHat(savedHat);
+		if (savedShoes) WearShoes(savedShoes);
 	}
 
 	public void WearFirstHat() {

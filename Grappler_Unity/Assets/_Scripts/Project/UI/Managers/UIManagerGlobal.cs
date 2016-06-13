@@ -13,8 +13,21 @@ public class UIManagerGlobal : UIManager {
 		AddPanelToQueue(panelInfo);
 	}
 
+	public void AddBarPanelToQueue() {
+		PanelInfo panelInfo = new PanelInfo();
+		panelInfo.panel = GetPanelOfType<BarPanel>();
+		AddPanelToQueue(panelInfo);
+	}
+
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) AddRandomMenuToQueue();
+		if (Input.GetKeyDown(KeyCode.B)) {
+			if (RegisteredPanelIsOfType(typeof(BarPanel))) {
+				BarPanel barPanel = GetPanelOfType<BarPanel>();
+				barPanel.Hide();
+			}
+			else AddBarPanelToQueue();
+		}
 		BaseUpdate();
 	}
 

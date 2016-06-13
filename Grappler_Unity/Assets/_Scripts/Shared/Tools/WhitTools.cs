@@ -46,6 +46,11 @@ public static class WhitTools {
 		return fieldOfView;
 	}
 
+	public static Color GetColorWithRandomHue(float s, float v, float a = 1.0f) {
+		HSVColor c = new HSVColor(Random.value, s, v, a);
+		return WadeUtils.HSVToRGB(c);
+	}
+
 	public static void SetTimeScale(float timeScale) {
 		Time.timeScale = timeScale;
 		Time.fixedDeltaTime = (1.0f/60.0f) * timeScale;

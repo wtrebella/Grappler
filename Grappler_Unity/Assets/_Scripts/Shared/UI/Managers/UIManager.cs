@@ -41,6 +41,11 @@ public class UIManager : Singleton<UIManager> {
 		return panelDictionary[typeof(T)].Cast<T>().ToList();
 	}
 
+	public bool RegisteredPanelIsOfType(Type type) {
+		if (!RegisteredPanelExists()) return false;
+		return registeredPanel.GetType() == type;
+	}
+
 	public void AddPanelToQueue(PanelInfo panelInfo) {
 		panelQueue.Enqueue(panelInfo);
 	}
