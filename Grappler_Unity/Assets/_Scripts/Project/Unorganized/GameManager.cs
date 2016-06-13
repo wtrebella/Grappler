@@ -30,6 +30,6 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void ShowBars() {
-		UIManagerGlobal.instance.AddBarPanelToQueue();
+		UIManagerGlobal.instance.AddPanelToQueue<BarPanel>();
 	}
 }

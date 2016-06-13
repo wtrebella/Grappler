@@ -5,8 +5,13 @@ public class UIManagerGlobal : UIManager {
 	public static UIManagerGlobal instance;
 
 	private void Awake() {
+		if (instance != null) {
+			Destroy(gameObject);
+			return;
+		}
+		else instance = this;
+
 		BaseAwake();
-		instance = this;
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -21,20 +26,20 @@ public class UIManagerGlobal : UIManager {
 		AddPanelToQueue(panelInfo);
 	}
 
-	public void AddBarPanelToQueue() {
+	public void AddPanelToQueue<T>() where T : PanelBase {
 		PanelInfo panelInfo = new PanelInfo();
-		panelInfo.panel = GetPanelOfType<BarPanel>();
+		panelInfo.panel = GetPanelOfType<T>();
 		AddPanelToQueue(panelInfo);
 	}
 
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) AddRandomMenuToQueue();
-		if (Input.GetKeyDown(KeyCode.B)) {
-			if (RegisteredPanelIsOfType(typeof(BarPanel))) {
-				BarPanel barPanel = GetPanelOfType<BarPanel>();
-				barPanel.Hide();
+		if (Input.GetKeyDown(KeyCode.P)) {
+			if (RegisteredPanelIsOfType(typeof(PostGamePanel))) {
+				PostGamePanel postGamePanel = GetPanelOfType<PostGamePanel>();
+				postGamePanel.Hide();
 			}
-			else AddBarPanelToQueue();
+			else AddPanelToQueue<PostGamePanel>();
 		}
 		BaseUpdate();
 	}

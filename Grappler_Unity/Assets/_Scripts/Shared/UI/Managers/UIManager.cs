@@ -33,6 +33,16 @@ public class UIManager : MonoBehaviour {
 		}
 	}
 
+	public void ShowPanel<T>() where T : PanelBase {
+		T panel = GetPanelOfType<T>();
+		panel.Show();
+	}
+
+	public void HidePanel<T>() where T : PanelBase {
+		T panel = GetPanelOfType<T>();
+		panel.Hide();
+	}
+
 	public T GetPanelOfType<T>() where T : PanelBase {
 		return (T)panelDictionary[typeof(T)].FirstOrDefault();
 	}
