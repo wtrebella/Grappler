@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class UIManager : Singleton<UIManager> {
+public class UIManager : MonoBehaviour {
 	[SerializeField] private Canvas UICanvas;
 
 	private Queue<PanelInfo> panelQueue;

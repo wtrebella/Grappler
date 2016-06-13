@@ -1,7 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class DeadStateController : PlayerStateController {
+	public Action SignalEnterDeadState;
+
 	[SerializeField] private GameCamera cameraMover;
 	[SerializeField] private RockSlide rockSlide;
 
@@ -15,5 +18,6 @@ public class DeadStateController : PlayerStateController {
 		player.grapplingManager.Disconnect();
 		player.ghostController.EnableGhosting();
 		GrapplingManager.instance.DisableGrappling();
+		if (SignalEnterDeadState != null) SignalEnterDeadState();
 	}
 }

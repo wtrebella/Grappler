@@ -2,6 +2,14 @@
 using System.Collections;
 
 public class UIManagerGlobal : UIManager {
+	public static UIManagerGlobal instance;
+
+	private void Awake() {
+		BaseAwake();
+		instance = this;
+		DontDestroyOnLoad(gameObject);
+	}
+
 	public void AddRandomMenuToQueue() {
 		PanelInfo panelInfo = new PanelInfo();
 
