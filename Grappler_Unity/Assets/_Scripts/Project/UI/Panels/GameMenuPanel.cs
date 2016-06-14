@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class GameMenuPanel : PanelBase {
+public class GameMenuPanel : RootPanel {
 
 	private void Awake() {
 

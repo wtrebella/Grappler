@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PanelCharacterCustomization : PanelBase {
+public class PanelCharacterCustomization : RootPanel {
 
 	// Use this for initialization
 	void Start () {

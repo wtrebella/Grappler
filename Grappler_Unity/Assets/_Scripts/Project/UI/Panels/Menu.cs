@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Menu : PanelBase {
+public class Menu : RootPanel {
 	[SerializeField] private Image headerImage;
 	[SerializeField] private Text title;
 	[SerializeField] private Text description;

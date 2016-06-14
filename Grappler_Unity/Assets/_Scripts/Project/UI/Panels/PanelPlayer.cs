@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PanelPlayer : PanelBase {
+public class PanelPlayer : RootPanel {
 
 	// Use this for initialization
 	void Start () {

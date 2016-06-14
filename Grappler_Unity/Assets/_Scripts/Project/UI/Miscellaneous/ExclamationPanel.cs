@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExclamationPanel : PanelBase {
+public class ExclamationPanel : RootPanel {
 	[SerializeField] private Player player;
 	[SerializeField] private RectTransform exclamationTextHolder;
 	[SerializeField] private ExclamationText exclamationTextPrefab;

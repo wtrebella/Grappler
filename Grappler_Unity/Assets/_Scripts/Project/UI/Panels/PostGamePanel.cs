@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PostGamePanel : PanelBase {
+public class PostGamePanel : RootPanel {
 	[SerializeField] private BarPanel barPanel;
 	[SerializeField] private GameMenuPanel gameMenuPanel;
 

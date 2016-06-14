@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class BarPanel : PanelBase {
+public class BarPanel : RootPanel {
 	[SerializeField] private Sprite starSprite;
 
 	[SerializeField] private PlainBar plainBarPrefab;

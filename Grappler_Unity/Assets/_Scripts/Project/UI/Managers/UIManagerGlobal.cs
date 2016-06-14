@@ -26,7 +26,7 @@ public class UIManagerGlobal : UIManager {
 		AddPanelToQueue(panelInfo);
 	}
 
-	public void AddPanelToQueue<T>() where T : PanelBase {
+	public void AddPanelToQueue<T>() where T : RootPanel {
 		PanelInfo panelInfo = new PanelInfo();
 		panelInfo.panel = GetPanelOfType<T>();
 		AddPanelToQueue(panelInfo);
@@ -35,7 +35,7 @@ public class UIManagerGlobal : UIManager {
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) AddRandomMenuToQueue();
 		if (Input.GetKeyDown(KeyCode.P)) {
-			if (RegisteredPanelIsOfType(typeof(PostGamePanel))) {
+			if (CurrentPanelIsOfType(typeof(PostGamePanel))) {
 				PostGamePanel postGamePanel = GetPanelOfType<PostGamePanel>();
 				postGamePanel.Hide();
 			}
