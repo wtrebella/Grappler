@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class GameMenuPanel : RootPanel {
+public class GameMenuPanel : ModularPanel {
 
 	private void Awake() {
 
@@ -16,15 +16,5 @@ public class GameMenuPanel : RootPanel {
 	
 	private void Update() {
 	
-	}
-
-	public override void Show() {
-		base.Show();
-
-	}
-
-	public override void Hide() {
-		base.Hide();
-
 	}
 }

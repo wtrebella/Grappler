@@ -6,12 +6,19 @@ using System;
 public class RootPanel : MonoBehaviour {
 	public bool isShowing {get; private set;}
 
-	public Action<RootPanel> SignalPanelHidden;
+	public Action<RootPanel> SignalShown;
+	public Action<RootPanel> SignalHidden;
 
 	private List<ModularPanel> modularPanels;
 
+	private bool initialized = false;
+
 	public void Show() {
+		if (!initialized) Initialize();
+
 		if (isShowing) return;
+		gameObject.SetActive(true);
+		isShowing = true;
 		StartCoroutine(ShowRoutine());
 	}
 
@@ -20,20 +27,9 @@ public class RootPanel : MonoBehaviour {
 		StartCoroutine(HideRoutine());
 	}
 
-	private IEnumerator ShowRoutine() {
-		gameObject.SetActive(true);
-		ShowModularPanels();
-		// call SignalPanelShown (make an OnShown method) when all have been shown
-	}
-
-	private IEnumerator HideRoutine() {
-		HideModularPanels();
-		// call OnHidden when all have been hidden
-	}
-
-	private void Awake() {
+	private void Initialize() {
 		isShowing = false;
-		modularPanels = GetComponentsInChildren<ModularPanel>();
+		modularPanels = GetComponentsInChildren<ModularPanel>(true).ToList<ModularPanel>();
 		SetupModularPanelCallbacks();
 	}
 
@@ -44,6 +40,18 @@ public class RootPanel : MonoBehaviour {
 		}
 	}
 
+	private IEnumerator ShowRoutine() {
+		ShowModularPanels();
+		yield return StartCoroutine(WaitForAllModularPanelsToShow());
+		OnShown();
+	}
+
+	private IEnumerator HideRoutine() {
+		HideModularPanels();
+		yield return StartCoroutine(WaitForAllModularPanelsToHide());
+		OnHidden();
+	}
+
 	private void ShowModularPanels() {
 		foreach (ModularPanel modularPanel in modularPanels) modularPanel.Show();
 	}
@@ -52,16 +60,55 @@ public class RootPanel : MonoBehaviour {
 		foreach (ModularPanel modularPanel in modularPanels) modularPanel.Hide();
 	}
 
-	private void OnModularPanelShown(ModularPanel modularPanel) {
+	private IEnumerator WaitForAllModularPanelsToShow() {
+		while (!AllModularPanelsAreShowing()) yield return null;
+	}
+
+	private IEnumerator WaitForAllModularPanelsToHide() {
+		while (!AllModularPanelsAreHidden()) yield return null;
+	}
+
+	private bool AllModularPanelsAreShowing() {
+		bool allShowing = true;
+
+		foreach (ModularPanel modularPanel in modularPanels) {
+			if (!modularPanel.isShowing) {
+				allShowing = false;
+				break;
+			}
+		}
+
+		return allShowing;
+	}
+
+	private bool AllModularPanelsAreHidden() {
+		bool allHidden = true;
+
+		foreach (ModularPanel modularPanel in modularPanels) {
+			if (modularPanel.isShowing) {
+				allHidden = false;
+				break;
+			}
+		}
+
+		return allHidden;
+	}
+
+	protected virtual void OnModularPanelShown(ModularPanel modularPanel) {
 
 	}
 
-	private void OnModularPanelHidden(ModularPanel modularPanel) {
+	protected virtual void OnModularPanelHidden(ModularPanel modularPanel) {
 
 	}
 
-	protected virtual void OnHidden() {
+	protected void OnHidden() {
 		gameObject.SetActive(false);
-		if (SignalPanelHidden != null) SignalPanelHidden(this);
+		isShowing = false;
+		if (SignalHidden != null) SignalHidden(this);
+	}
+
+	protected void OnShown() {
+		if (SignalShown != null) SignalShown(this);
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class BarPanel : RootPanel {
+public class BarPanel : ModularPanel {
 	[SerializeField] private Sprite starSprite;
 
 	[SerializeField] private PlainBar plainBarPrefab;
@@ -44,22 +44,6 @@ public class BarPanel : RootPanel {
 		barList = new List<Bar>();
 	}
 
-	public override void Show() {
-		base.Show();
-
-		AddButtonBar();
-		AddPlainBar();
-		AddButtonBar();
-
-		ShowBars();
-	}
-
-	public override void Hide() {
-		base.Hide();
-
-		HideBars();
-	}
-
 	private void ShowBars() {
 		for (int i = 0; i < barList.Count; i++) {
 			Bar bar = barList[i];
@@ -74,9 +58,28 @@ public class BarPanel : RootPanel {
 		}
 	}
 
-	public override void SetPanelInfo(PanelInfo panelInfo) {
-		base.SetPanelInfo(panelInfo);
+	protected override IEnumerator ShowSubroutine() {
+		AddButtonBar();
+		AddPlainBar();
+		AddButtonBar();
 
+		ShowBars();
+
+		yield return StartCoroutine(WaitForAllBarsToShow());
+	}
+
+	protected override IEnumerator HideSubroutine() {
+		HideBars();
+
+		yield return StartCoroutine(WaitForAllBarsToHide());
+	}
+
+	private IEnumerator WaitForAllBarsToShow() {
+		while (!AllBarsAreShowing()) yield return null;
+	}
+
+	private IEnumerator WaitForAllBarsToHide() {
+		while (!AllBarsAreHidden()) yield return null;
 	}
 
 	private void OnBarShown(Bar bar) {
@@ -86,9 +89,27 @@ public class BarPanel : RootPanel {
 	private void OnBarHidden(Bar bar) {
 		RemoveBar(bar);
 		Destroy(bar.gameObject);
-		if (barList.Count == 0) {
-			OnHidden();
-			if (SignalPanelHidden != null) SignalPanelHidden(this);
+	}
+
+	private bool AllBarsAreShowing() {
+		bool allShowing = true;
+		foreach (Bar bar in barList) {
+			if (!bar.isShowing) {
+				allShowing = false;
+				break;
+			}
 		}
+		return allShowing;
+	}
+
+	private bool AllBarsAreHidden() {
+		bool allHidden = true;
+		foreach (Bar bar in barList) {
+			if (bar.isShowing) {
+				allHidden = false;
+				break;
+			}
+		}
+		return allHidden;
 	}
 }

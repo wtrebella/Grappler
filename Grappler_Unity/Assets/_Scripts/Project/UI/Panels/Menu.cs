@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
+//TODO: gotta convert this to a ModularPanel that is a child of an Alert RootPanel
 public class Menu : RootPanel {
 	[SerializeField] private Image headerImage;
 	[SerializeField] private Text title;
@@ -20,18 +21,15 @@ public class Menu : RootPanel {
 		description.text = text;
 	}
 
-	public override void Show() {
-		base.Show();
-		animator.SetBool("isShowing", true);
-	}
+//	public void Show() {
+//		animator.SetBool("isShowing", true);
+//	}
+//
+//	public void Hide() {
+//		animator.SetBool("isShowing", false);
+//	}
 
-	public override void Hide() {
-		base.Hide();
-		animator.SetBool("isShowing", false);
-	}
-
-	public override void SetPanelInfo(PanelInfo panelInfo) {
-		base.SetPanelInfo(panelInfo);
+	public void SetPanelInfo(PanelInfo panelInfo) {
 		SetTitle(panelInfo.title);
 		SetDescription(panelInfo.description);
 		SetHeaderColor(panelInfo.headerColor);

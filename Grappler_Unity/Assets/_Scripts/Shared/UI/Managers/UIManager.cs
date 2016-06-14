@@ -8,26 +8,22 @@ using System;
 public class UIManager : MonoBehaviour {
 	[SerializeField] private Canvas UICanvas;
 
-	private Queue<PanelInfo> panelQueue;
 	private RootPanel currentPanel;
 
-	private Dictionary<System.Type, List<RootPanel>> panelDictionary = new Dictionary<System.Type, List<RootPanel>>();
+	private Dictionary<Type, RootPanel> panelDictionary = new Dictionary<Type, RootPanel>();
 
 	private void Awake() {
 		BaseAwake();
 	}
 
 	protected void BaseAwake() {
-		panelQueue = new Queue<PanelInfo>();
-
 		var childPanels = GetComponentsInChildren<RootPanel>(true);
 		foreach (RootPanel panel in childPanels) {
-			if(panelDictionary.ContainsKey(panel.GetType())) panelDictionary[panel.GetType()].Add(panel);
-			else {
-				List<RootPanel> newPanelList = new List<RootPanel>();
-				newPanelList.Add(panel);
-				panelDictionary.Add(panel.GetType(), newPanelList);
-			}
+			if(panelDictionary.ContainsKey(panel.GetType())) Debug.LogWarning("panel of type " + panel.GetType().ToString() + " already exists in dictionary. not adding this one.");
+			else panelDictionary.Add(panel.GetType(), panel);
+
+			panel.SignalShown += OnPanelShown;
+			panel.SignalHidden += OnPanelHidden;
 
 			panel.gameObject.SetActive(false);
 		}
@@ -38,17 +34,13 @@ public class UIManager : MonoBehaviour {
 		panel.Show();
 	}
 
-	public void HidePanel<T>() where T : RootPanel {
-		T panel = GetPanelOfType<T>();
-		panel.Hide();
+	public void HideCurrentPanel() {
+		if (!CurrentPanelExists()) return;
+		currentPanel.Hide();
 	}
 
 	public T GetPanelOfType<T>() where T : RootPanel {
-		return (T)panelDictionary[typeof(T)].FirstOrDefault();
-	}
-
-	public List<T> GetPanelsOfType<T>() where T : RootPanel {
-		return panelDictionary[typeof(T)].Cast<T>().ToList();
+		return (T)panelDictionary[typeof(T)];
 	}
 
 	public RootPanel GetCurrentPanel() {
@@ -56,61 +48,27 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public bool CurrentPanelIsOfType(Type type) {
-		if (!RegisteredPanelExists()) return false;
+		if (!CurrentPanelExists()) return false;
 		return currentPanel.GetType() == type;
 	}
 
-	public void AddPanelToQueue(PanelInfo panelInfo) {
-		panelQueue.Enqueue(panelInfo);
-	}
-
-	protected void HideCurrentPanel() {
-		if (!RegisteredPanelExists()) return;
-
-		currentPanel.Hide();
+	public bool CurrentPanelExists() {
+		return currentPanel != null;
 	}
 
 	private void RegisterPanel(RootPanel panel) {
 		currentPanel = panel;
-		panel.SignalPanelHidden += OnPanelHidden;
 	}
 
 	private void DeregisterPanel(RootPanel panel) {
 		currentPanel = null;
-		panel.SignalPanelHidden -= OnPanelHidden;
 	}
 
-	private void ShowNextPanelInQueue() {
-		if (QueueIsEmpty()) return;
-
-		PanelInfo panelInfo = panelQueue.Dequeue();
-		RootPanel panel = panelInfo.panel;
-		panel.SetPanelInfo(panelInfo);
+	private void OnPanelShown(RootPanel panel) {
 		RegisterPanel(panel);
-		panel.Show();
-	}
-
-	private bool RegisteredPanelExists() {
-		return currentPanel != null;
-	}
-
-	private bool QueueIsEmpty() {
-		return panelQueue.Count == 0;
-	}
-
-	private bool ShouldShowNextPanelInQueue() {
-		return !QueueIsEmpty() && !RegisteredPanelExists();
 	}
 
 	private void OnPanelHidden(RootPanel panel) {
 		DeregisterPanel(panel);
-	}
-
-	private void Update() {
-		BaseUpdate();
-	}
-
-	protected void BaseUpdate() {
-		if (ShouldShowNextPanelInQueue()) ShowNextPanelInQueue();
 	}
 }

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using System;
 
 public class Bar : MonoBehaviour {
+	public bool isShowing {get; private set;}
+
 	public Action<Bar> SignalShown;
 	public Action<Bar> SignalHidden;
 
@@ -12,6 +14,10 @@ public class Bar : MonoBehaviour {
 	[SerializeField] private Animator animator;
 	[SerializeField] private Text barText;
 	[SerializeField] private float moveDelay = 0.1f;
+
+	private void Awake() {
+		isShowing = false;
+	}
 
 	public virtual void SetColor(Color color) {
 		throw new NotImplementedException();
@@ -31,13 +37,12 @@ public class Bar : MonoBehaviour {
 
 	private IEnumerator ShowRoutine(int priority) {
 		yield return new WaitForSeconds(priority * moveDelay);
-
+		isShowing = true;
 		animator.SetBool("isShowing", true);
 	}
 
 	private IEnumerator HideRoutine(int priority) {
 		yield return new WaitForSeconds(priority * moveDelay);
-
 		animator.SetBool("isShowing", false);
 	}
 
@@ -50,6 +55,7 @@ public class Bar : MonoBehaviour {
 	}
 
 	public void OnHidden() {
+		isShowing = false;
 		if (SignalHidden != null) SignalHidden(this);
 	}
 }

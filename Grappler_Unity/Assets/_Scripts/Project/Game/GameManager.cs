@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void ShowBars() {
-		UIManagerGlobal.instance.AddPanelToQueue<BarPanel>();
+		// TODO: make it so you can show ModularPanels individually
+//		UIManagerGlobal.instance.AddPanelToQueue<BarPanel>();
 	}
 }

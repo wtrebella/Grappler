@@ -16,6 +16,8 @@ public class ModularPanel : MonoBehaviour {
 
 	public void Show() {
 		if (isShowing) return;
+		gameObject.SetActive(true);
+		isShowing = true;
 		StartCoroutine(ShowRoutine());
 	}
 		
@@ -25,8 +27,6 @@ public class ModularPanel : MonoBehaviour {
 	}
 
 	private IEnumerator ShowRoutine() {
-		isShowing = true;
-		gameObject.SetActive(true);
 		yield return StartCoroutine(ShowSubroutine());
 		OnShown();
 	}
@@ -47,14 +47,10 @@ public class ModularPanel : MonoBehaviour {
 	}
 
 	protected virtual IEnumerator ShowSubroutine() {
-
+		yield break;
 	}
 
 	protected virtual IEnumerator HideSubroutine() {
-
-	}
-
-	public virtual void SetPanelInfo(PanelInfo panelInfo) {
-
+		yield break;
 	}
 }
