@@ -10,6 +10,7 @@ public class RootPanel : MonoBehaviour {
 	public Action<RootPanel> SignalHidden;
 
 	private List<ModularPanel> modularPanels;
+	private Dictionary<Type, ModularPanel> modularPanelsDict;
 
 	private bool initialized = false;
 
@@ -30,6 +31,12 @@ public class RootPanel : MonoBehaviour {
 	private void Initialize() {
 		isShowing = false;
 		modularPanels = GetComponentsInChildren<ModularPanel>(true).ToList<ModularPanel>();
+		modularPanelsDict = new Dictionary<Type, ModularPanel>();
+		foreach (ModularPanel modularPanel in modularPanels) {
+			Type t = modularPanel.GetType();
+			if (modularPanelsDict.ContainsKey(t)) Debug.LogWarning("already contains a panel with type " + t.ToString() + ", skipping duplicates");
+			else modularPanelsDict.Add(t, modularPanel);
+		}
 		SetupModularPanelCallbacks();
 	}
 
@@ -41,22 +48,46 @@ public class RootPanel : MonoBehaviour {
 	}
 
 	private IEnumerator ShowRoutine() {
-		ShowModularPanels();
-		yield return StartCoroutine(WaitForAllModularPanelsToShow());
+//		ShowAllModularPanels();
+//		yield return StartCoroutine(WaitForAllModularPanelsToShow());
+		yield return null;
 		OnShown();
 	}
 
 	private IEnumerator HideRoutine() {
-		HideModularPanels();
+		HideAllModularPanels();
 		yield return StartCoroutine(WaitForAllModularPanelsToHide());
 		OnHidden();
 	}
 
-	private void ShowModularPanels() {
+	public T GetModularPanelOfType<T>() where T : ModularPanel {
+		if (!modularPanelsDict.ContainsKey(typeof(T))) {
+			Debug.LogError("no modular panel of type " + typeof(T).ToString() + " is a child of this root panel");
+			return null;
+		}
+		return (T)modularPanelsDict[typeof(T)];
+	}
+
+	public void ShowModularPanel<T>() where T : ModularPanel {
+		T panel = GetModularPanelOfType<T>();
+		panel.Show();
+	}
+
+	public void HideModularPanel<T>() where T : ModularPanel {
+		T panel = GetModularPanelOfType<T>();
+		panel.Hide();
+	}
+
+	public bool ModularPanelIsShowing<T>() where T : ModularPanel {
+		T panel = GetModularPanelOfType<T>();
+		return panel.isShowing;
+	}
+
+	private void ShowAllModularPanels() {
 		foreach (ModularPanel modularPanel in modularPanels) modularPanel.Show();
 	}
 
-	private void HideModularPanels() {
+	private void HideAllModularPanels() {
 		foreach (ModularPanel modularPanel in modularPanels) modularPanel.Hide();
 	}
 

@@ -13,6 +13,13 @@ public class PostGamePanel : RootPanel {
 	}
 	
 	private void Update() {
-	
+		if (Input.GetKeyDown(KeyCode.B)) {
+			if (ModularPanelIsShowing<BarPanel>()) HideModularPanel<BarPanel>();
+			else ShowModularPanel<BarPanel>();
+		}
+		if (Input.GetKeyDown(KeyCode.G)) {
+			if (ModularPanelIsShowing<GameMenuPanel>()) HideModularPanel<GameMenuPanel>();
+			else ShowModularPanel<GameMenuPanel>();
+		}
 	}
 }

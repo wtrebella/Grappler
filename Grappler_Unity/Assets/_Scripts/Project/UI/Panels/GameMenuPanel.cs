@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public class GameMenuPanel : ModularPanel {
+	[SerializeField] private Animator[] animators;
 
 	private void Awake() {
 
@@ -16,5 +17,15 @@ public class GameMenuPanel : ModularPanel {
 	
 	private void Update() {
 	
+	}
+
+	protected override IEnumerator ShowSubroutine() {
+		foreach (Animator animator in animators) animator.SetBool("isShowing", true);
+		yield return new WaitForSeconds(0.5f);
+	}
+
+	protected override IEnumerator HideSubroutine() {
+		foreach (Animator animator in animators) animator.SetBool("isShowing", false);
+		yield return new WaitForSeconds(0.5f);
 	}
 }
