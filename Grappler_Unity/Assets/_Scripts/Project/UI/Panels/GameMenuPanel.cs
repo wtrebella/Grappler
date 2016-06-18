@@ -20,12 +20,18 @@ public class GameMenuPanel : ModularPanel {
 	}
 
 	protected override IEnumerator ShowSubroutine() {
-		foreach (Animator animator in animators) animator.SetBool("isShowing", true);
+		foreach (Animator animator in animators) {
+			animator.SetBool("isShowing", true);
+			yield return new WaitForSeconds(0.03f);
+		}
 		yield return new WaitForSeconds(0.5f);
 	}
 
 	protected override IEnumerator HideSubroutine() {
-		foreach (Animator animator in animators) animator.SetBool("isShowing", false);
+		foreach (Animator animator in animators) {
+			animator.SetBool("isShowing", false);
+			yield return new WaitForSeconds(0.03f);
+		}
 		yield return new WaitForSeconds(0.5f);
 	}
 }
