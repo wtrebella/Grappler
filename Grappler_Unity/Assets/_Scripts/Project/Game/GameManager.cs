@@ -17,25 +17,19 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (Input.GetKeyDown(KeyCode.R)) RestartGame();
+		if (Input.GetKeyDown(KeyCode.R)) GameSceneManager.instance.StartOrRestartGame();
 	}
-
-	public void RestartGame() {
-		GameStateManager.instance.PopGameState();
-		GameStateManager.instance.PushGameState(GameStateType.Gameplay);
-	}
-
+		
 	private void OnEnterDeadState() {
 		GameOver();
 	}
 
 	private void GameOver() {
 		isGameOver = true;
-		ShowBars();
+		ShowPostGamePanel();
 	}
 
-	private void ShowBars() {
-		// TODO: make it so you can show ModularPanels individually
-//		UIManagerGlobal.instance.AddPanelToQueue<BarPanel>();
+	private void ShowPostGamePanel() {
+		UIManagerGlobal.instance.ShowPostGamePanel();
 	}
 }

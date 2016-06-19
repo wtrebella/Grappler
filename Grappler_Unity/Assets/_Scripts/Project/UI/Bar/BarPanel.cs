@@ -14,12 +14,20 @@ public class BarPanel : ModularPanel {
 
 	private void AddPlainBar() {
 		PlainBar bar = (PlainBar)AddBar(plainBarPrefab);
-		bar.SetText("6/20 Babies Melted");
+		bar.SetText((string)RXRandom.Select(
+			"6/20 Icicles Hit",
+			"425/500 Meters Traveled",
+			"34/50 Trees Chopped",
+			"5/10 Snowmen Destroyed"));
 	}
 
 	private void AddButtonBar() {
 		ButtonBar bar = (ButtonBar)AddBar(buttonBarPrefab);
-		bar.SetText("Free Cocaine!");
+		bar.SetText((string)RXRandom.Select(
+			"Free Gift!",
+			"Try On Hat",
+			"325 Coins Until Gift!",
+			"Buy Piggy Bank"));
 		bar.SetIconSprite(starSprite);
 	}
 
@@ -58,10 +66,15 @@ public class BarPanel : ModularPanel {
 		}
 	}
 
+	private void AddRandomBar() {
+		if (Random.value < 0.5f) AddPlainBar();
+		else AddButtonBar();
+	}
+
 	protected override IEnumerator ShowSubroutine() {
-		AddButtonBar();
-		AddPlainBar();
-		AddButtonBar();
+		AddRandomBar();
+		if (Random.value < 0.5f) AddRandomBar();
+		if (Random.value < 0.5f) AddRandomBar();
 
 		ShowBars();
 

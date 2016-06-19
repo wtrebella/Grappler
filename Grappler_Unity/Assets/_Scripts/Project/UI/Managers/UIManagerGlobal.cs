@@ -18,7 +18,14 @@ public class UIManagerGlobal : UIManager {
 	private void Update() {
 		if (Input.GetKeyDown(KeyCode.Space)) {
 			if (CurrentPanelExists()) HideCurrentPanel();
-			else ShowPanel<PostGamePanel>();
+			else ShowPostGamePanel();
 		}
+	}
+
+	public void ShowPostGamePanel() {
+		ShowPanel<PostGamePanel>();
+		PostGamePanel panel = GetPanelOfType<PostGamePanel>();
+		panel.ShowBars();
+		panel.ShowGameMenu();
 	}
 }

@@ -34,4 +34,8 @@ public class GameMenuPanel : ModularPanel {
 		}
 		yield return new WaitForSeconds(0.5f);
 	}
+
+	public void OnPlayButtonClicked() {
+		GameSceneManager.instance.StartOrRestartGame();
+	}
 }

@@ -6,6 +6,9 @@ using System.Linq;
 using System;
 
 public class UIManager : MonoBehaviour {
+	public Action<RootPanel> SignalPanelShown;
+	public Action<RootPanel> SignalPanelHidden;
+
 	[SerializeField] private Canvas UICanvas;
 
 	private RootPanel currentPanel;
@@ -66,9 +69,11 @@ public class UIManager : MonoBehaviour {
 
 	private void OnPanelShown(RootPanel panel) {
 		RegisterPanel(panel);
+		if (SignalPanelShown != null) SignalPanelShown(panel);
 	}
 
 	private void OnPanelHidden(RootPanel panel) {
 		DeregisterPanel(panel);
+		if (SignalPanelHidden != null) SignalPanelHidden(panel);
 	}
 }
