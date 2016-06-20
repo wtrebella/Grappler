@@ -7,6 +7,7 @@ public class Gift : MonoBehaviour {
 	[SerializeField] private ParticleSystem particles;
 	[SerializeField] private Animator animator;
 	[SerializeField] private Animator itemAnimator;
+	[SerializeField] private CollectionItemUISprite itemUISprite;
 
 	public void Pop() {
 		animator.SetTrigger("pop");
@@ -14,6 +15,10 @@ public class Gift : MonoBehaviour {
 
 	public void Drop() {
 		animator.SetTrigger("drop");
+	}
+
+	public void SetCollectionItem(CollectionItem item) {
+		itemUISprite.SetCollectionItem(item);
 	}
 
 	public void OnLidPoppedOff() {

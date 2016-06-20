@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CollectionItemList : MonoBehaviour {
 	[SerializeField] private CollectionItemButton collectionItemButtonPrefab;
-	[SerializeField] private CollectionType collectionType = CollectionType.None;
+	[SerializeField] private CollectionType collectionType = CollectionType.NONE;
 
 	private Collection collection;
 	private List<CollectionItem> items;

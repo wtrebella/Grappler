@@ -1,6 +1,7 @@
 ﻿public enum CollectionType {
-	None,
+	NONE,
 	Hats,
 	Shoes,
-	Pickups
+	Pickups,
+	MAX
 }

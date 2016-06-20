@@ -4,7 +4,7 @@ using System.Collections;
 public class EquipmentSlot : MonoBehaviour {
 	private string equippedKey {get {return "collectionItem_" + name + "_equipped";}}
 
-	public CollectionType collectionType = CollectionType.None;
+	public CollectionType collectionType = CollectionType.NONE;
 
 	private CollectionItem equippedItem;
 

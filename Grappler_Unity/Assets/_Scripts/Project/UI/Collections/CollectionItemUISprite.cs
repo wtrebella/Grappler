@@ -9,10 +9,11 @@ public class CollectionItemUISprite : MonoBehaviour {
 	public void SetCollectionItem(CollectionItem item) {
 		this.itemSet = item;
 		CollectionItemSprite firstSprite = item.GetFirstSprite();
+		tk2dSpriteCollectionData spriteCollection = firstSprite.GetSpriteCollectionData();
 		if (firstSprite == null || !firstSprite.HasValidSpriteName()) return;
 		float spriteScale = firstSprite.GetSpriteScale();
 		string spriteName = firstSprite.spriteName;
-		sprite.SetSprite(spriteName);
+		sprite.SetSprite(spriteCollection, spriteName);
 		sprite.scale = new Vector3(spriteScale, spriteScale, 1);
 	}
 }

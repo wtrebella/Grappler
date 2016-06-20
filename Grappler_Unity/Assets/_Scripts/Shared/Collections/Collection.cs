@@ -12,7 +12,7 @@ public class Collection : MonoBehaviour {
 		}
 	}
 
-	public CollectionType collectionType = CollectionType.None;
+	public CollectionType collectionType = CollectionType.NONE;
 
 	[SerializeField] private string path = "Collections/";
 
@@ -43,6 +43,10 @@ public class Collection : MonoBehaviour {
 			return null;
 		}
 		return items[index];
+	}
+
+	public CollectionItem GetRandomItem() {
+		return GetItem(Random.Range(0, GetItemCount()));
 	}
 
 	public int GetItemCount() {
