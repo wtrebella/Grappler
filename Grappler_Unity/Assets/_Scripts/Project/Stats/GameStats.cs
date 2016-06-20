@@ -41,10 +41,10 @@ public class GameStats : MonoBehaviour {
 	}
 
 	public void HitTree() {
-		Debug.Log("hit tree");
+
 	}
 
 	public void HitIcicle() {
-		Debug.Log("hit icicle");
+
 	}
 }
