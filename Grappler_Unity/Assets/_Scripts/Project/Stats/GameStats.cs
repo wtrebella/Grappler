@@ -39,4 +39,12 @@ public class GameStats : MonoBehaviour {
 		instance.coinCount++;
 		if (SignalCoinCollected != null) SignalCoinCollected();
 	}
+
+	public void HitTree() {
+		Debug.Log("hit tree");
+	}
+
+	public void HitIcicle() {
+		Debug.Log("hit icicle");
+	}
 }
