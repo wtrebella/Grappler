@@ -4,18 +4,33 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Gift : MonoBehaviour {
+	[SerializeField] private ParticleSystem particles;
 	[SerializeField] private Animator animator;
+	[SerializeField] private Animator itemAnimator;
+
+	public void Pop() {
+		animator.SetTrigger("pop");
+	}
+
+	public void Drop() {
+		animator.SetTrigger("drop");
+	}
+
+	public void OnLidPoppedOff() {
+		particles.Play();
+		itemAnimator.SetTrigger("pop");
+	}
 
 	private void Awake() {
 
 	}
 	
 	private void Start() {
-		animator.SetTrigger("drop");
+		Drop();
 	}
 	
 	private void Update() {
-	
+		if (Input.GetKeyDown(KeyCode.P)) Pop();
 	}
 
 	public void OnHitGround() {
