@@ -24,14 +24,22 @@ public class GameSceneManager : MonoBehaviour {
 	
 	}
 
-	public void StartOrRestartGame() {
-		StartCoroutine(StartOrRestartGameRoutine());
+	public void GoToGiftState() {
+		StartCoroutine(GoToGameState(GameStateType.Gift));
 	}
 
-	private IEnumerator StartOrRestartGameRoutine() {
+	public void GoToGameplayState() {
+		StartCoroutine(GoToGameState(GameStateType.Gameplay));
+	}
+
+	private IEnumerator GoToGameState(GameStateType gameStateType) {
+		yield return StartCoroutine(CleanUpCurrentScene());
+		GameStateManager.instance.PushGameState(gameStateType);
+	}
+
+	private IEnumerator CleanUpCurrentScene() {
 		UIManagerGlobal.instance.HideCurrentPanel();
 		while (UIManagerGlobal.instance.CurrentPanelExists()) yield return null;
-		if (GameStateManager.instance.IsInState(GameStateType.Gameplay)) GameStateManager.instance.PopGameState();
-		GameStateManager.instance.PushGameState(GameStateType.Gameplay);
+		GameStateManager.instance.PopGameState();
 	}
 }

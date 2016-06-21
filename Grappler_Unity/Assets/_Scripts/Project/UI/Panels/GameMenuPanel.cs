@@ -36,6 +36,6 @@ public class GameMenuPanel : ModularPanel {
 	}
 
 	public void OnPlayButtonClicked() {
-		GameSceneManager.instance.StartOrRestartGame();
+		GameSceneManager.instance.GoToGameplayState();
 	}
 }

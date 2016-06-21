@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (Input.GetKeyDown(KeyCode.R)) GameSceneManager.instance.StartOrRestartGame();
+		if (Input.GetKeyDown(KeyCode.R)) GameSceneManager.instance.GoToGameplayState();
 	}
 		
 	private void OnEnterDeadState() {

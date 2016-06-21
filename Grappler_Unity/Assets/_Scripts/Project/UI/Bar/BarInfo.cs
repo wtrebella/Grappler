@@ -31,7 +31,7 @@ public class BarInfo {
 
 		case BarInfoType.FreeGift:
 			text = "Free Gift";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_FreeGift;
 			break;
 
 		case BarInfoType.FreeGiftTimer:
@@ -41,27 +41,27 @@ public class BarInfo {
 
 		case BarInfoType.PiggyBank:
 			text = "Piggy Bank";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_PiggyBank;
 			break;
 
 		case BarInfoType.PurchaseItem:
 			text = "Purchase Item";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_PurchaseItem;
 			break;
 
 		case BarInfoType.Rate:
 			text = "Rate";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_Rate;
 			break;
 
 		case BarInfoType.TryItem:
 			text = "Try Item";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_TryItem;
 			break;
 
 		case BarInfoType.WatchAd:
 			text = "Watch Ad";
-			buttonDelegate = TempBarButtonMethod;
+			buttonDelegate = OnButtonPressed_WatchAd;
 			break;
 
 		default:
@@ -70,7 +70,27 @@ public class BarInfo {
 		}
 	}
 
-	private void TempBarButtonMethod(Bar bar) {
-		Debug.Log("Bar Info Type: " + bar.barInfo.barInfoType.ToString());
+	private static void OnButtonPressed_FreeGift(Bar bar) {
+		GameSceneManager.instance.GoToGiftState();
+	}
+
+	private static void OnButtonPressed_PiggyBank(Bar bar) {
+
+	}
+
+	private static void OnButtonPressed_PurchaseItem(Bar bar) {
+
+	}
+
+	private static void OnButtonPressed_Rate(Bar bar) {
+
+	}
+
+	private static void OnButtonPressed_TryItem(Bar bar) {
+
+	}
+
+	private static void OnButtonPressed_WatchAd(Bar bar) {
+
 	}
 }
