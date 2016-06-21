@@ -8,6 +8,22 @@ public class BarInfo {
 	public BarButtonDelegate buttonDelegate {get; private set;}
 	public string text {get; private set;}
 
+	public static List<BarInfoType> GetBarInfoTypesToShow() {
+		List<BarInfoType> barInfoTypeList = new List<BarInfoType>();
+		if (GameStats.instance.CanAffordGift()) barInfoTypeList.Add(BarInfoType.Gift);
+		else barInfoTypeList.Add(BarInfoType.CoinsToGo);
+		barInfoTypeList.Add(BarInfoType.Challenge);
+		barInfoTypeList.Add(BarInfoType.FreeCoinsTimer);
+		barInfoTypeList.Add(BarInfoType.PiggyBank);
+		barInfoTypeList.Add(BarInfoType.PurchaseItem);
+		barInfoTypeList.Add(BarInfoType.Rate);
+		barInfoTypeList.Add(BarInfoType.TryItem);
+		barInfoTypeList.Add(BarInfoType.WatchAd);
+		barInfoTypeList.Shuffle();
+		barInfoTypeList = barInfoTypeList.GetRange(0, 3);
+		return barInfoTypeList;
+	}
+
 	public BarInfo(BarInfoType barInfoType) {
 		this.barInfoType = barInfoType;
 		SetupBarInfo(barInfoType);
@@ -25,17 +41,17 @@ public class BarInfo {
 			break;
 
 		case BarInfoType.CoinsToGo:
-			text = "Coins to Go";
+			text = GameStats.instance.CoinsToGoUntilFreeGift() + " Coins Until Gift";
 			buttonDelegate = null;
 			break;
 
-		case BarInfoType.FreeGift:
+		case BarInfoType.Gift:
 			text = "Free Gift";
-			buttonDelegate = OnButtonPressed_FreeGift;
+			buttonDelegate = OnButtonPressed_Gift;
 			break;
 
-		case BarInfoType.FreeGiftTimer:
-			text = "Free Gift Timer";
+		case BarInfoType.FreeCoinsTimer:
+			text = "Free Coins Timer";
 			buttonDelegate = null;
 			break;
 
@@ -70,7 +86,7 @@ public class BarInfo {
 		}
 	}
 
-	private static void OnButtonPressed_FreeGift(Bar bar) {
+	private static void OnButtonPressed_Gift(Bar bar) {
 		GameSceneManager.instance.GoToGiftState();
 	}
 

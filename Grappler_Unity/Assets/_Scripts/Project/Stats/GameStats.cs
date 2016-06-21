@@ -9,6 +9,8 @@ public class GameStats : MonoBehaviour {
 	public Action SignalCoinCollected;
 	public Action SignalCoinCountChanged;
 
+	[SerializeField] private int giftCost = 1000;
+
 	private void Awake() {
 		if (instance == null) {
 			instance = this;
@@ -38,6 +40,14 @@ public class GameStats : MonoBehaviour {
 	public void OnCoinCollected() {
 		instance.coinCount++;
 		if (SignalCoinCollected != null) SignalCoinCollected();
+	}
+
+	public int CoinsToGoUntilFreeGift() {
+		return Mathf.Max(0, giftCost - coinCount);
+	}
+
+	public bool CanAffordGift() {
+		return coinCount >= giftCost;
 	}
 
 	public void HitTree() {

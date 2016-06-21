@@ -63,17 +63,17 @@ public class BarPanel : ModularPanel {
 		}
 	}
 
-	private void AddRandomBar() {
-		BarInfo barInfo = new BarInfo((BarInfoType)Random.Range(0, (int)BarInfoType.MAX));
-		Bar bar = CreateBar(barInfo);
-		AddBar(bar);
+	private void CreateBars() {
+		var barInfoTypes = BarInfo.GetBarInfoTypesToShow();
+		foreach (BarInfoType barInfoType in barInfoTypes) {
+			BarInfo barInfo = new BarInfo(barInfoType);
+			Bar bar = CreateBar(barInfo);
+			AddBar(bar);
+		}
 	}
 
 	protected override IEnumerator ShowSubroutine() {
-		AddRandomBar();
-		if (Random.value < 0.5f) AddRandomBar();
-		if (Random.value < 0.5f) AddRandomBar();
-
+		CreateBars();
 		ShowBars();
 
 		yield return StartCoroutine(WaitForAllBarsToShow());
