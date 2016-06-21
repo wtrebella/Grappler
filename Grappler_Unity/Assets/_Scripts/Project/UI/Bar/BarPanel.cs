@@ -12,36 +12,33 @@ public class BarPanel : ModularPanel {
 
 	private List<Bar> barList;
 
-	private void AddPlainBar() {
-		PlainBar bar = (PlainBar)AddBar(plainBarPrefab);
-		bar.SetText((string)RXRandom.Select(
-			"6/20 Icicles Hit",
-			"425/500 Meters Traveled",
-			"34/50 Trees Chopped",
-			"5/10 Snowmen Destroyed"));
-	}
-
-	private void AddButtonBar() {
-		ButtonBar bar = (ButtonBar)AddBar(buttonBarPrefab);
-		bar.SetText((string)RXRandom.Select(
-			"Free Gift!",
-			"Try On Hat",
-			"325 Coins Until Gift!",
-			"Buy Piggy Bank"));
-		bar.SetIconSprite(starSprite);
-	}
-
-	private Bar AddBar(Bar prefab) {
+	private Bar CreateBar(BarInfo barInfo) {
+		BarType barType = barInfo.GetBarType();
+		Bar prefab = GetBarPrefab(barType);
 		Bar bar = Instantiate(prefab);
+		bar.ApplyBarInfo(barInfo);
 		bar.transform.SetParent(barLayoutGroup.transform);
 		bar.transform.localScale = new Vector3(1, 1, 1);
 		bar.SetColor(WhitTools.GetColorWithRandomHue(0.6f, 1.0f));
+		return bar;
+	}
+
+	private Bar AddBar(Bar bar) {
 		bar.SignalShown += OnBarShown;
 		bar.SignalHidden += OnBarHidden;
 		barList.Add(bar);
 		return bar;
 	}
 
+	private Bar GetBarPrefab(BarType barType) {
+		if (barType == BarType.PlainBar) return plainBarPrefab;
+		else if (barType == BarType.ButtonBar) return buttonBarPrefab;
+		else {
+			Debug.LogError("invalid bar type: " + barType.ToString());
+			return null;
+		}
+	}
+		
 	private void RemoveBar(Bar bar) {
 		bar.SignalShown -= OnBarShown;
 		bar.SignalHidden -= OnBarHidden;
@@ -67,8 +64,9 @@ public class BarPanel : ModularPanel {
 	}
 
 	private void AddRandomBar() {
-		if (Random.value < 0.5f) AddPlainBar();
-		else AddButtonBar();
+		BarInfo barInfo = new BarInfo((BarInfoType)Random.Range(0, (int)BarInfoType.MAX));
+		Bar bar = CreateBar(barInfo);
+		AddBar(bar);
 	}
 
 	protected override IEnumerator ShowSubroutine() {
