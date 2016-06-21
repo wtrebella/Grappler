@@ -4,50 +4,24 @@ using System.Collections;
 public class CoinPatterns {
 	public static CoinPattern Square {get {return GenerateCoinPattern(stringArray_square);}}
 	private static string[] stringArray_square = new string[] {
-		"xxxxx",
-		"x   x",
-		"x   x",
-		"x   x",
-		"xxxxx"
+		"xxx",
+		"x x",
+		"xxx"
 	};
 
-	public static CoinPattern Heart {get {return GenerateCoinPattern(stringArray_heart);}}
-	private static string[] stringArray_heart = new string[] {
-		" xx xx ",
-		"x  x  x",
-		"x     x",
-		" x   x ",
-		"  x x  ",
-		"   x   "
+	public static CoinPattern XShape {get {return GenerateCoinPattern(stringArray_x);}}
+	private static string[] stringArray_x = new string[] {
+		"x x",
+		" x ",
+		"x x"
 	};
-
-	public static CoinPattern ArcUp {get {return GenerateCoinPattern(stringArray_arcUp);}}
-	private static string[] stringArray_arcUp = new string[] {
-		"        xxxx",
-		"     xxx    ",
-		"   xx       ",
-		" x          ",
-		"x           "
-	};
-
-	public static CoinPattern ArcDown {get {return GenerateCoinPattern(stringArray_arcDown);}}
-	private static string[] stringArray_arcDown = new string[] {
-		"xxxx       ",
-		"    xxx    ",
-		"       xx  ",
-		"         x ",
-		"          x"
-	};
-
 
 	public static CoinPattern RandomPattern {get {return GetRandomCoinPattern();}}
 
 	private static CoinPattern GetRandomCoinPattern() {
 		string[] stringArray = (string[])RXRandom.Select(
 			stringArray_square,
-			stringArray_heart,
-			stringArray_arcUp,
-			stringArray_arcDown
+			stringArray_x
 		);
 
 		return GenerateCoinPattern(stringArray);

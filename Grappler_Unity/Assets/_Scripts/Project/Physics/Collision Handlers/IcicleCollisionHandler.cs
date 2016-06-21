@@ -12,6 +12,7 @@ public class IcicleCollisionHandler : CollisionHandler {
 	}
 
 	private void OnHitIcicle() {
+		if (GameStats.instance == null) return;
 		GameStats.instance.HitIcicle();
 	}
 }
