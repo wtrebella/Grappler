@@ -63,6 +63,7 @@ public class WhitPrefs : AutoSingleton<WhitPrefs> {
 
 	public static void RemoveAll() {
 		P31Prefs.removeAll();
+		Debug.Log("prefs cleared");
 	}
 
 	public static void SetString(string aKey, string aString) {
