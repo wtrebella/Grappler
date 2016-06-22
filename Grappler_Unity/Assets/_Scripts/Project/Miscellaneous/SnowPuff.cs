@@ -16,9 +16,14 @@ public class SnowPuff : MonoBehaviour {
 		return units * pixelsPerUnit;
 	}
 
-	private void SetPoints(Vector2 pointA, Vector2 pointB) {
-		// get length here and set it
-		// figure out the rotations and how to line it up with the point slope
+	public void SetPoints(Vector2 pointA, Vector2 pointB) {
+		Vector2 pointVector = pointB - pointA;
+		Vector2 pointDirection = pointVector.normalized;
+		float length = pointVector.magnitude;
+		float angle = WhitTools.DirectionToAngle(pointDirection);
+		SetLength(length);
+		SetLocalRotation(angle);
+		SetLocalPosition(pointA);
 	}
 
 	private void SetLength(float unitLength) {
@@ -26,11 +31,18 @@ public class SnowPuff : MonoBehaviour {
 		sprite.dimensions = new Vector2(pixelLength, sprite.dimensions.y);
 	}
 
+	private void SetLocalRotation(float angle) {
+		Vector3 eulers = transform.localEulerAngles;
+		eulers.z = angle;
+		transform.localEulerAngles = eulers;
+	}
 
-
+	private void SetLocalPosition(Vector2 localPosition) {
+		transform.localPosition = localPosition;
+	}
 
 	private void Awake() {
-		SetLength(10);
+
 	}
 	
 	private void Start() {
