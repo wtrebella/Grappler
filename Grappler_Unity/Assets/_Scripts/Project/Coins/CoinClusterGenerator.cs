@@ -12,7 +12,7 @@ public class CoinClusterGenerator : ItemBetweenTerrainPairGenerator {
 	}
 
 	private void GenerateCoinPattern(FloatRange distRange) {
-		CoinCluster coinPattern = GenerateItem<CoinCluster>(distRange.GetRandom(), 0.5f);
+		CoinCluster coinPattern = GenerateItem<CoinCluster>(distRange.GetRandom(), 0.2f);
 		coinPattern.Initialize(GetCoinPatternData());
 	}
 

@@ -2,26 +2,19 @@
 using System.Collections;
 
 public class CoinPatterns {
-	public static CoinPattern Square {get {return GenerateCoinPattern(stringArray_square);}}
-	private static string[] stringArray_square = new string[] {
-		"xxx",
-		"x x",
-		"xxx"
-	};
-
-	public static CoinPattern XShape {get {return GenerateCoinPattern(stringArray_x);}}
-	private static string[] stringArray_x = new string[] {
-		"x x",
-		" x ",
-		"x x"
+	public static CoinPattern Diagonal {get {return GenerateCoinPattern(stringArray_diagonal);}}
+	private static string[] stringArray_diagonal = new string[] {
+		"    x",
+		"  x  ",
+		"x    "
 	};
 
 	public static CoinPattern RandomPattern {get {return GetRandomCoinPattern();}}
 
 	private static CoinPattern GetRandomCoinPattern() {
 		string[] stringArray = (string[])RXRandom.Select(
-			stringArray_square,
-			stringArray_x
+			stringArray_diagonal,
+			stringArray_diagonal
 		);
 
 		return GenerateCoinPattern(stringArray);

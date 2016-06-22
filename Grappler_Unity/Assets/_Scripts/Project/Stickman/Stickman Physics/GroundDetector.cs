@@ -3,11 +3,10 @@ using System.Collections;
 
 public class GroundDetector : MonoBehaviour {
 	[SerializeField] private Rigidbody2D rigid;
-	[SerializeField] private float maxDistance = 0.5f;
 	[SerializeField] private FloatRange distanceFromGroundRange = new FloatRange(0.5f, 5);
 
 	public bool IsCloseToGround() {
-		return IsWithinDistanceToGround(maxDistance);
+		return IsWithinDistanceToGround(distanceFromGroundRange.min);
 	}
 
 	public float GetDistanceFromGround() {
