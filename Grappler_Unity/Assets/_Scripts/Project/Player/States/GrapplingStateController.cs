@@ -77,8 +77,6 @@ public class GrapplingStateController : PlayerStateController {
 
 	public override void LeftTouchDown() {
 		base.LeftTouchDown();
-
-		SetToFlippingState();
 	}
 
 	private void EndGrappling() {

@@ -23,7 +23,5 @@ public class FallingStateController : PlayerStateController {
 
 	public override void LeftTouchDown() {
 		base.LeftTouchDown();
-
-		SetToFlippingState();
 	}
 }
