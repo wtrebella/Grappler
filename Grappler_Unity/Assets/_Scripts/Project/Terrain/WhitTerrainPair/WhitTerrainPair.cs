@@ -98,6 +98,8 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public WhitTerrainPairPatternType GetNextPatternType() {
+//		return WhitTerrainPairPatternType.Straight;
+
 		if (NeedsEnd()) return WhitTerrainPairPatternType.End;
 		else return WhitTerrainPairAttributes.instance.GetRandomPatternType();
 	}
@@ -189,7 +191,7 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	public void Bump() {
 		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidthAtEnd();
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
+		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, 50, 10, 100, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
 		AddPattern(WhitTerrainPairPatternType.Bump, pattern);
 	}
 

@@ -8,5 +8,6 @@ public enum WhitTerrainPairPatternType {
 	Widen,
 	Narrow,
 	Flat,
-	End
+	End,
+	Test
 }
