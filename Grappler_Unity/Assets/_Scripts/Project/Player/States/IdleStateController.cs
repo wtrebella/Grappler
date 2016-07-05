@@ -23,6 +23,5 @@ public class IdleStateController : PlayerStateController {
 
 	public void ResetRotation() {
 		player.body.transform.localRotation = Quaternion.identity;
-		player.feet.transform.localRotation = Quaternion.identity;
 	}
 }

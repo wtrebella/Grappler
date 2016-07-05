@@ -56,7 +56,6 @@ public class FlippingStateController : PlayerStateController {
 		float curRotation = GetRotation();
 		float newRotation = Mathf.LerpAngle(curRotation, targetRotation, 1);
 		body.transform.eulerAngles = new Vector3(0, 0, newRotation);
-		feet.transform.localEulerAngles = Vector3.zero;
 	}
 
 	private bool IsWithinUprightMargin() {

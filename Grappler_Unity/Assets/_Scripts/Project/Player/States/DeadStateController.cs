@@ -16,7 +16,6 @@ public class DeadStateController : PlayerStateController {
 	public override void EnterState() {
 		base.EnterState();
 		player.grapplingManager.Disconnect();
-		player.ghostController.EnableGhosting();
 		GrapplingManager.instance.DisableGrappling();
 		if (SignalEnterDeadState != null) SignalEnterDeadState();
 	}

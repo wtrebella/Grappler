@@ -9,7 +9,6 @@ public class Player : WhitStateMachine {
 	public Rigidbody2DAffecterGroup rigidbodyAffecterGroup;
 	public GrapplingManager grapplingManager;
 	public PlayerAnimator playerAnimator;
-	public SkeletonGhostController ghostController;
 	public GroundDetector groundDetector;
 	public PlayerCollisionHandler collisionHandler;
 

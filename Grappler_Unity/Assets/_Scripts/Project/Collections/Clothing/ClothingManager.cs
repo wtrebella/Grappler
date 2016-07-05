@@ -6,8 +6,7 @@ public class ClothingManager : Singleton<ClothingManager> {
 	public const string backShoeSpineSlotName = "shoeBack";
 	public const string frontShoeSpineSlotName = "shoeFront";
 
-	[SerializeField] private WhitSpineSkeleton topSkeleton;
-	[SerializeField] private WhitSpineSkeleton bottomSkeleton;
+	[SerializeField] private WhitSpineSkeleton bearSkeleton;
 
 	private EquipmentSlot hatEquipmentSlot;
 	private EquipmentSlot shoesEquipmentSlot;
@@ -61,9 +60,7 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	private void InitializeSpineSlots() {
-		hatSpineSlot = topSkeleton.GetSlot(hatSpineSlotName);
-		backShoeSpineSlot = bottomSkeleton.GetSlot(backShoeSpineSlotName);
-		frontShoeSpineSlot = bottomSkeleton.GetSlot(frontShoeSpineSlotName);
+		hatSpineSlot = bearSkeleton.GetSlot(hatSpineSlotName);
 	}
 
 	public void WearSavedOrFirstItems() {
