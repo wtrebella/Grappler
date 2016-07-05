@@ -1,0 +1,19 @@
+{
+"skeleton": { "hash": "+msaizzXnzdVzYcxUlKBQvXkMBM", "spine": "3.3.07", "width": 0, "height": 0, "images": "" },
+"bones": [
+	{ "name": "root" }
+],
+"slots": [
+	{ "name": "bearTemplate", "bone": "root", "color": "ffffff4e", "attachment": "bearTemplate" }
+],
+"skins": {
+	"default": {
+		"bearTemplate": {
+			"bearTemplate": { "x": 2.49, "y": 298.99, "scaleX": 1.318, "scaleY": 1.318, "width": 412, "height": 567 }
+		}
+	}
+},
+"animations": {
+	"animation": {}
+}
+}
