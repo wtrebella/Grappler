@@ -200,25 +200,25 @@ namespace WhitTerrain {
 			List<ContourSegment> topSections = new List<ContourSegment>();
 			List<ContourSegment> bottomSections = new List<ContourSegment>();
 
-			foreach (ContourPatternInstructionPair instructionPair in pattern.instructionPairs) {
-				if (instructionPair.topInstruction.instructionType == ContourPatternInstructionType.Straight) {
-					ContourPatternInstructionStraight topInstruction = (ContourPatternInstructionStraight)instructionPair.topInstruction;
+			foreach (ContourPatternStepPair instructionPair in pattern.instructionPairs) {
+				if (instructionPair.topInstruction.stepType == ContourPatternStepType.Straight) {
+					ContourPatternStepStraight topInstruction = (ContourPatternStepStraight)instructionPair.topInstruction;
 					var newSection = topContour.AddStraight(topInstruction.slope, topInstruction.length, topInstruction.bumpify);
 					if (newSection) topSections.Add(newSection);
 				}
-				else if (instructionPair.topInstruction.instructionType == ContourPatternInstructionType.Curve) {
-					ContourPatternInstructionCurve topInstruction = (ContourPatternInstructionCurve)instructionPair.topInstruction;
+				else if (instructionPair.topInstruction.stepType == ContourPatternStepType.Curve) {
+					ContourPatternStepCurve topInstruction = (ContourPatternStepCurve)instructionPair.topInstruction;
 					var newSections = topContour.AddCurve(topInstruction.targetSlope, topInstruction.radius, topInstruction.bumpify);
 					if (newSections.Count > 0) topSections.AddAll(newSections);
 				}
 
-				if (instructionPair.bottomInstruction.instructionType == ContourPatternInstructionType.Straight) {
-					ContourPatternInstructionStraight bottomInstruction = (ContourPatternInstructionStraight)instructionPair.bottomInstruction;
+				if (instructionPair.bottomInstruction.stepType == ContourPatternStepType.Straight) {
+					ContourPatternStepStraight bottomInstruction = (ContourPatternStepStraight)instructionPair.bottomInstruction;
 					var newSection = bottomContour.AddStraight(bottomInstruction.slope, bottomInstruction.length, bottomInstruction.bumpify);
 					if (newSection) bottomSections.Add(newSection);
 				}
-				else if (instructionPair.bottomInstruction.instructionType == ContourPatternInstructionType.Curve) {
-					ContourPatternInstructionCurve bottomInstruction = (ContourPatternInstructionCurve)instructionPair.bottomInstruction;
+				else if (instructionPair.bottomInstruction.stepType == ContourPatternStepType.Curve) {
+					ContourPatternStepCurve bottomInstruction = (ContourPatternStepCurve)instructionPair.bottomInstruction;
 					var newSections = bottomContour.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius, bottomInstruction.bumpify);
 					if (newSections.Count > 0) bottomSections.AddAll(newSections);
 				}

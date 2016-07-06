@@ -1,5 +1,5 @@
 ﻿namespace WhitTerrain {
-	public enum ContourPatternInstructionType {
+	public enum ContourPatternStepType {
 		None,
 		Straight,
 		Curve
