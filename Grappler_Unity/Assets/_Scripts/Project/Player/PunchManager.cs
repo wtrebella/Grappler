@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class PunchManager : MonoBehaviour {
 	public static PunchManager instance;

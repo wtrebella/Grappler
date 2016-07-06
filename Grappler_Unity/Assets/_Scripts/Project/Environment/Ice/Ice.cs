@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class Ice : GeneratableItem {
 	[SerializeField] private Transform scaledIceContainer;

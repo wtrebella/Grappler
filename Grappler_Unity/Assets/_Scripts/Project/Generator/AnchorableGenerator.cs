@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using WhitTerrain;
 
 public class AnchorableGenerator : ItemOnTerrainGenerator {
 	private static int currentAnchorableID = 0;

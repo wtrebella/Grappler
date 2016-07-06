@@ -1,4 +1,6 @@
-﻿public enum ContourMeshType	 {
-	BottomEdge,
-	TopEdge
+﻿namespace WhitTerrain {
+	public enum ContourMeshType	 {
+		BottomEdge,
+		TopEdge
+	}
 }

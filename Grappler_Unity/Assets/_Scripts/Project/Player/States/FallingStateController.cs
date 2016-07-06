@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class FallingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;

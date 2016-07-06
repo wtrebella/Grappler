@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitTerrain;
 
 public class IcicleGenerator : ItemOnTerrainGenerator {
 	[SerializeField] private FloatRange deltaDistRange = new FloatRange(1.0f, 20.0f);

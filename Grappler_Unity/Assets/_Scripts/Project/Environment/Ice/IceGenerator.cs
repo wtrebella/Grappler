@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitTerrain;
 
 public class IceGenerator : Generator {
 	[SerializeField] private ContourPair terrainPair;

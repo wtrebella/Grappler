@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class CragGenerator : ItemOnTerrainGenerator {
 	[SerializeField] private float cragProbibility = 0.5f;

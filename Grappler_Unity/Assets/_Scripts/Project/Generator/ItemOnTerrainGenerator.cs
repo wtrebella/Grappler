@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitTerrain;
 
 public class ItemOnTerrainGenerator : Generator {
 	[SerializeField] protected Contour terrain;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class TreeGenerator : ItemOnTerrainGenerator {
 	[SerializeField] private float sectionProbability = 0.5f;

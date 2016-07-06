@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using WhitTerrain;
 
 public class PunchingStateController : PlayerStateController {
 	[SerializeField] private ContourPair terrainPair;

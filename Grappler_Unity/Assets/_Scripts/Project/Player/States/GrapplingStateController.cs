@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UnityEngine.Events;
+using WhitTerrain;
 
 public class GrapplingStateController : PlayerStateController {
 	public Action SignalGrappleBegan;
