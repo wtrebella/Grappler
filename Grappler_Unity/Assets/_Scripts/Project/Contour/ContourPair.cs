@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class WhitTerrainPair : MonoBehaviour {
-	public Action<WhitTerrainPairPatternType, List<WhitTerrainSection>, List<WhitTerrainSection>> SignalPatternAdded;
+public class ContourPair : MonoBehaviour {
+	public Action<ContourPairPatternType, List<ContourSection>, List<ContourSection>> SignalPatternAdded;
 
-	public WhitTerrain topTerrain;
-	public WhitTerrain bottomTerrain;
+	public Contour topTerrain;
+	public Contour bottomTerrain;
 
 	[SerializeField] private Transform focusObject;
 
@@ -17,7 +17,7 @@ public class WhitTerrainPair : MonoBehaviour {
 
 	private float currentSlope;
 	private float currentWidth;
-	private List<WhitTerrainPairPatternType> patternTypes;
+	private List<ContourPairPatternType> patternTypes;
 
 	public Vector2 GetThroughDirection(Vector3 position) {
 		float dist = GetDistAtPosition(position);
@@ -46,11 +46,11 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public Vector2 GetStartPoint() {
-		return WhitTools.GetAveragePoint(topTerrain.GetStartPoint(), bottomTerrain.GetStartPoint());
+		return WhitTools.GetAveragePoint(topTerrain.GetWorldStartPoint(), bottomTerrain.GetWorldStartPoint());
 	}
 
 	public Vector2 GetEndPoint() {
-		return WhitTools.GetAveragePoint(topTerrain.GetEndPoint(), bottomTerrain.GetEndPoint());
+		return WhitTools.GetAveragePoint(topTerrain.GetWorldEndPoint(), bottomTerrain.GetWorldEndPoint());
 	}
 
 	public Vector2 GetPointAtX(float x) {
@@ -87,27 +87,27 @@ public class WhitTerrainPair : MonoBehaviour {
 	}		
 
 	public void AddNextPattern() {
-		WhitTerrainPairPatternType patternType = GetNextPatternType();
+		ContourPairPatternType patternType = GetNextPatternType();
 
-		if (patternType == WhitTerrainPairPatternType.Straight) Straight();
-		else if (patternType == WhitTerrainPairPatternType.Widen) Widen();
-		else if (patternType == WhitTerrainPairPatternType.Narrow) Narrow();
-		else if (patternType == WhitTerrainPairPatternType.Bump) Bump();
-		else if (patternType == WhitTerrainPairPatternType.Flat) Flat();
-		else if (patternType == WhitTerrainPairPatternType.End) End();
+		if (patternType == ContourPairPatternType.Straight) Straight();
+		else if (patternType == ContourPairPatternType.Widen) Widen();
+		else if (patternType == ContourPairPatternType.Narrow) Narrow();
+		else if (patternType == ContourPairPatternType.Bump) Bump();
+		else if (patternType == ContourPairPatternType.Flat) Flat();
+		else if (patternType == ContourPairPatternType.End) End();
 	}
 
-	public WhitTerrainPairPatternType GetNextPatternType() {
+	public ContourPairPatternType GetNextPatternType() {
 //		return WhitTerrainPairPatternType.Straight;
 
-		if (NeedsEnd()) return WhitTerrainPairPatternType.End;
-		else return WhitTerrainPairAttributes.instance.GetRandomPatternType();
+		if (NeedsEnd()) return ContourPairPatternType.End;
+		else return ContourPairAttributes.instance.GetRandomPatternType();
 	}
 
 	private void Awake() {
 		currentSlope = initialSlope;
 		currentWidth = initialWidth;
-		patternTypes = new List<WhitTerrainPairPatternType>();
+		patternTypes = new List<ContourPairPatternType>();
 
 		InitializeTerrains(Vector2.zero);
 	}
@@ -142,7 +142,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public float GetWidthAtEnd() {
-		return (topTerrain.GetEndPoint() - bottomTerrain.GetEndPoint()).magnitude;
+		return (topTerrain.GetWorldEndPoint() - bottomTerrain.GetWorldEndPoint()).magnitude;
 	}
 
 	public void RestartTerrain(Vector2 newStartPoint) {
@@ -153,71 +153,71 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	public bool GetXIsPastEnd(float x) {
-		float topEnd = topTerrain.GetEndPoint().x;
-		float bottomEnd = bottomTerrain.GetEndPoint().x;
+		float topEnd = topTerrain.GetWorldEndPoint().x;
+		float bottomEnd = bottomTerrain.GetWorldEndPoint().x;
 		return x > topEnd || x > bottomEnd;
 	}
 
 	public bool GetXIsPastStart(float x) {
-		float topStart = topTerrain.GetStartPoint().x;
-		float bottomStart = bottomTerrain.GetStartPoint().x;
+		float topStart = topTerrain.GetWorldStartPoint().x;
+		float bottomStart = bottomTerrain.GetWorldStartPoint().x;
 		return x > topStart || x > bottomStart;
 	}
 
 	public void End() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetEndPattern(currentSlope, 150, 150, 1f, 30.0f);
-		AddPattern(WhitTerrainPairPatternType.End, pattern);
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetEndPattern(currentSlope, 150, 150, 1f, 30.0f);
+		AddPattern(ContourPairPatternType.End, pattern);
 	}
 
 	public void Straight() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetStraightPattern(currentSlope + WhitTerrainPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
-		AddPattern(WhitTerrainPairPatternType.Straight, pattern);
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetStraightPattern(currentSlope + ContourPairAttributes.instance.slopeVariationRange.GetRandom(), GetTopStraightLength(), GetBottomStraightLength());
+		AddPattern(ContourPairPatternType.Straight, pattern);
 	}
 
 	public void Flat() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetFlatPattern(WhitTerrainPairAttributes.instance.iceWidthRange.GetRandom());
-		AddPattern(WhitTerrainPairPatternType.Flat, pattern);
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetFlatPattern(ContourPairAttributes.instance.iceWidthRange.GetRandom());
+		AddPattern(ContourPairPatternType.Flat, pattern);
 	}
 
 	public void Widen() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetWidenPattern(currentSlope, 0.2f, 30.0f);
-		AddPattern(WhitTerrainPairPatternType.Widen, pattern);
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetWidenPattern(currentSlope, 0.2f, 30.0f);
+		AddPattern(ContourPairPatternType.Widen, pattern);
 	}
 
 	public void Narrow() {
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetNarrowPattern(currentSlope, 0.1f, 30.0f);
-		AddPattern(WhitTerrainPairPatternType.Narrow, pattern);
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetNarrowPattern(currentSlope, 0.1f, 30.0f);
+		AddPattern(ContourPairPatternType.Narrow, pattern);
 	}
 
 	public void Bump() {
-		float maxRadius = WhitTerrainPairAttributes.instance.minCurveRadius + GetWidthAtEnd();
-		WhitTerrainPairPattern pattern = WhitTerrainPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, 50, 10, 100, WhitTerrainPairAttributes.instance.minCurveRadius, maxRadius);
-		AddPattern(WhitTerrainPairPatternType.Bump, pattern);
+		float maxRadius = ContourPairAttributes.instance.minCurveRadius + GetWidthAtEnd();
+		ContourPairPattern pattern = ContourPairPatternGenerator.GetBumpPattern(currentSlope, 0.3f, 50, 10, 100, ContourPairAttributes.instance.minCurveRadius, maxRadius);
+		AddPattern(ContourPairPatternType.Bump, pattern);
 	}
 
-	private void AddPattern(WhitTerrainPairPatternType patternType, WhitTerrainPairPattern pattern) {
-		List<WhitTerrainSection> topSections = new List<WhitTerrainSection>();
-		List<WhitTerrainSection> bottomSections = new List<WhitTerrainSection>();
+	private void AddPattern(ContourPairPatternType patternType, ContourPairPattern pattern) {
+		List<ContourSection> topSections = new List<ContourSection>();
+		List<ContourSection> bottomSections = new List<ContourSection>();
 
-		foreach (WhitTerrainPatternInstructionPair instructionPair in pattern.instructionPairs) {
-			if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
-				WhitTerrainPatternInstructionStraight topInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.topInstruction;
+		foreach (ContourPatternInstructionPair instructionPair in pattern.instructionPairs) {
+			if (instructionPair.topInstruction.instructionType == ContourPatternInstructionType.Straight) {
+				ContourPatternInstructionStraight topInstruction = (ContourPatternInstructionStraight)instructionPair.topInstruction;
 				var newSection = topTerrain.AddStraight(topInstruction.slope, topInstruction.length, topInstruction.bumpify);
 				if (newSection) topSections.Add(newSection);
 			}
-			else if (instructionPair.topInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
-				WhitTerrainPatternInstructionCurve topInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.topInstruction;
+			else if (instructionPair.topInstruction.instructionType == ContourPatternInstructionType.Curve) {
+				ContourPatternInstructionCurve topInstruction = (ContourPatternInstructionCurve)instructionPair.topInstruction;
 				var newSections = topTerrain.AddCurve(topInstruction.targetSlope, topInstruction.radius, topInstruction.bumpify);
 				if (newSections.Count > 0) topSections.AddAll(newSections);
 			}
 
-			if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Straight) {
-				WhitTerrainPatternInstructionStraight bottomInstruction = (WhitTerrainPatternInstructionStraight)instructionPair.bottomInstruction;
+			if (instructionPair.bottomInstruction.instructionType == ContourPatternInstructionType.Straight) {
+				ContourPatternInstructionStraight bottomInstruction = (ContourPatternInstructionStraight)instructionPair.bottomInstruction;
 				var newSection = bottomTerrain.AddStraight(bottomInstruction.slope, bottomInstruction.length, bottomInstruction.bumpify);
 				if (newSection) bottomSections.Add(newSection);
 			}
-			else if (instructionPair.bottomInstruction.instructionType == WhitTerrainPatternInstructionType.Curve) {
-				WhitTerrainPatternInstructionCurve bottomInstruction = (WhitTerrainPatternInstructionCurve)instructionPair.bottomInstruction;
+			else if (instructionPair.bottomInstruction.instructionType == ContourPatternInstructionType.Curve) {
+				ContourPatternInstructionCurve bottomInstruction = (ContourPatternInstructionCurve)instructionPair.bottomInstruction;
 				var newSections = bottomTerrain.AddCurve(bottomInstruction.targetSlope, bottomInstruction.radius, bottomInstruction.bumpify);
 				if (newSections.Count > 0) bottomSections.AddAll(newSections);
 			}
@@ -226,14 +226,14 @@ public class WhitTerrainPair : MonoBehaviour {
 		OnPatternAdded(patternType, topSections, bottomSections);
 	}
 
-	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+	private void OnPatternAdded(ContourPairPatternType patternType, List<ContourSection> topSections, List<ContourSection> bottomSections) {
 		patternTypes.Add(patternType);
 		if (SignalPatternAdded != null) SignalPatternAdded(patternType, topSections, bottomSections);
 	}
 
 	public bool HasEnd() {
 		if (patternTypes.Count == 0) return false;
-		return patternTypes.GetLast() == WhitTerrainPairPatternType.End;
+		return patternTypes.GetLast() == ContourPairPatternType.End;
 	}
 
 	public float GetDistAtPosition(Vector2 position) {
@@ -263,8 +263,8 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private Vector2 GetDirectionBetweenEndPoints() {
-		Vector2 topEndPoint = topTerrain.GetEndPoint();
-		Vector2 bottomEndPoint = bottomTerrain.GetEndPoint();
+		Vector2 topEndPoint = topTerrain.GetWorldEndPoint();
+		Vector2 bottomEndPoint = bottomTerrain.GetWorldEndPoint();
 
 		Vector2 endPointVector = topEndPoint - bottomEndPoint;
 		Vector2 endPointDirection = endPointVector.normalized;
@@ -273,7 +273,7 @@ public class WhitTerrainPair : MonoBehaviour {
 	}
 
 	private float GetTopStraightLength() {
-		return WhitTerrainPairAttributes.instance.straightLength;
+		return ContourPairAttributes.instance.straightLength;
 	}
 
 	private float GetBottomStraightLength() {
@@ -282,8 +282,8 @@ public class WhitTerrainPair : MonoBehaviour {
 
 		Vector2 targetDirectionBetweenEndPoints = new Vector2(directionAtEnd.y, -directionAtEnd.x);
 
-		Vector2 topEndPoint = topTerrain.GetEndPoint();
-		Vector2 bottomEndPoint = bottomTerrain.GetEndPoint();
+		Vector2 topEndPoint = topTerrain.GetWorldEndPoint();
+		Vector2 bottomEndPoint = bottomTerrain.GetWorldEndPoint();
 
 		float topLength = GetTopStraightLength();
 		Vector2 newTopEndPoint = topEndPoint + directionAtEnd * topLength;

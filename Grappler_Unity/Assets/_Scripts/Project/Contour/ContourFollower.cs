@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WhitTerrainFollower : MonoBehaviour {
+public class ContourFollower : MonoBehaviour {
 	public float dist {get; private set;}
 
 	[SerializeField] private bool smooth = true;
 	[SerializeField] private bool placeAtStart = true;
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 	[SerializeField] private float speed = 10;
 	[SerializeField] private float smoothDampTime = 0.3f;
 

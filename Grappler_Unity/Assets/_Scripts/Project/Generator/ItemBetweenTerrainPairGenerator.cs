@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ItemBetweenTerrainPairGenerator : Generator {
-	[SerializeField] protected WhitTerrainPair terrainPair;
+	[SerializeField] protected ContourPair terrainPair;
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
 		terrainPair.SignalPatternAdded += OnPatternAdded;
 	}
 
-	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
+	private void OnPatternAdded(ContourPairPatternType patternType, List<ContourSection> topSections, List<ContourSection> bottomSections) {
 		float topDistStart = topSections.GetFirst().distStart;
 		float topDistEnd = topSections.GetLast().distEnd;
 

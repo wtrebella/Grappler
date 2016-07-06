@@ -6,19 +6,19 @@ using System;
 public class AnchorableGenerator : ItemOnTerrainGenerator {
 	private static int currentAnchorableID = 0;
 
-	protected override void OnTerrainSectionAdded(WhitTerrainSection section) {
+	protected override void OnTerrainSectionAdded(ContourSection section) {
 		GenerateAnchorables(section);
 	}
 
-	protected override void OnTerrainSectionRemoved(WhitTerrainSection section) {
+	protected override void OnTerrainSectionRemoved(ContourSection section) {
 		RecycleItemsOnSection<Anchorable>(section);
 	}
 
-	private void GenerateAnchorables(WhitTerrainSection section) {
+	private void GenerateAnchorables(ContourSection section) {
 		foreach (Vector2 point in section.allPoints) CreateAnchorableAtPoint(section, point);
 	}
 
-	private void CreateAnchorableAtPoint(WhitTerrainSection section, Vector2 point) {
+	private void CreateAnchorableAtPoint(ContourSection section, Vector2 point) {
 		Anchorable anchorable = (Anchorable)GenerateItem();
 		anchorable.transform.parent = section.transform;
 		anchorable.transform.localPosition = point;

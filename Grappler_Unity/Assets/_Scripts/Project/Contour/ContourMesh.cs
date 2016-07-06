@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(TriangulatedMesh))]
 [RequireComponent(typeof(PolygonCollider2D))]
-public class WhitTerrainMesh : MonoBehaviour {
+public class ContourMesh : MonoBehaviour {
 	public enum WhitTerrainMeshType {
 		None,
 		BottomEdge,
@@ -12,7 +12,7 @@ public class WhitTerrainMesh : MonoBehaviour {
 	}
 
 	[SerializeField] private WhitTerrainMeshType meshType;
-	[SerializeField] private WhitTerrain terrain;
+	[SerializeField] private Contour terrain;
 	[SerializeField] private Vector2 outlineSize = new Vector2(1, 200);
 
 	private bool isDirty = false;
@@ -24,8 +24,8 @@ public class WhitTerrainMesh : MonoBehaviour {
 		isDirty = false;
 
 		List<Vector2> points = terrain.GetPointsLocal();
-		Vector2 startPointLocal = terrain.GetStartPointLocal();
-		Vector2 endPointLocal = terrain.GetEndPointLocal();
+		Vector2 startPointLocal = terrain.GetLocalStartPoint();
+		Vector2 endPointLocal = terrain.GetLocalEndPoint();
 
 		float yMin = Mathf.Min(startPointLocal.y, endPointLocal.y);
 		float yMax = Mathf.Max(startPointLocal.y, endPointLocal.y);

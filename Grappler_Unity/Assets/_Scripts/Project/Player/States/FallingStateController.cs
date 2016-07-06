@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FallingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 
 	private void Awake() {
 		BaseAwake();

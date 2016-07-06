@@ -4,26 +4,26 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WhitTerrainLine : MonoBehaviour {
-	[SerializeField] private WhitTerrain terrain;
+	[SerializeField] private Contour terrain;
 	[SerializeField] private SnowPuff snowPuffPrefab;
 
-	private Dictionary<WhitTerrainSection, List<SnowPuff>> snowPuffDict;
+	private Dictionary<ContourSection, List<SnowPuff>> snowPuffDict;
 
 	private void Awake() {
-		snowPuffDict = new Dictionary<WhitTerrainSection, List<SnowPuff>>();
+		snowPuffDict = new Dictionary<ContourSection, List<SnowPuff>>();
 
 		terrain.SignalTerrainSectionAdded += OnSectionAdded;
 		terrain.SignalTerrainSectionRemoved += OnSectionRemoved;
 	}
 
 	private void Start() {
-		WhitTerrainSection firstSection = terrain.GetFirstSection();
+		ContourSection firstSection = terrain.GetFirstSection();
 		if (!snowPuffDict.ContainsKey(firstSection)) {
 			AddSnowPuffsToSection(firstSection);
 		}
 	}
 
-	private void AddSnowPuffsToSection(WhitTerrainSection section) {
+	private void AddSnowPuffsToSection(ContourSection section) {
 		var points = section.allPoints;
 		snowPuffDict.Add(section, new List<SnowPuff>());
 		for (int i = 0; i < points.Count - 1; i++) {
@@ -36,7 +36,7 @@ public class WhitTerrainLine : MonoBehaviour {
 		}
 	}
 
-	private void RemoveSnowPuffsFromSection(WhitTerrainSection section) {
+	private void RemoveSnowPuffsFromSection(ContourSection section) {
 		var snowPuffs = snowPuffDict[section];
 		for (int i = snowPuffs.Count - 1; i >= 0; i--) {
 			SnowPuff snowPuff = snowPuffs[i];
@@ -46,11 +46,11 @@ public class WhitTerrainLine : MonoBehaviour {
 		snowPuffDict.Remove(section);
 	}
 
-	private void OnSectionAdded(WhitTerrainSection section) {
+	private void OnSectionAdded(ContourSection section) {
 		AddSnowPuffsToSection(section);
 	}
 
-	private void OnSectionRemoved(WhitTerrainSection section) {
+	private void OnSectionRemoved(ContourSection section) {
 		RemoveSnowPuffsFromSection(section);
 	}
 	

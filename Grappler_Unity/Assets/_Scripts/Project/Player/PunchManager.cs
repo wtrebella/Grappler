@@ -5,7 +5,7 @@ public class PunchManager : MonoBehaviour {
 	public static PunchManager instance;
 
 	[SerializeField] private CragFinder cragFinder;
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 	[SerializeField] private Player player;
 
 	private void Awake() {

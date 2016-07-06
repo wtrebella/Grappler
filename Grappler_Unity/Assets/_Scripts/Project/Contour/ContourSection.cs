@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class WhitTerrainSection : MonoBehaviour {
+public class ContourSection : MonoBehaviour {
 	public Vector2 startPoint {get {return config.startPoint;}}
 	public float length {get {return config.length;}}
 	public float slope {get {return config.slope;}}
@@ -12,7 +12,7 @@ public class WhitTerrainSection : MonoBehaviour {
 	public float surfaceDistStart {get {return surfaceDists[0];}}
 	public float surfaceDistEnd {get {return surfaceDists[allPoints.Count - 1];}}
 
-	public WhitTerrain terrain {get; private set;}
+	public Contour terrain {get; private set;}
 	public Vector2 endPoint {get; private set;}
 	public List<Vector2> midPoints {get; private set;}
 	public List<Vector2> allPoints {get; private set;}
@@ -20,12 +20,12 @@ public class WhitTerrainSection : MonoBehaviour {
 	public float distEnd {get; private set;}
 
 	private Dictionary<int, float> surfaceDists;
-	private WhitTerrainSectionConfig config;
-	private WhitTerrainSectionAttributes attributes;
+	private ContourSectionConfig config;
+	private ContourSectionAttributes attributes;
 	private Vector2 slopeVector;
 	private Vector2 perpendicularSlopeVector;
 
-	public void Initialize(WhitTerrain terrain, WhitTerrainSectionConfig config, WhitTerrainSectionAttributes attributes) {
+	public void Initialize(Contour terrain, ContourSectionConfig config, ContourSectionAttributes attributes) {
 		this.terrain = terrain;
 		this.config = config;
 		this.attributes = attributes;
@@ -37,7 +37,7 @@ public class WhitTerrainSection : MonoBehaviour {
 		CalculatePerpendicularSlopeVector();
 		GenerateEndPoint();
 		GenerateMidPoints();
-		BumpifyMidPointsIfNeeded();
+//		BumpifyMidPointsIfNeeded();
 		CollectAllPointsInList();
 		CalculateSurfaceMeasures();
 		CalculateDistAtEnd();

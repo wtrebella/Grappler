@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum WhitTerrainPairPatternType {
+public enum ContourPairPatternType {
 	None,
 	Straight,
 	Bump,
 	Widen,
 	Narrow,
 	Flat,
-	End,
-	Test
+	End
 }

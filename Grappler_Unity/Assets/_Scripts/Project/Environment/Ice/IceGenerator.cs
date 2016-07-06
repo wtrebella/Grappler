@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class IceGenerator : Generator {
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 
 	private void Awake() {
 		BaseAwake();
@@ -11,10 +11,10 @@ public class IceGenerator : Generator {
 		terrainPair.SignalPatternAdded += OnPatternAdded;
 	}
 
-	private void OnPatternAdded(WhitTerrainPairPatternType patternType, List<WhitTerrainSection> topSections, List<WhitTerrainSection> bottomSections) {
-		if (patternType != WhitTerrainPairPatternType.Flat) return;
+	private void OnPatternAdded(ContourPairPatternType patternType, List<ContourSection> topSections, List<ContourSection> bottomSections) {
+		if (patternType != ContourPairPatternType.Flat) return;
 
-		WhitTerrainSection section = bottomSections.GetFirst();
+		ContourSection section = bottomSections.GetFirst();
 		Ice ice = GenerateItem<Ice>();
 		ice.SetSection(section);
 	}

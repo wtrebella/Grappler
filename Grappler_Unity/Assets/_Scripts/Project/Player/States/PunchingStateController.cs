@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class PunchingStateController : PlayerStateController {
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 	[SerializeField] private float duration = 0.3f;
 	[SerializeField] private float speed = 10;
 	[SerializeField] private Timer timer;

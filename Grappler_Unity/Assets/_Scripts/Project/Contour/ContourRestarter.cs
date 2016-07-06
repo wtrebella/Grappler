@@ -1,9 +1,9 @@
 ﻿	using UnityEngine;
 using System.Collections;
 
-public class TerrainRestarter : MonoBehaviour {
+public class ContourRestarter : MonoBehaviour {
 	[SerializeField] private PlayerTrajectory playerTrajectory;
-	[SerializeField] private WhitTerrainPair terrainPair;
+	[SerializeField] private ContourPair terrainPair;
 	[SerializeField] private Player player;
 	[SerializeField] private float startPointOffset = 5;
 	[SerializeField] private float pastEndOffset = -50;
