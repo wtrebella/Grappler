@@ -2,25 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using WhitTerrain;
+using WhitDataTypes;
 
 public class ItemOnTerrainGenerator : Generator {
-	[SerializeField] protected Contour terrain;
+	[SerializeField] protected Contour contour;
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
-		terrain.SignalTerrainSectionAdded += OnTerrainSectionAdded;
-		terrain.SignalTerrainSectionRemoved += OnTerrainSectionRemoved;
+		contour.SignalSegmentAdded += OnSegmentAdded;
+		contour.SignalSegmentRemoved += OnSegmentRemoved;
 	}
 
-	protected virtual void OnTerrainSectionAdded(ContourSection section) {
+	protected virtual void OnSegmentAdded(ContourSegment section) {
 		
 	}
 
-	protected virtual void OnTerrainSectionRemoved(ContourSection section) {
+	protected virtual void OnSegmentRemoved(ContourSegment section) {
 
 	}
 
-	protected List<GeneratableItem> GenerateItemsOnSection(ContourSection section, FloatRange deltaDistRange) {
+	protected List<GeneratableItem> GenerateItemsOnSection(ContourSegment section, FloatRange deltaDistRange) {
 		List<GeneratableItem> items = new List<GeneratableItem>();
 		float length = section.surfaceLength;
 		float dist = 0;
@@ -32,7 +33,7 @@ public class ItemOnTerrainGenerator : Generator {
 		return items;
 	}
 
-	protected GeneratableItem GenerateItemOnSection(ContourSection section, float relativeSurfaceDist) {
+	protected GeneratableItem GenerateItemOnSection(ContourSegment section, float relativeSurfaceDist) {
 		GeneratableItem item = GenerateItem();
 		item.transform.parent = section.transform;
 		Vector3 position = section.GetSurfacePointAtRelativeDist(relativeSurfaceDist);
@@ -41,7 +42,7 @@ public class ItemOnTerrainGenerator : Generator {
 		return item;
 	}
 
-	protected void RecycleItemsOnSection<T>(ContourSection section) where T : GeneratableItem {
+	protected void RecycleItemsOnSection<T>(ContourSegment section) where T : GeneratableItem {
 		var items = section.GetComponentsInChildren<T>();
 		foreach (T item in items) item.RecycleItem();
 	}

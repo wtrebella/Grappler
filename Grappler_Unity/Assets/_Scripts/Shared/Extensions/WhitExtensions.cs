@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Events;
 using System.Linq;
+using WhitDataTypes;
 
 public static class WhitExtensions {
 	public static void IncrementWithWrap(this int value, IntRange wrapRange) {

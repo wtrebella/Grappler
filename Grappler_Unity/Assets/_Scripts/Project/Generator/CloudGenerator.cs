@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitDataTypes;
 
 public class CloudGenerator : Generator {
 	[SerializeField] private FloatRange camDistanceBetweenClouds;

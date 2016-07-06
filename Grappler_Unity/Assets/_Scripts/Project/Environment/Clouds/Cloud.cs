@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class Cloud : GeneratableItem {
 	[SerializeField] private tk2dSprite sprite;

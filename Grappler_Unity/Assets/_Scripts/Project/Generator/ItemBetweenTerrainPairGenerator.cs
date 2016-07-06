@@ -2,16 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using WhitTerrain;
+using WhitDataTypes;
 
 public class ItemBetweenTerrainPairGenerator : Generator {
-	[SerializeField] protected ContourPair terrainPair;
+	[SerializeField] protected Path path;
 
 	protected override void BaseAwake() {
 		base.BaseAwake();
-		terrainPair.SignalPatternAdded += OnPatternAdded;
+		path.SignalPatternAdded += OnPatternAdded;
 	}
 
-	private void OnPatternAdded(ContourPairPatternType patternType, List<ContourSection> topSections, List<ContourSection> bottomSections) {
+	private void OnPatternAdded(PathPatternType patternType, List<ContourSegment> topSections, List<ContourSegment> bottomSections) {
 		float topDistStart = topSections.GetFirst().distStart;
 		float topDistEnd = topSections.GetLast().distEnd;
 
@@ -31,9 +32,9 @@ public class ItemBetweenTerrainPairGenerator : Generator {
 
 	protected GeneratableItem GenerateItem(float dist, float betweenPercent) {
 		GeneratableItem item = GenerateItem();
-		item.transform.parent = terrainPair.transform;
-		Vector3 topPosition = terrainPair.topTerrain.GetPointAtDist(dist);
-		Vector3 bottomPosition = terrainPair.bottomTerrain.GetPointAtDist(dist);
+		item.transform.parent = path.transform;
+		Vector3 topPosition = path.topContour.GetPointAtDist(dist);
+		Vector3 bottomPosition = path.bottomContour.GetPointAtDist(dist);
 		Vector3 position = Vector3.Lerp(bottomPosition, topPosition, betweenPercent);
 		position.z += 0.1f;
 		item.transform.position = position;

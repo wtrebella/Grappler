@@ -4,7 +4,7 @@ using WhitTerrain;
 
 public class FallingStateController : PlayerStateController {
 	[SerializeField] private AnchorableFinder anchorableFinder;
-	[SerializeField] private ContourPair terrainPair;
+	[SerializeField] private Path terrainPair;
 
 	private void Awake() {
 		BaseAwake();

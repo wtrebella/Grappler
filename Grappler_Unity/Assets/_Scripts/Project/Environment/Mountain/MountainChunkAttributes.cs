@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class MountainChunkAttributes : ScriptableObject {
 	public int numPoints = 10;

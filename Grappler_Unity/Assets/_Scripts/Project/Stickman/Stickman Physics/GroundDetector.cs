@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class GroundDetector : MonoBehaviour {
 	[SerializeField] private Rigidbody2D rigid;

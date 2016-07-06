@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 namespace WhitTerrain {
-	public class ContourSection : MonoBehaviour {
+	public class ContourSegment : MonoBehaviour {
 		public Vector2 startPoint {get {return config.startPoint;}}
 		public float length {get {return config.length;}}
 		public float slope {get {return config.slope;}}
@@ -21,12 +21,12 @@ namespace WhitTerrain {
 		public float distEnd {get; private set;}
 
 		private Dictionary<int, float> surfaceDists;
-		private ContourSectionConfig config;
-		private ContourSectionAttributes attributes;
+		private ContourSegmentConfig config;
+		private ContourSegmentAttributes attributes;
 		private Vector2 slopeVector;
 		private Vector2 perpendicularSlopeVector;
 
-		public void Initialize(Contour terrain, ContourSectionConfig config, ContourSectionAttributes attributes) {
+		public void Initialize(Contour terrain, ContourSegmentConfig config, ContourSegmentAttributes attributes) {
 			this.terrain = terrain;
 			this.config = config;
 			this.attributes = attributes;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class BonusTankManager : MonoBehaviour {
 	public static BonusTankManager instance;

@@ -3,14 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace WhitTerrain {
-	public class ContourPairPattern {
+	public class PathPattern {
 		public List<ContourPatternInstructionPair> instructionPairs {get; private set;}
 
-		public ContourPairPattern() {
+		public PathPattern() {
 			
 		}
 
-		public ContourPairPattern(params ContourPatternInstructionPair[] pairs) {
+		public PathPattern(params ContourPatternInstructionPair[] pairs) {
 			AddInstructionPairs(pairs);
 		}
 

@@ -14,7 +14,7 @@ public class GrapplingManager : MonoBehaviour {
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private GrapplerRope grapplerRope;
 	[SerializeField] private Vector2 grappleBoost = new Vector2(200, -1000);
-	[SerializeField] private ContourPair terrainPair;
+	[SerializeField] private Path terrainPair;
 
 	private Player _player;
 	protected Player player {

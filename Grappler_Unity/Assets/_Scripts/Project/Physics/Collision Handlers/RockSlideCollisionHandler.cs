@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class RockSlideCollisionHandler : CollisionHandler {
 	[SerializeField] private FloatRange hitVelocityRangeX = new FloatRange(100, 200);

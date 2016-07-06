@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitDataTypes;
 
 public class SmallIcicle : GeneratableItem {
 	[SerializeField] private Rigidbody2D rigid;

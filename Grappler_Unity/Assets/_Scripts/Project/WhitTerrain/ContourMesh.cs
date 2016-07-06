@@ -62,7 +62,7 @@ namespace WhitTerrain {
 			mesh = GetComponent<TriangulatedMesh>();
 			polygonCollider = GetComponent<PolygonCollider2D>();
 
-			terrain.SignalTerrainChanged += OnTerrainChanged;
+			terrain.SignalContourChanged += OnTerrainChanged;
 		}
 
 		private void OnTerrainChanged() {

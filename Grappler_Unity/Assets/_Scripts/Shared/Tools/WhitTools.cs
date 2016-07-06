@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using WhitDataTypes;
 
 public static class WhitTools {
 	public const float PixelsToUnits = 1.0f / 100.0f;

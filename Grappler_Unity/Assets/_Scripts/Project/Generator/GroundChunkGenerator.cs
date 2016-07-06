@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
+using WhitDataTypes;
 
 public class GroundChunkGenerator : Generator {
 	public Action<GroundChunk> SignalGroundChunkGenerated;

@@ -3,47 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace WhitTerrain {
-	public class ContourPairPatternGenerator {
-		public static ContourPairPattern GetEndPattern(float currentSlope, float topLength, float bottomLength, float endSlope, float radius) {
+	public class PathPatternGenerator {
+		public static PathPattern GetEndPattern(float currentSlope, float topLength, float bottomLength, float endSlope, float radius) {
 			ContourPatternInstructionPair straight = GetStraight(currentSlope, 0, topLength, bottomLength, true);
 			ContourPatternInstructionPair curve = GetDivergentCurve(currentSlope, endSlope, -endSlope, radius, radius, true);
-			ContourPairPattern endPattern = new ContourPairPattern(straight, curve);
+			PathPattern endPattern = new PathPattern(straight, curve);
 			return endPattern;
 		}
 
-		public static ContourPairPattern GetStraightPattern(float currentSlope, float topLength, float bottomLength) {
+		public static PathPattern GetStraightPattern(float currentSlope, float topLength, float bottomLength) {
 			ContourPatternInstructionPair straight = GetStraight(currentSlope, 0, topLength, bottomLength, true);
-			ContourPairPattern straightPattern = new ContourPairPattern(straight);
+			PathPattern straightPattern = new PathPattern(straight);
 			return straightPattern;
 		}
 
-		public static ContourPairPattern GetWidenPattern(float currentSlope, float widenSlope, float radius) {
+		public static PathPattern GetWidenPattern(float currentSlope, float widenSlope, float radius) {
 			ContourPatternInstructionPair curveOut = GetDivergentCurve(currentSlope, widenSlope, -widenSlope, radius, radius, true);
 			ContourPatternInstructionPair curveBack = GetDivergentCurve(currentSlope, 0, 0, radius, radius, true);
-			ContourPairPattern widenPattern = new ContourPairPattern(curveOut, curveBack);
+			PathPattern widenPattern = new PathPattern(curveOut, curveBack);
 			return widenPattern;
 		}
 
-		public static ContourPairPattern GetNarrowPattern(float currentSlope, float narrowSlope, float radius) {
+		public static PathPattern GetNarrowPattern(float currentSlope, float narrowSlope, float radius) {
 			ContourPatternInstructionPair curveOut = GetDivergentCurve(currentSlope, -narrowSlope, narrowSlope, radius, radius, true);
 			ContourPatternInstructionPair curveBack = GetDivergentCurve(currentSlope, 0, 0, radius, radius, true);
-			ContourPairPattern narrowPattern = new ContourPairPattern(curveOut, curveBack);
+			PathPattern narrowPattern = new PathPattern(curveOut, curveBack);
 			return narrowPattern;
 		}
 
-		public static ContourPairPattern GetBumpPattern(float currentSlope, float bumpSlope, float upLength, float topLength, float downLength, float minRadius, float maxRadius) {
+		public static PathPattern GetBumpPattern(float currentSlope, float bumpSlope, float upLength, float topLength, float downLength, float minRadius, float maxRadius) {
 			ContourPatternInstructionPair turn1 = GetParallelCurve(currentSlope, bumpSlope, minRadius, maxRadius, true);
 			ContourPatternInstructionPair up = GetStraight(currentSlope, bumpSlope, upLength, upLength, true);
 			ContourPatternInstructionPair turn2 = GetParallelCurve(currentSlope, -bumpSlope, maxRadius, minRadius, true);
 			ContourPatternInstructionPair down = GetStraight(currentSlope, -bumpSlope, downLength, downLength, true);
 			ContourPatternInstructionPair turn3 = GetParallelCurve(currentSlope, 0, minRadius, maxRadius, true);
-			ContourPairPattern bumpPattern = new ContourPairPattern(turn1, up, turn2, down, turn3);
+			PathPattern bumpPattern = new PathPattern(turn1, up, turn2, down, turn3);
 			return bumpPattern;
 		}
 
-		public static ContourPairPattern GetFlatPattern(float length) {
+		public static PathPattern GetFlatPattern(float length) {
 			ContourPatternInstructionPair flat = GetStraight(0, 0, length, length, true);
-			ContourPairPattern flatPattern = new ContourPairPattern(flat);
+			PathPattern flatPattern = new PathPattern(flat);
 			return flatPattern;
 		}
 

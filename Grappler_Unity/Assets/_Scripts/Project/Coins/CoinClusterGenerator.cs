@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Events;
 using System;
+using WhitDataTypes;
 
 public class CoinClusterGenerator : ItemBetweenTerrainPairGenerator {
 	[SerializeField] private float probability = 0.5f;

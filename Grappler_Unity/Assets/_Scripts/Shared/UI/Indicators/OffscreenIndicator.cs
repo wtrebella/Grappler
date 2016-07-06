@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using WhitDataTypes;
 
 public class OffscreenIndicator : MonoBehaviour {
 	[SerializeField] private RectTransform root;

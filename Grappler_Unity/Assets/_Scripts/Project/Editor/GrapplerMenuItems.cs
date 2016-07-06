@@ -11,11 +11,11 @@ public class GrapplerMenuItems : Editor {
 
 	[MenuItem("Assets/Create/WhitTerrainSectionAttributes Asset", false, 102)]
 	public static void CreateWhitTerrainSectionAttributesAsset() {
-		ScriptableObjectUtility.CreateAsset<ContourSectionAttributes>();
+		ScriptableObjectUtility.CreateAsset<ContourSegmentAttributes>();
 	}
 
 	[MenuItem("Assets/Create/WhitTerrainPairAttributes Asset", false, 102)]
 	public static void CreateWhitTerrainPairAttributesAsset() {
-		ScriptableObjectUtility.CreateAsset<ContourPairAttributes>();
+		ScriptableObjectUtility.CreateAsset<PathAttributes>();
 	}
 }

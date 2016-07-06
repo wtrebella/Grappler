@@ -4,7 +4,7 @@ using System.Collections;
 namespace WhitTerrain {
 	public class ContourRestarter : MonoBehaviour {
 		[SerializeField] private PlayerTrajectory playerTrajectory;
-		[SerializeField] private ContourPair terrainPair;
+		[SerializeField] private Path terrainPair;
 		[SerializeField] private Player player;
 		[SerializeField] private float startPointOffset = 5;
 		[SerializeField] private float pastEndOffset = -50;

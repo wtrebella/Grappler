@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using WhitDataTypes;
 
 namespace WhitTerrain {
-	public class ContourPairAttributes : ScriptableObjectSingleton<ContourPairAttributes> {
+	public class PathAttributes : ScriptableObjectSingleton<PathAttributes> {
 		public FloatRange slopeVariationRange = new FloatRange(-0.2f, 0.2f);
 		public FloatRange widthRange = new FloatRange(6.0f, 20.0f);
 		public FloatRange iceWidthRange = new FloatRange(100.0f, 200.0f);
@@ -19,13 +20,13 @@ namespace WhitTerrain {
 		[SerializeField] private int bumpPatternWeight = 1;
 		[SerializeField] private int flatPatternWeight = 3;
 
-		public ContourPairPatternType GetRandomPatternType() {
-			List<ContourPairPatternType> patternTypes = new List<ContourPairPatternType>();
-			for (int i = 0; i < continuePatternWeight; i++) patternTypes.Add(ContourPairPatternType.Straight);
-			for (int i = 0; i < widenPatternWeight; i++) patternTypes.Add(ContourPairPatternType.Widen);
-			for (int i = 0; i < narrowPatternWeight; i++) patternTypes.Add(ContourPairPatternType.Narrow);
-			for (int i = 0; i < bumpPatternWeight; i++) patternTypes.Add(ContourPairPatternType.Bump);
-			for (int i = 0; i < flatPatternWeight; i++) patternTypes.Add(ContourPairPatternType.Flat);
+		public PathPatternType GetRandomPatternType() {
+			List<PathPatternType> patternTypes = new List<PathPatternType>();
+			for (int i = 0; i < continuePatternWeight; i++) patternTypes.Add(PathPatternType.Straight);
+			for (int i = 0; i < widenPatternWeight; i++) patternTypes.Add(PathPatternType.Widen);
+			for (int i = 0; i < narrowPatternWeight; i++) patternTypes.Add(PathPatternType.Narrow);
+			for (int i = 0; i < bumpPatternWeight; i++) patternTypes.Add(PathPatternType.Bump);
+			for (int i = 0; i < flatPatternWeight; i++) patternTypes.Add(PathPatternType.Flat);
 			return patternTypes[Random.Range(0, patternTypes.Count)];
 		}
 	}

@@ -17,7 +17,7 @@ public class Ice : GeneratableItem {
 		return doneSkating;
 	}
 
-	public void SetSection(ContourSection section) {
+	public void SetSection(ContourSegment section) {
 		SetWidth(section.length);
 		SetEndColliderPosition(section.length);
 		Vector2 startPoint = section.GetWorldStartPoint();

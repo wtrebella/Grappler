@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 public class FirTree : GeneratableItem {
 	[SerializeField] private FloatRange xScaleRange = new FloatRange(0.7f, 1.0f);

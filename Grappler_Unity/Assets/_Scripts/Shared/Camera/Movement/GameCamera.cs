@@ -14,7 +14,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private float offset = 10;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private Transform focusObject;
-	[SerializeField] private ContourPair terrainPair;
+	[SerializeField] private Path terrainPair;
 	[SerializeField] private Camera cam;
 	[SerializeField] private float marginSize = 10;
 	[SerializeField] private float newTerrainSwitchMargin = -20;

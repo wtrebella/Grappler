@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using WhitDataTypes;
 
 [RequireComponent(typeof(ParticleSystem))]
 public class GroundSnowParticles : MonoBehaviour {

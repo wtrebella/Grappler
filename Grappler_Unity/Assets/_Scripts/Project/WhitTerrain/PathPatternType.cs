@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace WhitTerrain {
-	public enum ContourPairPatternType {
+	public enum PathPatternType {
 		None,
 		Straight,
 		Bump,

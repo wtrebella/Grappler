@@ -7,7 +7,7 @@ namespace WhitTerrain {
 
 		[SerializeField] private bool smooth = true;
 		[SerializeField] private bool placeAtStart = true;
-		[SerializeField] private ContourPair terrainPair;
+		[SerializeField] private Path terrainPair;
 		[SerializeField] private float speed = 10;
 		[SerializeField] private float smoothDampTime = 0.3f;
 

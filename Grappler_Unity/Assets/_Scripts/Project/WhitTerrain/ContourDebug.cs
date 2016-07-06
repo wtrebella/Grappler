@@ -42,7 +42,7 @@ namespace WhitTerrain {
 			}
 		}
 
-		private void DrawGizmosForSection(ContourSection section, bool withEndPoint) {
+		private void DrawGizmosForSection(ContourSegment section, bool withEndPoint) {
 			DrawGizmoForPoint(section.startPoint);
 			foreach (Vector2 point in section.midPoints) DrawGizmoForPoint(point);
 			if (withEndPoint) DrawGizmoForPoint(section.endPoint);

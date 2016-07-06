@@ -6,7 +6,7 @@ public class PunchManager : MonoBehaviour {
 	public static PunchManager instance;
 
 	[SerializeField] private CragFinder cragFinder;
-	[SerializeField] private ContourPair terrainPair;
+	[SerializeField] private Path path;
 	[SerializeField] private Player player;
 
 	private void Awake() {
@@ -14,7 +14,7 @@ public class PunchManager : MonoBehaviour {
 	}
 
 	public void PunchThroughCragIfNear() {
-		Crag crag = cragFinder.FindInDirection(terrainPair.GetThroughDirection(player.body.transform.position));
+		Crag crag = cragFinder.FindInDirection(path.GetThroughDirection(player.body.transform.position));
 		if (crag) {
 //			player.SetState(Player.PlayerStates.Punching);
 			crag.Explode();

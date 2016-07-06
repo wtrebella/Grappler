@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.Events;
 using System;
 using System.Collections.Generic;
+using WhitDataTypes;
 
 public class PickupGenerator : ItemBetweenTerrainPairGenerator {
 	[SerializeField] private float probability = 0.1f;
