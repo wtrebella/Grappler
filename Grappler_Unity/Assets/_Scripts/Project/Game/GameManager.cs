@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void GameOver() {
+		if (isGameOver) Debug.LogWarning("game already over!");
+
 		isGameOver = true;
 		ShowPostGamePanel();
 	}
