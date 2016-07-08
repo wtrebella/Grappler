@@ -3,7 +3,7 @@ using System.Collections;
 using WhitTerrain;
 using WhitDataTypes;
 
-public class TreeGenerator : ItemOnTerrainGenerator {
+public class TreeGenerator : ContourItemGenerator {
 	[SerializeField] private float sectionProbability = 0.5f;
 	[SerializeField] private FloatRange deltaDistRange = new FloatRange(3.0f, 30.0f);
 

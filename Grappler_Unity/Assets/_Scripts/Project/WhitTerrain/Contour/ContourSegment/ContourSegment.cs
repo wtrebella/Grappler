@@ -55,6 +55,17 @@ namespace WhitTerrain {
 			return worldPoint;
 		}
 
+		public float GetDistAtWorldX(float x) {
+			float start = GetWorldStartPoint().x;
+			float end = GetWorldEndPoint().x;
+			x = Mathf.Max(Mathf.Min(x, end), start);
+			float localX = x - start;
+			float width = end - start;
+			float percent = Mathf.Clamp01(localX / width);
+			float dist = Mathf.Lerp(distStart, distEnd, percent);
+			return dist;
+		}
+
 		public Vector2 GetWorldPointAtWorldX(float x) {
 			Vector2 start = GetWorldStartPoint();
 			Vector2 end = GetWorldEndPoint();

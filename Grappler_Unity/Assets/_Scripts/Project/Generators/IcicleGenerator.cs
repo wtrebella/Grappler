@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using WhitTerrain;
 using WhitDataTypes;
 
-public class IcicleGenerator : ItemOnTerrainGenerator {
+public class IcicleGenerator : ContourItemGenerator {
 	[SerializeField] private FloatRange deltaDistRange = new FloatRange(1.0f, 20.0f);
 
 	protected override void OnSegmentAdded(ContourSegment section) {

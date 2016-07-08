@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using WhitTerrain;
 
-public class WarningSignGenerator : ItemOnTerrainGenerator {
+public class WarningSignGenerator : ContourItemGenerator {
 	[SerializeField] private Path terrainPair;
 
 	protected override void BaseAwake() {
@@ -13,7 +13,7 @@ public class WarningSignGenerator : ItemOnTerrainGenerator {
 
 	private void OnPatternAdded(PathPatternType patternType, List<ContourSegment> topSections, List<ContourSegment> bottomSections) {
 		if (patternType == PathPatternType.End) {
-			GenerateItemOnSection(bottomSections.GetFirst(), 0);
+			GenerateItemOnSegment(bottomSections.GetFirst(), 0);
 		}
 	}
 }

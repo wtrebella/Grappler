@@ -12,10 +12,7 @@ public class CoinPatterns {
 	public static CoinPattern RandomPattern {get {return GetRandomCoinPattern();}}
 
 	private static CoinPattern GetRandomCoinPattern() {
-		string[] stringArray = (string[])RXRandom.Select(
-			stringArray_diagonal,
-			stringArray_diagonal
-		);
+		string[] stringArray = stringArray_diagonal;
 
 		return GenerateCoinPattern(stringArray);
 	}

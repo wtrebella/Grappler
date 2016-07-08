@@ -3,7 +3,7 @@ using System.Collections;
 using WhitTerrain;
 using WhitDataTypes;
 
-public class CragGenerator : ItemOnTerrainGenerator {
+public class CragGenerator : ContourItemGenerator {
 	[SerializeField] private float cragProbibility = 0.5f;
 	[SerializeField] private FloatRange deltaDistRange = new FloatRange(3.0f, 30.0f);
 
@@ -16,6 +16,6 @@ public class CragGenerator : ItemOnTerrainGenerator {
 	}
 
 	private void GenerateCrag(ContourSegment section) {
-		GenerateItemOnSection(section, deltaDistRange.GetRandom());
+		GenerateItemOnSegment(section, deltaDistRange.GetRandom());
 	}
 }

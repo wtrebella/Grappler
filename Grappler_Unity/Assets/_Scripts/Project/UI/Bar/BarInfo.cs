@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class BarInfo {
 	public BarInfoType barInfoType {get; private set;}
@@ -19,7 +20,19 @@ public class BarInfo {
 		barInfoTypeList.Add(BarInfoType.Rate);
 		barInfoTypeList.Add(BarInfoType.TryItem);
 		barInfoTypeList.Add(BarInfoType.WatchAd);
-		barInfoTypeList.Shuffle();
+
+		// TODO cleanup
+		System.Random rng = new System.Random();  
+
+		int n = barInfoTypeList.Count;  
+		while (n > 1) {  
+			n--;  
+			int k = rng.Next(n + 1);  
+			BarInfoType value = barInfoTypeList[k];  
+			barInfoTypeList[k] = barInfoTypeList[n];  
+			barInfoTypeList[n] = value;  
+		} 
+
 		barInfoTypeList = barInfoTypeList.GetRange(0, 3);
 		return barInfoTypeList;
 	}

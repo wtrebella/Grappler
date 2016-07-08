@@ -6,9 +6,9 @@ using System;
 public class Generator : MonoBehaviour {
 	public int numItemsCreated {get; private set;}
 
+	[SerializeField] protected List<GeneratableItem> prefabs;
 	[SerializeField] private bool autoRecycle = true;
 	[SerializeField] private int autoRecycleMaxItemCount = 10;
-	[SerializeField] protected List<GeneratableItem> prefabs;
 
 	protected List<GeneratableItem> items;
 

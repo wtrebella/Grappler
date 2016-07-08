@@ -78,22 +78,33 @@ namespace WhitTerrain {
 			RemoveAllSections();
 		}
 
+		public float TranslateDistToContour(float dist, Contour contour) {
+			float x = GetPointAtDist(dist).x;
+			return contour.GetDistAtX(x);
+		}
+
 		public Vector2 GetPointAtX(float x) {
-			ContourSegment section = GetSectionAtX(x);
-			if (section == null) return Vector2.zero;
-			return section.GetWorldPointAtWorldX(x);
+			ContourSegment segment = GetSegmentAtX(x);
+			if (segment == null) return Vector2.zero;
+			return segment.GetWorldPointAtWorldX(x);
 		}
 
 		public Vector2 GetPointAtDist(float dist) {
-			ContourSegment section = GetSectionAtDist(dist);
-			if (section == null) return Vector2.zero;
-			else return section.GetPointAtDist(dist);
+			ContourSegment segment = GetSectionAtDist(dist);
+			if (segment == null) return Vector2.zero;
+			else return segment.GetPointAtDist(dist);
+		}
+
+		public float GetDistAtX(float x) {
+			ContourSegment segment = GetSegmentAtX(x);
+			if (segment == null) return 0;
+			else return segment.GetDistAtWorldX(x);
 		}
 
 		public Vector2 GetSurfacePointAtDist(float dist) {
-			ContourSegment section = GetSectionAtDist(dist);
-			if (section == null) return Vector2.zero;
-			else return section.GetSurfacePointAtDist(dist);
+			ContourSegment segment = GetSectionAtDist(dist);
+			if (segment == null) return Vector2.zero;
+			else return segment.GetSurfacePointAtDist(dist);
 		}
 
 		public List<Vector2> GetPointsLocal() {
@@ -135,7 +146,7 @@ namespace WhitTerrain {
 			return null;
 		}
 
-		private ContourSegment GetSectionAtX(float x) {
+		private ContourSegment GetSegmentAtX(float x) {
 			if (sections.Count == 0) return null;
 			for (int i = 0; i < sections.Count; i++) {
 				ContourSegment section = sections[i];

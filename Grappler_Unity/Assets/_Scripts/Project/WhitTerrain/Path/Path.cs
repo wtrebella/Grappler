@@ -42,6 +42,14 @@ namespace WhitTerrain {
 			return averagePoint;
 		}
 
+		public float GetTopDistAtBottomDist(float dist) {
+			return bottomContour.TranslateDistToContour(dist, topContour);
+		}
+
+		public float GetBottomDistAtTopDist(float dist) {
+			return topContour.TranslateDistToContour(dist, bottomContour);
+		}
+
 		public float GetCurrentWidth() {
 			return currentWidth;
 		}

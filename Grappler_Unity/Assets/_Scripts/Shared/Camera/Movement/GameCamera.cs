@@ -5,8 +5,8 @@ using WhitTerrain;
 
 public enum CameraFollowMode {
 	NONE,
-	Terrain,
-	Player,
+	ContourAndPlayer,
+	JustPlayer,
 	MAX
 }
 
@@ -14,12 +14,13 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private float offset = 10;
 	[SerializeField] private WhitUpdateType updateType = WhitUpdateType.Update;
 	[SerializeField] private Transform focusObject;
-	[SerializeField] private Path terrainPair;
+	[SerializeField] private Path path;
 	[SerializeField] private Camera cam;
-	[SerializeField] private float marginSize = 10;
+	[SerializeField] private float pathMargin = 10;
+	[SerializeField] private float playerMargin = 10;
 	[SerializeField] private float newTerrainSwitchMargin = -20;
 
-	private CameraFollowMode cameraFollowMode = CameraFollowMode.Terrain;
+	private CameraFollowMode cameraFollowMode = CameraFollowMode.ContourAndPlayer;
 	private Vector3 smoothVelocity;
 	private float smoothTime = 0.1f;
 
@@ -71,15 +72,21 @@ public class GameCamera : MonoBehaviour {
 		return (Vector2)transform.position - GetFocusObjectPosition();
 	}
 
+	// TODO cleanup
 	private Vector3 GetTargetPosition() {
 		Vector3 objectPosition = GetFocusObjectPosition();
 
-		if (cameraFollowMode == CameraFollowMode.Terrain) {
-			Vector3 terrainPoint = (Vector3)terrainPair.GetPointAtX(objectPosition.x);
-			terrainPoint.z = GetTargetZ();
-			return terrainPoint;
+		if (cameraFollowMode == CameraFollowMode.ContourAndPlayer) {
+			Vector2 topContourPoint = path.topContour.GetPointAtX(objectPosition.x);
+			Vector2 bottomCamPoint = path.bottomContour.GetPointAtX(objectPosition.x);
+			Vector2 topCamPoint = objectPosition.y > topContourPoint.y ? (Vector2)objectPosition : topContourPoint;
+			Vector2 camPoint = WhitTools.GetAveragePoint(topCamPoint, bottomCamPoint);
+
+			Vector3 contourCenterPoint = (Vector3)camPoint;
+			contourCenterPoint.z = GetTargetZ();
+			return contourCenterPoint;
 		}
-		else if (cameraFollowMode == CameraFollowMode.Player) {
+		else if (cameraFollowMode == CameraFollowMode.JustPlayer) {
 			Vector3 newPos = objectPosition;
 			newPos.z = transform.position.z;
 			return newPos;
@@ -88,34 +95,41 @@ public class GameCamera : MonoBehaviour {
 		else return transform.position;
 	}
 
-	private void UpdateCameraFollowMode() {
-		if (cameraFollowMode == CameraFollowMode.Terrain) {
-			if (ShouldSwitchToPlayerFollowMode()) cameraFollowMode = CameraFollowMode.Player;
-		}
-		else if (cameraFollowMode == CameraFollowMode.Player) {
-			if (ShouldSwitchToTerrainFollowMode()) cameraFollowMode = CameraFollowMode.Terrain;
-		}
-	}
-
-	private bool ShouldSwitchToPlayerFollowMode() {
-		return terrainPair.HasEnd() && terrainPair.GetXIsPastEnd(GetFocusObjectPosition().x);
-	}
-
-	private bool ShouldSwitchToTerrainFollowMode() {
-		return !terrainPair.HasEnd() && terrainPair.GetXIsPastStart(GetFocusObjectPosition().x + newTerrainSwitchMargin);
-	}
-
+	// TODO cleanup
 	private float GetTargetZ() {
+		Vector3 objectPosition = GetFocusObjectPosition();
+		Vector2 topContourPoint = path.topContour.GetPointAtX(objectPosition.x);
+		Vector2 bottomCamPoint = path.bottomContour.GetPointAtX(objectPosition.x);
+		Vector2 topCamPoint = objectPosition.y > topContourPoint.y ? (Vector2)objectPosition : topContourPoint;
+
 		float x = transform.position.x;
-		float terrainWidth = terrainPair.GetWidthAtX(x);
-		float targetFrustumHeight = terrainWidth + marginSize * 2;
+		float terrainWidth = topCamPoint.y - bottomCamPoint.y;// path.GetWidthAtX(x);
+		float targetFrustumHeight = terrainWidth + pathMargin * 2;
 		float distance = cam.GetDistanceAtFrustumHeight(targetFrustumHeight);
 		return -distance;
 	}
 
+	private void UpdateCameraFollowMode() {
+		if (cameraFollowMode == CameraFollowMode.ContourAndPlayer) {
+			if (ShouldSwitchToPlayerFollowMode()) cameraFollowMode = CameraFollowMode.JustPlayer;
+		}
+		else if (cameraFollowMode == CameraFollowMode.JustPlayer) {
+			if (ShouldSwitchToTerrainFollowMode()) cameraFollowMode = CameraFollowMode.ContourAndPlayer;
+		}
+	}
+
+	private bool ShouldSwitchToPlayerFollowMode() {
+		return path.HasEnd() && path.GetXIsPastEnd(GetFocusObjectPosition().x);
+	}
+
+	private bool ShouldSwitchToTerrainFollowMode() {
+		return !path.HasEnd() && path.GetXIsPastStart(GetFocusObjectPosition().x + newTerrainSwitchMargin);
+	}
+		
 	private Vector2 GetFocusObjectPosition() {
 		Vector2 position = focusObject.position;
 		position.x += offset;
+		position.y += playerMargin;
 		return position;
 	}
 }

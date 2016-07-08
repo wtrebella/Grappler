@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 using WhitTerrain;
 
-public class AnchorableGenerator : ItemOnTerrainGenerator {
+public class AnchorableGenerator : ContourItemGenerator {
 	private static int currentAnchorableID = 0;
 
 	protected override void OnSegmentAdded(ContourSegment section) {
