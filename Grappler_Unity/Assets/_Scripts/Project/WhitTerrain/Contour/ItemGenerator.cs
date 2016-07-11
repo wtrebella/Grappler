@@ -5,16 +5,9 @@ using System.Collections.Generic;
 using WhitTerrain;
 using WhitDataTypes;
 
-public class PathDivision {
-	public object slot;
-	public FloatRange xRange = new FloatRange(0, 0);
-
-	public PathDivision() {
-
-	}
-}
-
 public class ItemGenerator : MonoBehaviour {
+	public GameObject testObjectPrefab;
+
 	[SerializeField] private bool debugDivisions = false;
 	[SerializeField] private Path path;
 	[SerializeField] private float divisionSize = 10;
@@ -33,21 +26,6 @@ public class ItemGenerator : MonoBehaviour {
 	
 	private void Start() {
 	
-	}
-	
-	private void OnDrawGizmos() {
-		if (debugDivisions) ShowDivisionDebugLines();
-	}
-
-	private void ShowDivisionDebugLines() {
-		if (divisions == null) return;
-
-		float size = 1000;
-		foreach (PathDivision division in divisions) {
-			Gizmos.DrawLine(new Vector3(division.xRange.min, -size, 0), new Vector3(division.xRange.min, size, 0));
-		}
-		PathDivision lastDivision = divisions.GetLast();
-		Gizmos.DrawLine(new Vector3(lastDivision.xRange.max, -size, 0), new Vector3(lastDivision.xRange.max, size, 0));
 	}
 
 	private void OnTopContourChanged() {
@@ -71,7 +49,10 @@ public class ItemGenerator : MonoBehaviour {
 
 	private void RemoveDivisions() {
 		var divisionsToRemove = GetDivisionsBehindMinX();
-		foreach (PathDivision division in divisionsToRemove) divisions.Remove(division);
+		foreach (PathDivision division in divisionsToRemove) {
+			divisions.Remove(division);
+			GameObject.Destroy(division.gameObject);
+		}
 	}
 
 	private void CreateDivisions() {
@@ -98,8 +79,11 @@ public class ItemGenerator : MonoBehaviour {
 	}
 
 	private PathDivision CreateDivision(float xStart) {
-		PathDivision division = new PathDivision();
-		division.xRange = new FloatRange(xStart, xStart + divisionSize);
+		PathDivision division = new GameObject("", typeof(PathDivision)).GetComponent<PathDivision>();
+		division.transform.SetParent(transform);
+		division.Initialize(path, xStart, xStart + divisionSize);
+		division.name = "Path Division (" + ((int)xStart).ToString() + ")";
+		division.transform.position = path.bottomContour.GetPointAtX(division.xRange.min);
 		return division;
 	}
 
