@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using WhitTerrain;
 using WhitDataTypes;
 
-public class ItemGenerator : MonoBehaviour {
-	public GameObject testObjectPrefab;
+public class PathDivisionManager : MonoBehaviour {
+	public Action<PathDivision> SignalPathDivisionCreated;
 
-	[SerializeField] private bool debugDivisions = false;
 	[SerializeField] private Path path;
 	[SerializeField] private float divisionSize = 10;
 
@@ -29,12 +28,14 @@ public class ItemGenerator : MonoBehaviour {
 	}
 
 	private void OnTopContourChanged() {
+		if (path.topContour.sections.Count == 0) return;
 		xRangeTop.min = path.topContour.GetWorldStartPoint().x;
 		xRangeTop.max = path.topContour.GetWorldEndPoint().x;
 		UpdateXRange();
 	}
 
 	private void OnBottomContourChanged() {
+		if (path.bottomContour.sections.Count == 0) return;
 		xRangeBottom.min = path.bottomContour.GetWorldStartPoint().x;
 		xRangeBottom.max = path.bottomContour.GetWorldEndPoint().x;
 		UpdateXRange();
@@ -66,6 +67,7 @@ public class ItemGenerator : MonoBehaviour {
 			float xStart = lastDivisionX + i * divisionSize;
 			PathDivision division = CreateDivision(xStart);
 			divisions.Add(division);
+			if (SignalPathDivisionCreated != null) SignalPathDivisionCreated(division);
 		}
 	}
 
