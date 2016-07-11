@@ -63,8 +63,8 @@ namespace WhitTerrain {
 		}
 
 		private void UpdateGizmoColor() {
-			if (colorType == GizmoColorType.Color1) Gizmos.color = Color.green;
-			else if (colorType == GizmoColorType.Color2) Gizmos.color = Color.blue;
+			if (colorType == GizmoColorType.Color1) Gizmos.color = Color.cyan;
+			else if (colorType == GizmoColorType.Color2) Gizmos.color = Color.red;
 		}
 	}
 }
