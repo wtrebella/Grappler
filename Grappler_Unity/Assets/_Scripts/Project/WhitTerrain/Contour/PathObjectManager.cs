@@ -4,13 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PathObjectManager : MonoBehaviour {
-	[SerializeField] PathDivisionManager divisionManager;
-
-	// i need to create a custom class instead of using GameObject
-	// because i need a blank placeholder, plus sometimes i might want
-	// multiple objects in one division.
-	// maybe it could be PathDivisionObjects (or something like that)
-	private Queue<GameObject> prefabQueue;
+	[SerializeField] private GameObject[] prefabs;
+	[SerializeField] private PathDivisionManager divisionManager;
 
 	private void Awake() {
 		divisionManager.SignalPathDivisionCreated += OnDivisionCreated;
@@ -25,12 +20,6 @@ public class PathObjectManager : MonoBehaviour {
 	}
 
 	private void OnDivisionCreated(PathDivision division) {
-		
+		division.AddObject(prefabs[UnityEngine.Random.Range(0, prefabs.Length)], PathDivisionPositionType.Bottom);
 	}
-
-	private GameObject GetNextPrefab() {
-
-	}
-
-	private void AddToPrefabQueue(GameObject prefab, 
 }
