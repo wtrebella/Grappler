@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class CollisionCooldownResetter : CollisionHandler {
-	[SerializeField] private Cooldown cooldown;
+	[SerializeField] private HorizontalDistanceCooldown cooldown;
 
 	public override void HandleCollisionEnter(Rigidbody2D rigid, Collision2D collision) {
 		base.HandleCollisionEnter(rigid, collision);

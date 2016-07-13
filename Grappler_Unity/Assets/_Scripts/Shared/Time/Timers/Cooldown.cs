@@ -19,6 +19,10 @@ public class Cooldown : MonoBehaviour {
 	}
 
 	private void Update() {
+		UpdateCooldown();
+	}
+
+	private void UpdateCooldown() {
 		if (timer <= 0) timer = 0;
 		else timer -= Time.deltaTime;
 	}

@@ -14,7 +14,7 @@ namespace WhitTerrain {
 
 		[SerializeField] private float initialSlope = 0.1f;
 		[SerializeField] private float initialWidth = 16.0f;
-		[SerializeField] private int numPatternsBeforeEnd = 40;
+		[SerializeField] private int numPatternsBeforeEnd = 10;
 
 		private float currentSlope;
 		private float currentWidth;
@@ -107,8 +107,6 @@ namespace WhitTerrain {
 		}
 
 		public PathPatternType GetNextPatternType() {
-	//		return WhitTerrainPairPatternType.Straight;
-
 			if (NeedsEnd()) return PathPatternType.End;
 			else return PathAttributes.instance.GetRandomPatternType();
 		}

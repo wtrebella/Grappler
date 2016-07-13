@@ -12,7 +12,7 @@ public class GrapplerRope : StateMachine {
 	public Action Signal_Connected_UpdateState;
 
 	[SerializeField] private SpringJoint2D springJoint;
-	[SerializeField] private Cooldown accelerationCooldown;
+	[SerializeField] private HorizontalDistanceCooldown accelerationCooldown;
 
 	private enum GrappleRopeStates {Retracted, Connected}
 	private SpringJointAttributeCooldownLerper springJointAttributeCooldownLerper;

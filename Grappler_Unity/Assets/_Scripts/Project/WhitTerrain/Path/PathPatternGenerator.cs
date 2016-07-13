@@ -41,6 +41,16 @@ namespace WhitTerrain {
 			return bumpPattern;
 		}
 
+		public static PathPattern GetOpeningPattern(float currentSlope, float slope, float length, float radius) {
+			ContourPatternStepPair curveOut = GetDivergentCurve(currentSlope, slope, -slope, radius, radius, true);
+			ContourPatternStepPair curveOutStraighten = GetDivergentCurve(currentSlope, 0, 0, radius, radius, true);
+			ContourPatternStepPair straight = GetStraight(currentSlope, 0, length, length, true);
+			ContourPatternStepPair curveIn = GetDivergentCurve(currentSlope, -slope, slope, radius, radius, true);
+			ContourPatternStepPair curveInStraighten = GetDivergentCurve(currentSlope, 0, 0, radius, radius, true);
+			PathPattern pattern = new PathPattern(curveOut, curveOutStraighten, straight, curveIn, curveInStraighten);
+			return pattern;
+		}
+
 		public static PathPattern GetFlatPattern(float length) {
 			ContourPatternStepPair flat = GetStraight(0, 0, length, length, true);
 			PathPattern flatPattern = new PathPattern(flat);

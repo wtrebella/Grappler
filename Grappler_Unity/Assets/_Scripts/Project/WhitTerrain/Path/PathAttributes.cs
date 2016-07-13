@@ -19,6 +19,7 @@ namespace WhitTerrain {
 		[SerializeField] private int narrowPatternWeight = 2;
 		[SerializeField] private int bumpPatternWeight = 1;
 		[SerializeField] private int flatPatternWeight = 3;
+		[SerializeField] private int openingPatternWeight = 1;
 
 		public PathPatternType GetRandomPatternType() {
 			List<PathPatternType> patternTypes = new List<PathPatternType>();
