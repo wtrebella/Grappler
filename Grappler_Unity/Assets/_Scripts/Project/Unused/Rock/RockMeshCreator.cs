@@ -22,7 +22,7 @@ public class RockMeshCreator : MonoBehaviour {
 	private void CreateMesh(Vector2[] points) {
 		ClearMesh();
 		
-		Triangulator triangulator = new Triangulator(points);
+		WhitTriangulator triangulator = new WhitTriangulator(points);
 		int[] triArray = triangulator.Triangulate();
 		
 		foreach (int vertexNum in triArray) tris.Add(vertexNum);

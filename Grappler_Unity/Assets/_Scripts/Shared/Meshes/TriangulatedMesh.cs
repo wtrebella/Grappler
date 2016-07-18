@@ -21,7 +21,7 @@ public class TriangulatedMesh : MonoBehaviour {
 	}
 
 	private void RegenerateMesh(Vector2[] points) {
-		Triangulator triangulator = new Triangulator(points);
+		WhitTriangulator triangulator = new WhitTriangulator(points);
 		int[] triArray = triangulator.Triangulate();
 
 		foreach (int vertexNum in triArray) tris.Add(vertexNum);
