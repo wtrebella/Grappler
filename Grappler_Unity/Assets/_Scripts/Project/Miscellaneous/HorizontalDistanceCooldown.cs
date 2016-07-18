@@ -25,7 +25,6 @@ public class HorizontalDistanceCooldown : MonoBehaviour {
 
 	private void Update() {
 		UpdateCooldown();
-		Debug.Log(distanceTraveled);
 	}
 
 	private void UpdateCooldown() {
