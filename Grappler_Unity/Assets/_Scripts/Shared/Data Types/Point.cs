@@ -2,6 +2,7 @@
 using System.Collections;
 
 namespace WhitDataTypes {
+	[System.Serializable]
 	public class Point {
 		public Vector2 vector;
 

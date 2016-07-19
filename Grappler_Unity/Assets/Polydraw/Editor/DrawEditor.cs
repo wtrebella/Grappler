@@ -15,6 +15,7 @@ public class DrawEditor : Editor
 	const int INSERT_HANDLE_SIZE = 24;
 	private Texture2D HANDLE_ICON_ACTIVE;
 	private Texture2D HANDLE_ICON_NORMAL;
+	private Texture2D HANDLE_ICON_BORDERIGNORED;
 	private Texture2D INSERT_ICON_ACTIVE;
 	private Texture2D INSERT_ICON_NORMAL;
 	private Texture2D DELETE_ICON_NORMAL;
@@ -103,6 +104,7 @@ public class DrawEditor : Editor
 	{
 		HANDLE_ICON_NORMAL = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-Normal.png", typeof(Texture2D));
 		HANDLE_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-Active.png", typeof(Texture2D));
+		HANDLE_ICON_BORDERIGNORED = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-BorderIgnored.png", typeof(Texture2D));
 		INSERT_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/InsertPoint-Active.png", typeof(Texture2D));
 		INSERT_ICON_NORMAL = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/InsertPoint-Normal.png", typeof(Texture2D));
 		DELETE_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/DeletePoint-Active.png", typeof(Texture2D));
@@ -324,7 +326,15 @@ public class DrawEditor : Editor
 				break;
 		}
 
-		Vector3[] points = poly.transform.ToWorldSpace(poly.points.ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
+		List<PolydrawPoint3> points = new List<PolydrawPoint3>();
+		for (int i = 0; i < poly.points.Count; i++) {
+			PolydrawPoint2 point2 = poly.points[i];
+			Vector2 v2 = point2.vector;
+			Vector3 v3 = poly.transform.TransformPoint(v2.ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
+			PolydrawPoint3 point3 = new PolydrawPoint3(v3);
+			point3.borderIgnored = point2.borderIgnored;
+			points.Add(point3);
+		}
 
 		// listen for shortcuts
 		ShortcutListener(e);
@@ -348,10 +358,10 @@ public class DrawEditor : Editor
 		switch(poly.drawStyle)
 		{
 			case DrawStyle.Point:
-				PointDrawStyleInput(sceneView.camera, e, points);
+			PointDrawStyleInput(sceneView.camera, e, points);
 				break;
 			case DrawStyle.Continuous:
-				ContinuousDrawStyleInput(sceneView.camera, e, points);
+			ContinuousDrawStyleInput(sceneView.camera, e, points);
 				break;
 			default:
 				break;
@@ -359,16 +369,16 @@ public class DrawEditor : Editor
 
 	}
 
-	private bool DrawInsertPointGUI(Vector3[] points)
+	private bool DrawInsertPointGUI(List<PolydrawPoint3> points)
 	{
 		Handles.BeginGUI();
 
 			int n = 0;
-			for(int i = 0; i < points.Length; i++)
+			for(int i = 0; i < points.Count; i++)
 			{
-				n = (i >= points.Length-1) ? 0 : i+1;
+				n = (i >= points.Count-1) ? 0 : i+1;
 
-				Vector3 avg = (points[i]+points[n])/2f;
+				Vector3 avg = (points[i].vector+points[n].vector)/2f;
 				Vector2 g = HandleUtility.WorldToGUIPoint( avg );
 
 				Rect handleRect = new Rect(g.x-INSERT_HANDLE_SIZE/2f, g.y-INSERT_HANDLE_SIZE/2f, INSERT_HANDLE_SIZE, INSERT_HANDLE_SIZE);
@@ -413,15 +423,16 @@ public class DrawEditor : Editor
 
 	// private Vector2 handleOffset = Vector2.zero;
 
-	private void DrawHandles(Vector3[] p)
+	private void DrawHandles(List<PolydrawPoint3> p)
 	{
 		Handles.BeginGUI();
 		GUI.backgroundColor = Color.red;
-		for(int i = 0; i < p.Length; i++)
+		for(int i = 0; i < p.Count; i++)
 		{
-			Vector2 g = HandleUtility.WorldToGUIPoint(p[i]);
+			Vector2 g = HandleUtility.WorldToGUIPoint(p[i].vector);
 			Rect handleRect = new Rect(g.x-HANDLE_SIZE/2f, g.y-HANDLE_SIZE/2f, HANDLE_SIZE, HANDLE_SIZE);
-			
+			PolydrawPoint3 point = p[i];
+
 			if(i == poly.lastIndex)
 			{
 				GUI.Label(handleRect, HANDLE_ICON_ACTIVE);
@@ -434,8 +445,10 @@ public class DrawEditor : Editor
 					poly.Refresh();
 				}
 			}
-			else
-				GUI.Label(handleRect, HANDLE_ICON_NORMAL);
+			else {
+				if (point.borderIgnored) GUI.Label(handleRect, HANDLE_ICON_BORDERIGNORED);
+				else GUI.Label(handleRect, HANDLE_ICON_NORMAL);
+			}
 		}
 
 		GUI.backgroundColor = Color.white;
@@ -444,15 +457,15 @@ public class DrawEditor : Editor
 		SceneView.RepaintAll();
 	}
 
-	private void DrawLines(Vector3[] p)
+	private void DrawLines(List<PolydrawPoint3> p)
 	{
-		if(p.Length < 2) return;
+		if(p.Count < 2) return;
 
-		for(int i = 0; i < p.Length-1; i++)
+		for(int i = 0; i < p.Count-1; i++)
 		{
-			Handles.DrawLine(p[i], p[i+1]);
+			Handles.DrawLine(p[i].vector, p[i+1].vector);
 		}
-		Handles.DrawLine(p[p.Length-1], p[0]);
+		Handles.DrawLine(p[p.Count-1].vector, p[0].vector);
 	}
 
 	private float Round(float val, float snap)
@@ -474,7 +487,7 @@ public class DrawEditor : Editor
 
 #region Draw Style Input
 
-	private void PointDrawStyleInput(Camera cam, Event e, Vector3[] p)
+	private void PointDrawStyleInput(Camera cam, Event e, List<PolydrawPoint3> p)
 	{
 		if(!e.isMouse) return;
 
@@ -482,9 +495,9 @@ public class DrawEditor : Editor
 		{
 			case EventType.MouseDown:
 			{
-				for(int i = 0; i < p.Length; i++)
+				for(int i = 0; i < p.Count; i++)
 				{
-					Vector2 g = HandleUtility.WorldToGUIPoint(p[i]);
+					Vector2 g = HandleUtility.WorldToGUIPoint(p[i].vector);
 					Rect handleRect = new Rect(g.x-HANDLE_SIZE/2f, g.y-HANDLE_SIZE/2f, HANDLE_SIZE, HANDLE_SIZE);
 					
 					if(handleRect.Contains(e.mousePosition))
@@ -540,7 +553,7 @@ public class DrawEditor : Editor
 		}
 	}
 
-	private void ContinuousDrawStyleInput(Camera cam, Event e, Vector3[] points)
+	private void ContinuousDrawStyleInput(Camera cam, Event e, List<PolydrawPoint3> points)
 	{
 		if(!e.isMouse) return;
 
@@ -551,9 +564,9 @@ public class DrawEditor : Editor
 				/**
 				 * Check it we're clicking on an existing object
 				 */
-				for(int i = 0; i < points.Length; i++)
+				for(int i = 0; i < points.Count; i++)
 				{
-					Vector2 g = HandleUtility.WorldToGUIPoint(points[i]);
+					Vector2 g = HandleUtility.WorldToGUIPoint(points[i].vector);
 					Rect handleRect = new Rect(g.x-HANDLE_SIZE/2f, g.y-HANDLE_SIZE/2f, HANDLE_SIZE, HANDLE_SIZE);
 					
 					if(handleRect.Contains(e.mousePosition))
@@ -605,8 +618,8 @@ public class DrawEditor : Editor
 					Vector3 newPoint = snapEnabled ? Round( GetWorldPoint(cam, e.mousePosition).ToVector2(poly.drawSettings.axis), snapValue ) : GetWorldPoint(cam, e.mousePosition).ToVector2(poly.drawSettings.axis);
 
 
-					for(int i = 0; i < points.Length; i++)
-						if( Vector3.Distance(newPoint, points[i]) < poly.drawSettings.minimumDistanceBetweenPoints )
+					for(int i = 0; i < points.Count; i++)
+						if( Vector3.Distance(newPoint, points[i].vector) < poly.drawSettings.minimumDistanceBetweenPoints )
 							return;
 	
 					poly.lastIndex = poly.AddPoint(newPoint, insertPoint);

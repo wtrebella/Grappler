@@ -115,7 +115,7 @@ public static class PolydrawExtensions
 	{
 		if(!poly.isValid) return;
 
-		Vector3[] v = poly.transform.ToWorldSpace(poly.points.ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
+		Vector3[] v = poly.transform.ToWorldSpace(poly.GetPointVectors().ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
 
 		Vector3 avg = Vector3.zero;
 		
@@ -127,7 +127,7 @@ public static class PolydrawExtensions
 		for(int i = 0; i < v.Length; i++)
 			v[i] -= avg;
 
-		poly.points = new List<Vector2>(v.ToVector2(poly.drawSettings.axis));
+		poly.SetPointVectors(new List<Vector2>(v.ToVector2(poly.drawSettings.axis)));
 
 		poly.Refresh();
 
