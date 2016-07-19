@@ -15,10 +15,7 @@ public class TerrainSpawnTest : MonoBehaviour {
 	
 	private void Start() {
 		if (poly == null) return;
-		var points = poly.GetWorldBorderPoints();
-		foreach (Vector2 point in points) {
-			Instantiate(prefab, point, Quaternion.identity);
-		}
+
 	}
 	
 	private void Update() {

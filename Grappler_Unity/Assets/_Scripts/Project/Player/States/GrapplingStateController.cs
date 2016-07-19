@@ -10,7 +10,7 @@ public class GrapplingStateController : PlayerStateController {
 	public Action<float> SignalGrappleEndedWithSlopeDeviation;
 
 	[SerializeField] private float slopeAddition = 0.15f;
-	[SerializeField] private float allowedSlopeDeviation = 0.25f;
+//	[SerializeField] private float allowedSlopeDeviation = 0.25f;
 	[SerializeField] private Path terrainPair;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;

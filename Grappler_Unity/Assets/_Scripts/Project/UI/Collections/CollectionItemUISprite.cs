@@ -4,10 +4,7 @@ using System.Collections;
 public class CollectionItemUISprite : MonoBehaviour {
 	[SerializeField] private tk2dSprite sprite;
 
-	private CollectionItem itemSet;
-
 	public void SetCollectionItem(CollectionItem item) {
-		this.itemSet = item;
 		CollectionItemSprite firstSprite = item.GetFirstSprite();
 		tk2dSpriteCollectionData spriteCollection = firstSprite.GetSpriteCollectionData();
 		if (firstSprite == null || !firstSprite.HasValidSpriteName()) return;

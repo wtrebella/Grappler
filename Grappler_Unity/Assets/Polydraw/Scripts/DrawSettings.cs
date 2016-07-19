@@ -20,8 +20,8 @@ public class DrawSettings
 	public float 		uvRotation = 0f;				///< Rotation of texture in degrees.
 
 	// Sides
-	public bool 		generateSide = true;			///< If true, sides will be created along with the front face.
-	public float 		sideLength = 5f;				///< How long the sides will be.
+	public bool 		generateSide = false;			///< If true, sides will be created along with the front face.
+	public float 		sideLength = 0f;				///< How long the sides will be.
 	public Draw.Anchor 	anchor = Draw.Anchor.Center;	///< Where is the pivot point of this mesh?  See #Anchor for more information.
 	public float 		faceOffset = 0f;				///< This value is used to offset the anchor.  As an example, a faceOffset of 1f with a #zPosition of 0f would set the front face at Vector3(x, y, 1f).  With #SideAnchor Center and a faceOffset of 0, the front face is set to exactly 1/2 negative distance (towards the camera) of sideLength.   
 
@@ -60,7 +60,7 @@ public class DrawSettings
 	public string 		meshName = "Drawn Mesh";		///< What the finalized mesh will be named.
 
 	// Collisions
-	public Draw.ColliderType colliderType = Draw.ColliderType.MeshCollider;	///< The #ColliderStyle to be used.
+	public Draw.ColliderType colliderType = Draw.ColliderType.PolygonCollider2d;	///< The #ColliderStyle to be used.
 	public bool 		manualColliderDepth = false;	///< If #ColliderStyle is set to BoxCollider, this can override the #sideLength property to set collision depth.  See also #colDepth.
 	public Draw.Anchor	colAnchor = Draw.Anchor.Center;	///< If #manualColliderDepth is toggled, this value will be used to determine where meshcollider will anchor itself.  \sa #Draw:Anchor
 	public float 		colDepth = 5f;					///< If #manualColliderDepth is toggled, this value will be used to determine depth of colliders.

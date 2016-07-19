@@ -102,7 +102,6 @@ public class GameCamera : MonoBehaviour {
 		Vector2 bottomCamPoint = path.bottomContour.GetPointAtX(objectPosition.x);
 		Vector2 topCamPoint = objectPosition.y > topContourPoint.y ? (Vector2)objectPosition : topContourPoint;
 
-		float x = transform.position.x;
 		float terrainWidth = topCamPoint.y - bottomCamPoint.y;// path.GetWidthAtX(x);
 		float targetFrustumHeight = terrainWidth + pathMargin * 2;
 		float distance = cam.GetDistanceAtFrustumHeight(targetFrustumHeight);

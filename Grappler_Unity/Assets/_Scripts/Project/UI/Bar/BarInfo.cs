@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 
 public class BarInfo {
 	public BarInfoType barInfoType {get; private set;}

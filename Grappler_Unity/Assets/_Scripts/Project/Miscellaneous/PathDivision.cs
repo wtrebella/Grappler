@@ -23,12 +23,10 @@ public class PathDivision : MonoBehaviour {
 	public Vector2 topLeft {get; private set;}
 	public Vector2 topRight {get; private set;}
 
-	private List<object> objects;
 	private bool initialized = false;
 
 	public void Initialize(Path path, float min, float max) {
 		this.path = path;
-		objects = new List<object>();
 		xRange = new FloatRange(min, max);
 		CalculateDists();
 		CalculatePoints();

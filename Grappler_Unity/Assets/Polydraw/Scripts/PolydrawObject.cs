@@ -93,8 +93,12 @@ namespace Polydraw {
 
 		public void SetPoint(int index, Vector2 point)
 		{
-			if(index > -1 && index < points.Count)
-				points[index] = new PolydrawPoint2(transform.InverseTransformPoint(point.ToVector3(drawSettings.axis, drawSettings.zPosition)).ToVector2(drawSettings.axis));
+			if(index > -1 && index < points.Count) {
+				PolydrawPoint2 currentPoint = points[index];
+				PolydrawPoint2 newPoint = new PolydrawPoint2(transform.InverseTransformPoint(point.ToVector3(drawSettings.axis, drawSettings.zPosition)).ToVector2(drawSettings.axis));
+				newPoint.borderIgnored = currentPoint.borderIgnored;
+				points[index] = newPoint;
+			}
 
 			#if UNITY_EDITOR
 				EditorUtility.SetDirty(this);
@@ -302,7 +306,7 @@ namespace Polydraw {
 
 			foreach(Collider2D col2 in collisions2d)
 			{
-				DestroyImmediate(col2);
+				DestroyImmediate(col2, true);
 			}
 			
 			// remove old box collisions, if any

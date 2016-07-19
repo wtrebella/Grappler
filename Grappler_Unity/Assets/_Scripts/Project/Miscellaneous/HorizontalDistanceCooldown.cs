@@ -6,12 +6,10 @@ public class HorizontalDistanceCooldown : MonoBehaviour {
 	[SerializeField] private float distance = 200;
 
 	private float distanceTraveled = 0;
-	private float previousX = 0;
 	private float initialX = 0;
 
 	public void ResetCooldown() {
 		distanceTraveled = 0;
-		previousX = 0;
 		initialX = objectToFollow.position.x;
 	}
 

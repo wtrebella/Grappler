@@ -7,8 +7,6 @@ public class PathObjectManager : MonoBehaviour {
 	[SerializeField] private GameObject[] prefabs;
 	[SerializeField] private PathDivisionManager divisionManager;
 
-	private int chunkSize = 10;
-
 	private void Awake() {
 		divisionManager.SignalPathDivisionCreated += OnDivisionCreated;
 	}

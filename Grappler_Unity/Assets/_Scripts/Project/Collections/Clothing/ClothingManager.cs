@@ -12,8 +12,8 @@ public class ClothingManager : Singleton<ClothingManager> {
 	private EquipmentSlot shoesEquipmentSlot;
 
 	private WhitSpineSlot hatSpineSlot;
-	private WhitSpineSlot backShoeSpineSlot;
-	private WhitSpineSlot frontShoeSpineSlot;
+//	private WhitSpineSlot backShoeSpineSlot;
+//	private WhitSpineSlot frontShoeSpineSlot;
 
 	private Collection hatCollection;
 	private Collection shoesCollection;
@@ -96,8 +96,8 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	public void RemoveShoes() {
-		backShoeSpineSlot.RemoveSprite();
-		frontShoeSpineSlot.RemoveSprite();
+//		backShoeSpineSlot.RemoveSprite();
+//		frontShoeSpineSlot.RemoveSprite();
 		shoesEquipmentSlot.RemoveItem();
 	}
 
@@ -107,8 +107,8 @@ public class ClothingManager : Singleton<ClothingManager> {
 	}
 
 	public void WearShoes(CollectionItem item) {
-		backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
-		frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
+//		backShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetFirstSprite());
+//		frontShoeSpineSlot.SetSprite((SpineCollectionItemSprite)item.GetSecondSprite());
 		shoesEquipmentSlot.EquipItem(item);
 	}
 

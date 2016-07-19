@@ -6,10 +6,7 @@ public class CollectionItemButton : MonoBehaviour {
 	[SerializeField] private CollectionItemUISprite sprite;
 	[SerializeField] private Button button;
 
-	private CollectionItem item;
-
 	public void SetCollectionItem(CollectionItem item) {
-		this.item = item;
 		SetupSprite(item);
 		SetupButton(item);
 	}
