@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Bridge : MonoBehaviour {
+public class TerrainChunkConnector : MonoBehaviour {
 	public Transform exitPoint;
 
 	private void Awake() {
