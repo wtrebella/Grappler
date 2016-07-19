@@ -16,14 +16,7 @@ public class TerrainManager : MonoBehaviour {
 	}
 	
 	private void Start() {
-		CreateChunk();
-		CreateBridge();
-		CreateChunk();
-		CreateBridge();
-		CreateChunk();
-		CreateBridge();
-		CreateChunk();
-		CreateBridge();
+		for (int i = 0; i < 10; i++) CreateChunk();
 	}
 	
 	private void Update() {
@@ -32,19 +25,20 @@ public class TerrainManager : MonoBehaviour {
 
 	private void CreateChunk() {
 		TerrainChunk terrainChunkPrefab = terrainChunkPrefabs[UnityEngine.Random.Range(0, terrainChunkPrefabs.Length)];
-		TerrainChunk terrainChunk = Instantiate(terrainChunkPrefab);
-		if (terrainChunks.Count == 0) terrainChunk.transform.position = Vector3.zero;
+		TerrainChunk newTerrainChunk = Instantiate(terrainChunkPrefab);
+		if (terrainChunks.Count == 0) newTerrainChunk.transform.position = Vector3.zero;
 		else {
-			Bridge bridge = bridges.GetLast();
-			terrainChunk.transform.position = bridge.exitPoint.position;
+			Bridge bridge = CreateBridge();
+			newTerrainChunk.transform.position = bridge.exitPoint.position;
 		}
-		terrainChunks.Add(terrainChunk);
+		terrainChunks.Add(newTerrainChunk);
 	}
 
-	private void CreateBridge() {
+	private Bridge CreateBridge() {
 		Bridge bridge = Instantiate(bridgePrefab);
 		TerrainChunk terrainChunk = terrainChunks.GetLast();
 		bridge.transform.position = terrainChunk.exitPoint.position;
 		bridges.Add(bridge);
+		return bridge;
 	}
 }
