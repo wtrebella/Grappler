@@ -8,6 +8,18 @@ public static class PolydrawExtensions
 
 #region Conversion
 
+	public static List<PolydrawPoint2> ToPolydrawPoint2(this List<PolydrawPoint3> points, Axis axis) 
+	{
+		List<PolydrawPoint2> p = new List<PolydrawPoint2>();
+		for(int i = 0; i < points.Count; i++)
+		{
+			PolydrawPoint2 point = new PolydrawPoint2(points[i].vector.ToVector2(axis));
+			point.borderIgnored = points[i].borderIgnored;
+			p.Add(point);
+		}
+		return p;
+	}
+
 	public static List<Vector2> ToVector2(this List<Vector3> v, Axis axis)
 	{
 		List<Vector2> p = new List<Vector2>();
@@ -115,19 +127,27 @@ public static class PolydrawExtensions
 	{
 		if(!poly.isValid) return;
 
-		Vector3[] v = poly.transform.ToWorldSpace(poly.GetPointVectors().ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
-
+		List<PolydrawPoint3> points = new List<PolydrawPoint3>();
+		for (int i = 0; i < poly.points.Count; i++) {
+			PolydrawPoint2 point2 = poly.points[i];
+			Vector2 v2 = point2.vector;
+			Vector3 v3 = poly.transform.TransformPoint(v2.ToVector3(poly.drawSettings.axis, poly.drawSettings.zPosition));
+			PolydrawPoint3 point3 = new PolydrawPoint3(v3);
+			point3.borderIgnored = point2.borderIgnored;
+			points.Add(point3);
+		}
+		
 		Vector3 avg = Vector3.zero;
 		
-		for(int i = 0; i < v.Length; i++)
-			avg += v[i];
+		for(int i = 0; i < points.Count; i++)
+			avg += points[i].vector;
 		
-		avg /= (float)v.Length;
+		avg /= (float)points.Count;
 
-		for(int i = 0; i < v.Length; i++)
-			v[i] -= avg;
+		for(int i = 0; i < points.Count; i++)
+			points[i].vector -= avg;
 
-		poly.SetPointVectors(new List<Vector2>(v.ToVector2(poly.drawSettings.axis)));
+		poly.points = points.ToPolydrawPoint2(poly.drawSettings.axis);
 
 		poly.Refresh();
 

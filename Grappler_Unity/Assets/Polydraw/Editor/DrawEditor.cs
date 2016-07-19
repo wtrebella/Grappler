@@ -14,14 +14,17 @@ public class DrawEditor : Editor
 	const int HANDLE_SIZE = 32;
 	const int INSERT_HANDLE_SIZE = 24;
 	private Texture2D HANDLE_ICON_ACTIVE;
+	private Texture2D HANDLE_ICON_ACTIVEBORDERIGNORED;
 	private Texture2D HANDLE_ICON_NORMAL;
 	private Texture2D HANDLE_ICON_BORDERIGNORED;
 	private Texture2D INSERT_ICON_ACTIVE;
 	private Texture2D INSERT_ICON_NORMAL;
 	private Texture2D DELETE_ICON_NORMAL;
 	private Texture2D DELETE_ICON_ACTIVE;
+	private Texture2D TOGGLEBORDERIGNORE_ICON;
 	private GUIStyle insertIconStyle;
 	private GUIStyle deletePointStyle;
+	private GUIStyle borderIgnoreStyle;
 
 	public int insertPoint = -1;
 
@@ -104,11 +107,13 @@ public class DrawEditor : Editor
 	{
 		HANDLE_ICON_NORMAL = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-Normal.png", typeof(Texture2D));
 		HANDLE_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-Active.png", typeof(Texture2D));
+		HANDLE_ICON_ACTIVEBORDERIGNORED = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-ActiveBorderIgnored.png", typeof(Texture2D));
 		HANDLE_ICON_BORDERIGNORED = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/HandleIcon-BorderIgnored.png", typeof(Texture2D));
 		INSERT_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/InsertPoint-Active.png", typeof(Texture2D));
 		INSERT_ICON_NORMAL = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/InsertPoint-Normal.png", typeof(Texture2D));
 		DELETE_ICON_ACTIVE = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/DeletePoint-Active.png", typeof(Texture2D));
 		DELETE_ICON_NORMAL = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/DeletePoint-Normal.png", typeof(Texture2D));
+		TOGGLEBORDERIGNORE_ICON = (Texture2D)AssetDatabase.LoadAssetAtPath("Assets/Polydraw/Icons/ToggleBorderIgnore.png", typeof(Texture2D));
 
 		insertIconStyle = new GUIStyle();
 		insertIconStyle.normal.background = INSERT_ICON_NORMAL;
@@ -116,6 +121,9 @@ public class DrawEditor : Editor
 		deletePointStyle = new GUIStyle();
 		deletePointStyle.normal.background = DELETE_ICON_NORMAL;
 		deletePointStyle.active.background = DELETE_ICON_ACTIVE;
+		borderIgnoreStyle = new GUIStyle();
+		borderIgnoreStyle.normal.background = TOGGLEBORDERIGNORE_ICON;
+		borderIgnoreStyle.active.background = TOGGLEBORDERIGNORE_ICON;
 
 		#if UNITY_4_3
 			if(Undo.undoRedoPerformed != this.UndoRedoPerformed)
@@ -139,7 +147,7 @@ public class DrawEditor : Editor
 #region Interface
 
 	public override void OnInspectorGUI()
-	{
+	{				
 		string onoff = poly.isEditable ? "Lock Editing" : "Edit Polydraw Object";
 		GUI.backgroundColor = poly.isEditable ? Color.red : Color.green;
 		if(GUILayout.Button(onoff, GUILayout.MinHeight(25)))
@@ -152,7 +160,7 @@ public class DrawEditor : Editor
 
 		if(GUI_EditSettings())
 			guiChanged = true;
-		
+
 		EditorGUI.BeginChangeCheck();
 		poly.drawSettings.generateBackFace = EditorGUILayout.Toggle("Generate Back Face", poly.drawSettings.generateBackFace);
 		
@@ -177,7 +185,7 @@ public class DrawEditor : Editor
 		if(poly.t_showCollisionSettings)
 			if( GUI_CollisionSettings() )
 				guiChanged = true;
-		
+
 		if(guiChanged) 
 		{
 			EditorUtility.SetDirty(poly);
@@ -301,7 +309,7 @@ public class DrawEditor : Editor
 #region OnSceneGUI
 
 	public void OnSceneGUI()
-	{		
+	{	
 		Event e = Event.current;
 		
 		if(poly && !poly.isEditable) return;
@@ -338,7 +346,6 @@ public class DrawEditor : Editor
 
 		// listen for shortcuts
 		ShortcutListener(e);
-
 
 		// draw handles
 		// draws PositionHandles and delete / point no info
@@ -435,13 +442,22 @@ public class DrawEditor : Editor
 
 			if(i == poly.lastIndex)
 			{
-				GUI.Label(handleRect, HANDLE_ICON_ACTIVE);
+				if (point.borderIgnored) GUI.Label(handleRect, HANDLE_ICON_ACTIVEBORDERIGNORED);
+				else GUI.Label(handleRect, HANDLE_ICON_ACTIVE);
 
 				if(GUI.Button(new Rect(g.x+10, g.y-40, 25, 25), "", deletePointStyle))
 				{
 					Undo.RecordObject(poly, "Delete Point");
 
 					poly.RemovePointAtIndex(i);
+					poly.Refresh();
+				}
+			
+				if(GUI.Button(new Rect(g.x-40, g.y-40, 25, 25), "", borderIgnoreStyle))
+				{
+					Undo.RecordObject(poly, "Toggle Border Ignored for Point");
+
+					poly.ToggleBorderIgnoredForPointAtIndex(i);
 					poly.Refresh();
 				}
 			}
@@ -455,6 +471,14 @@ public class DrawEditor : Editor
 		Handles.EndGUI();		
 
 		SceneView.RepaintAll();
+	}
+
+	private void LogNumIgnored(string introString) {
+		int numIgnored = 0;
+		foreach (PolydrawPoint2 point in poly.points) {
+			if (point.borderIgnored) numIgnored++;
+		}
+		Debug.Log(introString + ": " + numIgnored);
 	}
 
 	private void DrawLines(List<PolydrawPoint3> p)

@@ -111,6 +111,18 @@ namespace Polydraw {
 			#endif
 		}
 
+		public void ToggleBorderIgnoredForPointAtIndex(int index) 
+		{
+			if(index < points.Count && index > -1) {
+				PolydrawPoint2 point = points[index];
+				point.borderIgnored = !point.borderIgnored;
+			}
+
+			#if UNITY_EDITOR
+				EditorUtility.SetDirty(this);
+			#endif
+		}
+
 		public void ClearPoints()
 		{
 			points.Clear();
@@ -118,6 +130,25 @@ namespace Polydraw {
 			#if UNITY_EDITOR
 				EditorUtility.SetDirty(this);
 			#endif
+		}
+
+		public List<Vector2> GetWorldBorderPoints() 
+		{
+			List<Vector2> v = GetLocalBorderPoints();
+			for (int i = 0; i < v.Count; i++) {
+				v[i] = transform.TransformPoint(v[i]);
+			}
+			return v;
+		}
+
+		public List<Vector2> GetLocalBorderPoints() 
+		{
+			List<Vector2> v = new List<Vector2>();
+			foreach (PolydrawPoint2 point in points) {
+				if (point.borderIgnored) continue;
+				v.Add(point.vector);
+			}
+			return v;
 		}
 
 		public void Refresh()
