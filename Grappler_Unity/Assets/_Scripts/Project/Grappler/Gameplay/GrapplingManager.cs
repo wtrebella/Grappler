@@ -14,7 +14,6 @@ public class GrapplingManager : MonoBehaviour {
 	[SerializeField] private AnchorableFinder anchorableFinder;
 	[SerializeField] private GrapplerRope grapplerRope;
 	[SerializeField] private Vector2 grappleBoost = new Vector2(200, -1000);
-	[SerializeField] private Path terrainPair;
 
 	private Player _player;
 	protected Player player {
@@ -105,8 +104,7 @@ public class GrapplingManager : MonoBehaviour {
 	private bool ReadyToConnect() {
 		return grapplingIsEnabled && 
 			grapplerRope.IsRetracted() && 
-			!grapplerRope.IsConnected() && 
-			!terrainPair.GetXIsPastEnd(player.body.transform.position.x);
+			!grapplerRope.IsConnected();
 	}
 
 	private bool ReadyToDisconnect() {

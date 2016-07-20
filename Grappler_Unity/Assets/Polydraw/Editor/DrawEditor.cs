@@ -196,6 +196,18 @@ public class DrawEditor : Editor
 		GUILayout.Space(10);
 
 		GUI.backgroundColor = Color.cyan;
+		if(GUILayout.Button("Reverse Vert Order"))
+		{
+			poly.ReverseVertOrder();
+			poly.Refresh();
+			SceneView.RepaintAll();
+			Debug.Log("vert order reversed");
+		}
+		GUI.backgroundColor = Color.white;
+
+		GUILayout.Space(10);
+
+		GUI.backgroundColor = Color.red;
 		if(GUILayout.Button("Clear Points"))
 		{
 			poly.ClearPoints();

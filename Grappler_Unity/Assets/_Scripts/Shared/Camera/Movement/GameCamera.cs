@@ -20,7 +20,7 @@ public class GameCamera : MonoBehaviour {
 	[SerializeField] private float playerMargin = 10;
 	[SerializeField] private float newTerrainSwitchMargin = -20;
 
-	private CameraFollowMode cameraFollowMode = CameraFollowMode.ContourAndPlayer;
+	private CameraFollowMode cameraFollowMode = CameraFollowMode.JustPlayer;
 	private Vector3 smoothVelocity;
 	private float smoothTime = 0.1f;
 
@@ -35,14 +35,12 @@ public class GameCamera : MonoBehaviour {
 	private void Update() {
 		if (updateType != WhitUpdateType.Update) return;
 
-		UpdateCameraFollowMode();
 		UpdateMovement();
 	}
 
 	private void FixedUpdate() {
 		if (updateType != WhitUpdateType.FixedUpdate) return;
 
-		UpdateCameraFollowMode();
 		UpdateMovement();
 	}
 

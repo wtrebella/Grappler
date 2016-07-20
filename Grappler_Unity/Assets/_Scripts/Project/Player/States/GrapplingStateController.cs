@@ -35,7 +35,6 @@ public class GrapplingStateController : PlayerStateController {
 	public override void ExitState() {
 		base.ExitState();
 
-		OnGrappleEndDeviation();
 		playerTrajectory.Hide();
 		collisionSignaler.SignalCollision -= OnCollision;
 		DisconnectPlayer();

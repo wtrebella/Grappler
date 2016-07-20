@@ -115,6 +115,16 @@ namespace Polydraw {
 			#endif
 		}
 
+		public void ReverseVertOrder() {
+			List<PolydrawPoint2> newList = new List<PolydrawPoint2>();
+			for (int i = points.Count - 1; i >= 0; i--) newList.Add(points[i]);
+			points = newList;
+
+			#if UNITY_EDITOR
+				EditorUtility.SetDirty(this);
+			#endif
+		}
+
 		public void ToggleBorderIgnoredForPointAtIndex(int index) 
 		{
 			if(index < points.Count && index > -1) {

@@ -3,21 +3,19 @@ using System.Collections;
 using System;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Anchorable : GeneratableItem {
+public class Anchorable : MonoBehaviour {
+	private static int currentAnchorableID = 0;
+
 	public int anchorableID {get; private set;}
 
 	public bool isConnected {get; private set;}
 	public Rigidbody2D rigid {get; private set;}
 	private AnchorPoint anchorPoint;
 
-	public void SetAnchorableID(int id) {
-		anchorableID = id;
-	}
-
 	private void Awake() {
 		rigid = GetComponent<Rigidbody2D>();
 		anchorPoint = GetComponentInChildren<AnchorPoint>();
-
+		anchorableID = currentAnchorableID++;
 		WhitTools.Assert(anchorPoint != null, "object has no anchor point!");
 	}
 

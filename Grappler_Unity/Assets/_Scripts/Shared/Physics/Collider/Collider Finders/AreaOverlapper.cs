@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 public class AreaOverlapper : MonoBehaviour {
 	[SerializeField] private float overlapWidth = 5;
+	[SerializeField] private float overlapMargin = 5;
 	[SerializeField] private LayerMask anchorableLayerMask;
 	[SerializeField] private LayerMask mountainLayerMask;
 	[SerializeField] private bool drawDebugRays = false;
@@ -15,16 +16,24 @@ public class AreaOverlapper : MonoBehaviour {
 	}
 
 	private Anchorable ScreenOverlap() {
-		float xMargin = 20;
 		Vector2 bodyPos = transform.position;
 		Vector2 screenLowerLeftInWorldPoints = ScreenUtility.instance.lowerLeft;
-		Vector2 lowerLeft = new Vector2(bodyPos.x - xMargin, screenLowerLeftInWorldPoints.y - xMargin);
-		Vector2 upperRight = new Vector2(lowerLeft.x + overlapWidth + xMargin, lowerLeft.y + ScreenUtility.instance.height + xMargin * 2);
+		Vector2 lowerLeft = new Vector2(bodyPos.x - overlapMargin, screenLowerLeftInWorldPoints.y - overlapMargin);
+		Vector2 upperRight = new Vector2(lowerLeft.x + overlapWidth + overlapMargin, lowerLeft.y + ScreenUtility.instance.height + overlapMargin * 2);
+		Vector2 upperLeft = new Vector2(lowerLeft.x, upperRight.y);
+		Vector2 lowerRight = new Vector2(upperRight.x, lowerLeft.y);
 		Collider2D[] colliders = Physics2D.OverlapAreaAll(lowerLeft, upperRight, anchorableLayerMask);
 		List<Anchorable> anchorables = new List<Anchorable>();
 		foreach (Collider2D collider in colliders) {
 			Anchorable anchorable = collider.GetComponent<Anchorable>();
 			if (anchorable) anchorables.Add(anchorable);
+		}
+
+		if (drawDebugRays) {
+			Debug.DrawLine(lowerLeft, upperLeft, Color.green, 0.5f);
+			Debug.DrawLine(upperLeft, upperRight, Color.green, 0.5f);
+			Debug.DrawLine(upperRight, lowerRight, Color.green, 0.5f);
+			Debug.DrawLine(lowerRight, lowerLeft, Color.green, 0.5f);
 		}
 
 		anchorables.Sort(delegate(Anchorable a, Anchorable b) {
