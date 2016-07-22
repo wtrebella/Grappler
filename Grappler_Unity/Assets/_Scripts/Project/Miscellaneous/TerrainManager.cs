@@ -16,7 +16,7 @@ public class TerrainManager : MonoBehaviour {
 	}
 	
 	private void Start() {
-		for (int i = 0; i < 10; i++) CreateChunk();
+		for (int i = 0; i < 20; i++) CreateChunk();
 	}
 	
 	private void Update() {

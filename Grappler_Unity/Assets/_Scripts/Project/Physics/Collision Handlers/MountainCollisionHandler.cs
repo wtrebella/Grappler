@@ -6,7 +6,7 @@ public class MountainCollisionHandler : CollisionHandler {
 		base.HandleCollisionEnter(rigid, collision);
 
 		ShakeScreen(rigid, collision);
-
-		ReduceVelocity();
+		if (player.isGrappling) player.SetState(Player.PlayerStates.Falling);
+//		ReduceVelocity();
 	}
 }

@@ -69,6 +69,11 @@ namespace Polydraw {
 			Refresh();
 		}
 
+		private void Awake() 
+		{
+			Refresh();
+		}
+
 		public void SetEditable(bool yayornay)
 		{
 			_isEditable = yayornay;
@@ -225,6 +230,8 @@ namespace Polydraw {
 	#else
 			RefreshCollisions();
 	#endif
+
+			Debug.Log("mesh: " + m + ", meshRenderer: " + mr);
 		}
 
 		public void DestroyMesh()

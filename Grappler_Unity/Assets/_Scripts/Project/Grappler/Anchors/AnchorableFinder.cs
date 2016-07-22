@@ -6,10 +6,10 @@ public class AnchorableFinder : MonoBehaviour {
 	[SerializeField] private CircleOverlapper[] circleOverlappers;
 	[SerializeField] private AreaOverlapper screenOverlapper;
 
-	public bool FindAnchorableInDirection(out Anchorable anchorable, Vector2 direction) {
+	public bool FindAnchorableInArc(out Anchorable anchorable) {
 		anchorable = null;
 		foreach (ArcRaycaster arcRaycaster in arcRaycasters) {
-			if (arcRaycaster.FindAnchorable(out anchorable, direction)) break;
+			if (arcRaycaster.FindAnchorable(out anchorable)) break;
 		}
 
 		return anchorable != null;

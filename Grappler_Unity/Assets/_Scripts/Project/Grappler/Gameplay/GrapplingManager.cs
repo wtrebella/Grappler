@@ -67,7 +67,10 @@ public class GrapplingManager : MonoBehaviour {
 	private bool ConnectGrapplerToHighestAnchorable() {
 		if (!ReadyToConnect()) return false;
 		Anchorable anchorable;
-		if (anchorableFinder.FindAnchorableInScreenOverlap(out anchorable)) {
+//		if (anchorableFinder.FindAnchorableInScreenOverlap(out anchorable)) {
+//			return ConnectGrapplerIfPossible(anchorable);
+//		}
+		if (anchorableFinder.FindAnchorableInArc(out anchorable)) {
 			return ConnectGrapplerIfPossible(anchorable);
 		}
 		return false;
