@@ -301,7 +301,11 @@ public class DrawEditor : Editor
 		
 		poly.drawSettings.colliderType = (Draw.ColliderType)EditorGUILayout.EnumPopup(gc_colliderType, poly.drawSettings.colliderType);
 
-		if(poly.drawSettings.colliderType != Draw.ColliderType.PolygonCollider2d)
+		if(poly.drawSettings.colliderType == Draw.ColliderType.PolygonCollider2d)
+		{
+			poly.drawSettings.physicsMaterial = (PhysicsMaterial2D)EditorGUILayout.ObjectField("Physics Material", poly.drawSettings.physicsMaterial, typeof(PhysicsMaterial2D), true);
+		}
+		else 
 		{
 			poly.drawSettings.colDepth = EditorGUILayout.FloatField(gc_colDepth, poly.drawSettings.colDepth);
 			poly.drawSettings.colAnchor = (Draw.Anchor)EditorGUILayout.EnumPopup(gc_colAnchor, poly.drawSettings.colAnchor); 

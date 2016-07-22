@@ -15,6 +15,12 @@ public class RockSlide : MonoBehaviour {
 	private bool hasStarted = false;
 	private bool isMoving = false;
 
+	private void Start() {
+		if (InputManager.instance != null) {
+			InputManager.instance.SignalRightTouchDown += OnRightTouchDown;
+		}
+	}
+
 	public void StartMoving() {
 		isMoving = true;
 	}
@@ -32,16 +38,16 @@ public class RockSlide : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (!hasStarted) {
-			if (InputManager.instance.GetMouseButtonDown(0) || InputManager.instance.GetTouchBegan()) {
-				hasStarted = true;
-				StartMoving();
-			}
-		}
-
 		if (updateType != WhitUpdateType.Update) return;
 		if (!hasStarted) return;
 		if (isMoving) MoveUpdate();
+	}
+
+	private void OnRightTouchDown() {
+		if (!hasStarted) {
+			hasStarted = true;
+			StartMoving();
+		}
 	}
 
 	private void FixedUpdate() {

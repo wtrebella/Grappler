@@ -230,8 +230,6 @@ namespace Polydraw {
 	#else
 			RefreshCollisions();
 	#endif
-
-			Debug.Log("mesh: " + m + ", meshRenderer: " + mr);
 		}
 
 		public void DestroyMesh()
@@ -349,7 +347,7 @@ namespace Polydraw {
 		private void BuildPoly2dCollisions()
 		{
 			PolygonCollider2D poly = gameObject.AddComponent<PolygonCollider2D>();
-
+			poly.sharedMaterial = drawSettings.physicsMaterial;
 			poly.points = GetPointVectors().ToArray();
 		}
 

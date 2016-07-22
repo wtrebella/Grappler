@@ -7,7 +7,6 @@ public class GroundCollisionHandler : CollisionHandler {
 		if (player.isDead) return;
 		ShakeScreen(rigid, collision);
 
-		if (player.isGrappling) player.SetState(Player.PlayerStates.Falling);
 //		player.SetState(Player.PlayerStates.OnGround);
 
 //		ReduceVelocity();

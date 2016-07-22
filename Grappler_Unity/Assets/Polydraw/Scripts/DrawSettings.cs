@@ -61,6 +61,7 @@ public class DrawSettings
 
 	// Collisions
 	public Draw.ColliderType colliderType = Draw.ColliderType.PolygonCollider2d;	///< The #ColliderStyle to be used.
+	public PhysicsMaterial2D physicsMaterial;
 	public bool 		manualColliderDepth = false;	///< If #ColliderStyle is set to BoxCollider, this can override the #sideLength property to set collision depth.  See also #colDepth.
 	public Draw.Anchor	colAnchor = Draw.Anchor.Center;	///< If #manualColliderDepth is toggled, this value will be used to determine where meshcollider will anchor itself.  \sa #Draw:Anchor
 	public float 		colDepth = 5f;					///< If #manualColliderDepth is toggled, this value will be used to determine depth of colliders.

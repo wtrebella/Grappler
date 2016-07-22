@@ -22,7 +22,7 @@ public class GameCamera : MonoBehaviour {
 
 	private CameraFollowMode cameraFollowMode = CameraFollowMode.JustPlayer;
 	private Vector3 smoothVelocity;
-	private float smoothTime = 0.2f;
+	private float smoothTime = 0.1f;
 
 	public void SetUpdateType(WhitUpdateType newUpdateType) {
 		updateType = newUpdateType;

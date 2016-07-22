@@ -14,7 +14,6 @@ public class GrapplingStateController : PlayerStateController {
 	[SerializeField] private Path terrainPair;
 	[SerializeField] private RockSlide rockSlide;
 	[SerializeField] private CollisionSignaler collisionSignaler;
-	[SerializeField] private PlayerTrajectory playerTrajectory;
 	[SerializeField] private Trail trail;
 
 	private void Awake() {
@@ -26,7 +25,6 @@ public class GrapplingStateController : PlayerStateController {
 	public override void EnterState() {
 		base.EnterState();
 
-		playerTrajectory.Show();
 		player.rigidbodyAffecterGroup.SetNonKinematic();
 		player.playerAnimator.PlayGrapplingAnimations();
 		if (SignalGrappleBegan != null) SignalGrappleBegan();
@@ -35,7 +33,6 @@ public class GrapplingStateController : PlayerStateController {
 	public override void ExitState() {
 		base.ExitState();
 
-		playerTrajectory.Hide();
 		collisionSignaler.SignalCollision -= OnCollision;
 		DisconnectPlayer();
 		if (SignalGrappleEnded != null) SignalGrappleEnded();
