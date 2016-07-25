@@ -4,15 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TerrainManager : MonoBehaviour {
-	public TerrainChunk[] terrainChunkPrefabs;
+	public TerrainSet[] terrainSets;
 	public TerrainChunkConnector[] connectorPrefabs;
 
 	private List<TerrainChunk> terrainChunks;
-	private List<TerrainChunkConnector> bridges;
+	private List<TerrainChunkConnector> connectors;
 
 	private void Awake() {
 		terrainChunks = new List<TerrainChunk>();
-		bridges = new List<TerrainChunkConnector>();
+		connectors = new List<TerrainChunkConnector>();
 	}
 	
 	private void Start() {
@@ -41,7 +41,7 @@ public class TerrainManager : MonoBehaviour {
 		TerrainChunk previousChunk = terrainChunks.GetLast();
 		connector.transform.SetParent(previousChunk.transform);
 		connector.transform.position = previousChunk.exitPoint.position;
-		bridges.Add(connector);
+		connectors.Add(connector);
 		return connector;
 	}
 
@@ -50,6 +50,6 @@ public class TerrainManager : MonoBehaviour {
 	}
 
 	private TerrainChunk GetRandomChunkPrefab() {
-		return terrainChunkPrefabs[UnityEngine.Random.Range(0, terrainChunkPrefabs.Length)];
+		return terrainSets[0].GetRandomTerrainChunkPrefab();
 	}
 }
