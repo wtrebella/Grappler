@@ -8,15 +8,20 @@ public class TerrainManager : MonoBehaviour {
 	public TerrainChunkConnector[] connectorPrefabs;
 
 	[SerializeField] private CollisionSignaler exitTriggerSignaler;
-	[SerializeField] private int numChunks = 10;
+	[SerializeField] private int maxChunks = 10;
+	[SerializeField] private int setSize = 10;
+	[SerializeField] private TerrainSet firstSet;
 
 	private List<TerrainChunk> terrainChunks;
 	private List<TerrainChunkConnector> connectors;
+	private TerrainSet currentSet;
+	private int numChunks = 0;
 
 	private void Awake() {
 		terrainChunks = new List<TerrainChunk>();
 		connectors = new List<TerrainChunkConnector>();
 		exitTriggerSignaler.SignalCollision += OnExitTrigger;
+		currentSet = firstSet;
 	}
 	
 	private void Start() {
@@ -25,7 +30,7 @@ public class TerrainManager : MonoBehaviour {
 
 	private void OnExitTrigger() {
 		CreateChunk();
-		while (terrainChunks.Count > numChunks) RemoveFirstChunk();
+		while (terrainChunks.Count > maxChunks) RemoveFirstChunk();
 	}
 	
 	private void Update() {
@@ -42,6 +47,8 @@ public class TerrainManager : MonoBehaviour {
 			chunk.transform.position = bridge.exitPoint.position;
 		}
 		terrainChunks.Add(chunk);
+		numChunks++;
+		if (numChunks % setSize == 0) RechooseSet();
 	}
 
 	private void RemoveFirstChunk() {
@@ -70,6 +77,15 @@ public class TerrainManager : MonoBehaviour {
 	}
 
 	private TerrainChunk GetRandomChunkPrefab() {
-		return GetRandomSet().GetRandomTerrainChunkPrefab();
+		return currentSet.GetRandomTerrainChunkPrefab();
+	}
+
+	private void RechooseSet() {
+		TerrainSet newSet;
+		do {
+			newSet = GetRandomSet();
+		} while (newSet == currentSet);
+
+		currentSet = newSet;
 	}
 }
