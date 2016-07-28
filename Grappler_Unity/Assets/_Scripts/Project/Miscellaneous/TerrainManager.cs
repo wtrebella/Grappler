@@ -7,16 +7,25 @@ public class TerrainManager : MonoBehaviour {
 	public TerrainSet[] terrainSets;
 	public TerrainChunkConnector[] connectorPrefabs;
 
+	[SerializeField] private CollisionSignaler exitTriggerSignaler;
+	[SerializeField] private int numChunks = 10;
+
 	private List<TerrainChunk> terrainChunks;
 	private List<TerrainChunkConnector> connectors;
 
 	private void Awake() {
 		terrainChunks = new List<TerrainChunk>();
 		connectors = new List<TerrainChunkConnector>();
+		exitTriggerSignaler.SignalCollision += OnExitTrigger;
 	}
 	
 	private void Start() {
-		for (int i = 0; i < 25; i++) CreateChunk();
+		for (int i = 0; i < 5; i++) CreateChunk();
+	}
+
+	private void OnExitTrigger() {
+		CreateChunk();
+		while (terrainChunks.Count > numChunks) RemoveFirstChunk();
 	}
 	
 	private void Update() {
@@ -35,6 +44,13 @@ public class TerrainManager : MonoBehaviour {
 		terrainChunks.Add(chunk);
 	}
 
+	private void RemoveFirstChunk() {
+		if (terrainChunks.Count == 0) return;
+		TerrainChunk firstChunk = terrainChunks[0];
+		terrainChunks.RemoveAt(0);
+		Destroy(firstChunk);
+	}
+
 	private TerrainChunkConnector CreateBridge() {
 		TerrainChunkConnector prefab = GetRandomConnectorPrefab();
 		TerrainChunkConnector connector = Instantiate(prefab);
@@ -49,7 +65,11 @@ public class TerrainManager : MonoBehaviour {
 		return connectorPrefabs[UnityEngine.Random.Range(0, connectorPrefabs.Length)];
 	}
 
+	private TerrainSet GetRandomSet() {
+		return terrainSets[UnityEngine.Random.Range(0, terrainSets.Length)];
+	}
+
 	private TerrainChunk GetRandomChunkPrefab() {
-		return terrainSets[0].GetRandomTerrainChunkPrefab();
+		return GetRandomSet().GetRandomTerrainChunkPrefab();
 	}
 }

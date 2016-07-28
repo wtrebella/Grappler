@@ -37,7 +37,7 @@ public class PlayerBodyPart : MonoBehaviour {
 	}
 
 	private void OnTriggerStay2D(Collider2D collider) {
-		player.collisionHandler.HandleTriggerEnter(this, collider);
+		player.collisionHandler.HandleTriggerStay(this, collider);
 	}
 
 	private void OnTriggerExit2D(Collider2D collider) {
