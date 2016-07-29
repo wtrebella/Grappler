@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Polydraw;
 
 public class TerrainManager : MonoBehaviour {
-	public GameObject testPrefab;
+	public Sign signPrefab;
 
 
 
@@ -65,9 +65,21 @@ public class TerrainManager : MonoBehaviour {
 			PolydrawObject floor = chunk.GetFloors()[0];
 			List<Vector2> points = floor.GetWorldBorderPoints();
 			Vector2 lastPoint = points.GetLast();
-			GameObject testObject = Instantiate(testPrefab);
-			testObject.transform.SetParent(floor.transform);
-			testObject.transform.position = lastPoint;
+			Sign sign = Instantiate(signPrefab);
+			sign.transform.SetParent(floor.transform);
+			sign.transform.position = lastPoint;
+			sign.SetAsFloorSign();
+			sign.SetIcon(nextSet.terrainSetType);
+		}
+		else if (chunk.hasCeiling) {
+			PolydrawObject ceiling = chunk.GetCeilings()[0];
+			List<Vector2> points = ceiling.GetWorldBorderPoints();
+			Vector2 lastPoint = points.GetLast();
+			Sign sign = Instantiate(signPrefab);
+			sign.transform.SetParent(ceiling.transform);
+			sign.transform.position = lastPoint;
+			sign.SetAsCeilingSign();
+			sign.SetIcon(nextSet.terrainSetType);
 		}
 		IncrementSet();
 	}
