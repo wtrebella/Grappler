@@ -20,11 +20,12 @@ public class TerrainManager : MonoBehaviour {
 	private void Awake() {
 		terrainChunks = new List<TerrainChunk>();
 		connectors = new List<TerrainChunkConnector>();
-		exitTriggerSignaler.SignalCollision += OnExitTrigger;
 		currentSet = firstSet;
 	}
 	
 	private void Start() {
+		if (exitTriggerSignaler != null) exitTriggerSignaler.SignalCollision += OnExitTrigger;
+
 		for (int i = 0; i < 5; i++) CreateChunk();
 	}
 
@@ -55,7 +56,7 @@ public class TerrainManager : MonoBehaviour {
 		if (terrainChunks.Count == 0) return;
 		TerrainChunk firstChunk = terrainChunks[0];
 		terrainChunks.RemoveAt(0);
-		Destroy(firstChunk);
+		Destroy(firstChunk.gameObject);
 	}
 
 	private TerrainChunkConnector CreateBridge() {
