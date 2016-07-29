@@ -2,10 +2,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Polydraw;
 
 public class TerrainChunk : MonoBehaviour {
 	public Transform exitPoint;
-	
+
+	public bool hasCeiling {get {return ceilings.Length > 0;}}
+	public bool hasFloor {get {return floors.Length > 0;}}
+
+	[SerializeField] private PolydrawObject[] ceilings;
+	[SerializeField] private PolydrawObject[] floors;
+
+	public PolydrawObject[] GetCeilings() {
+		if (!hasCeiling) Debug.LogWarning("Doesn't have ceiling. Returning empty array.");
+		return ceilings;
+	}
+
+	public PolydrawObject[] GetFloors() {
+		if (!hasFloor) Debug.LogWarning("Doesn't have floor. Returning empty array.");
+		return floors;
+	}
+
 	private void Awake() {
 		CreateExitTrigger();
 	}

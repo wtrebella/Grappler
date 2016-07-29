@@ -2,31 +2,39 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Polydraw;
 
 public class TerrainManager : MonoBehaviour {
+	public GameObject testPrefab;
+
+
+
 	public TerrainSet[] terrainSets;
 	public TerrainChunkConnector[] connectorPrefabs;
 
 	[SerializeField] private CollisionSignaler exitTriggerSignaler;
 	[SerializeField] private int maxChunks = 10;
+	[SerializeField] private int numAheadChunks = 5;
 	[SerializeField] private int setSize = 10;
 	[SerializeField] private TerrainSet firstSet;
 
 	private List<TerrainChunk> terrainChunks;
 	private List<TerrainChunkConnector> connectors;
 	private TerrainSet currentSet;
+	private TerrainSet nextSet;
 	private int numChunks = 0;
 
 	private void Awake() {
 		terrainChunks = new List<TerrainChunk>();
 		connectors = new List<TerrainChunkConnector>();
 		currentSet = firstSet;
+		ChooseNextSet();
 	}
 	
 	private void Start() {
 		if (exitTriggerSignaler != null) exitTriggerSignaler.SignalCollision += OnExitTrigger;
 
-		for (int i = 0; i < 5; i++) CreateChunk();
+		for (int i = 0; i < numAheadChunks; i++) CreateChunk();
 	}
 
 	private void OnExitTrigger() {
@@ -49,7 +57,19 @@ public class TerrainManager : MonoBehaviour {
 		}
 		terrainChunks.Add(chunk);
 		numChunks++;
-		if (numChunks % setSize == 0) RechooseSet();
+		if (numChunks % setSize == 0) OnLastChunkCreated(chunk);
+	}
+
+	private void OnLastChunkCreated(TerrainChunk chunk) {
+		if (chunk.hasFloor) {
+			PolydrawObject floor = chunk.GetFloors()[0];
+			List<Vector2> points = floor.GetWorldBorderPoints();
+			Vector2 lastPoint = points.GetLast();
+			GameObject testObject = Instantiate(testPrefab);
+			testObject.transform.SetParent(floor.transform);
+			testObject.transform.position = lastPoint;
+		}
+		IncrementSet();
 	}
 
 	private void RemoveFirstChunk() {
@@ -81,12 +101,17 @@ public class TerrainManager : MonoBehaviour {
 		return currentSet.GetRandomTerrainChunkPrefab();
 	}
 
-	private void RechooseSet() {
+	private void IncrementSet() {
+		currentSet = nextSet;
+		ChooseNextSet();
+	}
+
+	private void ChooseNextSet() {
 		TerrainSet newSet;
 		do {
 			newSet = GetRandomSet();
 		} while (newSet == currentSet);
 
-		currentSet = newSet;
+		nextSet = newSet;
 	}
 }
