@@ -6,7 +6,7 @@ using Polydraw;
 
 public class TerrainManager : MonoBehaviour {
 	public ArrowSign signPrefab;
-
+	public GameObject treePrefab;
 
 
 	public TerrainSet[] terrainSets;
@@ -48,10 +48,24 @@ public class TerrainManager : MonoBehaviour {
 		else PlaceChunkAtBeginning(chunk);
 		terrainChunks.Add(chunk);
 		numChunks++;
-		if (IsOnLastChunk()) OnLastChunkCreated(chunk);
+		if (IsOnLastChunk()) OnLastChunkInSetAdded(chunk);
+		OnChunkAdded(chunk);
 	}
 
-	private void OnLastChunkCreated(TerrainChunk chunk) {
+	private void OnChunkAdded(TerrainChunk chunk) {
+		if (chunk.hasFloor) CreateTree(chunk);
+	}
+
+	private void CreateTree(TerrainChunk chunk) {
+		PolydrawObject floor = chunk.GetFirstFloor();
+		List<Vector2> points = floor.GetWorldBorderPoints();
+		Vector2 randomPoint = points.GetRandom();
+		GameObject tree = Instantiate(treePrefab);
+		tree.transform.SetParent(floor.transform);
+		tree.transform.position = randomPoint;
+	}
+
+	private void OnLastChunkInSetAdded(TerrainChunk chunk) {
 		if (chunk.hasFloor) CreateFloorSign(chunk);
 		else if (chunk.hasCeiling) CreateCeilingSign(chunk);
 		IncrementSet();
@@ -66,6 +80,10 @@ public class TerrainManager : MonoBehaviour {
 
 	private bool HasTooManyChunks() {
 		return terrainChunks.Count > maxChunks;
+	}
+
+	private bool IsOnFirstChunk() {
+		return numChunks % setSize == 1;
 	}
 
 	private bool IsOnLastChunk() {
