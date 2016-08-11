@@ -34,54 +34,77 @@ public class TerrainManager : MonoBehaviour {
 	private void Start() {
 		if (exitTriggerSignaler != null) exitTriggerSignaler.SignalCollision += OnExitTrigger;
 
-		for (int i = 0; i < numAheadChunks; i++) CreateChunk();
+		for (int i = 0; i < numAheadChunks; i++) AddChunk();
 	}
 
 	private void OnExitTrigger() {
-		CreateChunk();
-		while (terrainChunks.Count > maxChunks) RemoveFirstChunk();
-	}
-	
-	private void Update() {
-	
+		AddChunk();
+		while (HasTooManyChunks()) RemoveFirstChunk();
 	}
 
-	private void CreateChunk() {
-		TerrainChunk prefab = GetRandomChunkPrefab();
-		TerrainChunk chunk = Instantiate(prefab);
-		chunk.transform.SetParent(transform);
-		if (terrainChunks.Count == 0) chunk.transform.localPosition = Vector3.zero;
-		else {
-			TerrainChunkConnector bridge = CreateBridge();
-			chunk.transform.position = bridge.exitPoint.position;
-		}
+	private void AddChunk() {
+		TerrainChunk chunk = CreateChunk();
+		if (HasChunks()) ConnectToPreviousChunk(chunk);
+		else PlaceChunkAtBeginning(chunk);
 		terrainChunks.Add(chunk);
 		numChunks++;
-		if (numChunks % setSize == 0) OnLastChunkCreated(chunk);
+		if (IsOnLastChunk()) OnLastChunkCreated(chunk);
 	}
 
 	private void OnLastChunkCreated(TerrainChunk chunk) {
-		if (chunk.hasFloor) {
-			PolydrawObject floor = chunk.GetFloors()[0];
-			List<Vector2> points = floor.GetWorldBorderPoints();
-			Vector2 lastPoint = points.GetLast();
-			ArrowSign sign = Instantiate(signPrefab);
-			sign.transform.SetParent(floor.transform);
-			sign.transform.position = lastPoint;
-			sign.SetAsFloorSign();
-			sign.SetArrowDirection(nextSet.terrainSetType);
-		}
-		else if (chunk.hasCeiling) {
-			PolydrawObject ceiling = chunk.GetCeilings()[0];
-			List<Vector2> points = ceiling.GetWorldBorderPoints();
-			Vector2 lastPoint = points.GetLast();
-			ArrowSign sign = Instantiate(signPrefab);
-			sign.transform.SetParent(ceiling.transform);
-			sign.transform.position = lastPoint;
-			sign.SetAsCeilingSign();
-			sign.SetArrowDirection(nextSet.terrainSetType);
-		}
+		if (chunk.hasFloor) CreateFloorSign(chunk);
+		else if (chunk.hasCeiling) CreateCeilingSign(chunk);
 		IncrementSet();
+	}
+
+	private TerrainChunk CreateChunk() {
+		TerrainChunk prefab = GetRandomChunkPrefab();
+		TerrainChunk chunk = Instantiate(prefab);
+		chunk.transform.SetParent(transform);
+		return chunk;
+	}
+
+	private bool HasTooManyChunks() {
+		return terrainChunks.Count > maxChunks;
+	}
+
+	private bool IsOnLastChunk() {
+		return numChunks % setSize == 0;
+	}
+
+	private bool HasChunks() {
+		return terrainChunks.Count > 0;
+	}
+
+	private void PlaceChunkAtBeginning(TerrainChunk chunk) {
+		chunk.transform.localPosition = Vector3.zero;
+	}
+
+	private void ConnectToPreviousChunk(TerrainChunk chunk) {
+		TerrainChunkConnector bridge = CreateConnector();
+		chunk.transform.position = bridge.exitPoint.position;
+	}
+
+	private void CreateFloorSign(TerrainChunk chunk) {
+		PolydrawObject floor = chunk.GetFirstFloor();
+		List<Vector2> points = floor.GetWorldBorderPoints();
+		Vector2 lastPoint = points.GetLast();
+		ArrowSign sign = Instantiate(signPrefab);
+		sign.transform.SetParent(floor.transform);
+		sign.transform.position = lastPoint;
+		sign.SetAsFloorSign();
+		sign.SetArrowDirection(nextSet.terrainSetType);
+	}
+
+	private void CreateCeilingSign(TerrainChunk chunk) {
+		PolydrawObject ceiling = chunk.GetFirstCeiling();
+		List<Vector2> points = ceiling.GetWorldBorderPoints();
+		Vector2 lastPoint = points.GetLast();
+		ArrowSign sign = Instantiate(signPrefab);
+		sign.transform.SetParent(ceiling.transform);
+		sign.transform.position = lastPoint;
+		sign.SetAsCeilingSign();
+		sign.SetArrowDirection(nextSet.terrainSetType);
 	}
 
 	private void RemoveFirstChunk() {
@@ -91,7 +114,7 @@ public class TerrainManager : MonoBehaviour {
 		Destroy(firstChunk.gameObject);
 	}
 
-	private TerrainChunkConnector CreateBridge() {
+	private TerrainChunkConnector CreateConnector() {
 		TerrainChunkConnector prefab = GetRandomConnectorPrefab();
 		TerrainChunkConnector connector = Instantiate(prefab);
 		TerrainChunk previousChunk = terrainChunks.GetLast();

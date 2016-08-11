@@ -23,6 +23,14 @@ public class TerrainChunk : MonoBehaviour {
 		return floors;
 	}
 
+	public PolydrawObject GetFirstFloor() {
+		return GetFloors()[0];
+	}
+
+	public PolydrawObject GetFirstCeiling() {
+		return GetCeilings()[0];
+	}
+
 	private void Awake() {
 		CreateExitTrigger();
 	}
