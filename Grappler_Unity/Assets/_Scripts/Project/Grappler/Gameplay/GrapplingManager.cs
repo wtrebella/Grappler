@@ -7,6 +7,7 @@ public class GrapplingManager : MonoBehaviour {
 	public static GrapplingManager instance;
 
 	public Action<bool> SignalGrapplingEnabledChanged;
+	public Action SignalGrapple;
 
 	public Vector2 targetDirection {get; private set;}
 
@@ -56,6 +57,9 @@ public class GrapplingManager : MonoBehaviour {
 
 	public bool Connect() {
 		bool connected = ConnectGrapplerToHighestAnchorable();
+		if (connected) {
+			if (SignalGrapple != null) SignalGrapple();
+		}
 		return connected;
 	}
 

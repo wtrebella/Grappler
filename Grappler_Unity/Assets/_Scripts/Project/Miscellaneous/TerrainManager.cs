@@ -53,16 +53,19 @@ public class TerrainManager : MonoBehaviour {
 	}
 
 	private void OnChunkAdded(TerrainChunk chunk) {
-		if (chunk.hasFloor) CreateTree(chunk);
+		if (chunk.hasFloor) {
+			if (UnityEngine.Random.value < 0.1f) CreateForest(chunk);
+		}
 	}
 
-	private void CreateTree(TerrainChunk chunk) {
+	private void CreateForest(TerrainChunk chunk) {
 		PolydrawObject floor = chunk.GetFirstFloor();
 		List<Vector2> points = floor.GetWorldBorderPoints();
-		Vector2 randomPoint = points.GetRandom();
-		GameObject tree = Instantiate(treePrefab);
-		tree.transform.SetParent(floor.transform);
-		tree.transform.position = randomPoint;
+		foreach (Vector2 point in points) {
+			GameObject tree = Instantiate(treePrefab);
+			tree.transform.SetParent(floor.transform);
+			tree.transform.position = point;
+		}
 	}
 
 	private void OnLastChunkInSetAdded(TerrainChunk chunk) {
