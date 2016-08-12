@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using Polydraw;
 
 public class TerrainManager : MonoBehaviour {
-	public ArrowSign signPrefab;
+	public ArrowSign arrowSignPrefab;
 	public GameObject treePrefab;
-
+	public Sign signPrefab;
 
 	public TerrainSet[] terrainSets;
 	public TerrainChunkConnector[] connectorPrefabs;
@@ -54,7 +54,10 @@ public class TerrainManager : MonoBehaviour {
 
 	private void OnChunkAdded(TerrainChunk chunk) {
 		if (chunk.hasFloor) {
-			if (UnityEngine.Random.value < 0.1f) CreateForest(chunk);
+			if (UnityEngine.Random.value < 0.1f) {
+				CreateForest(chunk);
+				if (terrainChunks.Count >= 2) CreateForestWarningSign(terrainChunks[terrainChunks.Count - 2]);
+			}
 		}
 	}
 
@@ -68,9 +71,14 @@ public class TerrainManager : MonoBehaviour {
 		}
 	}
 
+	private void CreateForestWarningSign(TerrainChunk chunk) {
+		if (chunk.hasFloor) CreateFloorWarningSign(chunk);
+		else if (chunk.hasCeiling) CreateCeilingWarningSign(chunk);
+	}
+
 	private void OnLastChunkInSetAdded(TerrainChunk chunk) {
-		if (chunk.hasFloor) CreateFloorSign(chunk);
-		else if (chunk.hasCeiling) CreateCeilingSign(chunk);
+		if (chunk.hasFloor) CreateFloorArrowSign(chunk);
+		else if (chunk.hasCeiling) CreateCeilingArrowSign(chunk);
 		IncrementSet();
 	}
 
@@ -106,26 +114,48 @@ public class TerrainManager : MonoBehaviour {
 		chunk.transform.position = bridge.exitPoint.position;
 	}
 
-	private void CreateFloorSign(TerrainChunk chunk) {
+	private void CreateFloorArrowSign(TerrainChunk chunk) {
 		PolydrawObject floor = chunk.GetFirstFloor();
 		List<Vector2> points = floor.GetWorldBorderPoints();
 		Vector2 lastPoint = points.GetLast();
-		ArrowSign sign = Instantiate(signPrefab);
+		ArrowSign sign = Instantiate(arrowSignPrefab);
 		sign.transform.SetParent(floor.transform);
 		sign.transform.position = lastPoint;
 		sign.SetAsFloorSign();
 		sign.SetArrowDirection(nextSet.terrainSetType);
 	}
 
-	private void CreateCeilingSign(TerrainChunk chunk) {
+	private void CreateCeilingArrowSign(TerrainChunk chunk) {
 		PolydrawObject ceiling = chunk.GetFirstCeiling();
 		List<Vector2> points = ceiling.GetWorldBorderPoints();
 		Vector2 lastPoint = points.GetLast();
-		ArrowSign sign = Instantiate(signPrefab);
+		ArrowSign sign = Instantiate(arrowSignPrefab);
 		sign.transform.SetParent(ceiling.transform);
 		sign.transform.position = lastPoint;
 		sign.SetAsCeilingSign();
 		sign.SetArrowDirection(nextSet.terrainSetType);
+	}
+
+	private void CreateFloorWarningSign(TerrainChunk chunk) {
+		PolydrawObject floor = chunk.GetFirstFloor();
+		List<Vector2> points = floor.GetWorldBorderPoints();
+		Vector2 lastPoint = points.GetLast();
+		Sign sign = Instantiate(signPrefab);
+		sign.transform.SetParent(floor.transform);
+		sign.transform.position = lastPoint;
+		sign.SetAsFloorSign();
+		sign.SetIcon(TerrainSetType.Flat);
+	}
+
+	private void CreateCeilingWarningSign(TerrainChunk chunk) {
+		PolydrawObject ceiling = chunk.GetFirstCeiling();
+		List<Vector2> points = ceiling.GetWorldBorderPoints();
+		Vector2 lastPoint = points.GetLast();
+		Sign sign = Instantiate(signPrefab);
+		sign.transform.SetParent(ceiling.transform);
+		sign.transform.position = lastPoint;
+		sign.SetAsCeilingSign();
+		sign.SetIcon(TerrainSetType.Flat);
 	}
 
 	private void RemoveFirstChunk() {
